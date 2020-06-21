@@ -1,0 +1,176 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "zlyj",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 1,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "btn_zlyj1": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 0.5,
+              "value": [
+                0,
+                -2
+              ]
+            }
+          ],
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": 0.9
+            },
+            {
+              "frame": 0.5,
+              "value": 1.2
+            },
+            {
+              "frame": 1,
+              "value": 1.6
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 0.9
+            },
+            {
+              "frame": 0.5,
+              "value": 1.2
+            },
+            {
+              "frame": 1,
+              "value": 1.6
+            }
+          ],
+          "opacity": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 0.5,
+              "value": 53
+            },
+            {
+              "frame": 1,
+              "value": 0
+            }
+          ]
+        }
+      },
+      "guang_31": {
+        "props": {
+          "position": [
+            {
+              "frame": 0.1,
+              "value": [
+                10.6,
+                -19.11
+              ]
+            },
+            {
+              "frame": 0.11666666666666667,
+              "value": [
+                10.6,
+                -19.11
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                56.29,
+                -2.1214
+              ]
+            }
+          ],
+          "scaleX": [
+            {
+              "frame": 0.1,
+              "value": 0.2225
+            },
+            {
+              "frame": 0.11666666666666667,
+              "value": 0.2225
+            },
+            {
+              "frame": 1,
+              "value": 0.6
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0.1,
+              "value": 0.0735
+            },
+            {
+              "frame": 0.11666666666666667,
+              "value": 0.0735
+            },
+            {
+              "frame": 1,
+              "value": 0.0735
+            }
+          ],
+          "opacity": [
+            {
+              "frame": 0.1,
+              "value": 0
+            },
+            {
+              "frame": 0.11666666666666667,
+              "value": 255
+            },
+            {
+              "frame": 1,
+              "value": 0
+            }
+          ],
+          "rotation": [
+            {
+              "frame": 0.11666666666666667,
+              "value": -20
+            },
+            {
+              "frame": 1,
+              "value": -20.0003
+            }
+          ]
+        }
+      },
+      "btn_zlyj2": {},
+      "btn_zlyj3": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                0
+              ]
+            }
+          ],
+          "opacity": [
+            {
+              "frame": 0,
+              "value": 255
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

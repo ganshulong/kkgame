@@ -1,0 +1,168 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "zise",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 2.8666666666666667,
+  "sample": 30,
+  "speed": 1,
+  "wrapMode": "2",
+  "curveData": {
+    "paths": {
+      "Node_2/qq1_2": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0.0001,
+                -0.0001
+              ]
+            },
+            {
+              "frame": 2.8333333333333335,
+              "value": [
+                0.0001,
+                -0.0001
+              ]
+            }
+          ],
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": -0.5307
+            },
+            {
+              "frame": 2.8333333333333335,
+              "value": -0.5307
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 0.5307
+            },
+            {
+              "frame": 2.8333333333333335,
+              "value": 0.5307
+            }
+          ],
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 2.8333333333333335,
+              "value": 360
+            }
+          ]
+        },
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "5eab13ee-035a-4c2a-a783-96961a055976"
+                }
+              },
+              {
+                "frame": 2.8333333333333335,
+                "value": {
+                  "__uuid__": "5eab13ee-035a-4c2a-a783-96961a055976"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "Node_2/qq1_2_0": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 2.8333333333333335,
+              "value": [
+                0,
+                0
+              ]
+            }
+          ],
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 2.8333333333333335,
+              "value": 1
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 2.8333333333333335,
+              "value": 1
+            }
+          ],
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 120
+            },
+            {
+              "frame": 2.8333333333333335,
+              "value": -240
+            }
+          ]
+        }
+      },
+      "Node_2": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0.0002,
+                0.0001
+              ]
+            }
+          ],
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": 0.5173
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 0.5173
+            }
+          ]
+        }
+      },
+      "tips": {
+        "props": {
+          "y": [
+            {
+              "frame": 0,
+              "value": -81
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

@@ -1,0 +1,10 @@
+别名： lucky88
+口令： lucky88
+导入证书 keytool -import -alias mykey -file deployment_cert.der -keystore ./lucky88.keystore
+
+#keystore转jks
+第一步:  keytool -importkeystore -srckeystore ./lucky88.keystore -srcstoretype JKS -deststoretype PKCS12 -destkeystore lucky88.p12
+
+第二步  keytool -v -importkeystore -srckeystore ./lucky88.p12 -srcstoretype PKCS12 -destkeystore ./upload_lucky88.jks -deststoretype JKS
+
+创建上传密钥

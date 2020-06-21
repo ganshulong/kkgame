@@ -1,0 +1,262 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "lanse",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.25,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "Node_2/qq1_2": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0.0001,
+                -0.0001
+              ]
+            },
+            {
+              "frame": 1.25,
+              "value": [
+                0.0001,
+                -0.0001
+              ]
+            }
+          ],
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": -0.5307
+            },
+            {
+              "frame": 1.25,
+              "value": -0.5307
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 0.5307
+            },
+            {
+              "frame": 1.25,
+              "value": 0.5307
+            }
+          ],
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 1.25,
+              "value": 360
+            }
+          ]
+        },
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "4f5b6bdd-5bb5-4af3-bff5-865c7696f6c8"
+                }
+              },
+              {
+                "frame": 1.25,
+                "value": {
+                  "__uuid__": "4f5b6bdd-5bb5-4af3-bff5-865c7696f6c8"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "Node_2/qq1_2_0": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 1.25,
+              "value": [
+                0,
+                0
+              ]
+            }
+          ],
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 1.25,
+              "value": 1
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 1.25,
+              "value": 1
+            }
+          ],
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 120
+            },
+            {
+              "frame": 1.25,
+              "value": -240
+            }
+          ]
+        }
+      },
+      "Node_2/Sprite_1": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "64a0433f-1215-45ed-887d-f841292015ff"
+                }
+              },
+              {
+                "frame": 0.08333333333333333,
+                "value": {
+                  "__uuid__": "6b0938c8-7fd1-4eff-b4dc-c06ba8f38826"
+                }
+              },
+              {
+                "frame": 0.16666666666666666,
+                "value": {
+                  "__uuid__": "65b2aa3e-223a-421b-8ac4-6873af6c6ce6"
+                }
+              },
+              {
+                "frame": 0.25,
+                "value": {
+                  "__uuid__": "9f600a87-4cd2-430e-80ac-6c28ff1ad17f"
+                }
+              },
+              {
+                "frame": 0.3333333333333333,
+                "value": {
+                  "__uuid__": "02d1b9b1-f60e-41ea-800f-f152d2010076"
+                }
+              },
+              {
+                "frame": 0.4166666666666667,
+                "value": {
+                  "__uuid__": "0ed7eb2a-d245-42de-97fe-face9420ce2a"
+                }
+              },
+              {
+                "frame": 0.5,
+                "value": {
+                  "__uuid__": "03a3827a-f7cd-4ccd-8be9-3669c71adcf2"
+                }
+              },
+              {
+                "frame": 0.5833333333333334,
+                "value": {
+                  "__uuid__": "c279f3c3-b364-4198-afba-440e2be239b7"
+                }
+              },
+              {
+                "frame": 0.6666666666666666,
+                "value": {
+                  "__uuid__": "8634cb89-019f-4e62-858a-8bb7b6136b81"
+                }
+              },
+              {
+                "frame": 0.75,
+                "value": {
+                  "__uuid__": "5c2f5b9c-329d-405a-bfe6-38f56758db36"
+                }
+              },
+              {
+                "frame": 0.8333333333333334,
+                "value": {
+                  "__uuid__": "c7cc5fa5-8f89-4210-8db8-0a75cfdfb8e9"
+                }
+              },
+              {
+                "frame": 0.9166666666666666,
+                "value": {
+                  "__uuid__": "81cfb193-af2c-4542-9af0-652b842b8571"
+                }
+              },
+              {
+                "frame": 1,
+                "value": {
+                  "__uuid__": "e7828515-f3c1-42f0-8509-89163df38b9d"
+                }
+              },
+              {
+                "frame": 1.0833333333333333,
+                "value": {
+                  "__uuid__": "d66d987d-cd8a-4794-a9e8-ad38c8470c1e"
+                }
+              },
+              {
+                "frame": 1.1666666666666667,
+                "value": {
+                  "__uuid__": "c93cc425-f286-42da-9049-c464da23f864"
+                }
+              },
+              {
+                "frame": 1.25,
+                "value": {
+                  "__uuid__": "eb0289e7-946f-4c52-878c-480556ab84c0"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "Node_2": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0.0002,
+                0.0001
+              ]
+            }
+          ],
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": 0.5173
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 0.5173
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}
