@@ -59,13 +59,11 @@ cc.Class({
 
         // 账号登录
         this._wechat_login = this.node.getChildByName("wechat_login");
-        Global.btnClickEvent(this._account_login,this.onWeChatLogin,this);
+        Global.btnClickEvent(this._wechat_login,this.onWeChatLogin,this);
 
         // facebook登录
         let phone_login = this.node.getChildByName("phone_login");
         Global.btnClickEvent(phone_login,this.onPhoneLogin,this);
-
-
     },
 
     onPhoneLogin(){
@@ -75,12 +73,14 @@ cc.Class({
     // 微信登录
     onWeChatLogin() {
         cc.vv.GameManager.checkIsPhone(false);
-        if(!cc.vv.GameManager.accountAutoLogin()){
+		//test
+        if(true){
             var WxMgr = require('WxMgr');
             WxMgr.init();
             cc.vv.WxMgr = WxMgr;
 
             let loginSyncCall = function (data) {
+                cc.vv.FloatTip.show("test---loginSyncCall");
                 cc.log("微信===  data： " + JSON.stringify(data));
                 if (data.result === 1) {
                     let code = data.token
@@ -93,7 +93,9 @@ cc.Class({
                 else {
                     cc.vv.FloatTip.show('微信授权失败！')
                 }
-
+            }
+            cc.vv.wxLoginResult = function (data) {
+                cc.vv.FloatTip.show("test---wxLoginResult "+data);
             }
             cc.vv.WxMgr.wxLogin(loginSyncCall)
         }

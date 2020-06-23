@@ -34,8 +34,8 @@ cc.Class({
         wxLogin:function(pCall){
             var self = this
             self._loginResultCall = pCall
-
             cc.vv.PlatformApiMgr.addCallback(self.loginSdkCallback.bind(this),"loginSdkCallback")
+
             cc.vv.PlatformApiMgr.wxLogin()
         },
 

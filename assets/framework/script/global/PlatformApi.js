@@ -13,8 +13,7 @@ cc.Class({
         _cbDataList: null,  //回调数据缓存
 
         _IOS_CLASS_NAME: 'PlatformIosApi', //ios类名
-        _AND_CLASS_NAME: 'org/cocos2dx/javascript/PlatformAndroidApi', //android类名
-
+        _AND_CLASS_NAME: 'org/cocos2dx/javascript/AppActivity', //android类名
         //初始化
         init: function () {
             setInterval(this.update.bind(this), 100);
@@ -273,7 +272,12 @@ cc.Class({
         //微信登录
         wxLogin:function(){
             if(Global.isNative()){
-                this.callPlatformApi('wxLogin','()V')
+                // this.callPlatformApi('wxLogin','()V')
+                if (Global.isAndroid()) {
+                    var resturnInt = jsb.reflection.callStaticMethod(this._AND_CLASS_NAME,"wxLogin",'()I');
+                     cc.vv.FloatTip.show("test---callStaticMethod return ----- " + resturnInt);
+                    // cc.vv.FloatTip.show("test---callPlatformApi ----- ");    //显示
+                }
             }
             else{
                 AppLog.warn('Browser call Function [wxLogin]');
@@ -283,7 +287,7 @@ cc.Class({
         // 消耗物品
         consumeOwnedPurchase:function (token) {
             if(Global.isNative()){
-                this.callPlatformApi('consumeOwnedPurchase','(Ljava/lang/String;)V', token)
+                this.callPlatformApiWX('consumeOwnedPurchase','(Ljava/lang/String;)V', token)
             }
             else{
                 AppLog.warn('Browser call Function [installWXApp]');
