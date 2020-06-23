@@ -35,14 +35,16 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.WindowManager;
 
-import org.cocos2dx.lib.Cocos2dxJavascriptJavaBridge;
-import static org.cocos2dx.lib.Cocos2dxHelper.getActivity;
-
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import org.cocos2dx.lib.Cocos2dxJavascriptJavaBridge;
+import static org.cocos2dx.lib.Cocos2dxHelper.getActivity;
 
 import org.cocos2dx.javascript.SDKWrapper;
 import com.kk.happygame.wxapi.WXEntryActivity;
@@ -51,7 +53,6 @@ public class AppActivity extends Cocos2dxActivity{
     
     private static final String APP_ID = "wx82256d3bda922e13";
     public static IWXAPI wx_api;
-    private static int resturnInt = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +74,27 @@ public class AppActivity extends Cocos2dxActivity{
         wx_api.registerApp(APP_ID);
     }
     
-    public static int wxLogin() {
+    public static void wxLogin() {
         SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
         req.state = "wxLogin";
         wx_api.sendReq(req);
-
-        resturnInt = resturnInt + 1;
-        return resturnInt;
     }
 
-    public static void wxLoginResult(final String value) {
-        resturnInt = resturnInt + 100;
+    public static void wxLoginResult(final String code) {
+        final String exes = "cc.vv.wxLoginResult(\""+ code + "\")";
+        TimerTask task = new TimerTask(){
+            public void run(){
+                Cocos2dxGLSurfaceView.getInstance().queueEvent(new Runnable() {
+                    @Override
+                    public void run() {
+                        Cocos2dxJavascriptJavaBridge.evalString(exes);
+                    }
+                });
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 500);
     }
 
     @Override

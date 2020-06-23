@@ -6576,7 +6576,7 @@ statics: {
 _callbackDic: null,
 _cbDataList: null,
 _IOS_CLASS_NAME: "PlatformIosApi",
-_AND_CLASS_NAME: "org.cocos2dx.javascript/AppActivity",
+_AND_CLASS_NAME: "org/cocos2dx/javascript/AppActivity",
 init: function() {
 setInterval(this.update.bind(this), 100);
 },
@@ -6669,12 +6669,7 @@ if (Global.isNative()) return this.callPlatformApi("openWXApp", "()I");
 AppLog.warn("Browser call Function [openWXApp]");
 },
 wxLogin: function() {
-if (Global.isNative()) {
-if (Global.isAndroid()) {
-var e = jsb.reflection.callStaticMethod(this._AND_CLASS_NAME, "wxLogin", "()I");
-cc.vv.FloatTip.show("test---callStaticMethod return ----- " + e);
-}
-} else AppLog.warn("Browser call Function [wxLogin]");
+Global.isNative() ? this.callPlatformApi("wxLogin", "()V") : AppLog.warn("Browser call Function [wxLogin]");
 },
 consumeOwnedPurchase: function(e) {
 Global.isNative() ? this.callPlatformApiWX("consumeOwnedPurchase", "(Ljava/lang/String;)V", e) : AppLog.warn("Browser call Function [installWXApp]");
@@ -8588,6 +8583,9 @@ this._wechat_login = this.node.getChildByName("wechat_login");
 Global.btnClickEvent(this._wechat_login, this.onWeChatLogin, this);
 var i = this.node.getChildByName("phone_login");
 Global.btnClickEvent(i, this.onPhoneLogin, this);
+cc.vv.wxLoginResult = function(e) {
+cc.vv.FloatTip.show("test---wxLoginResult " + e);
+};
 },
 onPhoneLogin: function() {},
 onWeChatLogin: function() {
@@ -8595,9 +8593,6 @@ cc.vv.GameManager.checkIsPhone(!1);
 var e = a("WxMgr");
 e.init();
 cc.vv.WxMgr = e;
-cc.vv.wxLoginResult = function(e) {
-cc.vv.FloatTip.show("test---wxLoginResult " + e);
-};
 cc.vv.WxMgr.wxLogin(function(e) {
 cc.vv.FloatTip.show("test---loginSyncCall");
 cc.log("微信===  data： " + JSON.stringify(e));

@@ -64,6 +64,10 @@ cc.Class({
         // facebook登录
         let phone_login = this.node.getChildByName("phone_login");
         Global.btnClickEvent(phone_login,this.onPhoneLogin,this);
+
+        cc.vv.wxLoginResult = function (code) {
+            cc.vv.FloatTip.show("test---wxLoginResult " + code);
+        }
     },
 
     onPhoneLogin(){
@@ -94,13 +98,9 @@ cc.Class({
                     cc.vv.FloatTip.show('微信授权失败！')
                 }
             }
-            cc.vv.wxLoginResult = function (data) {
-                cc.vv.FloatTip.show("test---wxLoginResult "+data);
-            }
             cc.vv.WxMgr.wxLogin(loginSyncCall)
         }
     },
-
 
     // 游客登录
     onVisitorLogin(){

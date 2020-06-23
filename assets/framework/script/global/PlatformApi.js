@@ -272,12 +272,7 @@ cc.Class({
         //微信登录
         wxLogin:function(){
             if(Global.isNative()){
-                // this.callPlatformApi('wxLogin','()V')
-                if (Global.isAndroid()) {
-                    var resturnInt = jsb.reflection.callStaticMethod(this._AND_CLASS_NAME,"wxLogin",'()I');
-                     cc.vv.FloatTip.show("test---callStaticMethod return ----- " + resturnInt);
-                    // cc.vv.FloatTip.show("test---callPlatformApi ----- ");    //显示
-                }
+                this.callPlatformApi('wxLogin','()V')
             }
             else{
                 AppLog.warn('Browser call Function [wxLogin]');
