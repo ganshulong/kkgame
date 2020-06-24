@@ -713,7 +713,7 @@ var _initSys = function () {
     sys.now = function () {
         return Date.now();
     };
-
+	
     // JS to Native bridges
     if(window.JavascriptJavaBridge && cc.sys.os == cc.sys.OS_ANDROID){
         jsb.reflection = new JavascriptJavaBridge();

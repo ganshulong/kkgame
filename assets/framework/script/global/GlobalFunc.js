@@ -3,8 +3,8 @@
 */
 
 var GlobalFunc = require('GlobalVar');
-GlobalFunc.designSize = cc.size(1280,720);
-GlobalFunc.centerPos = cc.v2(640,360);
+GlobalFunc.designSize = cc.size(1280, 720);
+GlobalFunc.centerPos = cc.v2(640, 360);
 GlobalFunc.shake = false;
 
 /*
@@ -29,16 +29,16 @@ let headPic = {
 
 // 获取默认头像索引
 GlobalFunc.getHeadId = function (id) {
-    id = id%10;
+    id = id % 10;
     return headPic[id];
 }
 
 
-GlobalFunc.setHead = function(head,url){
-    if(cc.js.isString(url)){
+GlobalFunc.setHead = function (head, url) {
+    if (cc.js.isString(url)) {
         let index = url.indexOf("http");
-        if(index>=0){
-            head.getComponent("ImageLoader").setUserHeadUrl(url,(spr)=>{
+        if (index >= 0) {
+            head.getComponent("ImageLoader").setUserHeadUrl(url, (spr) => {
                 head.getComponent(cc.Sprite).spriteFrame = spr;
             });
         }
@@ -46,41 +46,40 @@ GlobalFunc.setHead = function(head,url){
 },
 // 设置是否震动
 // 设置 true false
-GlobalFunc.setShake = function(value){
-    GlobalFunc.shake = value;
-    cc.sys.localStorage.setItem("shake",value);
-    Global.dispatchEvent(EventId.SET_SHAKE,value);
-}
+    GlobalFunc.setShake = function (value) {
+        GlobalFunc.shake = value;
+        cc.sys.localStorage.setItem("shake", value);
+        Global.dispatchEvent(EventId.SET_SHAKE, value);
+    }
 
 // 获取当前震动值
 // 返回ture false
-GlobalFunc.getShake = function(value){
+GlobalFunc.getShake = function (value) {
     return GlobalFunc.shake;
 }
 /*
 ** 是否是Adnroid
 */
 GlobalFunc.isAndroid = function () {
-	return cc.sys.os == cc.sys.OS_ANDROID;
+    return cc.sys.os == cc.sys.OS_ANDROID;
 }
 
 /*
 ** 是否是IOS 
 */
 GlobalFunc.isIOS = function () {
-	return cc.sys.os == cc.sys.OS_IOS;
+    return cc.sys.os == cc.sys.OS_IOS;
 }
 
 /*
 ** 是否是IOS审核版本
 */
 GlobalFunc.isIOSReview = function () {
-	if (!GlobalFunc.isIOS()) {
+    if (!GlobalFunc.isIOS()) {
         return false;
-	}
-	else {
-		return Global.isReview;
-	}
+    } else {
+        return Global.isReview;
+    }
 }
 
 /*
@@ -95,55 +94,55 @@ GlobalFunc.getDeviceId = function () {
 ** 再次封装，主要是打印
 */
 GlobalFunc.emit = function (node, eventId, dic) {
-	if (node) {
-		node.emit(eventId, dic);
-		if (Global.localVersion) {
-			dic.eventId = eventId;
-			cc.log('emit', JSON.stringify(dic));
-		}
-	}
+    if (node) {
+        node.emit(eventId, dic);
+        if (Global.localVersion) {
+            dic.eventId = eventId;
+            cc.log('emit', JSON.stringify(dic));
+        }
+    }
 }
 
 /*
 ** 注册事件监听
 */
 GlobalFunc.on = function (node, eventId, func, target) {
-	if (node) {
-		node.on(eventId, func, target);
-		if (Global.localVersion) {
-			cc.log('node(' + node.getName() + ') on ' + 'eventId(' + eventId + ')');
-		}
-	}
+    if (node) {
+        node.on(eventId, func, target);
+        if (Global.localVersion) {
+            cc.log('node(' + node.getName() + ') on ' + 'eventId(' + eventId + ')');
+        }
+    }
 }
 
 /*
 ** 注销事件监听
 */
 GlobalFunc.off = function (node, eventId, func, target) {
-	if (node) {
-		node.off(eventId, func, target);
-		if (Global.localVersion) {
-			cc.log('node(' + node.getName() + ') off ' + 'eventId(' + eventId + ')');
-		}
-	}
+    if (node) {
+        node.off(eventId, func, target);
+        if (Global.localVersion) {
+            cc.log('node(' + node.getName() + ') off ' + 'eventId(' + eventId + ')');
+        }
+    }
 }
 
 /*
 ** retain对象(未开启长期持有C++底层对象时)
 */
 GlobalFunc.retain = function (obj) {
-	if (!cc.sys.ENABLE_GC_FOR_NATIVE_OBJECTS) {
-		obj.retain();
-	}
+    if (!cc.sys.ENABLE_GC_FOR_NATIVE_OBJECTS) {
+        obj.retain();
+    }
 }
 
 /*
 ** release对象(未开启长期持有C++底层对象时)
-*/ 
+*/
 GlobalFunc.release = function (obj) {
-	if (obj && !cc.sys.ENABLE_GC_FOR_NATIVE_OBJECTS) {
-		obj.release();
-	}
+    if (obj && !cc.sys.ENABLE_GC_FOR_NATIVE_OBJECTS) {
+        obj.release();
+    }
 }
 
 /*
@@ -152,14 +151,14 @@ GlobalFunc.release = function (obj) {
 ** 方便下一个场景可以通过这个节点访问数据
 */
 GlobalFunc.addPersistNode = function (node) {
-	cc.game.addPersistRootNode(node);
+    cc.game.addPersistRootNode(node);
 }
 
 /*
 ** 移除常驻节点
-*/ 
+*/
 GlobalFunc.removePersistNode = function (node) {
-	cc.game.removePersistRootNode(node)
+    cc.game.removePersistRootNode(node)
 }
 
 /*
@@ -180,10 +179,10 @@ GlobalFunc.getLocal = function (key, defaultStr) {
     //var str = cc.sys.localStorage.getItem(key);
     var str = cc.sys.localStorage.getItem(Global.compile(key));
     if (str) str = Global.uncompile(str);
-	if (!str || str.length <= 0) {
-		str = defaultStr
-	}
-	return str;
+    if (!str || str.length <= 0) {
+        str = defaultStr
+    }
+    return str;
 }
 
 /*
@@ -199,9 +198,9 @@ GlobalFunc.deleteLocal = function (key) {
 ** 简单加密字符串
 */
 GlobalFunc.compile = function (code) {
-    var c=String.fromCharCode(code.charCodeAt(0)+code.length);  
-    for(var i=1;i<code.length;i++){  
-        c+=String.fromCharCode(code.charCodeAt(i)+code.charCodeAt(i-1));  
+    var c = String.fromCharCode(code.charCodeAt(0) + code.length);
+    for (var i = 1; i < code.length; i++) {
+        c += String.fromCharCode(code.charCodeAt(i) + code.charCodeAt(i - 1));
     }
     // alert(escape(c));
     c = escape(c);
@@ -212,12 +211,12 @@ GlobalFunc.compile = function (code) {
 ** 简单解密字符串
 */
 GlobalFunc.uncompile = function (code) {
-    code=unescape(code);  
-    var c=String.fromCharCode(code.charCodeAt(0)-code.length);  
-    for(var i=1;i<code.length;i++){  
-        c+=String.fromCharCode(code.charCodeAt(i)-c.charCodeAt(i-1));  
-    }  
-   return c;  
+    code = unescape(code);
+    var c = String.fromCharCode(code.charCodeAt(0) - code.length);
+    for (var i = 1; i < code.length; i++) {
+        c += String.fromCharCode(code.charCodeAt(i) - c.charCodeAt(i - 1));
+    }
+    return c;
 }
 
 
@@ -226,13 +225,13 @@ GlobalFunc.uncompile = function (code) {
 ** 第一个参数必须是函数类型
 */
 GlobalFunc.bindParams = function () {
-	var args = Array.prototype.slice.call(arguments);
-	var func = args.shift();
-	if (typeof(func) != 'function') return;
+    var args = Array.prototype.slice.call(arguments);
+    var func = args.shift();
+    if (typeof (func) != 'function') return;
 
-    return function() {
-      return func.apply(null, args.concat(Array.prototype.slice.call(arguments)));
-  };
+    return function () {
+        return func.apply(null, args.concat(Array.prototype.slice.call(arguments)));
+    };
 }
 
 /*
@@ -241,13 +240,13 @@ GlobalFunc.bindParams = function () {
 ** min期望的最小值
 */
 GlobalFunc.random = function (min, max) {
-	return Math.floor(Math.random()*(max-min+1)+min);
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 /*
 ** 对象 深拷贝
 */
-GlobalFunc.copy = function (obj){
+GlobalFunc.copy = function (obj) {
     var newObj = obj instanceof Array ? [] : {}
     for (var item in obj) {
         if (typeof obj[item] === "object") {
@@ -262,66 +261,65 @@ GlobalFunc.copy = function (obj){
 /*
 ** string转化成Bytes
 */
-GlobalFunc.stringToBytes = function ( str ) {  
-    var ch, re = []; 
-    for (var i = 0; i < str.length; i++ ) { 
+GlobalFunc.stringToBytes = function (str) {
+    var ch, re = [];
+    for (var i = 0; i < str.length; i++) {
         ch = str.charCodeAt(i);  // get char
         var st = [];
-		do {  
-        	st.push( ch & 0xFF );  // push byte to stack  
-        	ch = ch >> 8;          // shift value down by 1 byte  
-    	}
-    	while ( ch );  
-    	// add stack contents to result  
-    	// done because chars have "wrong" endianness
-        re = re.concat( st.reverse() ); 
-    }  
+        do {
+            st.push(ch & 0xFF);  // push byte to stack
+            ch = ch >> 8;          // shift value down by 1 byte
+        }
+        while (ch);
+        // add stack contents to result
+        // done because chars have "wrong" endianness
+        re = re.concat(st.reverse());
+    }
     // return an array of bytes  
-    return re;  
-} 
+    return re;
+}
 
 /*
 ** 转化value=n*256+m为字符串nm
 */
 GlobalFunc.jsToCByShort = function (value) {
-	var low1 = Math.floor(value / 256);
-	var low2 = Math.floor(value % 256);
-	/*var lowByte1 = GlobalFunc.charToByte(low1,low2);
-	var lowByte2 = GlobalFunc.charToByte(low2);*/
-	return String.fromCharCode(low1,low2);
+    var low1 = Math.floor(value / 256);
+    var low2 = Math.floor(value % 256);
+    /*var lowByte1 = GlobalFunc.charToByte(low1,low2);
+    var lowByte2 = GlobalFunc.charToByte(low2);*/
+    return String.fromCharCode(low1, low2);
 }
 
 /*
 ** 转化m+n*2^24+k*2^16+l*2^8=为字符串mnkl
 */
 GlobalFunc.jsToCByInt = function (value) {
-	var low1 = Math.floor(value / (256*256*256))
-	var low2 = Math.floor(value / (256*256)) % 256
-	var low3 = Math.floor(value / 256) % 256
-	var low4 = Math.floor(value % 256)
-	/*var lowByte1 = GlobalFunc.charToByte(low1);
-	var lowByte2 = GlobalFunc.charToByte(low2);
-	var lowByte3 = GlobalFunc.charToByte(low3);
-	var lowByte4 = GlobalFunc.charToByte(low4);*/
-	return String.fromCharCode(low1,low2,low3,low4);
+    var low1 = Math.floor(value / (256 * 256 * 256))
+    var low2 = Math.floor(value / (256 * 256)) % 256
+    var low3 = Math.floor(value / 256) % 256
+    var low4 = Math.floor(value % 256)
+    /*var lowByte1 = GlobalFunc.charToByte(low1);
+    var lowByte2 = GlobalFunc.charToByte(low2);
+    var lowByte3 = GlobalFunc.charToByte(low3);
+    var lowByte4 = GlobalFunc.charToByte(low4);*/
+    return String.fromCharCode(low1, low2, low3, low4);
 }
 
 /*
 ** 计算长度
 */
 GlobalFunc.srcSum = function (strData, len) {
-	var sum = 65535;
-	for (var i=0; i < len; i++) {
-		var d = strData[i];
-		sum = sum^d;
-		if ((sum && 1) == 0) {
-			sum = sum / 2;
-		}
-		else {
-			sum = (sum/2)^(0x70B1);
-		}
-	}
-	return sum;
+    var sum = 65535;
+    for (var i = 0; i < len; i++) {
+        var d = strData[i];
+        sum = sum ^ d;
+        if ((sum && 1) == 0) {
+            sum = sum / 2;
+        } else {
+            sum = (sum / 2) ^ (0x70B1);
+        }
+    }
+    return sum;
 }
 
 
@@ -354,7 +352,7 @@ GlobalFunc.convertGPS2GCJ = function (lng, lat) {
         ret += (160.0 * Math.sin(lat / 12.0 * PI) + 320 * Math.sin(lat * PI / 30.0)) * 2.0 / 3.0;
         return ret
     }
-     
+
     function transformlng(lng, lat) {
         var ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
         ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
@@ -372,17 +370,17 @@ GlobalFunc.convertGPS2GCJ = function (lng, lat) {
     //     return {lat:lat, lng:lng}
     // }
     // else {
-        var dlat = transformlat(lng - 105.0, lat - 35.0);
-        var dlng = transformlng(lng - 105.0, lat - 35.0);
-        var radlat = lat / 180.0 * PI;
-        var magic = Math.sin(radlat);
-        magic = 1 - ee * magic * magic;
-        var sqrtmagic = Math.sqrt(magic);
-        dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtmagic) * PI);
-        dlng = (dlng * 180.0) / (a / sqrtmagic * Math.cos(radlat) * PI);
-        var mglat = lat + dlat;
-        var mglng = lng + dlng;
-        return {lat:mglat, lng:mglng};
+    var dlat = transformlat(lng - 105.0, lat - 35.0);
+    var dlng = transformlng(lng - 105.0, lat - 35.0);
+    var radlat = lat / 180.0 * PI;
+    var magic = Math.sin(radlat);
+    magic = 1 - ee * magic * magic;
+    var sqrtmagic = Math.sqrt(magic);
+    dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtmagic) * PI);
+    dlng = (dlng * 180.0) / (a / sqrtmagic * Math.cos(radlat) * PI);
+    var mglat = lat + dlat;
+    var mglng = lng + dlng;
+    return {lat: mglat, lng: mglng};
     // }
 }
 /*
@@ -438,8 +436,7 @@ GlobalFunc.convertGPS2GCJ = function (lat,lng) {
 GlobalFunc.gcj02towgs84 = function (lng, lat) {
     if (out_of_china(lng, lat)) {
         return [lng, lat]
-    }
-    else {
+    } else {
         var dlat = transformlat(lng - 105.0, lat - 35.0);
         var dlng = transformlng(lng - 105.0, lat - 35.0);
         var radlat = lat / 180.0 * PI;
@@ -462,7 +459,7 @@ GlobalFunc.gcj02towgs84 = function (lng, lat) {
 ** @param cb 回调,返回街道地址
 ** [[ {"status":0,"result":{"location":{"lng":111.07259999999997,"lat":26.268391095085833},"formatted_address":"广西壮族自治区桂林市全州县","business":"","addressComponent":{"country":"中国","country_code":0,"province":"广西壮族自治区","city":"桂林市","district":"全州县","town":"","adcode":"450324","street":"","street_number":"","direction":"","distance":""},"pois":[],"roads":[],"poiRegions":[],"sematic_description":"","cityCode":142}} ]]
 */
-GlobalFunc.getAddressDetail = function (lat,lng,cb) {
+GlobalFunc.getAddressDetail = function (lat, lng, cb) {
     //因获取的是高德地图经纬度(火星坐标)，这里需要换算到百度地图的经纬度
     /*var posData = convertGCJ2DB(lat,lng)
     lat = posData.lat;
@@ -496,21 +493,22 @@ GlobalFunc.getAddressDetail = function (lat,lng,cb) {
 ** @description 计算两个经纬度点间的距离
 ** @return 距离（number），千米
 */
-GlobalFunc.getDistanceOfTwoPoint = function (lat1,lng1,lat2,lng2) {
-    AppLog.log(lat1,lng1,lat2,lng2);
+GlobalFunc.getDistanceOfTwoPoint = function (lat1, lng1, lat2, lng2) {
+    AppLog.log(lat1, lng1, lat2, lng2);
 
     //角度转弧度
     var angleToRadian = function (angle) {
-    	return angle*Math.PI/180;
+        return angle * Math.PI / 180;
     }
 
     var radlat1 = angleToRadian(lat1);
-    var radlat2 = angleToRadian(lat2);;
+    var radlat2 = angleToRadian(lat2);
+    ;
     var a = radlat1 - radlat2;
     var b = angleToRadian(lng1) - angleToRadian(lng2);
-    var distance = 2 * Math.asin( Math.sqrt( Math.pow( Math.sin(a/2),2)+ Math.cos(radlat1) * Math.cos(radlat2) * Math.pow( Math.sin(b/2),2)));
+    var distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.pow(Math.sin(b / 2), 2)));
     var earth_radius = 6378.137;
-    distance = distance*earth_radius;
+    distance = distance * earth_radius;
     return Math.abs(distance);
 }
 
@@ -523,27 +521,27 @@ GlobalFunc.getDistanceOfTwoPoint = function (lat1,lng1,lat2,lng2) {
 ** costomunitArr 自定义后缀 ['','W','Y','H']
 */
 GlobalFunc.convertNumToShort = function (num, radix, decimal, costomunitArr) {
-	 var unitArr = ['', '万', '亿', '万亿'];
+    var unitArr = ['', '万', '亿', '万亿'];
     // var unitArr = ['', 'K', 'M', 'B'];
-	var sign = (num != 0)?num/Math.abs(num):1;  //符号
-	num = Math.abs(num);
+    var sign = (num != 0) ? num / Math.abs(num) : 1;  //符号
+    num = Math.abs(num);
 
-	//替换自定义后缀
-	if(costomunitArr){
-		unitArr = costomunitArr
-	}
+    //替换自定义后缀
+    if (costomunitArr) {
+        unitArr = costomunitArr
+    }
 
-	radix = (radix == null)?10000:radix; //默认值  10000万亿
-	decimal = (decimal == null)?1:decimal; //默认值
+    radix = (radix == null) ? 10000 : radix; //默认值  10000万亿
+    decimal = (decimal == null) ? 1 : decimal; //默认值
 
-	var sum = 0;
-	while (num >= radix) {
-		sum ++;
-		num = num/radix;
-	}
-	num = Math.floor(num*Math.pow(10, decimal))/Math.pow(10, decimal);
-	
-	return num*sign + unitArr[sum];	
+    var sum = 0;
+    while (num >= radix) {
+        sum++;
+        num = num / radix;
+    }
+    num = Math.floor(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
+
+    return num * sign + unitArr[sum];
 }
 
 /*
@@ -626,40 +624,33 @@ GlobalFunc.convertNumToChineseNum = function (moneyNum) {
 ** （串，长度，增加....）
 */
 GlobalFunc.subStrOfChinese = function (str, len, hasDot) {
-	var newLength = 0;  
-    var newStr = "";  
-    var chineseRegex = /[^\x00-\xff]/g;  
+    var newLength = 0;
+    var newStr = "";
+    var chineseRegex = /[^\x00-\xff]/g;
     var singleChar = "";
     try {
-        var strLength = str.replace(chineseRegex,"**").length;
-        for(var i = 0;i < strLength;i++)
-        {
+        var strLength = str.replace(chineseRegex, "**").length;
+        for (var i = 0; i < strLength; i++) {
             singleChar = str.charAt(i).toString();
-            if(singleChar.match(chineseRegex) != null)
-            {
+            if (singleChar.match(chineseRegex) != null) {
                 newLength += 2;
-            }
-            else
-            {
+            } else {
                 newLength++;
             }
-            if(newLength > len)
-            {
+            if (newLength > len) {
                 break;
             }
             newStr += singleChar;
         }
 
-        if(hasDot && strLength > len)
-        {
+        if (hasDot && strLength > len) {
             newStr += "..";
         }
-    }
-    catch (e) {
-		return str;
+    } catch (e) {
+        return str;
     }
 
-    return newStr;  
+    return newStr;
 },
 
 //截屏
@@ -668,85 +659,83 @@ GlobalFunc.subStrOfChinese = function (str, len, hasDot) {
 //endCall: 截屏完成的回调会传出目标文件路径
 //cpSize: 截屏大小：如果不是截全屏大小。
 //bHide:有些节点需要隐藏截图后，就只在截图瞬间显示
-GlobalFunc.captureScreen=function(fileName,node,endCall,cpSize,bHide){
-	if(CC_JSB){
-        var oldPos = node.position
-        var doCapSize = Global.designSize
-        if(cpSize){
-            doCapSize = cpSize
-        }
-        if(bHide){
-            node.active = true
-        }
-        
-        var rt = cc.RenderTexture.create(doCapSize.width,doCapSize.height)
-        rt.setVisible(false)
-		rt.begin()
-		node.position = cc.p(Global.designSize.width/2,Global.designSize.height/2); //要加这句，不然会偏移坐标
-		node._sgNode.visit()
-        rt.end()
-        if(bHide){
-            node.active = false
-        }
-        
+    GlobalFunc.captureScreen = function (fileName, node, endCall, cpSize, bHide) {
+        if (CC_JSB) {
+            var oldPos = node.position
+            var doCapSize = Global.designSize
+            if (cpSize) {
+                doCapSize = cpSize
+            }
+            if (bHide) {
+                node.active = true
+            }
 
-		rt.saveToFile(fileName,cc.ImageFormat.PNG,true,function(){
-			cc.log(jsb.fileUtils.getWritablePath())
-			var targetPath = jsb.fileUtils.getWritablePath() + fileName
-			if(endCall){
-                node.position = oldPos
-				endCall(targetPath)
-			}
-		})
-	}
-},
+            var rt = cc.RenderTexture.create(doCapSize.width, doCapSize.height)
+            rt.setVisible(false)
+            rt.begin()
+            node.position = cc.p(Global.designSize.width / 2, Global.designSize.height / 2); //要加这句，不然会偏移坐标
+            node._sgNode.visit()
+            rt.end()
+            if (bHide) {
+                node.active = false
+            }
+
+
+            rt.saveToFile(fileName, cc.ImageFormat.PNG, true, function () {
+                cc.log(jsb.fileUtils.getWritablePath())
+                var targetPath = jsb.fileUtils.getWritablePath() + fileName
+                if (endCall) {
+                    node.position = oldPos
+                    endCall(targetPath)
+                }
+            })
+        }
+    },
 
 //FB链接分享
 //linkUrl:点击跳转的url
 //strContent:文字内容即引文
-GlobalFunc.ShareLink=function(linkUrl,strContent){
-    //fb
-    if( Global.openFacebookLogin && Global.playerData.logintype === Global.LoginType.FB){
-        var shareData = {}
-        shareData.shareType = 1 //链接分享
-        shareData.linkUrl = linkUrl
-        shareData.content = strContent || ""
-        cc.vv.PlatformApiMgr.SdkShare(JSON.stringify(shareData))
-    }
-    else if(Global.openWeChatLogin ) {
-        //微信
-        var title = 'f4娱乐'
-        var content = '喊你一起玩游戏！'
-        if(strContent && strContent.length > 0){
-            content = strContent
-        }
-        var toScene = Global.WX_SHARE_SCENE.Secssion
-        Global.WXShareLink(linkUrl,title,content,toScene)
-    }
-    else{
-        cc.loader.loadRes("prefab/UIShare", function (err, prefab) {
-            var newNode = cc.instantiate(prefab);
-            var script = newNode.getComponent('UIGuestShare')
-            if(script){
-                script.setQRCodeUrl(linkUrl)
+    GlobalFunc.ShareLink = function (linkUrl, strContent) {
+        //fb
+        if (Global.openFacebookLogin && Global.playerData.logintype === Global.LoginType.FB) {
+            var shareData = {}
+            shareData.shareType = 1 //链接分享
+            shareData.linkUrl = linkUrl
+            shareData.content = strContent || ""
+            cc.vv.PlatformApiMgr.SdkShare(JSON.stringify(shareData))
+        } else if (Global.openWeChatLogin) {
+            //微信
+            var title = 'f4娱乐'
+            var content = '喊你一起玩游戏！'
+            if (strContent && strContent.length > 0) {
+                content = strContent
             }
-            newNode.position = Global.centerPos
-            cc.director.getScene().addChild(newNode);
-        });
-    }
+            var toScene = Global.WX_SHARE_SCENE.Secssion
+            Global.WXShareLink(linkUrl, title, content, toScene)
+        } else {
+            cc.loader.loadRes("prefab/UIShare", function (err, prefab) {
+                var newNode = cc.instantiate(prefab);
+                var script = newNode.getComponent('UIGuestShare')
+                if (script) {
+                    script.setQRCodeUrl(linkUrl)
+                }
+                newNode.position = Global.centerPos
+                cc.director.getScene().addChild(newNode);
+            });
+        }
 
-	
-}
+
+    }
 
 GlobalFunc.shareAppWebLink = function (actionId, valueId) {
     actionId = actionId || '0';
     valueId = valueId || '0';
-    var url_linke = Global.share_url + '?appName=ruili.com&actionId=' + actionId +'&valueId=' + valueId;
+    var url_linke = Global.share_url + '?appName=ruili.com&actionId=' + actionId + '&valueId=' + valueId;
     //添加渠道号
     var strChannal = cc.vv.PlatformApiMgr.umChannel()
-    url_linke  = url_linke + "&channel="  + strChannal
-    Global.ShareLink(url_linke,'');
-    
+    url_linke = url_linke + "&channel=" + strChannal
+    Global.ShareLink(url_linke, '');
+
 }
 //==FB分享end
 
@@ -756,81 +745,73 @@ GlobalFunc.shareAppWebLink = function (actionId, valueId) {
 //content:分享内容
 //toScene:分享场景 Global.WX_SHARE_SCENE
 //shareResultCall:分享结果回调
-GlobalFunc.WXShareLink=function(linkUrl,title,content,toScene,shareResultCall){
-	var iconUrl = Global.webShareIcon
-	if(toScene >= 0 && linkUrl && title && content){
-		cc.vv.WxMgr.wxShareWeb(toScene,title,content,iconUrl,linkUrl,shareResultCall)
-	}
+GlobalFunc.WXShareLink = function (linkUrl, title, content, toScene, shareResultCall) {
+    var iconUrl = Global.webShareIcon
+    if (toScene >= 0 && linkUrl && title && content) {
+        cc.vv.WxMgr.wxShareWeb(toScene, title, content, iconUrl, linkUrl, shareResultCall)
+    }
 }
 
 //WX图片分享
 //imgPath 图片地址
 //toScene: 分享场景
-GlobalFunc.WXShareImage=function(imgPath,toScene,shareResultCall){
-	if(toScene >= 0 && imgPath){
-		cc.vv.WxMgr.wxShareImg(toScene,imgPath,shareResultCall)
-	}
+GlobalFunc.WXShareImage = function (imgPath, toScene, shareResultCall) {
+    if (toScene >= 0 && imgPath) {
+        cc.vv.WxMgr.wxShareImg(toScene, imgPath, shareResultCall)
+    }
 }
 
 //是否开启wss 
 //不带端口的时候，就采用https
 //即当是https的时候，websocket也需要用wss
-GlobalFunc.isUserWSS = function(pUrl){
+GlobalFunc.isUserWSS = function (pUrl) {
     var res = false
     let url = Global.loginServerAddress
-    if(pUrl){
+    if (pUrl) {
         url = pUrl
     }
-	if(url.indexOf(':') === -1){
-		res = true
-	}
-	return res
+    if (url.indexOf(':') === -1) {
+        res = true
+    }
+    return res
 }
 
 // 获取房间等级显示的文字
-GlobalFunc.getRoomLevelString = function(level)
-{
+GlobalFunc.getRoomLevelString = function (level) {
     level = level || 0;
-    var roomNames = ['场次名称', '体验场', '初级场','普通场', '高级场','VIP场'];
-	return roomNames[level];
+    var roomNames = ['场次名称', '体验场', '初级场', '普通场', '高级场', 'VIP场'];
+    return roomNames[level];
 }
 
 // 注册事件
-GlobalFunc.registerEvent = function(eventName,func,obj)
-{
+GlobalFunc.registerEvent = function (eventName, func, obj) {
     let canvas = cc.find("Canvas");
-    canvas.on(eventName,func,obj);
+    canvas.on(eventName, func, obj);
 }
 
 // 发送事件
-GlobalFunc.dispatchEvent= function (eventName,data) {
+GlobalFunc.dispatchEvent = function (eventName, data) {
     let canvas = cc.find("Canvas");
-    if(canvas)   canvas.emit(eventName,data);
+    if (canvas) canvas.emit(eventName, data);
 }
 
 // 按钮点击事件
 //soundCfg null 播放默认 有配置则播放配置的。-1表示不播放声音
-GlobalFunc.btnClickEvent = function (btn,func,obj,soundCfg=null) {
-    if(btn == null)
-    {
+GlobalFunc.btnClickEvent = function (btn, func, obj, soundCfg = null) {
+    if (btn == null) {
         return null;
     }
     let temp = func.bind(obj);
-    btn.on("click",(event)=>
-    {
-        let btnCmp =  btn.getComponent(cc.Button);
-        if(btnCmp){
-            if(btnCmp.interactable){
-                if(soundCfg === null || soundCfg === undefined)
-                {
+    btn.on("click", (event) => {
+        let btnCmp = btn.getComponent(cc.Button);
+        if (btnCmp) {
+            if (btnCmp.interactable) {
+                if (soundCfg === null || soundCfg === undefined) {
                     if (cc.vv.gameData === null) Global.playEff(Global.SOUNDS.eff_click);
-                }
-                else if(soundCfg === -1){
+                } else if (soundCfg === -1) {
                     //不播放声音
-                    
-                }
-                else
-                {
+
+                } else {
                     cc.vv.AudioManager.playEff(soundCfg.path, soundCfg.filename, soundCfg.common);
                 }
             }
@@ -841,20 +822,19 @@ GlobalFunc.btnClickEvent = function (btn,func,obj,soundCfg=null) {
 }
 
 // 按钮点击事件, 不需要默认音效版本，如樱桃的爱，伟大的蓝色，func 中 自己单独播放 同一个按键不同的音效
-GlobalFunc.btnClickEventNoDefaultSound = function (btn,func,obj) {
-    if(btn == null)
-    {
+GlobalFunc.btnClickEventNoDefaultSound = function (btn, func, obj) {
+    if (btn == null) {
         return null;
     }
-    btn.on("click",func,obj);
+    btn.on("click", func, obj);
     return btn;
 }
 
 // 数字转换逗号分隔符
-GlobalFunc.FormatNumToComma = function (num){
-    var res=num.toString().replace(/\d+/, function(n){ // 先提取整数部分
-        return n.replace(/(\d)(?=(\d{3})+$)/g,function($1){
-            return $1+",";
+GlobalFunc.FormatNumToComma = function (num) {
+    var res = num.toString().replace(/\d+/, function (n) { // 先提取整数部分
+        return n.replace(/(\d)(?=(\d{3})+$)/g, function ($1) {
+            return $1 + ",";
         });
     })
     return num;
@@ -866,11 +846,10 @@ GlobalFunc.FormatCommaNumToNum = function (numStr) {
 }
 
 // 查找toggle选中
-GlobalFunc.checkToggleIsSelect = function(toggleParent)
-{
-    for(let i = 0;i<toggleParent.childrenCount;++i){
+GlobalFunc.checkToggleIsSelect = function (toggleParent) {
+    for (let i = 0; i < toggleParent.childrenCount; ++i) {
         let t = toggleParent.children[i].getComponent(cc.Toggle);
-        if(t.isChecked){
+        if (t.isChecked) {
             return t.node;
         }
     }
@@ -878,23 +857,21 @@ GlobalFunc.checkToggleIsSelect = function(toggleParent)
 }
 
 // 设置选中的toggle
-GlobalFunc.setToggleSecelct = function(toggleParent,toggleName) {
-    for(let i = 0;i<toggleParent.childrenCount;++i){
+GlobalFunc.setToggleSecelct = function (toggleParent, toggleName) {
+    for (let i = 0; i < toggleParent.childrenCount; ++i) {
 
         let t = toggleParent.children[i].getComponent(cc.Toggle);
-        if(toggleParent.children[i].name == toggleName){
+        if (toggleParent.children[i].name == toggleName) {
 
             t.isChecked = true;
-        }
-        else
-        {
+        } else {
             t.isChecked = false;
         }
     }
 }
 
 //自动适配设备
-GlobalFunc.autoAdaptDevices = function (isShowAll=true) {
+GlobalFunc.autoAdaptDevices = function (isShowAll = true) {
     //
     var canvasNode = cc.find('Canvas');
     var canvas = canvasNode.getComponent(cc.Canvas);
@@ -906,11 +883,10 @@ GlobalFunc.autoAdaptDevices = function (isShowAll=true) {
     var frameHeight = canvasNode.height;
     var designWidth = canvas.designResolution.width;
     var designHeight = canvas.designResolution.height;
-    if ((frameWidth/frameHeight) < (designWidth/designHeight)) { //按照宽来适配
+    if ((frameWidth / frameHeight) < (designWidth / designHeight)) { //按照宽来适配
         canvas.fitWidth = true;
         canvas.fitHeight = false;
-    }
-    else { //按照高来适配
+    } else { //按照高来适配
         canvas.fitWidth = false;
         canvas.fitHeight = true;
     }
@@ -920,37 +896,36 @@ GlobalFunc.autoAdaptDevices = function (isShowAll=true) {
     // }
     //
     // //适配iPhoneX的刘海
-     Global.setAdaptIphoneX();
+    Global.setAdaptIphoneX();
 }
 
-GlobalFunc.clickService = function(){
+GlobalFunc.clickService = function () {
     cc.sys.openURL("https://mapped.vorsco.com/talk/chatClient/chatbox.jsp?companyID=631049927&configID=1490&jid=7922767770&s=1");
 },
 
 // 适配iphoneX
-GlobalFunc.setAdaptIphoneX = function()
-{
-    var nameStr = 'safe_node';
-    var canvas = cc.find("Canvas").getComponent(cc.Canvas);
-    let safe_node = canvas.node.getChildByName(nameStr);
-    if(safe_node) {
-        let widget = safe_node.getComponent(cc.Widget);
-        if(widget){
-            widget.top = 0;
-            widget.bottom = 0;
-            widget.left = 0;
-            widget.right = 0;
+    GlobalFunc.setAdaptIphoneX = function () {
+        var nameStr = 'safe_node';
+        var canvas = cc.find("Canvas").getComponent(cc.Canvas);
+        let safe_node = canvas.node.getChildByName(nameStr);
+        if (safe_node) {
+            let widget = safe_node.getComponent(cc.Widget);
+            if (widget) {
+                widget.top = 0;
+                widget.bottom = 0;
+                widget.left = 0;
+                widget.right = 0;
+            }
         }
+
     }
 
-}
-
-GlobalFunc.getStrBLen = function(str) {
+GlobalFunc.getStrBLen = function (str) {
     if (str == null) return 0;
-    if (typeof str != "string"){
+    if (typeof str != "string") {
         str += "";
     }
-    return str.replace(/[^\x00-\xff]/g,"ab").length;
+    return str.replace(/[^\x00-\xff]/g, "ab").length;
 }
 
 /*
@@ -977,33 +952,32 @@ GlobalFunc.checkIpAndGps = function (playersList, toPlayer) {
 
     if (!toPlayer) {
         //先检测是否IP相同
-        for (var i=0; i < playersList.length - 1; i++) {
+        for (var i = 0; i < playersList.length - 1; i++) {
             if (!playersList[i]) continue;
-            for (var j=i+1; j < playersList.length; j++) {
+            for (var j = i + 1; j < playersList.length; j++) {
                 if (!playersList[j]) continue;
                 if (isSameIp(playersList[i], playersList[j])) return true;
             }
         }
 
         //再检测GPS是否过近
-        for (var i=0; i < playersList.length - 1; i++) {
+        for (var i = 0; i < playersList.length - 1; i++) {
             if (!playersList[i]) continue;
-            for (var j=i+1; j < playersList.length; j++) {
+            for (var j = i + 1; j < playersList.length; j++) {
                 if (!playersList[j]) continue;
                 if (isNearlyDistance(playersList[i], playersList[j])) return true;
             }
         }
-    }
-    else {
+    } else {
         //先检测是否IP相同
-        for (var i=0; i < playersList.length; i++) {
+        for (var i = 0; i < playersList.length; i++) {
             if (!playersList[i]) continue;
             if (playersList[i].uid == toPlayer.uid) continue;
             if (isSameIp(playersList[i], toPlayer)) return true;
         }
 
         //再检测GPS是否过近
-        for (var i=0; i < playersList.length; i++) {
+        for (var i = 0; i < playersList.length; i++) {
             if (!playersList[i]) continue;
             if (playersList[i].uid == toPlayer.uid) continue;
             if (isNearlyDistance(playersList[i], toPlayer)) return true;
@@ -1015,76 +989,62 @@ GlobalFunc.checkIpAndGps = function (playersList, toPlayer) {
 //urlData:数据链接
 //node:显示二维码预制节点
 //bShowIcon:是否显示游戏icon
-GlobalFunc.showQRCode = function(urlData,node,bShowIcon){
-    if(node){
+GlobalFunc.showQRCode = function (urlData, node, bShowIcon) {
+    if (node) {
         var script = node.getComponent('showQRcode')
-        if(script){
-            script.showQRCode(urlData,bShowIcon)
+        if (script) {
+            script.showQRCode(urlData, bShowIcon)
         }
     }
-    
+
 }
 
-GlobalFunc.moveMenu = function(isDown,meunNode) // 移动菜单栏
+GlobalFunc.moveMenu = function (isDown, meunNode) // 移动菜单栏
 {
     meunNode.getComponent(cc.Button).interactable = false;
-    let startPos = isDown? cc.v2(0,meunNode.height):cc.v2(0,0);
-    let endPos = isDown? cc.v2(0,0):cc.v2(0,meunNode.height);
+    let startPos = isDown ? cc.v2(0, meunNode.height) : cc.v2(0, 0);
+    let endPos = isDown ? cc.v2(0, 0) : cc.v2(0, meunNode.height);
     meunNode.position = startPos;
-    meunNode.opacity = isDown ? 0:255;
+    meunNode.opacity = isDown ? 0 : 255;
     meunNode.active = true;
     let delaytime = 0.3;
-    meunNode.runAction(cc.sequence(cc.spawn(cc.moveTo(delaytime,endPos),cc.fadeTo(delaytime,isDown?255:0)),cc.callFunc(()=>
-    {
+    meunNode.runAction(cc.sequence(cc.spawn(cc.moveTo(delaytime, endPos), cc.fadeTo(delaytime, isDown ? 255 : 0)), cc.callFunc(() => {
         meunNode.getComponent(cc.Button).interactable = true;
     })));
 }
 
 // 弹出动画显示
-GlobalFunc.showAlertAction = function(node,isShow,startScale,endScale,callback)
-{
+GlobalFunc.showAlertAction = function (node, isShow, startScale, endScale, callback) {
     let start_Scale = startScale;
     let end_Scale = endScale;
-    if(isShow)
-    {
-        if(start_Scale == null)
-        {
+    if (isShow) {
+        if (start_Scale == null) {
             node.scale = 0;
-        }else {
+        } else {
             node.scale = start_Scale;
         }
 
-        if(end_Scale == null)
-        {
+        if (end_Scale == null) {
             end_Scale = 1;
         }
-    }
-    else
-    {
-        if(start_Scale == null)
-        {
+    } else {
+        if (start_Scale == null) {
             node.scale = 1;
         }
 
-        if(end_Scale == null)
-        {
+        if (end_Scale == null) {
             end_Scale = 0;
         }
     }
-    let action = cc.scaleTo(0.2,end_Scale);
-    if(isShow)
-    {
+    let action = cc.scaleTo(0.2, end_Scale);
+    if (isShow) {
         action.easing(cc.easeBackOut());
-    }
-    else
-    {
+    } else {
         action.easing(cc.easeSineIn());
     }
 
-    node.runAction(cc.sequence(action,cc.callFunc(function()
-    {
-        if(callback)
-        {
+    node.runAction(cc.sequence(action, cc.callFunc(function () {
+        if (callback) {
             callback();
         }
 
@@ -1101,48 +1061,47 @@ GlobalFunc.showAlertAction = function(node,isShow,startScale,endScale,callback)
 //strConn前缀和数字之间的连接字符可空
 //beginDif:开始图片的起始下标，默认1开始
 //return: 返回的节点需要自己删除
-GlobalFunc.createrSpriteAni=function(atlas,preSufix,nNum,speed,bLoop,endCall,strConn,beginDif,addZero){
+GlobalFunc.createrSpriteAni = function (atlas, preSufix, nNum, speed, bLoop, endCall, strConn, beginDif, addZero) {
     var self = this
     //创建一个空节点
     var newNode = new cc.Node('node_eff')
     var sp = newNode.addComponent(cc.Sprite)
 
-    self.addSpriteAni(newNode,atlas,preSufix,nNum,speed,bLoop,endCall,strConn,beginDif,addZero)
-    
+    self.addSpriteAni(newNode, atlas, preSufix, nNum, speed, bLoop, endCall, strConn, beginDif, addZero)
+
     return newNode
 }
 
 // 时间戳转换成具体时间
-GlobalFunc.getLocalTime = (timestamp,splitStr='/')=> {
+GlobalFunc.getLocalTime = (timestamp, splitStr = '/') => {
     var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
     var Y = date.getFullYear() + splitStr;
-    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + splitStr;
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + splitStr;
     var D = date.getDate();
-    if(D<10) D = "0"+D;
+    if (D < 10) D = "0" + D;
     D = D + ' ';
     var h = date.getHours();
-    if(h<10) h = "0"+h;
-    h = h+":"
+    if (h < 10) h = "0" + h;
+    h = h + ":"
     var m = date.getMinutes();
-    if(m<10) m = "0"+m;
-    m = m+":"
+    if (m < 10) m = "0" + m;
+    m = m + ":"
     var s = date.getSeconds();
-    if(s<10) s = "0"+s;
-    return Y+M+D+h+m+s;
+    if (s < 10) s = "0" + s;
+    return Y + M + D + h + m + s;
 },
 
 // 设置玩家名字
 // @param isSubstr 是否截取
-GlobalFunc.showName = function(name,isSubstr){
+GlobalFunc.showName = function (name, isSubstr) {
     let str = name;
     // 全部都是数字
-    if(Global.checkNum(name)&&name.length===11){
-        str = name.substr(0,3);
+    if (Global.checkNum(name) && name.length === 11) {
+        str = name.substr(0, 3);
         str += "******";
-        str += name.substr(9,name.length);
-    }
-    else{
-        if(isSubstr){
+        str += name.substr(9, name.length);
+    } else {
+        if (isSubstr) {
             str = Global.subStrOfChinese(name, 10, true);
         }
     }
@@ -1150,87 +1109,83 @@ GlobalFunc.showName = function(name,isSubstr){
 }
 
 //判断字符串是否为数字 ，判断正整数用/^[1-9]+[0-9]*]*$/
-GlobalFunc.checkNum =function(str){
+GlobalFunc.checkNum = function (str) {
 
-    var reg=/^[0-9]+.?[0-9]*$/;
+    var reg = /^[0-9]+.?[0-9]*$/;
 
-    if(!reg.test(str)){
+    if (!reg.test(str)) {
         return false;
-    }
-    else return true;
+    } else return true;
 
 },
 
 //给节点添加帧动画组件
-GlobalFunc.addSpriteAni=function(newNode,atlas,preSufix,nNum,speed,bLoop,endCall,strConn,beginDif,addZero){
-    var self = this
-    if(!beginDif) beginDif = 1
-    if(addZero == null ){
-        addZero = true
-    }
-    // 是否需要补零
-    var getZeroize=function(num,isZeroize)
-    {
-        if(isZeroize)
-        {
-            let str = num<10?("0"+num):num;
-            return str;
+    GlobalFunc.addSpriteAni = function (newNode, atlas, preSufix, nNum, speed, bLoop, endCall, strConn, beginDif, addZero) {
+        var self = this
+        if (!beginDif) beginDif = 1
+        if (addZero == null) {
+            addZero = true
         }
-        else{
-            return num;
+        // 是否需要补零
+        var getZeroize = function (num, isZeroize) {
+            if (isZeroize) {
+                let str = num < 10 ? ("0" + num) : num;
+                return str;
+            } else {
+                return num;
+            }
+
         }
 
-    }
+        var lists = []
+        for (var i = 0; i < nNum; i++) {
+            var key = preSufix + getZeroize(i + beginDif, addZero)
+            if (strConn) {
+                key = preSufix + strConn + getZeroize(i + beginDif, addZero)
+            }
 
-    var lists = []
-    for(var i = 0;i < nNum; i++){
-        var key = preSufix + getZeroize(i+beginDif,addZero)
-        if(strConn){
-            key = preSufix + strConn + getZeroize(i+beginDif,addZero)
+            if (atlas._spriteFrames[key]) {
+                lists.push(atlas._spriteFrames[key])
+            }
+
         }
-        
-        if(atlas._spriteFrames[key]){
-            lists.push(atlas._spriteFrames[key])
+
+        var ani = newNode.addComponent(cc.Animation)
+        var clip = cc.AnimationClip.createWithSpriteFrames(lists, 30)
+        let finishEvent = 'finished'
+        if (bLoop) {
+            clip.wrapMode = cc.WrapMode.Loop
+            finishEvent = 'lastframe'
         }
-        
-    }
-    
-    var ani = newNode.addComponent(cc.Animation)
-    var clip = cc.AnimationClip.createWithSpriteFrames(lists,30)
-    let finishEvent = 'finished'
-    if(bLoop){
-        clip.wrapMode = cc.WrapMode.Loop
-        finishEvent = 'lastframe'
-    }
-    
-    clip.speed = speed
-    ani.addClip(clip,preSufix)
-    var finishCall = function(){
-        ani.off(finishEvent,finishCall)
-        if(endCall){
-           endCall()
+
+        clip.speed = speed
+        ani.addClip(clip, preSufix)
+        var finishCall = function () {
+            ani.off(finishEvent, finishCall)
+            if (endCall) {
+                endCall()
+            }
         }
+        ani.on(finishEvent, finishCall) //不循环的
+        ani.play(preSufix)
     }
-    ani.on(finishEvent,finishCall) //不循环的
-    ani.play(preSufix)
-}
 
 //空对象判断
-GlobalFunc.isEmptyObject = function(obj) {   
-    for (var key in obj){
-    　　return false;
-    }　　
+GlobalFunc.isEmptyObject = function (obj) {
+    for (var key in obj) {
+        return false;
+    }
     return true;
 }
 
 
 //获取设备信息
 //用于后台上报
-GlobalFunc.getDeviceInfo = function(){
-    let info = {osValue:'web'}
-    if(cc.sys.isNative){
+GlobalFunc.getDeviceInfo = function () {
+    let info = {osValue: 'web'}
+    if (cc.sys.isNative) {
         //分辨率
-        info.frameSize  = cc.view.getFrameSize()
+        info.frameSize = cc.view.getFrameSize()
         //系统:ios android
         info.osValue = cc.sys.os
         //手机型号 android:手机品牌_手机型号(小米_xiaomi)  ios:iphne6_ios12
@@ -1246,10 +1201,10 @@ GlobalFunc.getDeviceInfo = function(){
 
 //对节点缩放适配
 //node cc.Node 类型
-Global.setNodeScaleFixWin=function(node){
+Global.setNodeScaleFixWin = function (node) {
     var winSize = cc.director.getWinSize()
-    node.scaleX = winSize.width/node.width
-    node.scaleY = winSize.height/node.height
+    node.scaleX = winSize.width / node.width
+    node.scaleY = winSize.height / node.height
 }
 
 //对节点缩放适配, 节点的width和height，可以不是 设计分辨率
@@ -1260,7 +1215,7 @@ Global.setNodeScaleWithDesignSize = function (node) {
 }
 
 // 剔除重复元素
-Global.unique5 = function(arr){
+Global.unique5 = function (arr) {
     var x = new Set(arr);
     return [...x];
 }
@@ -1270,7 +1225,7 @@ Global.unique5 = function(arr){
 //@param offset 摇晃的幅度(默认16)
 //@param time: 摇晃的时间(默认1s)
 //@param originPos: 摇晃结束后回到的位置
-Global.shakeNode = function(node, offset, time, originPos) {
+Global.shakeNode = function (node, offset, time, originPos) {
     offset = offset || 16;
     time = time || 1.0;
     let duration = 0.04;
@@ -1287,7 +1242,7 @@ Global.shakeNode = function(node, offset, time, originPos) {
     let moveDown = cc.moveBy(duration, cc.p(0, -offset));
     let moveDReset = cc.moveBy(duration, cc.p(0, offset));
     let verSeq = cc.sequence(moveUp, moveUReset, moveDown, moveDReset);
-    node.runAction(cc.sequence(cc.scaleTo(duration,1.025), cc.repeat(cc.spawn(horSeq, verSeq), times), cc.scaleTo(duration,1), cc.callFunc(()=>{
+    node.runAction(cc.sequence(cc.scaleTo(duration, 1.025), cc.repeat(cc.spawn(horSeq, verSeq), times), cc.scaleTo(duration, 1), cc.callFunc(() => {
         if (originPos) {
             node.setPosition(originPos);
         }
@@ -1311,7 +1266,7 @@ Global.showAd = function () {
 }
 
 Global.getShortList = function () {
-    return  [
+    return [
         '快点吧,我等的花都谢了',
         '你的牌打的太好了',
         '打一个来碰呀',
@@ -1325,7 +1280,76 @@ Global.getShortList = function () {
 }
 
 Global.getEmjoList = function () {
-    return [1,2,3,4,5,6,7,8,9,10,11,12];
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 }
 
+///////////////////微信登录相关的SDK
+//判断用户是否安装了微信客户端
+Global.isWXAppInstalled = function () {
+    if (GlobalFunc.isAndroid()) {
+        let className = "org/cocos2dx/javascript/AppActivity"
+        let result = false;
+        result = jsb.reflection.callStaticMethod(className, "isWXAppInstalled", "()Z");
+        return result;
+    }
+    else if (GlobalFunc.isIOS()) {
+
+        //暂时返回false
+        return false;
+    }else {
+        return false;
+    }
+}
+
+//设置微信SDK的appid 和 APP_SECRET, 返回注册app到微信是否成功
+Global.setAppidWithAppsecretForJS = function (app_id, app_sceret) {
+    if (GlobalFunc.isAndroid()) {
+        let className = "org/cocos2dx/javascript/AppActivity"
+        let result = false;
+        result = jsb.reflection.callStaticMethod(className, "setAppidWithAppsecretForJS", "(Ljava/lang/String;Ljava/lang/String;)Z", app_id, app_sceret );
+        return result;
+    }
+    else if (GlobalFunc.isIOS()) {
+
+    }else {
+    }
+}
+
+Global.wxRequestCallBack = null;
+Global.wxRequestCallBackTarget = null;
+Global.wxCode = "";
+//设置微信授权之后的回调函数
+Global.setWXRequestCallBack = function (callback, target) {
+    Global.wxRequestCallBack = callback;
+    Global.wxRequestCallBackTarget = target;
+}
+
+//JAVA/OC端调用此函数，返回JS层code值
+Global.WXCode = function (code) {
+    Global.wxCode = code;
+    Global.wxRequestCallBack.call(Global.wxRequestCallBackTarget, code);
+}
+
+//拉起微信客户端
+Global.onWxAuthorize = function (callback, target) {
+    // if (callback &&  typeof (callback)=== 'function')
+    Global.wxRequestCallBack = callback;
+    Global.wxRequestCallBackTarget = target;
+
+    if (!Global.wxRequestCallBack) {
+        cc.warn("请先设置微信相应的回调");
+        return;
+    }
+
+    if (GlobalFunc.isAndroid()) {
+        let className = "org/cocos2dx/javascript/AppActivity"
+        let result = false;
+        result = jsb.reflection.callStaticMethod(className, "onWxAuthorize", "()Z");
+        return result;
+    }
+    else if (GlobalFunc.isIOS()) {
+
+    }else {
+    }
+}
 

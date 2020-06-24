@@ -2114,11 +2114,15 @@ if (t) for (var n = 0; n < t.length; n++) if (t[n].id == e) return 1 == t[n].sta
 return !0;
 },
 onRcvMsgLogin: function(e) {
+cc.log("@@@@@@@@ " + JSON.stringify(e));
+cc.warn("@@@@@@@@ " + JSON.stringify(e));
 if (200 === e.code) {
 var t = e.net, n = e.uid, i = e.server, a = e.subid, o = e.token;
 Global.openid = e.openid;
 cc.sys.localStorage.setItem("account", e.account);
 cc.sys.localStorage.setItem("passwd", e.passwd);
+var r = e.openid;
+r && 0 < r.length && cc.sys.localStorage.setItem("openid", r);
 cc.vv.UserManager.initLoginServer(e);
 cc.vv.NetManager.close();
 cc.vv.NetManager.connect(t, function() {
@@ -2897,6 +2901,39 @@ return [ "快点吧,我等的花都谢了", "你的牌打的太好了", "打一�
 };
 Global.getEmjoList = function() {
 return [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
+};
+Global.isWXAppInstalled = function() {
+if (o.isAndroid()) {
+return jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "isWXAppInstalled", "()Z");
+}
+return o.isIOS(), !1;
+};
+Global.setAppidWithAppsecretForJS = function(e, t) {
+if (o.isAndroid()) {
+return jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "setAppidWithAppsecretForJS", "(Ljava/lang/String;Ljava/lang/String;)Z", e, t);
+}
+o.isIOS();
+};
+Global.wxRequestCallBack = null;
+Global.wxRequestCallBackTarget = null;
+Global.wxCode = "";
+Global.setWXRequestCallBack = function(e, t) {
+Global.wxRequestCallBack = e;
+Global.wxRequestCallBackTarget = t;
+};
+Global.WXCode = function(e) {
+Global.wxCode = e;
+Global.wxRequestCallBack.call(Global.wxRequestCallBackTarget, e);
+};
+Global.onWxAuthorize = function(e, t) {
+Global.wxRequestCallBack = e;
+Global.wxRequestCallBackTarget = t;
+if (Global.wxRequestCallBack) {
+if (o.isAndroid()) {
+return jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "onWxAuthorize", "()Z");
+}
+o.isIOS();
+} else cc.warn("请先设置微信相应的回调");
 };
 cc._RF.pop();
 }, {
@@ -6576,7 +6613,7 @@ statics: {
 _callbackDic: null,
 _cbDataList: null,
 _IOS_CLASS_NAME: "PlatformIosApi",
-_AND_CLASS_NAME: "org/cocos2dx/javascript/AppActivity",
+_AND_CLASS_NAME: "org/cocos2dx/javascript/PlatformAndroidApi",
 init: function() {
 setInterval(this.update.bind(this), 100);
 },
@@ -6672,7 +6709,7 @@ wxLogin: function() {
 Global.isNative() ? this.callPlatformApi("wxLogin", "()V") : AppLog.warn("Browser call Function [wxLogin]");
 },
 consumeOwnedPurchase: function(e) {
-Global.isNative() ? this.callPlatformApiWX("consumeOwnedPurchase", "(Ljava/lang/String;)V", e) : AppLog.warn("Browser call Function [installWXApp]");
+Global.isNative() ? this.callPlatformApi("consumeOwnedPurchase", "(Ljava/lang/String;)V", e) : AppLog.warn("Browser call Function [installWXApp]");
 },
 wxShare: function(e) {
 Global.isNative() ? this.callPlatformApi("wxShare", "(Ljava/lang/String;)V", e) : AppLog.warn("Browser call Function [wxShare]");
@@ -8551,7 +8588,7 @@ PlatformApi: "PlatformApi",
 SceneMgr: "SceneMgr",
 WxMgr: "WxMgr"
 } ],
-login: [ function(a, e, t) {
+login: [ function(o, e, t) {
 "use strict";
 cc._RF.push(e, "27525iCX4lKSruZwKK1s4UV", "login");
 cc.Class({
@@ -8562,15 +8599,15 @@ this.node.parent.name = "login";
 Global.autoAdaptDevices(!1);
 cc.vv = cc.vv || {};
 if (!cc.vv.GameManager) {
-var e = a("GameManager");
+var e = o("GameManager");
 e.init();
 cc.vv.GameManager = e;
 }
-var t = a("UserManager");
+var t = o("UserManager");
 t.init();
 cc.vv.UserManager = t;
 cc.vv.UserManager.clearNotice();
-var n = a("SpeakerMgr");
+var n = o("SpeakerMgr");
 n.init();
 cc.vv.SpeakerMgr = n;
 cc.find("ver", this.node).getComponent(cc.Label).string = Global.resVersion;
@@ -8583,25 +8620,47 @@ this._wechat_login = this.node.getChildByName("wechat_login");
 Global.btnClickEvent(this._wechat_login, this.onWeChatLogin, this);
 var i = this.node.getChildByName("phone_login");
 Global.btnClickEvent(i, this.onPhoneLogin, this);
-cc.vv.wxLoginResult = function(e) {
-cc.vv.FloatTip.show("test---wxLoginResult " + e);
-};
+if (Global.isAndroid()) {
+var a = Global.setAppidWithAppsecretForJS("wx82256d3bda922e13", "b87d6ec883757e530cdf55794df03e92");
+console.log(a + "@@@@@@@@");
+} else Global.isIOS();
 },
 onPhoneLogin: function() {},
+onWeChatLoginCallBack: function(e) {
+console.log("code is  " + e);
+var t = this;
+t._nickname = "";
+if (0 == t._nickname.length) {
+var n = Global.getLocal("account", "");
+t._nickname = n;
+0 == t._nickname.length && (t._nickname = "G" + Global.random(1e4, 99999));
+}
+Global.saveLocal("account", t._nickname);
+var i = Global.getLocal("guest_token_map", ""), a = 0 < i.length ? JSON.parse(i) : {}, o = a[t._nickname];
+if (!o || o.length <= 0) {
+o = new Date().getTime() + "_" + Global.random(1, 99999999);
+a[t._nickname] = o;
+Global.saveLocal("guest_token_map", JSON.stringify(a));
+}
+cc.vv.GameManager.reqLogin(e, "", 10, e, "", "");
+Global.playEff(Global.SOUNDS.eff_click);
+},
 onWeChatLogin: function() {
-cc.vv.GameManager.checkIsPhone(!1);
-var e = a("WxMgr");
-e.init();
-cc.vv.WxMgr = e;
-cc.vv.WxMgr.wxLogin(function(e) {
-cc.vv.FloatTip.show("test---loginSyncCall");
-cc.log("微信===  data： " + JSON.stringify(e));
-if (1 === e.result) {
-var t = e.token;
-e.uid;
-cc.vv.GameManager.reqWxLogin(t, "", "", "");
-} else cc.vv.FloatTip.show("微信授权失败！");
-});
+if (Global.isNative()) {
+var e = cc.sys.localStorage.getItem("openid"), t = cc.sys.localStorage.getItem("passwd");
+if (e && 0 < e.length) cc.vv.GameManager.reqLogin(e, t, 14, e, "", ""); else {
+if (!Global.isWXAppInstalled()) {
+cc.warn("请先下载微信客户端，或web端暂不支持");
+cc.vv.FloatTip.show("请先下载微信客户端，或web端暂不支持微信客户端");
+return;
+}
+Global.onWxAuthorize(this.onWeChatLoginCallBack, this);
+}
+} else {
+var n = "oJtfO5gD5B2WVXlfmXeSkP4fQsCk";
+cc.sys.localStorage.setItem("openid", n);
+cc.vv.GameManager.reqLogin(n, "Aa123456", 14, n, "", "");
+}
 },
 onVisitorLogin: function() {
 var e = this;
@@ -8634,8 +8693,7 @@ cc._RF.pop();
 }, {
 GameManager: "GameManager",
 SpeakerMgr: "SpeakerMgr",
-UserManager: "UserManager",
-WxMgr: "WxMgr"
+UserManager: "UserManager"
 } ],
 "md5.min": [ function(e, r, t) {
 "use strict";

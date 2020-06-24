@@ -179,7 +179,6 @@ cc.Class({
         },
 
         //登录界面构造登录消息
-
         reqLogin: function (nickname, pwd, loginType, accesstoken, loginExData, token, code = "",email="") {
             cc.vv.NetManager.connect(Global.loginServerAddress, function () {
                 let req = {c: MsgId.LOGIN};
@@ -277,7 +276,8 @@ cc.Class({
 
         onRcvMsgLogin: function (msgDic) {
             let self = this
-
+            cc.log("@@@@@@@@ " + JSON.stringify(msgDic));
+            cc.warn("@@@@@@@@ " + JSON.stringify(msgDic));
             if (msgDic.code === 200) {
                 //下发新的服务器地址
                 let gameServer = msgDic.net
@@ -289,6 +289,13 @@ cc.Class({
 
                 cc.sys.localStorage.setItem("account",msgDic.account);
                 cc.sys.localStorage.setItem("passwd",msgDic.passwd);
+
+                //首次拉起微信的登录，才有这个值
+                let openid = msgDic.openid;
+                if (openid && openid.length > 0) {
+                    cc.sys.localStorage.setItem("openid", openid);
+                }
+
 
                 //首次登陆下发的信息
                 cc.vv.UserManager.initLoginServer(msgDic)
@@ -513,5 +520,7 @@ cc.Class({
         onRcvNetEnterGame: function (msg) {
             this.onRecNetCreateOrJoinRoom(msg)
         },
+
+
     }
 });

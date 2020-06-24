@@ -339,6 +339,7 @@ cc.Class({
                 if (Global.localVersion) {
                     //msgDic.cmd0x = msgDic.cmd.toString(16);
                     let  str = JSON.stringify(msgDic);
+                    //cc.warn("Recieved: ", str);
                     str = str.replace(/[\'\"\\\/\b\f\n\r\t]/g, '');
                     AppLog.log("Recieved: ", str);
                 }
