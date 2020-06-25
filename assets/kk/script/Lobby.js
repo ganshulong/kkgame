@@ -55,7 +55,8 @@ cc.Class({
          let head = cc.find("head_bg/UserHead/radio_mask/spr_head",this.node);
          Global.setHead(head,cc.vv.UserManager.userIcon);
 
-         Global.playBgm(Global.SOUNDS.bgm_hall);
+         //testgsl
+         // Global.playBgm(Global.SOUNDS.bgm_hall);
 
      },
 

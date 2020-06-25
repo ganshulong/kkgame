@@ -61,6 +61,10 @@ cc.Class({
                 info = cc.vv.UserManager.clubs[i];
             }
         }
+
+        let spr_head = cc.find("Layer/bg/UserHead/radio_mask/spr_head",this.node);
+        Global.setHead(spr_head, (info?info.createIcon:""));
+
         let clubId = cc.find("Layer/bg/img_club_name_bg/txt_clubId",this.node);
         clubId.getComponent(cc.Label).string = info?("ID:"+info.clubid):"";
 
