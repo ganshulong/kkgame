@@ -119,8 +119,8 @@ cc.Class({
             let gameListNode = cc.find("bg/img_game/text_game",item);
             gameListNode.getComponent(cc.Label).string = str;
 
-            let head = cc.find("UserHead/spr_frame_mask",item);
-            Global.setHead(head,list[i].createIcon);
+            let spr_head = cc.find("bg/UserHead/radio_mask/spr_head",item);
+            Global.setHead(spr_head,list[i].createIcon);
 
             let createrIcon = cc.find("bg/node_user/img_createrIcon",item);
             createrIcon.active = cc.vv.UserManager.uid === list[i].createUid;

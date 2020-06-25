@@ -223,7 +223,8 @@ cc.Class({
 
     initPlayerInfo(user){
         if(user){
-            Global.setHead(this._playerNode.getChildByName("head"),user.usericon);
+            let spr_head = cc.find("head/radio_mask/spr_head",this._playerNode);
+            Global.setHead(spr_head,user.usericon);
             cc.find("img_bg/txt_name",this._playerNode).getComponent(cc.Label).string = user.playername;
             this.setTotalScore(user.score);
             this.showOffline(user.ofline===1);

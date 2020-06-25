@@ -214,7 +214,8 @@ cc.Class({
                 if(config.seat === 2 && j===1) headNode = cc.find("node/char_3/headNode",item);
                 if(headNode){
                     headNode.active = true;
-                    Global.setHead(headNode.getChildByName("UserHead"),users[j].usericon);
+                    let spr_head = cc.find("UserHead/radio_mask/spr_head",headNode);
+                    Global.setHead(spr_head,users[j].usericon);
                     let name = cc.find("img_nameBg/txt_name",headNode);
                     name.getComponent(cc.Label).string = users[j].playername;
 
