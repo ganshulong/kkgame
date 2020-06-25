@@ -7,6 +7,8 @@ GlobalFunc.designSize = cc.size(1280, 720);
 GlobalFunc.centerPos = cc.v2(640, 360);
 GlobalFunc.shake = false;
 
+GlobalFunc.ANDROID_CLASS_NAME = 'org/cocos2dx/javascript/AppActivity';
+
 /*
 ** 是否是原生app端
 */
@@ -1283,13 +1285,14 @@ Global.getEmjoList = function () {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 }
 
+
+
 ///////////////////微信登录相关的SDK
 //判断用户是否安装了微信客户端
 Global.isWXAppInstalled = function () {
     if (GlobalFunc.isAndroid()) {
-        let className = "org/cocos2dx/javascript/AppActivity"
         let result = false;
-        result = jsb.reflection.callStaticMethod(className, "isWXAppInstalled", "()Z");
+        result = jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "isWXAppInstalled", "()Z");
         return result;
     }
     else if (GlobalFunc.isIOS()) {
@@ -1304,9 +1307,8 @@ Global.isWXAppInstalled = function () {
 //设置微信SDK的appid 和 APP_SECRET, 返回注册app到微信是否成功
 Global.setAppidWithAppsecretForJS = function (app_id, app_sceret) {
     if (GlobalFunc.isAndroid()) {
-        let className = "org/cocos2dx/javascript/AppActivity"
         let result = false;
-        result = jsb.reflection.callStaticMethod(className, "setAppidWithAppsecretForJS", "(Ljava/lang/String;Ljava/lang/String;)Z", app_id, app_sceret );
+        result = jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "setAppidWithAppsecretForJS", "(Ljava/lang/String;Ljava/lang/String;)Z", app_id, app_sceret );
         return result;
     }
     else if (GlobalFunc.isIOS()) {
@@ -1342,14 +1344,39 @@ Global.onWxAuthorize = function (callback, target) {
     }
 
     if (GlobalFunc.isAndroid()) {
-        let className = "org/cocos2dx/javascript/AppActivity"
         let result = false;
-        result = jsb.reflection.callStaticMethod(className, "onWxAuthorize", "()Z");
+        result = jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWxAuthorize", "()Z");
         return result;
     }
     else if (GlobalFunc.isIOS()) {
 
     }else {
+
     }
 }
 
+//text:分享内容
+GlobalFunc.onWXShareText = function (title, description) {
+    if (GlobalFunc.isAndroid()) {
+        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareText", '(Ljava/lang/String;Ljava/lang/String;)V', title, description);
+    }
+    else if (GlobalFunc.isIOS()) {
+
+    }else {
+        
+    }
+}
+
+//WX图片分享
+//imgPath 图片地址
+//toScene: 分享场景
+GlobalFunc.onWXShareImage = function (imgPath, toScene, shareResultCall) {
+    if (GlobalFunc.isAndroid()) {
+        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareImage", "(Ljava/lang/String;Ljava/lang/String;)Z", title, description);
+    }
+    else if (GlobalFunc.isIOS()) {
+
+    }else {
+        
+    }
+}

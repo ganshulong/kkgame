@@ -36,6 +36,10 @@ import com.kk.happygame.wxapi.WXEntryActivity;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.modelmsg.WXImageObject;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
@@ -314,6 +318,28 @@ public class AppActivity extends Cocos2dxActivity {
                 Cocos2dxJavascriptJavaBridge.evalString(jsCallStr);
             }
         });
+    }
+
+
+    /*
+     *  拉起微信登录授权界面
+     */
+    public static void onWXShareText(final String title, final String description) {
+        WXTextObject textObj = new WXTextObject();
+        textObj.text = description;     //文本数据 描述
+
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.title = title;              //标题
+        msg.description = description;  //描述
+        //msg.thumbData = "";           //缩略图的二进制数据
+        msg.mediaObject = textObj;      //消息对象
+
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.message = msg;
+        req.scene = SendMessageToWX.Req.WXSceneSession;     //发送的目标场景
+        //req.transaction = buildTransaction("text");       //对应该请求的事务 ID，通常由 Req 发起，回复 Resp 时应填入对应事务 ID
+
+        api.sendReq(req);
     }
 
 }

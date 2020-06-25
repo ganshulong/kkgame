@@ -42,14 +42,9 @@ cc.Class({
 
         let readyBtn = cc.find("scene/operate_btn_view/ready_btn",this.node);
         Global.btnClickEvent(readyBtn,this.onReady,this);
-
-
-
-        cc.find("scene/operate_btn_view/btn_invite_wx",this.node).active = false;
-
+        
         let setting = cc.find("scene/operate_btn_view/btn_setting",this.node);
         Global.btnClickEvent(setting,this.onClickSetting,this);
-
 
         this._panelSettingNode = cc.find("scene/panel_setting",this.node);
         this._panelSettingNode.getComponent(cc.Widget).updateAlignment();
@@ -68,10 +63,28 @@ cc.Class({
         let btn_close = cc.find("btn_close",this._panelSettingNode);
         Global.btnClickEvent(btn_close,this.onClose,this);
 
+        let btn_invite_wx = cc.find("scene/operate_btn_view/btn_invite_wx",this.node)
+        Global.btnClickEvent(btn_invite_wx,this.onClickInviteWx,this);
+
         Global.registerEvent(EventId.CLOSE_ROUNDVIEW,this.recvCloseRoundView,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
+        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         this.recvDeskInfoMsg();
+    },
+
+    onClickInviteWx(){
+        let roomConf = cc.vv.gameData.getRoomConf();
+
+        let title = "闲去房间邀请";
+        let description = "红黑胡";
+        description += ("," + roomConf.gamenum + "局");
+        description += ("," + roomConf.seat + "人场");
+        let bankerModeStr = ["连中玩法","中庄x2","四首相乘"];
+        description += ("," + bankerModeStr[roomConf.param1]);
+        description += (",底分:" + roomConf.score);
+        description += (",房间号:" + roomConf.deskId);
+        Global.onWXShareText(title, description);
     },
 
     onClose(){
@@ -116,6 +129,13 @@ cc.Class({
         }
     },
 
+    onRecvHandCard(data){
+        data = data.detail;
+        if(data.seat === cc.vv.gameData.getMySeatIndex()){
+            this.showInviteWx(false);
+        }
+    },
+
     onExit(){
         if(cc.vv.gameData) cc.vv.gameData.exitGame();
     },
@@ -139,6 +159,10 @@ cc.Class({
 
     showReady(bShow){
         cc.find("scene/operate_btn_view/ready_btn",this.node).active = bShow;
+    },
+
+    showInviteWx(bShow){
+        cc.find("scene/operate_btn_view/btn_invite_wx",this.node).active = bShow;
     },
 
     onDestroy(){
