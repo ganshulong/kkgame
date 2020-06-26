@@ -31,8 +31,12 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.kk.happygame.wxapi.WXEntryActivity;
+import com.kk.happygame.util.Util;
+
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -46,6 +50,24 @@ import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 import org.cocos2dx.lib.Cocos2dxJavascriptJavaBridge;
 
 import java.util.Random;
+import java.io.File;
+
+//test
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.Toast;
+
 
 public class AppActivity extends Cocos2dxActivity {
     public static AppActivity instance;
@@ -320,11 +342,17 @@ public class AppActivity extends Cocos2dxActivity {
         });
     }
 
+    public static int getWxShareScene(final String shareSceneType){
+        if ("WXSceneTimeline" == shareSceneType) {
+            return SendMessageToWX.Req.WXSceneTimeline;
+        } else if ("WXSceneFavorite" == shareSceneType) {
+            return SendMessageToWX.Req.WXSceneFavorite;
+        } else {
+            return SendMessageToWX.Req.WXSceneSession;
+        }
+    }
 
-    /*
-     *  拉起微信登录授权界面
-     */
-    public static void onWXShareText(final String title, final String description) {
+    public static void onWXShareText(final String shareSceneType, final String title, final String description) {
         WXTextObject textObj = new WXTextObject();
         textObj.text = description;     //文本数据 描述
 
@@ -336,9 +364,36 @@ public class AppActivity extends Cocos2dxActivity {
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.message = msg;
-        req.scene = SendMessageToWX.Req.WXSceneSession;     //发送的目标场景
+        req.scene = getWxShareScene(shareSceneType);     //发送的目标场景
         //req.transaction = buildTransaction("text");       //对应该请求的事务 ID，通常由 Req 发起，回复 Resp 时应填入对应事务 ID
 
+        api.sendReq(req);
+    }
+
+    
+    public static void onWXShareImage(final String shareSceneType, final String imgPath) {
+        File file = new File(imgPath);  
+        if (!file.exists()) {
+            return;
+        }
+
+        //图二进制数据
+        Bitmap bmp = BitmapFactory.decodeFile(imgPath);
+        //缩略图二进制数据
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+        bmp.recycle();
+
+        WXImageObject imgObj = new WXImageObject();
+        imgObj.setImagePath(imgPath);
+        
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
+        msg.mediaObject = imgObj;
+        
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.message = msg;
+        req.scene = getWxShareScene(shareSceneType);
+        // req.transaction = buildTransaction("img");
         api.sendReq(req);
     }
 

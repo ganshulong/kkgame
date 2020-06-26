@@ -51,6 +51,12 @@ GlobalMgr.CONST_NUM = {
 	HIGHT_ZORDER : 100,	//像提示框，loading框这些层级需要提高
 },
 
+GlobalMgr.ShareSceneType = {
+    WXSceneSession  : "WXSceneSession",		//对话/好友
+    WXSceneTimeline : "WXSceneTimeline",  	//朋友圈
+    WXSceneFavorite : "WXSceneFavorite", 	//收藏
+},
+
 //声音资源配置
 //common表示共用，不考虑切换语言
 GlobalMgr.SOUNDS = Global.SOUNDS || {};

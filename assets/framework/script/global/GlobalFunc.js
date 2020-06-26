@@ -1347,36 +1347,53 @@ Global.onWxAuthorize = function (callback, target) {
         let result = false;
         result = jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWxAuthorize", "()Z");
         return result;
-    }
-    else if (GlobalFunc.isIOS()) {
+    } else if (GlobalFunc.isIOS()) {
 
-    }else {
+    } else {
 
     }
 }
 
-//text:分享内容
-GlobalFunc.onWXShareText = function (title, description) {
+//shareSceneType:分享目标场景
+//title:分享标题
+//description:分享描述
+GlobalFunc.onWXShareText = function (shareSceneType, title, description) {
     if (GlobalFunc.isAndroid()) {
-        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareText", '(Ljava/lang/String;Ljava/lang/String;)V', title, description);
-    }
-    else if (GlobalFunc.isIOS()) {
+        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareText", '(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V', shareSceneType, title, description);
 
-    }else {
+    } else if (GlobalFunc.isIOS()) {
+
+    } else {
         
     }
 }
 
-//WX图片分享
+//shareSceneType:分享目标场景
 //imgPath 图片地址
-//toScene: 分享场景
-GlobalFunc.onWXShareImage = function (imgPath, toScene, shareResultCall) {
-    if (GlobalFunc.isAndroid()) {
-        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareImage", "(Ljava/lang/String;Ljava/lang/String;)Z", title, description);
-    }
-    else if (GlobalFunc.isIOS()) {
+GlobalFunc.onWXShareImage = function (shareSceneType) {
+    if (GlobalFunc.isNative()) {   
+        let dirpath = jsb.fileUtils.getWritablePath() + 'ScreenShoot/';
+        if (!jsb.fileUtils.isDirectoryExist(dirpath)) {
+            jsb.fileUtils.createDirectory(dirpath);
+        }
+        let name = 'ScreenShoot-' + (new Date()).valueOf() + '.png';
+        let imgPath = dirpath + name;
+        let size = cc.winSize;
+        let rt = cc.RenderTexture.create(size.width, size.height);
+        rt.setPosition(cc.p(size.width/2, size.height/2));
+        cc.director.getScene()._sgNode.addChild(rt);
+        rt.setVisible(false);
+        rt.begin();
+        cc.director.getScene()._sgNode.visit();
+        rt.end();
+        rt.saveToFile('ScreenShoot/' + name, cc.ImageFormat.PNG, true, function() {
+            rt.removeFromParent();
+            if(GlobalFunc.isAndroid()){
+                jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareImage", "(Ljava/lang/String;Ljava/lang/String;)V", shareSceneType, imgPath);
 
-    }else {
-        
+            }else if(GlobalFunc.isIOS()){
+
+            }
+        });
     }
 }

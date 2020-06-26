@@ -64,7 +64,10 @@ cc.Class({
         Global.btnClickEvent(btn_close,this.onClose,this);
 
         let btn_invite_wx = cc.find("scene/operate_btn_view/btn_invite_wx",this.node)
-        Global.btnClickEvent(btn_invite_wx,this.onClickInviteWx,this);
+        Global.btnClickEvent(btn_invite_wx,this.onClickInviteToWx,this);
+        
+        let btn_copy_roomId = cc.find("scene/operate_btn_view/btn_copy_roomId",this.node)
+        Global.btnClickEvent(btn_copy_roomId,this.onClickCopyRoomIdToWx,this);
 
         Global.registerEvent(EventId.CLOSE_ROUNDVIEW,this.recvCloseRoundView,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
@@ -73,19 +76,27 @@ cc.Class({
         this.recvDeskInfoMsg();
     },
 
-    onClickInviteWx(){
-        let roomConf = cc.vv.gameData.getRoomConf();
+    onClickInviteToWx(){
+        // let roomConf = cc.vv.gameData.getRoomConf();
 
-        let title = "闲去房间邀请";
-        let description = "红黑胡";
-        description += ("," + roomConf.gamenum + "局");
-        description += ("," + roomConf.seat + "人场");
-        let bankerModeStr = ["连中玩法","中庄x2","四首相乘"];
-        description += ("," + bankerModeStr[roomConf.param1]);
-        description += (",底分:" + roomConf.score);
-        description += (",房间号:" + roomConf.deskId);
+        // let title = "闲去房间邀请";
+        // let description = "红黑胡";
+        // description += ("," + roomConf.gamenum + "局");
+        // description += ("," + roomConf.seat + "人场");
+        // let bankerModeStr = ["连中玩法","中庄x2","四首相乘"];
+        // description += ("," + bankerModeStr[roomConf.param1]);
+        // description += (",底分:" + roomConf.score);
+        // description += (",房间号:" + roomConf.deskId);
         
-        Global.onWXShareText(title, description);
+        // Global.onWXShareText(Global.ShareSceneType.WXSceneSession, title, description);
+
+        Global.onWXShareImage(Global.ShareSceneType.WXSceneSession);
+    },
+
+    onClickCopyRoomIdToWx(){
+        let title = "房间ID";
+        let description = cc.vv.gameData.getRoomConf().deskId;
+        Global.onWXShareText(Global.ShareSceneType.WXSceneSession, title, description);
     },
 
     onClose(){
@@ -133,7 +144,7 @@ cc.Class({
     onRecvHandCard(data){
         data = data.detail;
         if(data.seat === cc.vv.gameData.getMySeatIndex()){
-            this.showInviteWx(false);
+            this.showInviteWxCopyRoomId(false);
         }
     },
 
@@ -162,8 +173,9 @@ cc.Class({
         cc.find("scene/operate_btn_view/ready_btn",this.node).active = bShow;
     },
 
-    showInviteWx(bShow){
+    showInviteWxCopyRoomId(bShow){
         cc.find("scene/operate_btn_view/btn_invite_wx",this.node).active = bShow;
+        cc.find("scene/operate_btn_view/btn_copy_roomId",this.node).active = bShow;
     },
 
     onDestroy(){
