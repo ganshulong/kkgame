@@ -15,6 +15,7 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth.Resp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.constants.ConstantsAPI;
 
 import org.apache.http.client.ClientProtocolException;
 import org.cocos2dx.javascript.AppActivity;
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-// import com.tencent.mm.sdk.constants.ConstantsAPI;
 // import java.util.Calendar;
 // import java.util.GregorianCalendar;
 
@@ -193,25 +193,31 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 //                    AppActivity.GobackJS();
 //                    finish();
 //                } else
-                SendAuth.Resp sendAuthResp = (Resp) resp;    // 用于分享时不要有这个，不能强转
-                String code = sendAuthResp.code;            // 这里的code就是接入指南里要拿到的code
 
-                // 微信回调得到的state
-                String state = sendAuthResp.state;
-                Log.i("AppActivity.state:", AppActivity.s_strState);
-                Log.i("state:", state);
+                if(resp.getType()== ConstantsAPI.COMMAND_SENDAUTH){     //登陆响应
+                    SendAuth.Resp sendAuthResp = (Resp) resp;    // 用于分享时不要有这个，不能强转
+                    String code = sendAuthResp.code;            // 这里的code就是接入指南里要拿到的code
 
-                // 判断传入的state参数和回调过来的是否一致
-                if (AppActivity.s_strState.equals(state)) {
-                    //将此code传给JS层
-                    AppActivity.onJavaWXCodeToJS(code);
-                    //getResult(code);        //第二步：通过 code 获取 access_token
-                    Log.i(TAG, "onResp-------------success ");
-                    // Toast.makeText(this, "onResp-------------success " + code, 6000).show();
-                } else {
-                    // 微信登录失败，重新回到畅游岛app
-                    Log.i(TAG, "onResp-------------error! ");
-                    // Toast.makeText(this, "onResp-------------error!", 6000).show();
+                    // 微信回调得到的state
+                    String state = sendAuthResp.state;
+                    Log.i("AppActivity.state:", AppActivity.s_strState);
+                    Log.i("state:", state);
+
+                    // 判断传入的state参数和回调过来的是否一致
+                    if (AppActivity.s_strState.equals(state)) {
+                        //将此code传给JS层
+                        AppActivity.onJavaWXCodeToJS(code);
+                        //getResult(code);        //第二步：通过 code 获取 access_token
+                        Log.i(TAG, "onResp-------------success ");
+                        // Toast.makeText(this, "onResp-------------success " + code, 6000).show();
+                    } else {
+                        // 微信登录失败，重新回到畅游岛app
+                        Log.i(TAG, "onResp-------------error! ");
+                        // Toast.makeText(this, "onResp-------------error!", 6000).show();
+                    }
+                    
+                }else if(resp.getType()==ConstantsAPI.COMMAND_SENDMESSAGE_TO_WX){   //分享响应
+                    // Toast.makeText(WXEntryActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
                 }
 
                 finish();// 必须要有，用于点击返回游戏的时候不会留在微信

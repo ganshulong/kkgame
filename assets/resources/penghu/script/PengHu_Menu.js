@@ -84,6 +84,7 @@ cc.Class({
         description += ("," + bankerModeStr[roomConf.param1]);
         description += (",底分:" + roomConf.score);
         description += (",房间号:" + roomConf.deskId);
+        
         Global.onWXShareText(title, description);
     },
 
