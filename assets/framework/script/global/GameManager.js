@@ -286,6 +286,8 @@ cc.Class({
                 let subid = msgDic.subid
                 let token = msgDic.token
                 Global.openid = msgDic.openid;
+                Global.shareLink = msgDic.shareLink;
+                Global.iconUrl = msgDic.iconUrl;
 
                 cc.sys.localStorage.setItem("account",msgDic.account);
                 cc.sys.localStorage.setItem("passwd",msgDic.passwd);

@@ -40,10 +40,11 @@ import com.kk.happygame.util.Util;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.tencent.mm.opensdk.modelmsg.WXTextObject;
-import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.modelmsg.WXImageObject;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
@@ -359,7 +360,6 @@ public class AppActivity extends Cocos2dxActivity {
         WXMediaMessage msg = new WXMediaMessage();
         msg.title = title;              //标题
         msg.description = description;  //描述
-        //msg.thumbData = "";           //缩略图的二进制数据
         msg.mediaObject = textObj;      //消息对象
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
@@ -377,23 +377,41 @@ public class AppActivity extends Cocos2dxActivity {
             return;
         }
 
-        //图二进制数据
         Bitmap bmp = BitmapFactory.decodeFile(imgPath);
-        //缩略图二进制数据
-        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 30, 30, true);
-        bmp.recycle();
-
-        WXImageObject imgObj = new WXImageObject();
-        imgObj.setImagePath(imgPath);
-        
+        WXImageObject imgObj = new WXImageObject(bmp);
         WXMediaMessage msg = new WXMediaMessage();
-        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
         msg.mediaObject = imgObj;
+
+        //缩略图二进制数据  100 * 56 * 4(32位色图) < 32K
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 100, 56, true);
+        bmp.recycle();
+        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
         
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.message = msg;
         req.scene = getWxShareScene(shareSceneType);
         // req.transaction = buildTransaction("img");
+        // req.userOpenId = getOpenId();
+
+        api.sendReq(req);
+    }
+
+    public static void onWXShareLink(final String shareSceneType, final String title, final String description, final String iconUrl, final String linkUrl) {
+
+        WXWebpageObject webpage = new WXWebpageObject();
+        webpage.webpageUrl = linkUrl;
+
+        WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = title;
+        msg.description = description;
+        msg.thumbData = Util.getHtmlByteArray(iconUrl);
+
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.message = msg;
+        req.scene = getWxShareScene(shareSceneType);
+        // req.transaction = buildTransaction("webpage");
+        // req.userOpenId = getOpenId();
+
         api.sendReq(req);
     }
 

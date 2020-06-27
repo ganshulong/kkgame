@@ -40,10 +40,11 @@ import com.kk.happygame.util.Util;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.tencent.mm.opensdk.modelmsg.WXTextObject;
-import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.modelmsg.WXImageObject;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
@@ -390,6 +391,25 @@ public class AppActivity extends Cocos2dxActivity {
         req.message = msg;
         req.scene = getWxShareScene(shareSceneType);
         // req.transaction = buildTransaction("img");
+        // req.userOpenId = getOpenId();
+
+        api.sendReq(req);
+    }
+
+    public static void onWXShareLink(final String shareSceneType, final String title, final String description, final String iconUrl, final String linkUrl) {
+
+        WXWebpageObject webpage = new WXWebpageObject();
+        webpage.webpageUrl = linkUrl;
+
+        WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = title;
+        msg.description = description;
+        msg.thumbData = Util.getHtmlByteArray(iconUrl);
+
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.message = msg;
+        req.scene = getWxShareScene(shareSceneType);
+        // req.transaction = buildTransaction("webpage");
         // req.userOpenId = getOpenId();
 
         api.sendReq(req);

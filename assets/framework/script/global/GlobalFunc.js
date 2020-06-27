@@ -1359,7 +1359,7 @@ Global.onWxAuthorize = function (callback, target) {
 //description:分享描述
 GlobalFunc.onWXShareText = function (shareSceneType, title, description) {
     if (GlobalFunc.isAndroid()) {
-        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareText", '(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V', shareSceneType, title, description);
+        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareText", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", shareSceneType, title, description);
 
     } else if (GlobalFunc.isIOS()) {
 
@@ -1395,5 +1395,18 @@ GlobalFunc.onWXShareImage = function (shareSceneType) {
 
             }
         });
+    }
+}
+
+//shareSceneType:分享目标场景
+//title:分享标题
+//description:分享描述
+//iconUrl:icon网址
+//linkUrl:链接网址
+GlobalFunc.onWXShareLink = function (shareSceneType, title, description, iconUrl, linkUrl) {
+    if(GlobalFunc.isAndroid()){
+        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareLink", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", shareSceneType, title, description, iconUrl, linkUrl);
+    }else if(GlobalFunc.isIOS()){
+
     }
 }

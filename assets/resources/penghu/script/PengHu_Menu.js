@@ -77,20 +77,19 @@ cc.Class({
     },
 
     onClickInviteToWx(){
-        // let roomConf = cc.vv.gameData.getRoomConf();
+        let roomConf = cc.vv.gameData.getRoomConf();
 
-        // let title = "闲去房间邀请";
-        // let description = "红黑胡";
-        // description += ("," + roomConf.gamenum + "局");
-        // description += ("," + roomConf.seat + "人场");
-        // let bankerModeStr = ["连中玩法","中庄x2","四首相乘"];
-        // description += ("," + bankerModeStr[roomConf.param1]);
-        // description += (",底分:" + roomConf.score);
-        // description += (",房间号:" + roomConf.deskId);
-        
-        // Global.onWXShareText(Global.ShareSceneType.WXSceneSession, title, description);
+        let title = "闲去房间邀请";
+        let description = "红黑胡";
+        description += ("," + roomConf.gamenum + "局");
+        description += ("," + roomConf.seat + "人场");
+        let bankerModeStr = ["连中玩法","中庄x2","四首相乘"];
+        description += ("," + bankerModeStr[roomConf.param1]);
+        description += (",底分:" + roomConf.score);
+        description += (",房间号:" + roomConf.deskId);
+        Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
 
-        Global.onWXShareImage(Global.ShareSceneType.WXSceneSession);
+        // Global.onWXShareImage(Global.ShareSceneType.WXSceneSession);
     },
 
     onClickCopyRoomIdToWx(){
