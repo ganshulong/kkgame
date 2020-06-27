@@ -359,7 +359,6 @@ public class AppActivity extends Cocos2dxActivity {
         WXMediaMessage msg = new WXMediaMessage();
         msg.title = title;              //标题
         msg.description = description;  //描述
-        //msg.thumbData = "";           //缩略图的二进制数据
         msg.mediaObject = textObj;      //消息对象
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
@@ -377,23 +376,22 @@ public class AppActivity extends Cocos2dxActivity {
             return;
         }
 
-        //图二进制数据
         Bitmap bmp = BitmapFactory.decodeFile(imgPath);
-        //缩略图二进制数据
-        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
-        bmp.recycle();
-
-        WXImageObject imgObj = new WXImageObject();
-        imgObj.setImagePath(imgPath);
-        
+        WXImageObject imgObj = new WXImageObject(bmp);
         WXMediaMessage msg = new WXMediaMessage();
-        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
         msg.mediaObject = imgObj;
+
+        //缩略图二进制数据  100 * 56 * 4(32位色图) < 32K
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 100, 56, true);
+        bmp.recycle();
+        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
         
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.message = msg;
         req.scene = getWxShareScene(shareSceneType);
         // req.transaction = buildTransaction("img");
+        // req.userOpenId = getOpenId();
+
         api.sendReq(req);
     }
 
