@@ -132,7 +132,7 @@ cc.Class({
                 id.getComponent(cc.Label).string = "ID:"+users[i].uid;
 
                 let icon = cc.find("radio_mask/spr_head",head);
-                Global.setHead(icon,users[i].userIcon);
+                Global.setHead(icon,users[i].usericon);
 
                 let handCardNode = player.getChildByName("panel_cards");
                 let cardValue = null;

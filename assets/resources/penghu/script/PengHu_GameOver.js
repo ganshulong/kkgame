@@ -112,7 +112,7 @@ cc.Class({
 
     // 分享
     onShare(){
-
+        Global.onWXShareImage(Global.ShareSceneType.WXSceneSession);
     },
 
     onBack(){
@@ -148,7 +148,7 @@ cc.Class({
 
             let head = player.getChildByName("head");
             let icon = cc.find("radio_mask/spr_head",head);
-            Global.setHead(icon,user.userIcon);
+            Global.setHead(icon,user.usericon);
 
             if(cc.vv.UserManager.uid === user.uid){
                 cc.find("game_end_bg/win_title",this._gameOverNode).active = user.score>=0;

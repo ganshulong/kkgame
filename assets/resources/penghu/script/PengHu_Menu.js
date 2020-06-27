@@ -88,8 +88,6 @@ cc.Class({
         description += (",底分:" + roomConf.score);
         description += (",房间号:" + roomConf.deskId);
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
-
-        // Global.onWXShareImage(Global.ShareSceneType.WXSceneSession);
     },
 
     onClickCopyRoomIdToWx(){
