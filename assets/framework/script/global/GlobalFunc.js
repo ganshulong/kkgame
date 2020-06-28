@@ -1379,7 +1379,7 @@ GlobalFunc.onWXShareImage = function (shareSceneType) {
         let name = 'ScreenShoot-' + (new Date()).valueOf() + '.png';
         let imgPath = dirpath + name;
         let size = cc.winSize;
-        let rt = cc.RenderTexture.create(size.width, size.height);
+        let rt = cc.RenderTexture.create(size.width, size.height, cc.Texture2D.PixelFormat.RGBA8888, 0x88F0);
         rt.setPosition(cc.p(size.width/2, size.height/2));
         cc.director.getScene()._sgNode.addChild(rt);
         rt.setVisible(false);

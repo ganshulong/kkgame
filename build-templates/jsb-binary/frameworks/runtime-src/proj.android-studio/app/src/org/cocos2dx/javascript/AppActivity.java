@@ -344,9 +344,9 @@ public class AppActivity extends Cocos2dxActivity {
     }
 
     public static int getWxShareScene(final String shareSceneType){
-        if ("WXSceneTimeline" == shareSceneType) {
+        if (shareSceneType.equals("WXSceneTimeline")) {
             return SendMessageToWX.Req.WXSceneTimeline;
-        } else if ("WXSceneFavorite" == shareSceneType) {
+        } else if (shareSceneType.equals("WXSceneFavorite")) {
             return SendMessageToWX.Req.WXSceneFavorite;
         } else {
             return SendMessageToWX.Req.WXSceneSession;
