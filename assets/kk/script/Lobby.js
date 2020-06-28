@@ -45,8 +45,18 @@ cc.Class({
          cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
          cc.find("money_bg/gold_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
          cc.find("room_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
+
          let club_btn = this.node.getChildByName("club_btn");
          Global.btnClickEvent(club_btn,this.onClub,this);
+
+         let share_btn = cc.find("dt_xmt/share_btn",this.node)
+         Global.btnClickEvent(share_btn,this.onClickShare,this);
+         this.shareNode = this.node.getChildByName("shareNode");
+         this.shareNode.active = false;
+         let btn_shareToSession = cc.find("share_bg/btn_shareToSession",this.shareNode)
+         Global.btnClickEvent(btn_shareToSession,this.onClickShareToSession,this);
+         let btn_shareToTimeline = cc.find("share_bg/btn_shareToTimeline",this.shareNode)
+         Global.btnClickEvent(btn_shareToTimeline,this.onClickShareToTimeline,this);
 
          let info = club_btn.getChildByName("info");
          info.active = cc.vv.UserManager.clubs.length>0;
@@ -75,7 +85,24 @@ cc.Class({
         if(cc.vv.UserManager.clubs.length>0) cc.vv.UserManager.currClubId = cc.vv.UserManager.clubs[0].clubid;
         cc.vv.SceneMgr.enterScene(cc.vv.UserManager.clubs.length>0?"club":"club_lobby");
     },
+ 
+ 	onClickShare(){
+ 		this.shareNode.active = !this.shareNode.active;
+ 	},
 
+ 	onClickShareToSession(){
+ 		this.onShareToWx(Global.ShareSceneType.WXSceneSession);
+ 	},
+
+ 	onClickShareToTimeline(){
+ 		this.onShareToWx(Global.ShareSceneType.WXSceneTimeline);
+ 	},
+
+ 	onShareToWx(ShareSceneType){
+ 		let title = "闲去游戏邀请";
+        let description = "点击进入闲去游戏下载";
+        Global.onWXShareLink(ShareSceneType, title, description, Global.iconUrl, Global.shareLink);
+ 	},
 
     start () {
 

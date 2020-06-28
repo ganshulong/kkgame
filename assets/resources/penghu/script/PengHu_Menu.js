@@ -80,7 +80,7 @@ cc.Class({
         let roomConf = cc.vv.gameData.getRoomConf();
 
         let title = "闲去房间邀请";
-        let description = "红黑胡";
+        let description = "碰胡";
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "人场");
         let bankerModeStr = ["连中玩法","中庄x2","四首相乘"];
