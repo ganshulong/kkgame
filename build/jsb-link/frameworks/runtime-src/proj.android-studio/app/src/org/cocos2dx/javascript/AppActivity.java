@@ -53,21 +53,14 @@ import org.cocos2dx.lib.Cocos2dxJavascriptJavaBridge;
 import java.util.Random;
 import java.io.File;
 
-//test
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.Toast;
+//gaode gps
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
+import com.amap.api.location.AMapLocationClientOption.AMapLocationProtocol;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.AMapLocationQualityReport;
 
 
 public class AppActivity extends Cocos2dxActivity {
@@ -107,6 +100,9 @@ public class AppActivity extends Cocos2dxActivity {
     // 回调到JS的函数id
     public static int s_nDownloadWxAppProFuncId;    // 提示下载微信客户端回调函数id
 
+    //gaode gps
+    public AMapLocationClient mLocationClient = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +120,56 @@ public class AppActivity extends Cocos2dxActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         SDKWrapper.getInstance().init(this);
 
-//        this.instance.setAppidWithAppsecretForJS(APP_ID, APP_SECRET);
-//        this.instance.onWxAuthorize();       //测试拉起微信
+        //初始化定位
+        initLocation();
     }
+
+    public void initLocation(){
+        //初始化client
+        mLocationClient = new AMapLocationClient(this.getApplicationContext());
+        mLocationClient.setLocationOption(getLocationOption());
+        mLocationClient.setLocationListener(mAMapLocationListener);
+        mLocationClient.startLocation();
+    }
+
+    public AMapLocationClientOption getLocationOption(){
+        AMapLocationClientOption mOption = new AMapLocationClientOption();
+        mOption.setInterval(20000);//可选，设置定位间隔。默认为2秒
+        // mOption.setLocationMode(AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
+        // mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
+        // mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
+        // mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
+        // mOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
+        // mOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
+        // AMapLocationClientOption.setLocationProtocol(AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
+        // mOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
+        // mOption.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
+        // mOption.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
+        // mOption.setGeoLanguage(AMapLocationClientOption.GeoLanguage.DEFAULT);//可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
+        return mOption;
+    }
+
+    //异步获取定位结果
+    AMapLocationListener mAMapLocationListener = new AMapLocationListener(){
+        @Override
+        public void onLocationChanged(AMapLocation amapLocation) {
+            if (amapLocation != null) {
+                if (amapLocation.getErrorCode() == 0) {
+                    String gpsDataStr = "" + amapLocation.getLongitude();   //获取经度
+                    gpsDataStr += "," + amapLocation.getLatitude();         //获取纬度
+                    gpsDataStr += "," + amapLocation.getDistrict();         //区域信息
+                    final String callGpsDataStr = gpsDataStr;
+                    instance.runOnGLThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String jsCallStr = "Global.GetGPSData('"+ callGpsDataStr +"')";
+                            Cocos2dxJavascriptJavaBridge.evalString(jsCallStr);
+                        }
+                    });
+                }
+            }
+        }
+    };
 
     @Override
     public Cocos2dxGLSurfaceView onCreateView() {
