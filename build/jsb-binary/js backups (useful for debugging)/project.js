@@ -2952,7 +2952,7 @@ r.onWXShareImage = function(e) {
 if (r.isNative()) {
 var t = jsb.fileUtils.getWritablePath() + "ScreenShoot/";
 jsb.fileUtils.isDirectoryExist(t) || jsb.fileUtils.createDirectory(t);
-var n = "ScreenShoot-" + new Date().valueOf() + ".png", i = t + n, a = cc.winSize, o = cc.RenderTexture.create(a.width, a.height);
+var n = "ScreenShoot-" + new Date().valueOf() + ".png", i = t + n, a = cc.winSize, o = cc.RenderTexture.create(a.width, a.height, cc.Texture2D.PixelFormat.RGBA8888, 35056);
 o.setPosition(cc.p(a.width / 2, a.height / 2));
 cc.director.getScene()._sgNode.addChild(o);
 o.setVisible(!1);
@@ -2967,6 +2967,9 @@ r.isAndroid() ? jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWX
 };
 r.onWXShareLink = function(e, t, n, i, a) {
 r.isAndroid() ? jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareLink", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", e, t, n, i, a) : r.isIOS();
+};
+Global.GetGPSData = function(e) {
+cc.vv.FloatTip("GetGPSData " + e);
 };
 cc._RF.pop();
 }, {
@@ -3262,11 +3265,19 @@ cc.find("money_bg/gold_num", this.node).getComponent(cc.Label).string = cc.vv.Us
 cc.find("room_bg/roomcard_num", this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 var e = this.node.getChildByName("club_btn");
 Global.btnClickEvent(e, this.onClub, this);
-var t = e.getChildByName("info");
-t.active = 0 < cc.vv.UserManager.clubs.length;
-0 < cc.vv.UserManager.clubs.length && this.initClub(t);
-var n = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
-Global.setHead(n, cc.vv.UserManager.userIcon);
+var t = cc.find("dt_xmt/share_btn", this.node);
+Global.btnClickEvent(t, this.onClickShare, this);
+this.shareNode = this.node.getChildByName("shareNode");
+this.shareNode.active = !1;
+var n = cc.find("share_bg/btn_shareToSession", this.shareNode);
+Global.btnClickEvent(n, this.onClickShareToSession, this);
+var i = cc.find("share_bg/btn_shareToTimeline", this.shareNode);
+Global.btnClickEvent(i, this.onClickShareToTimeline, this);
+var a = e.getChildByName("info");
+a.active = 0 < cc.vv.UserManager.clubs.length;
+0 < cc.vv.UserManager.clubs.length && this.initClub(a);
+var o = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
+Global.setHead(o, cc.vv.UserManager.userIcon);
 },
 initClub: function(e) {
 var t = cc.find("users_bg/curr_num", e), n = cc.find("users_bg/total_num", e), i = cc.find("users_bg/tabel_num", e);
@@ -3278,6 +3289,18 @@ e.getChildByName("club_name").getComponent(cc.Label).string = cc.vv.UserManager.
 onClub: function() {
 0 < cc.vv.UserManager.clubs.length && (cc.vv.UserManager.currClubId = cc.vv.UserManager.clubs[0].clubid);
 cc.vv.SceneMgr.enterScene(0 < cc.vv.UserManager.clubs.length ? "club" : "club_lobby");
+},
+onClickShare: function() {
+this.shareNode.active = !this.shareNode.active;
+},
+onClickShareToSession: function() {
+this.onShareToWx(Global.ShareSceneType.WXSceneSession);
+},
+onClickShareToTimeline: function() {
+this.onShareToWx(Global.ShareSceneType.WXSceneTimeline);
+},
+onShareToWx: function(e) {
+Global.onWXShareLink(e, "闲去游戏邀请", "点击进入闲去游戏下载", Global.iconUrl, Global.shareLink);
 },
 start: function() {},
 onDestroy: function() {}
@@ -5247,7 +5270,7 @@ Global.registerEvent(EventId.HANDCARD, this.onRecvHandCard, this);
 this.recvDeskInfoMsg();
 },
 onClickInviteToWx: function() {
-var e = cc.vv.gameData.getRoomConf(), t = "红黑胡";
+var e = cc.vv.gameData.getRoomConf(), t = "碰胡";
 t += "," + e.gamenum + "局";
 t += "," + e.seat + "人场";
 t += "," + [ "连中玩法", "中庄x2", "四首相乘" ][e.param1];
@@ -9452,7 +9475,7 @@ return n[t++] << 24 | n[t++] << 16 | n[t++] << 8 | n[t];
 function v(n, i) {
 return function(e) {
 var t = e.reserve(n);
-return i.call(e.buffer, t, T);
+return i.call(e.buffer, t, w);
 };
 }
 function p(e) {
@@ -9477,7 +9500,7 @@ var I = e("ieee754"), A = e("int64-buffer"), y = A.Uint64BE, S = A.Int64BE;
 n.getReadFormat = function(e) {
 var t = R.hasArrayBuffer && e && e.binarraybuffer, n = e && e.int64;
 return {
-map: w && e && e.usemap ? a : i,
+map: T && e && e.usemap ? a : i,
 array: o,
 str: r,
 bin: t ? c : s,
@@ -9494,7 +9517,7 @@ float32: v(4, E),
 float64: v(8, N)
 };
 }, n.readUint8 = h;
-var R = e("./bufferish"), M = e("./bufferish-proto"), w = "undefined" != typeof Map, T = !0;
+var R = e("./bufferish"), M = e("./bufferish-proto"), T = "undefined" != typeof Map, w = !0;
 }, {
 "./bufferish": 8,
 "./bufferish-proto": 6,
@@ -9835,7 +9858,7 @@ case "hex":
 return n >>> 1;
 
 case "base64":
-return w(e).length;
+return T(e).length;
 
 default:
 if (i) return M(e).length;
@@ -9898,7 +9921,7 @@ e[n + r] = s;
 return r;
 }
 function v(e, t, n, i) {
-return T(function(e) {
+return w(function(e) {
 for (var t = [], n = 0; n < e.length; ++n) t.push(255 & e.charCodeAt(n));
 return t;
 }(t), e, n, i);
@@ -10024,14 +10047,14 @@ o.push(n >> 18 | 240, n >> 12 & 63 | 128, n >> 6 & 63 | 128, 63 & n | 128);
 }
 return o;
 }
-function w(e) {
+function T(e) {
 return L.toByteArray(function(e) {
 if ((e = (t = e, t.trim ? t.trim() : t.replace(/^\s+|\s+$/g, "")).replace(k, "")).length < 2) return "";
 for (var t; e.length % 4 != 0; ) e += "=";
 return e;
 }(e));
 }
-function T(e, t, n, i) {
+function w(e, t, n, i) {
 for (var a = 0; a < i && !(a + n >= t.length || a >= e.length); ++a) t[a + n] = e[a];
 return a;
 }
@@ -10198,7 +10221,7 @@ return _(this, e, t, n);
 
 case "utf8":
 case "utf-8":
-return d = t, u = n, T(M(e, (h = this).length - d), h, d, u);
+return d = t, u = n, w(M(e, (h = this).length - d), h, d, u);
 
 case "ascii":
 return v(this, e, t, n);
@@ -10208,13 +10231,13 @@ case "binary":
 return v(this, e, t, n);
 
 case "base64":
-return s = this, c = t, l = n, T(w(e), s, c, l);
+return s = this, c = t, l = n, w(T(e), s, c, l);
 
 case "ucs2":
 case "ucs-2":
 case "utf16le":
 case "utf-16le":
-return o = t, r = n, T(function(e, t) {
+return o = t, r = n, w(function(e, t) {
 for (var n, i, a, o = [], r = 0; r < e.length && !((t -= 2) < 0); ++r) n = e.charCodeAt(r), 
 i = n >> 8, a = n % 256, o.push(a), o.push(i);
 return o;
@@ -10524,12 +10547,12 @@ function e(e, t, c) {
 function a(e, t, n, i) {
 return this instanceof a ? function(e, t, n, i, a) {
 if (O && G && (t instanceof G && (t = new O(t)), i instanceof G && (i = new O(i))), 
-!(t || n || i || w)) return void (e.buffer = A(P, 0));
+!(t || n || i || T)) return void (e.buffer = A(P, 0));
 if (!N(t, n)) {
-var o = w || Array;
+var o = T || Array;
 a = n, i = t, n = 0, t = new o(8);
 }
-e.buffer = t, e.offset = n |= 0, T !== ("undefined" == typeof i ? "undefined" : D(i)) && ("string" == typeof i ? function(e, t, n, i) {
+e.buffer = t, e.offset = n |= 0, w !== ("undefined" == typeof i ? "undefined" : D(i)) && ("string" == typeof i ? function(e, t, n, i) {
 var a = 0, o = n.length, r = 0, s = 0;
 "-" === n[0] && a++;
 for (var c = a; a < o; ) {
@@ -10568,17 +10591,17 @@ return !(!e || !e[p]);
 }
 function b(e) {
 var t = this.buffer, n = this.offset;
-return w = null, !1 !== e && 0 === n && 8 === t.length && i(t) ? t : A(t, n);
+return T = null, !1 !== e && 0 === n && 8 === t.length && i(t) ? t : A(t, n);
 }
 function C(e) {
 var t = this.buffer, n = this.offset;
-if (w = L, !1 !== e && 0 === n && 8 === t.length && a.isBuffer(t)) return t;
+if (T = L, !1 !== e && 0 === n && 8 === t.length && a.isBuffer(t)) return t;
 var i = new L(8);
 return I(i, 0, t, n), i;
 }
 function E(e) {
 var t = this.buffer, n = this.offset, i = t.buffer;
-if (w = O, !1 !== e && 0 === n && i instanceof G && 8 === i.byteLength) return i;
+if (T = O, !1 !== e && 0 === n && i instanceof G && 8 === i.byteLength) return i;
 var a = new O(8);
 return I(a, 0, t, n), a.buffer;
 }
@@ -10607,7 +10630,7 @@ function M(e, t, n) {
 var i = t + 8;
 for (n++; t < i; ) e[t++] = 255 & -n ^ 255, n /= 256;
 }
-var w, T = "undefined", L = T !== ("undefined" == typeof a ? "undefined" : D(a)) && a, O = T !== ("undefined" == typeof Uint8Array ? "undefined" : D(Uint8Array)) && Uint8Array, G = T !== ("undefined" == typeof ArrayBuffer ? "undefined" : D(ArrayBuffer)) && ArrayBuffer, P = [ 0, 0, 0, 0, 0, 0, 0, 0 ], i = Array.isArray || function(e) {
+var T, w = "undefined", L = w !== ("undefined" == typeof a ? "undefined" : D(a)) && a, O = w !== ("undefined" == typeof Uint8Array ? "undefined" : D(Uint8Array)) && Uint8Array, G = w !== ("undefined" == typeof ArrayBuffer ? "undefined" : D(ArrayBuffer)) && ArrayBuffer, P = [ 0, 0, 0, 0, 0, 0, 0, 0 ], i = Array.isArray || function(e) {
 return !!e && "[object Array]" == Object.prototype.toString.call(e);
 }, k = 4294967296;
 e("Uint64BE", !0, !0), e("Int64BE", !0, !1), e("Uint64LE", !1, !0), e("Int64LE", !1, !1);

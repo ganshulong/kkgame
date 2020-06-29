@@ -1410,3 +1410,10 @@ GlobalFunc.onWXShareLink = function (shareSceneType, title, description, iconUrl
 
     }
 }
+
+//JAVA/OC端调用此函数，返回JS层code值
+Global.GetGPSData = function (parameterStr) {
+    cc.vv.FloatTip("GetGPSData " + parameterStr)
+    // Global.wxCode = code;
+    // Global.wxRequestCallBack.call(Global.wxRequestCallBackTarget, code);
+}

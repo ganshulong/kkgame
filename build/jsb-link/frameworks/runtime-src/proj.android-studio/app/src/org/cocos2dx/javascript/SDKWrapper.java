@@ -169,14 +169,4 @@ public class SDKWrapper {
 	}
 	
 	private static native void nativeLoadAllPlugins();
-
-	public void wxLogin() {
-		if (PACKAGE_AS) {
-			try {
-				mClass.getMethod("wxLogin").invoke(mClass);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 }
