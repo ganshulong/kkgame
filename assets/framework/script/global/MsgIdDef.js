@@ -226,3 +226,6 @@ GlobalMsgId.DEL_HANDCARD = 101416;          // 删除手牌
 GlobalMsgId.CHAT = 112;                     // 聊天
 GlobalMsgId.CHAT_NOTIFY = 2006;             // 聊天通知
 GlobalMsgId.OFFLINE_NOTIFY = 2009;          // 掉线通知通知
+
+GlobalMsgId.SELF_GPS_DATA = 163;       		// 发送定位数据
+GlobalMsgId.PLAYER_DISTANCE_DATA = 8813; 	// 玩家距离数据

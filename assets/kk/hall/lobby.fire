@@ -2151,7 +2151,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 162,
+      "width": 160,
       "height": 44
     },
     "_rotationX": 0,
@@ -4421,7 +4421,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -46.9,
+      "x": -55,
       "y": -1.6
     },
     "_skewX": 0,
@@ -4461,7 +4461,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "gold_num",
+    "_name": "label_city",
     "_objFlags": 0,
     "_parent": {
       "__id__": 114
@@ -4487,12 +4487,12 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0.5
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 60,
+      "width": 0,
       "height": 32
     },
     "_rotationX": 0,
@@ -4501,8 +4501,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 13.3,
-      "y": -2.8
+      "x": -40,
+      "y": 0
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -4529,8 +4529,8 @@
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
-    "_N$string": "攸县",
-    "_N$horizontalAlign": 1,
+    "_N$string": "",
+    "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0

@@ -65,11 +65,14 @@ cc.Class({
          let head = cc.find("head_bg/UserHead/radio_mask/spr_head",this.node);
          Global.setHead(head,cc.vv.UserManager.userIcon);
 
-         //testgsl
-         // Global.playBgm(Global.SOUNDS.bgm_hall);
+        Global.playBgm(Global.SOUNDS.bgm_hall);
 
+        Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData,this);
      },
 
+    onRecvSelfGpsData(data){
+        cc.find("gps/label_city",this.node).getComponent(cc.Label).string = data.detail.city;
+    },
 
     initClub(info){
         let currNumLabel = cc.find("users_bg/curr_num",info);

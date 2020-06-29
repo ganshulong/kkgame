@@ -120,7 +120,15 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.NOTICE_JOINCLUB, this.onRcvJoinClub, this);
 
+            cc.vv.NetManager.registerMsg(MsgId.SELF_GPS_DATA, this.onRcvSelfGpsData, this);
+
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvSelfGpsData(msg){
+            if(msg.code === 200){
+                Global.dispatchEvent(EventId.SELF_GPS_DATA, msg);
+            }
         },
 
         onRcvJoinClub(msg){

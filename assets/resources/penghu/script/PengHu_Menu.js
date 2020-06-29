@@ -69,11 +69,75 @@ cc.Class({
         let btn_copy_roomId = cc.find("scene/operate_btn_view/btn_copy_roomId",this.node)
         Global.btnClickEvent(btn_copy_roomId,this.onClickCopyRoomIdToWx,this);
 
+        let btn_gps = cc.find("scene/operate_btn_view/btn_gps",this.node);
+        Global.btnClickEvent(btn_gps,this.onClickGPS,this);
+
+        this.panel_gps = cc.find("scene/panel_gps",this.node);
+        this.onSetShowGps(false);
+
+        let btn_exit = cc.find("spr_bg/btn_exit", this.panel_gps);
+        Global.btnClickEvent(btn_exit,this.onClickExitGame,this);
+        let btn_continue = cc.find("spr_bg/btn_continue", this.panel_gps);
+        Global.btnClickEvent(btn_continue,this.onClickContinueGame,this);
+
         Global.registerEvent(EventId.CLOSE_ROUNDVIEW,this.recvCloseRoundView,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData,this);
         this.recvDeskInfoMsg();
+    },
+
+    onClickGPS(){
+        let req = {c: MsgId.PLAYER_DISTANCE_DATA};
+        cc.vv.NetManager.send(req);
+    },
+
+    onClickExitGame(){
+        this.onSetShowGps(false);
+        this.onExit();
+    },
+
+    onClickContinueGame(){
+        this.onSetShowGps(false);
+    },
+
+    onSetShowGps(isShow, data){
+        this.panel_gps.active = isShow;
+        if (isShow && data && data.locatingList) {
+            let panel_gps_bg = this.panel_gps.getChildByName("spr_bg");
+            let locatingList = data.locatingList;
+            let maxSeat = cc.vv.gameData.getRoomConf().seat;
+            for (var i = 2; i <= 4; i++) {
+                panel_gps_bg.getChildByName("node_" + i + "player").active = (maxSeat == i);
+            }
+            let node_players = panel_gps_bg.getChildByName("node_" + maxSeat + "player");
+            for (var i = 0; i < locatingList.length; i++) {
+                let localSeat = cc.vv.gameData.getLocalChair(locatingList[i].seat);
+                let ndoe_player = node_players.getChildByName("ndoe_player" + localSeat);
+                ndoe_player.getChildByName("GPS_Red").active = (!locatingList[i].isOpen);
+                ndoe_player.getChildByName("GPS_Green").active = (locatingList[i].isOpen);
+                let spr_head = cc.find("radio_mask/spr_head", ndoe_player);
+                spr_head.active = true;
+                Global.setHead(spr_head,locatingList[i].usericon);
+
+                let toOtherPlayerData = locatingList[i].data;
+                for (var j = 0; j < toOtherPlayerData.length; j++) {
+                    let toLocalSeat = cc.vv.gameData.getLocalChair(toOtherPlayerData[j].seat);
+                    if (localSeat < toLocalSeat) {
+                        let ndoe_line = node_players.getChildByName("ndoe_line" + localSeat + toLocalSeat);
+                        //isLineRed 对应值 test                  
+                        ndoe_line.getChildByName("line_red").active = (1 == toOtherPlayerData[j].gpsColour);
+                        ndoe_line.getChildByName("line_green").active = (2 == toOtherPlayerData[j].gpsColour);
+                        ndoe_line.getChildByName("text_distance").getComponent(cc.Label).string = toOtherPlayerData[j].locating;
+                    }
+                }
+            }
+        }
+    },
+
+    onRcvPlayersDistanceData(data){
+        this.onSetShowGps(true, data.detail);
     },
 
     onClickInviteToWx(){

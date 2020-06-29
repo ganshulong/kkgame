@@ -71,6 +71,6 @@ EventId.CHAT_NOTIFY = "chat_notify";                      // 聊天通知
 EventId.DEL_HANDCARD_NOTIFY = "del_handcard_notify";      // 删除手牌通知
 EventId.READY_NOTIFY = "ready_notify";                    // 准备通知
 EventId.OFFLINE_NOTIFY  = "offline_notify";               // 掉线通知
-
-
+EventId.SELF_GPS_DATA = "sele_gps_data";	  			  // 获得gps数据	
+EventId.PLAYER_DISTANCE_DATA = "player_distance_data";	  // 玩家距离数据	
 
