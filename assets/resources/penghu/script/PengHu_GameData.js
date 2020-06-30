@@ -139,6 +139,8 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_READY, this.onRcvReadyNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.OFFLINE_NOTIFY, this.onRcvOfflineNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData, this);
+        cc.vv.NetManager.registerMsg(MsgId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify, this);
+
     },
 
     unregisterMsg() {
@@ -168,12 +170,19 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.DEL_HANDCARD, this.onRcvDelHandcardNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_READY, this.onRcvReadyNotice,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.OFFLINE_NOTIFY, this.onRcvOfflineNotice,false,this);
-        cc.vv.NetManager.unregisterMsg(MsgId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData,false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify,false,this);
     },
 
     onRcvPlayersDistanceData(msg){
         if(msg.code == 200){
             Global.dispatchEvent(EventId.PLAYER_DISTANCE_DATA,msg)
+        }
+    },
+
+    onRcvGpsTipsNotify(msg){
+        if(msg.code == 200){
+            Global.dispatchEvent(EventId.GPS_TIPS_NOTIFY,msg)
         }
     },
 

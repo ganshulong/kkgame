@@ -229,3 +229,4 @@ GlobalMsgId.OFFLINE_NOTIFY = 2009;          // 掉线通知通知
 
 GlobalMsgId.SELF_GPS_DATA = 163;       		// 发送定位数据
 GlobalMsgId.PLAYER_DISTANCE_DATA = 8813; 	// 玩家距离数据
+GlobalMsgId.GPS_TIPS_NOTIFY = 18809; 		// 玩家距离提示通知

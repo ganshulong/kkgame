@@ -1941,6 +1941,7 @@ i.READY_NOTIFY = "ready_notify";
 i.OFFLINE_NOTIFY = "offline_notify";
 i.SELF_GPS_DATA = "sele_gps_data";
 i.PLAYER_DISTANCE_DATA = "player_distance_data";
+i.GPS_TIPS_NOTIFY = "gps_tips_notify";
 cc._RF.pop();
 }, {
 EventDef: "EventDef"
@@ -3290,6 +3291,7 @@ a.active = 0 < cc.vv.UserManager.clubs.length;
 0 < cc.vv.UserManager.clubs.length && this.initClub(a);
 var o = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
 Global.setHead(o, cc.vv.UserManager.userIcon);
+cc.find("gps/label_city", this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
 Global.playBgm(Global.SOUNDS.bgm_hall);
 Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData, this);
 },
@@ -3661,6 +3663,7 @@ i.CHAT_NOTIFY = 2006;
 i.OFFLINE_NOTIFY = 2009;
 i.SELF_GPS_DATA = 163;
 i.PLAYER_DISTANCE_DATA = 8813;
+i.GPS_TIPS_NOTIFY = 18809;
 cc._RF.pop();
 }, {} ],
 NetErrorCode: [ function(e, t, n) {
@@ -4491,6 +4494,7 @@ cc.vv.NetManager.registerMsg(MsgId.DEL_HANDCARD, this.onRcvDelHandcardNotify, th
 cc.vv.NetManager.registerMsg(MsgId.NOTICE_READY, this.onRcvReadyNotice, this);
 cc.vv.NetManager.registerMsg(MsgId.OFFLINE_NOTIFY, this.onRcvOfflineNotice, this);
 cc.vv.NetManager.registerMsg(MsgId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData, this);
+cc.vv.NetManager.registerMsg(MsgId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify, this);
 },
 unregisterMsg: function() {
 cc.vv.NetManager.unregisterMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, !1, this);
@@ -4518,10 +4522,14 @@ cc.vv.NetManager.unregisterMsg(MsgId.CHAT_NOTIFY, this.onRcvChatNotify, !1, this
 cc.vv.NetManager.unregisterMsg(MsgId.DEL_HANDCARD, this.onRcvDelHandcardNotify, !1, this);
 cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_READY, this.onRcvReadyNotice, !1, this);
 cc.vv.NetManager.unregisterMsg(MsgId.OFFLINE_NOTIFY, this.onRcvOfflineNotice, !1, this);
-cc.vv.NetManager.unregisterMsg(MsgId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData, this);
+cc.vv.NetManager.unregisterMsg(MsgId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData, !1, this);
+cc.vv.NetManager.unregisterMsg(MsgId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify, !1, this);
 },
 onRcvPlayersDistanceData: function(e) {
 200 == e.code && Global.dispatchEvent(EventId.PLAYER_DISTANCE_DATA, e);
+},
+onRcvGpsTipsNotify: function(e) {
+200 == e.code && Global.dispatchEvent(EventId.GPS_TIPS_NOTIFY, e);
 },
 onRcvOfflineNotice: function(e) {
 200 == e.code && Global.dispatchEvent(EventId.OFFLINE_NOTIFY, e);
@@ -5287,20 +5295,27 @@ var o = cc.find("scene/operate_btn_view/btn_invite_wx", this.node);
 Global.btnClickEvent(o, this.onClickInviteToWx, this);
 var r = cc.find("scene/operate_btn_view/btn_copy_roomId", this.node);
 Global.btnClickEvent(r, this.onClickCopyRoomIdToWx, this);
-var s = cc.find("scene/operate_btn_view/btn_gps", this.node);
-Global.btnClickEvent(s, this.onClickGPS, this);
+this.btn_gps = cc.find("scene/operate_btn_view/btn_gps", this.node);
+Global.btnClickEvent(this.btn_gps, this.onClickGPS, this);
+this.setGpsBtnColour(1);
 this.panel_gps = cc.find("scene/panel_gps", this.node);
 this.onSetShowGps(!1);
-var c = cc.find("spr_bg/btn_exit", this.panel_gps);
-Global.btnClickEvent(c, this.onClickExitGame, this);
-var l = cc.find("spr_bg/btn_continue", this.panel_gps);
-Global.btnClickEvent(l, this.onClickContinueGame, this);
+var s = cc.find("spr_bg/btn_exit", this.panel_gps);
+Global.btnClickEvent(s, this.onClickExitGame, this);
+var c = cc.find("spr_bg/btn_continue", this.panel_gps);
+Global.btnClickEvent(c, this.onClickContinueGame, this);
 Global.registerEvent(EventId.CLOSE_ROUNDVIEW, this.recvCloseRoundView, this);
 Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO, this.recvDeskInfoMsg, this);
 Global.registerEvent(EventId.READY_NOTIFY, this.onRcvReadyNotice, this);
 Global.registerEvent(EventId.HANDCARD, this.onRecvHandCard, this);
 Global.registerEvent(EventId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData, this);
+Global.registerEvent(EventId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify, this);
 this.recvDeskInfoMsg();
+},
+setGpsBtnColour: function(e) {
+cc.find("btn_ani/GPS_Green", this.btn_gps).active = 1 == e;
+cc.find("btn_ani/GPS_Red", this.btn_gps).active = 3 == e;
+cc.find("btn_ani/GPS_Yellow", this.btn_gps).active = 2 == e;
 },
 onClickGPS: function() {
 var e = {
@@ -5321,8 +5336,8 @@ for (var n = this.panel_gps.getChildByName("spr_bg"), i = t.locatingList, a = cc
 var r = n.getChildByName("node_" + a + "player");
 for (o = 0; o < i.length; o++) {
 var s = cc.vv.gameData.getLocalChair(i[o].seat), c = r.getChildByName("ndoe_player" + s);
-c.getChildByName("GPS_Red").active = !i[o].isOpen;
-c.getChildByName("GPS_Green").active = i[o].isOpen;
+c.getChildByName("GPS_Green").active = 1 == i[o].headColour;
+c.getChildByName("GPS_Red").active = 2 == i[o].headColour;
 var l = cc.find("radio_mask/spr_head", c);
 l.active = !0;
 Global.setHead(l, i[o].usericon);
@@ -5330,9 +5345,9 @@ for (var h = i[o].data, d = 0; d < h.length; d++) {
 var u = cc.vv.gameData.getLocalChair(h[d].seat);
 if (s < u) {
 var g = r.getChildByName("ndoe_line" + s + u);
-g.getChildByName("line_red").active = 1 == h[d].gpsColour;
-g.getChildByName("line_green").active = 2 == h[d].gpsColour;
-g.getChildByName("text_distance").getComponent(cc.Label).string = h[d].locating;
+g.getChildByName("line_green").active = 1 == h[d].gpsColour;
+g.getChildByName("line_red").active = 2 == h[d].gpsColour;
+0 < h[d].locating && (g.getChildByName("text_distance").getComponent(cc.Label).string = Global.convertNumToShort(h[d].locating, 10, 1));
 }
 }
 }
@@ -5340,6 +5355,9 @@ g.getChildByName("text_distance").getComponent(cc.Label).string = h[d].locating;
 },
 onRcvPlayersDistanceData: function(e) {
 this.onSetShowGps(!0, e.detail);
+},
+onRcvGpsTipsNotify: function(e) {
+this.setGpsBtnColour(e.detail.gpsColour);
 },
 onClickInviteToWx: function() {
 var e = cc.vv.gameData.getRoomConf(), t = "碰胡";
@@ -7822,6 +7840,7 @@ areaCode: null,
 headSprite: null,
 sigin: "",
 mobile: "",
+GpsCity: "",
 clubs: [],
 init: function() {
 (Global.playerData = this).switch = [];
@@ -7898,6 +7917,7 @@ this.sigin = e.sigin;
 this.mobile = t.mobile ? t.mobile : "";
 this.roomcard = t.roomcard;
 this.clubs = e.clubs;
+this.GpsCity = t.city || "";
 this.gameList.sort(function(e, t) {
 return t.ord - e.ord;
 });
@@ -7958,6 +7978,9 @@ this._apiLogin = e;
 },
 getLoginType: function() {
 return this._apiLogin;
+},
+getGpsCity: function() {
+return this.GpsCity;
 }
 }
 });

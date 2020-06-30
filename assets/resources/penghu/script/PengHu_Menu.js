@@ -69,8 +69,9 @@ cc.Class({
         let btn_copy_roomId = cc.find("scene/operate_btn_view/btn_copy_roomId",this.node)
         Global.btnClickEvent(btn_copy_roomId,this.onClickCopyRoomIdToWx,this);
 
-        let btn_gps = cc.find("scene/operate_btn_view/btn_gps",this.node);
-        Global.btnClickEvent(btn_gps,this.onClickGPS,this);
+        this.btn_gps = cc.find("scene/operate_btn_view/btn_gps",this.node);
+        Global.btnClickEvent(this.btn_gps,this.onClickGPS,this);
+        this.setGpsBtnColour(1);
 
         this.panel_gps = cc.find("scene/panel_gps",this.node);
         this.onSetShowGps(false);
@@ -85,7 +86,15 @@ cc.Class({
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData,this);
+        Global.registerEvent(EventId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify,this);
         this.recvDeskInfoMsg();
+    },
+
+    //1绿色，2黄色，3红色
+    setGpsBtnColour(colour){
+        cc.find("btn_ani/GPS_Green",this.btn_gps).active = (1 == colour);
+        cc.find("btn_ani/GPS_Red",this.btn_gps).active = (3 == colour);
+        cc.find("btn_ani/GPS_Yellow",this.btn_gps).active = (2 == colour);
     },
 
     onClickGPS(){
@@ -139,6 +148,10 @@ cc.Class({
 
     onRcvPlayersDistanceData(data){
         this.onSetShowGps(true, data.detail);
+    },
+
+    onRcvGpsTipsNotify(data){
+        this.setGpsBtnColour(data.detail.gpsColour);
     },
 
     onClickInviteToWx(){
