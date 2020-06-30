@@ -64,6 +64,7 @@ cc.Class({
         headSprite:null,    // 获取我的头像
         sigin:"",           // 兑换key
         mobile:"",          // 绑定手机号
+        GpsCity:"",          // 玩家定位区域
         clubs:[],
 
         //初始化
@@ -162,6 +163,7 @@ cc.Class({
             this.mobile = playerData.mobile?playerData.mobile:"";
             this.roomcard =  playerData.roomcard;
             this.clubs = serverData.clubs;
+            this.GpsCity = playerData.city || "";
             this.gameList.sort((a,b)=>{
                 return b.ord-a.ord;
             });
@@ -270,6 +272,9 @@ cc.Class({
         },
         getLoginType(){
             return this._apiLogin
+        },
+        getGpsCity(){
+            return this.GpsCity
         },
     },
 });

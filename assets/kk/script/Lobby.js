@@ -65,6 +65,8 @@ cc.Class({
          let head = cc.find("head_bg/UserHead/radio_mask/spr_head",this.node);
          Global.setHead(head,cc.vv.UserManager.userIcon);
 
+         cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
+
         Global.playBgm(Global.SOUNDS.bgm_hall);
 
         Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData,this);

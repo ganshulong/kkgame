@@ -115,8 +115,8 @@ cc.Class({
             for (var i = 0; i < locatingList.length; i++) {
                 let localSeat = cc.vv.gameData.getLocalChair(locatingList[i].seat);
                 let ndoe_player = node_players.getChildByName("ndoe_player" + localSeat);
-                ndoe_player.getChildByName("GPS_Red").active = (!locatingList[i].isOpen);
-                ndoe_player.getChildByName("GPS_Green").active = (locatingList[i].isOpen);
+                ndoe_player.getChildByName("GPS_Green").active = (1 == locatingList[i].headColour);
+                ndoe_player.getChildByName("GPS_Red").active = (2 == locatingList[i].headColour);
                 let spr_head = cc.find("radio_mask/spr_head", ndoe_player);
                 spr_head.active = true;
                 Global.setHead(spr_head,locatingList[i].usericon);
@@ -126,10 +126,11 @@ cc.Class({
                     let toLocalSeat = cc.vv.gameData.getLocalChair(toOtherPlayerData[j].seat);
                     if (localSeat < toLocalSeat) {
                         let ndoe_line = node_players.getChildByName("ndoe_line" + localSeat + toLocalSeat);
-                        //isLineRed 对应值 test                  
-                        ndoe_line.getChildByName("line_red").active = (1 == toOtherPlayerData[j].gpsColour);
-                        ndoe_line.getChildByName("line_green").active = (2 == toOtherPlayerData[j].gpsColour);
-                        ndoe_line.getChildByName("text_distance").getComponent(cc.Label).string = toOtherPlayerData[j].locating;
+                        ndoe_line.getChildByName("line_green").active = (1 == toOtherPlayerData[j].gpsColour);
+                        ndoe_line.getChildByName("line_red").active = (2 == toOtherPlayerData[j].gpsColour);
+                        if (0 < toOtherPlayerData[j].locating) {
+                            ndoe_line.getChildByName("text_distance").getComponent(cc.Label).string = Global.convertNumToShort(toOtherPlayerData[j].locating,10,1);
+                        }
                     }
                 }
             }
