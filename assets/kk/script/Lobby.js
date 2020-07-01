@@ -67,7 +67,7 @@ cc.Class({
 
          cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
 
-        Global.playBgm(Global.SOUNDS.bgm_hall);
+        // Global.playBgm(Global.SOUNDS.bgm_hall);
 
         Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData,this);
      },

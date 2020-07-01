@@ -138,7 +138,15 @@ cc.Class({
                         ndoe_line.getChildByName("line_green").active = (1 == toOtherPlayerData[j].gpsColour);
                         ndoe_line.getChildByName("line_red").active = (2 == toOtherPlayerData[j].gpsColour);
                         if (0 < toOtherPlayerData[j].locating) {
-                            ndoe_line.getChildByName("text_distance").getComponent(cc.Label).string = Global.convertNumToShort(toOtherPlayerData[j].locating,10,1);
+                            let numForShort = Math.floor(toOtherPlayerData[j].locating * 10) / 10;
+                            ndoe_line.getChildByName("text_distance").getComponent(cc.Label).string = numForShort + "米";
+                            if (1 == toOtherPlayerData[j].gpsColour) {
+                                ndoe_line.getChildByName("text_distance").color = cc.Color.GREEN;
+                            } else if (2 == toOtherPlayerData[j].gpsColour) {
+                                ndoe_line.getChildByName("text_distance").color = cc.Color.RED;
+                            } else {
+                                ndoe_line.getChildByName("text_distance").color = new cc.Color(134,90,46);
+                            }
                         }
                     }
                 }
