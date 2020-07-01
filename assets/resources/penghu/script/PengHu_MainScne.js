@@ -64,7 +64,7 @@ cc.Class({
         let btnMsg = cc.find("scene/operate_btn_view/btn_msg",this.node);
         Global.btnClickEvent(btnMsg,this.onShowMsg,this);
 
-        this.node.addComponent("PengHu_Menu");
+        // this.node.addComponent("PengHu_Menu");
 
         for(let i=0;i<4;++i){
             this.node.addComponent("PengHu_ShowCard").init(i,conf.seat);

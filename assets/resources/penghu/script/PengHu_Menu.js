@@ -31,6 +31,7 @@ cc.Class({
         _startPos:null,
         _canClick:true,
         _clickNode:null,
+        _clickBtnSeat:-1,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -70,11 +71,13 @@ cc.Class({
         Global.btnClickEvent(btn_copy_roomId,this.onClickCopyRoomIdToWx,this);
 
         this.btn_gps = cc.find("scene/operate_btn_view/btn_gps",this.node);
-        Global.btnClickEvent(this.btn_gps,this.onClickGPS,this);
         this.setGpsBtnColour(1);
 
         this.panel_gps = cc.find("scene/panel_gps",this.node);
         this.onSetShowGps(false);
+
+        this.panel_player = cc.find("scene/panel_player",this.node);
+        this.onClickClosePlayerInfo();
 
         let btn_exit = cc.find("spr_bg/btn_exit", this.panel_gps);
         Global.btnClickEvent(btn_exit,this.onClickExitGame,this);
@@ -97,7 +100,8 @@ cc.Class({
         cc.find("btn_ani/GPS_Yellow",this.btn_gps).active = (2 == colour);
     },
 
-    onClickGPS(){
+    onClickGPS(event, customEventData){
+        this._clickBtnSeat = customEventData;
         let req = {c: MsgId.PLAYER_DISTANCE_DATA};
         cc.vv.NetManager.send(req);
     },
@@ -155,7 +159,56 @@ cc.Class({
     },
 
     onRcvPlayersDistanceData(data){
-        this.onSetShowGps(true, data.detail);
+        if (-1 == this._clickBtnSeat) {
+            this.onSetShowGps(true, data.detail);
+        } else {
+            this.onShowPlayerInfo(this._clickBtnSeat, data.detail);
+        }
+    },
+
+    onClickClosePlayerInfo(){
+        this.panel_player.active = false;
+    },
+
+    onShowPlayerInfo(clickLocalSeat, data){
+        this.panel_player.active = true;
+        let self_bg = this.panel_player.getChildByName("self_bg");
+        self_bg.active = false;
+        let other_bg = this.panel_player.getChildByName("other_bg");
+        other_bg.active = false;
+        var panel_show = (0 == clickLocalSeat) ? self_bg : other_bg;
+
+        if (data && data.locatingList) {
+            let locatingList = data.locatingList;
+            for (var i = 0; i < locatingList.length; i++) {
+                let localSeat = cc.vv.gameData.getLocalChair(locatingList[i].seat);
+                if (clickLocalSeat == localSeat) {
+                    let spr_head = cc.find("head/radio_mask/spr_head", panel_show);
+                    Global.setHead(spr_head, locatingList[i].usericon);
+
+                    cc.find("node_bean/txet_beanNum", panel_show).getComponent(cc.Label).string = cc.vv.UserManager.coin;
+                    cc.find("node_roomCard/txet_roomCardNum", panel_show).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
+                    panel_show.getChildByName("txet_name").getComponent(cc.Label).string = "昵称：" + locatingList[i].playername;
+                    panel_show.getChildByName("txet_ID").getComponent(cc.Label).string = "游戏ID：" + locatingList[i].uid;
+                    panel_show.getChildByName("txet_IP").getComponent(cc.Label).string = "IP：" + locatingList[i].ip;
+                    panel_show.getChildByName("txet_GPS").getComponent(cc.Label).string = locatingList[i].isOpen ? "定位已开启" : "未开启定位";
+                    let toOtherPlayerData = locatingList[i].data;
+                    let distanceStr = "";
+                    for (var j = 0; j < toOtherPlayerData.length; j++) {
+                        distanceStr += "距离 " + toOtherPlayerData[j].playername + " ";
+                        if (0 < toOtherPlayerData[j].locating) {
+                            let numForShort = Math.floor(toOtherPlayerData[j].locating * 10) / 10;
+                            distanceStr += numForShort + "米\n";
+                        } else {
+                            distanceStr += "未知距离\n";
+                        }
+                    }
+                    panel_show.getChildByName("txet_distance").getComponent(cc.Label).string = distanceStr;
+
+                    panel_show.active = true;
+                }
+            }
+        }
     },
 
     onRcvGpsTipsNotify(data){
