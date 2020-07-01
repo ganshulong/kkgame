@@ -60,6 +60,8 @@ cc.Class({
                 this._gameOverNode.active = this._show;
                 this._gameOverNode.zIndex = 1;
                 this._gameOverNode.parent = this.node.getChildByName("scene");
+                this._gameOverNode.x = this.node.width/2;
+                this._gameOverNode.y = this.node.height/2;
 
                 this._winBgSpr = cc.find("game_end_bg/player0/img_bg",this._gameOverNode).getComponent(cc.Sprite).spriteFrame;
                 this._loseBgSpr = cc.find("game_end_bg/player1/img_bg",this._gameOverNode).getComponent(cc.Sprite).spriteFrame;

@@ -90,8 +90,8 @@ cc.Class({
                     this._overRoundNode.parent = this.node.getChildByName("scene");
                     this._overRoundNode.zIndex = 3;
                     this._overRoundNode.active = false;
-                    this._overRoundNode.x = -this.node.width/2;
-                    this._overRoundNode.y = -this.node.height/2;
+                    this._overRoundNode.x = this.node.width/2;
+                    this._overRoundNode.y = this.node.height/2;
                     this.initPlayerInfo(data.users,data.seat,data.hcard,data.source,data.hupaiType);
                     this.initRoomInfo(data.seat>0);
                     this.scheduleOnce(()=>{
