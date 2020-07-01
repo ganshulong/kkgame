@@ -206,8 +206,15 @@ cc.Class({
         if (-1 == this._clickBtnSeat) {
             this.onSetShowGps(true, data.detail);
         } else {
-            this.onShowPlayerInfo(this._clickBtnSeat, data.detail);
+            let localSeat = this.uiSeatToLocalSeat(this._clickBtnSeat);
+            this.onShowPlayerInfo(localSeat, data.detail);
         }
+    },
+
+    uiSeatToLocalSeat(uiSeat){
+        let uiSeatToLocalSeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,-1,1,-1],[0,1,-1,2],[0,1,2,3]];
+        let maxSeat = cc.vv.gameData.getRoomConf().seat;
+        return uiSeatToLocalSeatArr[maxSeat][uiSeat];
     },
 
     onClickClosePlayerInfo(){
