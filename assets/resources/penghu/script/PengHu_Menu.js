@@ -101,7 +101,7 @@ cc.Class({
     },
 
     onClickGPS(event, customEventData){
-        this._clickBtnSeat = customEventData;
+        this._clickBtnSeat = parseInt(customEventData);
         let req = {c: MsgId.PLAYER_DISTANCE_DATA};
         cc.vv.NetManager.send(req);
     },
@@ -125,8 +125,13 @@ cc.Class({
                 panel_gps_bg.getChildByName("node_" + i + "player").active = (maxSeat == i);
             }
             let node_players = panel_gps_bg.getChildByName("node_" + maxSeat + "player");
+            let isShowHeadTag = [];
+            for (var i = 0; i < maxSeat; i++) {
+                isShowHeadTag.push(false);
+            }
             for (var i = 0; i < locatingList.length; i++) {
                 let localSeat = cc.vv.gameData.getLocalChair(locatingList[i].seat);
+                isShowHeadTag[localSeat] = true;
                 let ndoe_player = node_players.getChildByName("ndoe_player" + localSeat);
                 ndoe_player.getChildByName("GPS_Green").active = (1 == locatingList[i].headColour);
                 ndoe_player.getChildByName("GPS_Red").active = (2 == locatingList[i].headColour);
@@ -135,9 +140,14 @@ cc.Class({
                 Global.setHead(spr_head,locatingList[i].usericon);
 
                 let toOtherPlayerData = locatingList[i].data;
+                let isShowLineTag = [];
+                for (var j = 0; j < maxSeat - 1; j++) {
+                    isShowLineTag.push(false);
+                }
                 for (var j = 0; j < toOtherPlayerData.length; j++) {
                     let toLocalSeat = cc.vv.gameData.getLocalChair(toOtherPlayerData[j].seat);
                     if (localSeat < toLocalSeat) {
+                        isShowLineTag[toLocalSeat] = true;
                         let ndoe_line = node_players.getChildByName("ndoe_line" + localSeat + toLocalSeat);
                         ndoe_line.getChildByName("line_green").active = (1 == toOtherPlayerData[j].gpsColour);
                         ndoe_line.getChildByName("line_red").active = (2 == toOtherPlayerData[j].gpsColour);
@@ -151,6 +161,40 @@ cc.Class({
                             } else {
                                 ndoe_line.getChildByName("text_distance").color = new cc.Color(134,90,46);
                             }
+                        }
+                    }
+                }
+                //还原线
+                for (var j = 0; j < maxSeat; j++) {
+                    if (!isShowLineTag[j]) {
+                        let toLocalSeat = j;
+                        if (localSeat < toLocalSeat) {
+                            let ndoe_line = node_players.getChildByName("ndoe_line" + localSeat + toLocalSeat);
+                            ndoe_line.getChildByName("line_green").active = false;
+                            ndoe_line.getChildByName("line_red").active = false;
+                            ndoe_line.getChildByName("text_distance").getComponent(cc.Label).string = "未知距离";
+                            ndoe_line.getChildByName("text_distance").color = new cc.Color(134,90,46);
+                        }
+                    }
+                }
+            }
+            //还原头像
+            for (var i = 0; i < maxSeat; i++) {
+                if (!isShowHeadTag[i]) {
+                    let localSeat = i;
+                    let ndoe_player = node_players.getChildByName("ndoe_player" + localSeat);
+                    ndoe_player.getChildByName("GPS_Green").active = false;
+                    ndoe_player.getChildByName("GPS_Red").active = false;
+                    cc.find("radio_mask/spr_head", ndoe_player).active = false;
+                    //还原线
+                    for (var j = 0; j < maxSeat; j++) {
+                        let toLocalSeat = j;
+                        if (localSeat < toLocalSeat) {
+                            let ndoe_line = node_players.getChildByName("ndoe_line" + localSeat + toLocalSeat);
+                            ndoe_line.getChildByName("line_green").active = false;
+                            ndoe_line.getChildByName("line_red").active = false;
+                            ndoe_line.getChildByName("text_distance").getComponent(cc.Label).string = "未知距离";
+                            ndoe_line.getChildByName("text_distance").color = new cc.Color(134,90,46);
                         }
                     }
                 }
