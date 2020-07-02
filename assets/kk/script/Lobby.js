@@ -70,6 +70,11 @@ cc.Class({
 
         this.initJoinGame();
 
+        let gameItem = cc.find("right_list/scrollview/view/content/item",this.node)
+        Global.btnClickEvent(gameItem,this.onClickCreateRoom,this);
+
+        this.CreateRoomJS = this.node.getComponent("CreateRoom");
+
         let info = club_btn.getChildByName("info");
         info.active = cc.vv.UserManager.clubs.length>0;
         if(cc.vv.UserManager.clubs.length>0) this.initClub(info);
@@ -82,6 +87,10 @@ cc.Class({
         Global.playBgm(Global.SOUNDS.bgm_hall);
 
         Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData,this);
+    },
+
+    onClickCreateRoom(){
+        this.CreateRoomJS.showCreateRoom(false);
     },
 
     initSetBtn(){

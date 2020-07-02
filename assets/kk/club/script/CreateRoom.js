@@ -28,6 +28,7 @@ cc.Class({
         //     }
         // },
         _createLayer:null,
+        _isClubRoom:false,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -46,28 +47,28 @@ cc.Class({
      gameInfo.tname // 桌名
      gameInfo.trustee // 托管
      */
-start () {
-
+    start () {
         Global.registerEvent(EventId.GAME_CREATEROOM,this.showCreateRoom,this);
         cc.vv.NetManager.registerMsg(MsgId.ADDGAME, this.onRcvAddGameResult, this);
     },
 
-    showCreateRoom(){
+    showCreateRoom(isClubRoo){
+        this._isClubRoom = isClubRoo;
         if(this._createLayer === null){
-            cc.loader.loadRes("common/prefab/create_home_layer",cc.Prefab,(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
                 if(err === null){
                     this._createLayer = cc.instantiate(prefab);
                     this._createLayer.parent = this.node;
                     this._createLayer.zIndex = 1;
-                    this._createLayer.x = -this.node.width/2;
-                    this._createLayer.y = -this.node.height/2;
+                    // this._createLayer.x = this.node.width/2;
+                    // this._createLayer.y = this.node.height/2;
                     this.clearPengHu();
 
-                    let btn_create_home_back = this._createLayer.getChildByName("btn_create_home_back");
-                    Global.btnClickEvent(btn_create_home_back,this.onClose,this);
+                    let btn_back = this._createLayer.getChildByName("btn_back");
+                    Global.btnClickEvent(btn_back,this.onClose,this);
 
-                    let btn_create_home = cc.find("penghu/btn_create_home",this._createLayer);
-                    Global.btnClickEvent(btn_create_home,this.onCreatePengHu,this);
+                    let btn_create_room = cc.find("img_bg/right_bg/penghu/btn_create_room",this._createLayer);
+                    Global.btnClickEvent(btn_create_room,this.onCreatePengHu,this);
                 }
             })
         }
@@ -90,15 +91,17 @@ start () {
 
     // 创建碰胡
     onCreatePengHu(){
-        let layer = this._createLayer.getChildByName("penghu");
-        let str = layer.getChildByName("input_name").getComponent(cc.EditBox).string;
-        if(str.length===0){
-            cc.vv.FloatTip.show("请输入桌子名称!");
-            return;
-        }
+        let layer = cc.find("img_bg/right_bg/penghu",this._createLayer);
+        // let str = layer.getChildByName("input_name").getComponent(cc.EditBox).string;
+        // if(str.length===0){
+        //     cc.vv.FloatTip.show("请输入桌子名称!");
+        //     return;
+        // }
         let req = {};
-        req.clubid = cc.vv.UserManager.currClubId;
-        req.gameid = 1;
+        if (this._isClubRoom) {
+            req.clubid = cc.vv.UserManager.currClubId;
+        }
+        req.gameid = 3;
         req.gamenum = 8;
         req.param1 = 0;
         req.score = 1;
@@ -123,7 +126,7 @@ start () {
             }
 
             // 积分
-            let jifen = cc.find("jifen/toggle"+i,layer);
+            let jifen = cc.find("score/toggle"+i,layer);
             if(zhongzhuang.getComponent(cc.Toggle).isChecked){
                 if(i===1) req.score = 1;
                 else if(i === 2) req.score = 2;
@@ -158,15 +161,15 @@ start () {
         let distance = cc.find("other/toggle2",layer);
         req.distance = distance.getComponent(cc.Toggle).isChecked?1:0;
 
-        req.tname = str;
+        req.tname = "";
 
-        var data = { 'c': MsgId.ADDGAME};
+        var data = { 'c': MsgId.GAME_CREATEROOM};
         data.gameInfo = req;
         cc.vv.NetManager.send(data);
     },
 
     clearPengHu(){
-        let layer = this._createLayer.getChildByName("penghu");
+        let layer = cc.find("img_bg/right_bg/penghu",this._createLayer);
         for(let i=1;i<4;++i){
             // 局数
             let round = cc.find("round/toggle"+i,layer);
@@ -177,7 +180,7 @@ start () {
             zhongzhuang.getComponent(cc.Toggle).isChecked = i===1;
 
             // 积分
-            let jifen = cc.find("jifen/toggle"+i,layer);
+            let jifen = cc.find("score/toggle"+i,layer);
             jifen.getComponent(cc.Toggle).isChecked = i===1;
 
             if(i<3){
@@ -200,7 +203,8 @@ start () {
         // 托管
         let distance = cc.find("other/toggle2",layer);
         distance.getComponent(cc.Toggle).isChecked = false;
-        layer.getChildByName("input_name").getComponent(cc.EditBox).string = "";
+
+        // layer.getChildByName("input_name").getComponent(cc.EditBox).string = "";
     },
 
     onDestroy(){

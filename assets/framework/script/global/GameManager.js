@@ -386,7 +386,7 @@ cc.Class({
         //创建房间或者加入房间
         onRecNetCreateOrJoinRoom: function (msgDic) {
             if (msgDic.code == 200) {
-                if(msgDic.deskInfo.conf.gameid === 1){
+                if(msgDic.deskInfo.conf.gameid === 1 || msgDic.deskInfo.conf.gameid === 3){
                     if(cc.vv.gameData === null){
                         let data = require("PengHu_GameData");
                         cc.vv.gameData = new data();

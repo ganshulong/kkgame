@@ -72,6 +72,9 @@ cc.Class({
         } else if (Global.isIOS()) {
 
         }
+
+        //testgsl
+        this.onWeChatLogin();
     },
 
     onPhoneLogin() {
