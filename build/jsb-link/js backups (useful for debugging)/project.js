@@ -3267,7 +3267,11 @@ Lobby: [ function(e, t, n) {
 cc._RF.push(t, "cce2fkSN6hEsrT0otSSB/TE", "Lobby");
 cc.Class({
 extends: cc.Component,
-properties: {},
+properties: {
+_effectIsOpen: 1,
+_musicIsOpen: 1,
+_audioVolue: 1
+},
 onLoad: function() {
 cc.vv.gameData && cc.vv.gameData.clear();
 this.node.parent.name = "lobby";
@@ -3280,19 +3284,106 @@ var e = this.node.getChildByName("club_btn");
 Global.btnClickEvent(e, this.onClub, this);
 var t = cc.find("dt_xmt/share_btn", this.node);
 Global.btnClickEvent(t, this.onClickShare, this);
-this.shareNode = this.node.getChildByName("shareNode");
-this.shareNode.active = !1;
-var n = cc.find("share_bg/btn_shareToSession", this.shareNode);
+this.panel_share = this.node.getChildByName("panel_share");
+this.panel_share.active = !1;
+var n = cc.find("share_bg/btn_shareToSession", this.panel_share);
 Global.btnClickEvent(n, this.onClickShareToSession, this);
-var i = cc.find("share_bg/btn_shareToTimeline", this.shareNode);
+var i = cc.find("share_bg/btn_shareToTimeline", this.panel_share);
 Global.btnClickEvent(i, this.onClickShareToTimeline, this);
+this.initSetBtn();
 var a = e.getChildByName("info");
 a.active = 0 < cc.vv.UserManager.clubs.length;
 0 < cc.vv.UserManager.clubs.length && this.initClub(a);
 var o = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
 Global.setHead(o, cc.vv.UserManager.userIcon);
 cc.find("gps/label_city", this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
+Global.playBgm(Global.SOUNDS.bgm_hall);
 Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData, this);
+},
+initSetBtn: function() {
+var e = cc.find("dt_xmt/setting_btn", this.node);
+Global.btnClickEvent(e, this.onClickSet, this);
+this.panel_set = this.node.getChildByName("panel_set");
+this.panel_set.active = !1;
+var t = this.panel_set.getChildByName("btn_closeSet");
+Global.btnClickEvent(t, this.onClickSet, this);
+var n = cc.find("phone_bg/btn_bind", this.panel_set);
+Global.btnClickEvent(n, this.onClickBindPhone, this);
+var i = this.panel_set.getChildByName("btn_switch");
+Global.btnClickEvent(i, this.onClickSwitch, this);
+var a = this.panel_set.getChildByName("btn_quitGame");
+Global.btnClickEvent(a, this.onClickQuitGame, this);
+this.slider_volum = this.panel_set.getChildByName("slider_volum");
+this.progressBar_volum = this.slider_volum.getChildByName("progressBar_volum");
+var o = this.panel_set.getChildByName("btn_effect");
+Global.btnClickEvent(o, this.setEffct, this);
+this.btn_effect_mask = this.panel_set.getChildByName("btn_effect_mask");
+var r = this.panel_set.getChildByName("btn_music");
+Global.btnClickEvent(r, this.setMusic, this);
+this.btn_music_mask = this.panel_set.getChildByName("btn_music_mask");
+var s = this.panel_set.getChildByName("btn_help");
+Global.btnClickEvent(s, this.onClickHelp, this);
+var c = this.panel_set.getChildByName("btn_protol");
+Global.btnClickEvent(c, this.onClickProtol, this);
+var l = this.panel_set.getChildByName("btn_clean");
+Global.btnClickEvent(l, this.onClickClean, this);
+},
+onClickBindPhone: function() {},
+onClickSwitch: function() {},
+onClickQuitGame: function() {
+var e = cc.vv.Language.request_quit;
+cc.vv.AlertView.show(e, function() {
+cc.game.end();
+}, function() {});
+},
+onSliderVolum: function(e) {
+this._audioVolue = Math.floor(100 * e.progress) / 100;
+this.slider_volum.getComponent(cc.Slider).progress = this._audioVolue;
+this.progressBar_volum.getComponent(cc.ProgressBar).progress = this._audioVolue;
+cc.sys.localStorage.setItem("_audioVolue", this._audioVolue);
+this._effectIsOpen && cc.vv.AudioManager.setEffVolume(this._audioVolue);
+this._musicIsOpen && cc.vv.AudioManager.setBgmVolume(this._audioVolue);
+},
+setEffct: function() {
+this._effectIsOpen = 0 == this._effectIsOpen ? 1 : 0;
+this.setOperate(this._effectIsOpen, this.btn_effect_mask);
+cc.sys.localStorage.setItem("_effectIsOpen", this._effectIsOpen);
+cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
+},
+setMusic: function() {
+this._musicIsOpen = 0 == this._musicIsOpen ? 1 : 0;
+this.setOperate(this._musicIsOpen, this.btn_music_mask);
+cc.sys.localStorage.setItem("_musicIsOpen", this._musicIsOpen);
+cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
+},
+setOperate: function(e, t) {
+t.x = 0 == e ? 55 : 140;
+},
+onClickHelp: function() {},
+onClickProtol: function() {},
+onClickClean: function() {},
+onClickSet: function() {
+this.panel_set.active = !this.panel_set.active;
+if (this.panel_set.active) {
+var e = this.panel_set.getChildByName("node_userinfo"), t = cc.find("UserHead/radio_mask/spr_head", e);
+Global.setHead(t, cc.vv.UserManager.userIcon);
+e.getChildByName("text_name").getComponent(cc.Label).string = cc.vv.UserManager.nickName;
+e.getChildByName("text_id").getComponent(cc.Label).string = "ID: " + cc.vv.UserManager.uid;
+cc.find("phone_bg/text_num", this.panel_set).getComponent(cc.Label).string = cc.vv.UserManager.mobile;
+cc.find("phone_bg/btn_bind", this.panel_set).active = !cc.vv.UserManager.mobile;
+this._audioVolue = Number(cc.sys.localStorage.getItem("_audioVolue"));
+null === this._audioVolue && (this._audioVolue = 1);
+this.slider_volum.getComponent(cc.Slider).progress = this._audioVolue;
+this.progressBar_volum.getComponent(cc.ProgressBar).progress = this._audioVolue;
+this._effectIsOpen = parseInt(cc.sys.localStorage.getItem("_effectIsOpen"));
+null === this._effectIsOpen && (this._effectIsOpen = 1);
+this.setOperate(this._effectIsOpen, this.btn_effect_mask);
+cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
+this._musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
+null === this._musicIsOpen && (this._musicIsOpen = 1);
+this.setOperate(this._musicIsOpen, this.btn_music_mask);
+cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
+}
 },
 onRecvSelfGpsData: function(e) {
 cc.find("gps/label_city", this.node).getComponent(cc.Label).string = e.detail.city;
@@ -3309,7 +3400,7 @@ onClub: function() {
 cc.vv.SceneMgr.enterScene(0 < cc.vv.UserManager.clubs.length ? "club" : "club_lobby");
 },
 onClickShare: function() {
-this.shareNode.active = !this.shareNode.active;
+this.panel_share.active = !this.panel_share.active;
 },
 onClickShareToSession: function() {
 this.onShareToWx(Global.ShareSceneType.WXSceneSession);
@@ -4755,6 +4846,8 @@ d._gameOverNode = cc.instantiate(t);
 d._gameOverNode.active = d._show;
 d._gameOverNode.zIndex = 1;
 d._gameOverNode.parent = d.node.getChildByName("scene");
+d._gameOverNode.x = d.node.width / 2;
+d._gameOverNode.y = d.node.height / 2;
 d._winBgSpr = cc.find("game_end_bg/player0/img_bg", d._gameOverNode).getComponent(cc.Sprite).spriteFrame;
 d._loseBgSpr = cc.find("game_end_bg/player1/img_bg", d._gameOverNode).getComponent(cc.Sprite).spriteFrame;
 var n = d._gameOverNode.getChildByName("btn_back");
@@ -6356,8 +6449,8 @@ i._overRoundNode = cc.instantiate(t);
 i._overRoundNode.parent = i.node.getChildByName("scene");
 i._overRoundNode.zIndex = 3;
 i._overRoundNode.active = !1;
-i._overRoundNode.x = -i.node.width / 2;
-i._overRoundNode.y = -i.node.height / 2;
+i._overRoundNode.x = i.node.width / 2;
+i._overRoundNode.y = i.node.height / 2;
 i.initPlayerInfo(n.users, n.seat, n.hcard, n.source, n.hupaiType);
 i.initRoomInfo(0 < n.seat);
 i.scheduleOnce(function() {
@@ -7987,7 +8080,7 @@ this.growup = e.growup;
 this.red_envelope = t.red_envelope;
 this.openid = t.openid;
 this.sigin = e.sigin;
-this.mobile = t.mobile ? t.mobile : "";
+this.mobile = t.mobile || "";
 this.roomcard = t.roomcard;
 this.clubs = e.clubs;
 this.GpsCity = t.city || "";
@@ -8730,7 +8823,7 @@ cc._RF.pop();
 }, {
 Md5: "Md5"
 } ],
-lauch: [ function(h, e, t) {
+lauch: [ function(d, e, t) {
 "use strict";
 cc._RF.push(e, "a926erjdRBMzZ52kpxBGxpF", "lauch");
 cc.Class({
@@ -8738,47 +8831,49 @@ extends: cc.Component,
 properties: {},
 onLoad: function() {
 cc.director.setDisplayStats(!1);
-h("AppLog");
-h("GlobalVar");
-h("MsgIdDef");
-h("EventDef");
-h("GlobalCfg");
-h("GlobalFunc");
+d("AppLog");
+d("GlobalVar");
+d("MsgIdDef");
+d("EventDef");
+d("GlobalCfg");
+d("GlobalFunc");
 Global.autoAdaptDevices(!1);
 cc.vv = {};
-var e = h("AudioManager");
+var e = d("AudioManager");
 e.init();
 cc.vv.AudioManager = e;
-cc.vv.Language = h("ChineseCfg");
-cc.vv.EventManager = h("EventManager");
-var t = h("NetManager");
+cc.vv.Language = d("ChineseCfg");
+cc.vv.EventManager = d("EventManager");
+var t = d("NetManager");
 t.init();
 cc.vv.NetManager = t;
-var n = h("PlatformApi");
+var n = d("PlatformApi");
 n.init();
 cc.vv.PlatformApiMgr = n;
-var i = h("FloatTip");
+var i = d("FloatTip");
 cc.vv.FloatTip = new i();
 cc.vv.FloatTip.init("common/prefab/FloatTip");
-var a = h("AlertViewMgr");
+var a = d("AlertViewMgr");
 cc.vv.AlertView = new a();
-var o = h("SceneMgr");
+var o = d("SceneMgr");
 cc.vv.SceneMgr = o;
 var r = new cc.Node();
 r.addComponent("SubGameUpdate");
 cc.vv.SubGameUpdateNode = r;
 cc.game.addPersistRootNode(r);
-var s = cc.sys.localStorage.getItem("music");
+var s = Number(cc.sys.localStorage.getItem("_audioVolue"));
 null === s && (s = 1);
-cc.vv.AudioManager.setBgmVolume(1 == s ? 1 : 0);
-var c = cc.sys.localStorage.getItem("effect");
+var c = parseInt(cc.sys.localStorage.getItem("_effectIsOpen"));
 null === c && (c = 1);
-cc.vv.AudioManager.setEffVolume(1 == c ? 1 : 0);
-var l = cc.sys.localStorage.getItem("language");
-null === l && (l = 0);
-Global.language = l;
-cc.vv.WxMgr = h("WxMgr");
-h("AssetManager").loadAllRes();
+cc.vv.AudioManager.setEffVolume(1 == c ? s : 0);
+var l = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
+null === l && (l = 1);
+cc.vv.AudioManager.setBgmVolume(1 == l ? s : 0);
+var h = cc.sys.localStorage.getItem("language");
+null === h && (h = 0);
+Global.language = h;
+cc.vv.WxMgr = d("WxMgr");
+d("AssetManager").loadAllRes();
 this.loadAlterView();
 this.loadLoadingTip();
 },
@@ -8874,6 +8969,7 @@ if (Global.isAndroid()) {
 var a = Global.setAppidWithAppsecretForJS("wx82256d3bda922e13", "b87d6ec883757e530cdf55794df03e92");
 console.log(a + "@@@@@@@@");
 } else Global.isIOS();
+this.onWeChatLogin();
 },
 onPhoneLogin: function() {},
 onWeChatLoginCallBack: function(e) {

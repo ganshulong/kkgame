@@ -34,6 +34,11 @@ cc.Class({
         _effectIsOpen:1,
         _musicIsOpen:1,
         _audioVolue:1,
+
+        _numList:[],
+        _inputIndex:0,
+        _numLength:6,
+        numAtlas:cc.SpriteAtlas,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -62,6 +67,8 @@ cc.Class({
         Global.btnClickEvent(btn_shareToTimeline,this.onClickShareToTimeline,this);
 
         this.initSetBtn();
+
+        this.initJoinGame();
 
         let info = club_btn.getChildByName("info");
         info.active = cc.vv.UserManager.clubs.length>0;
@@ -210,6 +217,80 @@ cc.Class({
             cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
         }
     },
+    
+    initJoinGame(){
+        let btn_join_game = this.node.getChildByName("btn_join_game");
+        Global.btnClickEvent(btn_join_game,this.onClickJoinGame,this);
+
+        this.panel_join_game = this.node.getChildByName("panel_join_game");
+        this.panel_join_game.active = false;
+
+        let closeBtn = cc.find("bg/btn_close",this.panel_join_game);
+        Global.btnClickEvent(closeBtn,this.onCloseJoinClub,this);
+
+        for(let i=0;i<10;++i){
+            let btn = cc.find("bg/btn_number"+i,this.panel_join_game);
+            btn._index = i;
+            Global.btnClickEvent(btn,this.inputNum,this);
+        }
+
+        let delBtn = cc.find("bg/btn_delete",this.panel_join_game);
+        Global.btnClickEvent(delBtn,this.onDelete,this);
+
+        let resetBtn = cc.find("bg/btn_reset",this.panel_join_game);
+        Global.btnClickEvent(resetBtn,this.onReset,this);
+
+        for(let i=0;i<this._numLength;++i){
+            let numLabel = cc.find("bg/num"+i,this.panel_join_game).getChildByName("num");
+            numLabel.active = false;
+            this._numList.push(numLabel);
+        }
+    },
+
+    onClickJoinGame(){
+        this.panel_join_game.active = true;
+        this.onReset();
+    },
+
+    onCloseJoinClub(){
+       this.panel_join_game.active = false;
+    },
+
+    inputNum(event){
+        if(this._inputIndex < this._numLength){
+            let index = event.target._index;
+            this._numList[this._inputIndex].active = true;
+            this._numList[this._inputIndex].getComponent(cc.Sprite).spriteFrame = this.numAtlas.getSpriteFrame("hallClub-img-member-img-img_"+index);
+            this._numList[this._inputIndex]._index = index;
+            ++this._inputIndex;
+            if(this._inputIndex >= this._numLength){
+                let str = "";
+                for(let i=0;i<this._numLength;++i){
+                    str += this._numList[i]._index;
+                }
+                var req = { 'c': MsgId.GAME_JOINROOM};
+                req.deskId = str;
+                cc.vv.NetManager.send(req);
+            }
+        }
+    },
+
+    onReset(){
+        this._inputIndex = 0;
+        for(let i=0;i<this._numList.length;++i){
+            this._numList[i].active = false;
+            this._numList[i]._index = -1;
+        }
+    },
+
+    onDelete(){
+        --this._inputIndex;
+        if(this._inputIndex<0) this._inputIndex = 0;
+        if(this._inputIndex>=0){
+            this._numList[this._inputIndex].active = false;
+            this._numList[this._inputIndex]._index = -1;
+        }
+    },
 
     onRecvSelfGpsData(data){
         cc.find("gps/label_city",this.node).getComponent(cc.Label).string = data.detail.city;
@@ -230,23 +311,23 @@ cc.Class({
         cc.vv.SceneMgr.enterScene(cc.vv.UserManager.clubs.length>0?"club":"club_lobby");
     },
  
- 	onClickShare(){
- 		this.panel_share.active = !this.panel_share.active;
- 	},
+    onClickShare(){
+        this.panel_share.active = !this.panel_share.active;
+    },
 
- 	onClickShareToSession(){
- 		this.onShareToWx(Global.ShareSceneType.WXSceneSession);
- 	},
+    onClickShareToSession(){
+        this.onShareToWx(Global.ShareSceneType.WXSceneSession);
+    },
 
- 	onClickShareToTimeline(){
- 		this.onShareToWx(Global.ShareSceneType.WXSceneTimeline);
- 	},
+    onClickShareToTimeline(){
+        this.onShareToWx(Global.ShareSceneType.WXSceneTimeline);
+    },
 
- 	onShareToWx(ShareSceneType){
- 		let title = "闲去游戏邀请";
+    onShareToWx(ShareSceneType){
+        let title = "闲去游戏邀请";
         let description = "点击进入闲去游戏下载";
         Global.onWXShareLink(ShareSceneType, title, description, Global.iconUrl, Global.shareLink);
- 	},
+    },
 
     start () {
 
