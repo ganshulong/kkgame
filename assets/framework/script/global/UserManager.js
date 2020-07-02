@@ -160,7 +160,7 @@ cc.Class({
             this.red_envelope = playerData.red_envelope;
             this.openid = playerData.openid;
             this.sigin = serverData.sigin;
-            this.mobile = playerData.mobile?playerData.mobile:"";
+            this.mobile = playerData.mobile || "";
             this.roomcard =  playerData.roomcard;
             this.clubs = serverData.clubs;
             this.GpsCity = playerData.city || "";

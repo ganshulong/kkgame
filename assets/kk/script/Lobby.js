@@ -31,46 +31,185 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
+        _effectIsOpen:1,
+        _musicIsOpen:1,
+        _audioVolue:1,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () {
-         if(cc.vv.gameData) cc.vv.gameData.clear();
+        if(cc.vv.gameData) cc.vv.gameData.clear();
 
-         this.node.parent.name = "lobby";
-         Global.autoAdaptDevices(false);
+        this.node.parent.name = "lobby";
+        Global.autoAdaptDevices(false);
 
-         cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;
-         cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
-         cc.find("money_bg/gold_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
-         cc.find("room_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
+        cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;
+        cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
+        cc.find("money_bg/gold_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
+        cc.find("room_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
-         let club_btn = this.node.getChildByName("club_btn");
-         Global.btnClickEvent(club_btn,this.onClub,this);
+        let club_btn = this.node.getChildByName("club_btn");
+        Global.btnClickEvent(club_btn,this.onClub,this);
 
-         let share_btn = cc.find("dt_xmt/share_btn",this.node)
-         Global.btnClickEvent(share_btn,this.onClickShare,this);
-         this.shareNode = this.node.getChildByName("shareNode");
-         this.shareNode.active = false;
-         let btn_shareToSession = cc.find("share_bg/btn_shareToSession",this.shareNode)
-         Global.btnClickEvent(btn_shareToSession,this.onClickShareToSession,this);
-         let btn_shareToTimeline = cc.find("share_bg/btn_shareToTimeline",this.shareNode)
-         Global.btnClickEvent(btn_shareToTimeline,this.onClickShareToTimeline,this);
+        let share_btn = cc.find("dt_xmt/share_btn",this.node)
+        Global.btnClickEvent(share_btn,this.onClickShare,this);
+        this.panel_share = this.node.getChildByName("panel_share");
+        this.panel_share.active = false;
+        let btn_shareToSession = cc.find("share_bg/btn_shareToSession",this.panel_share)
+        Global.btnClickEvent(btn_shareToSession,this.onClickShareToSession,this);
+        let btn_shareToTimeline = cc.find("share_bg/btn_shareToTimeline",this.panel_share)
+        Global.btnClickEvent(btn_shareToTimeline,this.onClickShareToTimeline,this);
 
-         let info = club_btn.getChildByName("info");
-         info.active = cc.vv.UserManager.clubs.length>0;
-         if(cc.vv.UserManager.clubs.length>0) this.initClub(info);
+        this.initSetBtn();
 
-         let head = cc.find("head_bg/UserHead/radio_mask/spr_head",this.node);
-         Global.setHead(head,cc.vv.UserManager.userIcon);
+        let info = club_btn.getChildByName("info");
+        info.active = cc.vv.UserManager.clubs.length>0;
+        if(cc.vv.UserManager.clubs.length>0) this.initClub(info);
 
-         cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
+        let head = cc.find("head_bg/UserHead/radio_mask/spr_head",this.node);
+        Global.setHead(head,cc.vv.UserManager.userIcon);
 
-        // Global.playBgm(Global.SOUNDS.bgm_hall);
+        cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
+
+        Global.playBgm(Global.SOUNDS.bgm_hall);
 
         Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData,this);
-     },
+    },
+
+    initSetBtn(){
+        let setting_btn = cc.find("dt_xmt/setting_btn",this.node)
+        Global.btnClickEvent(setting_btn,this.onClickSet,this);
+
+        this.panel_set = this.node.getChildByName("panel_set");
+        this.panel_set.active = false;
+
+        let btn_closeSet = this.panel_set.getChildByName("btn_closeSet");
+        Global.btnClickEvent(btn_closeSet,this.onClickSet,this);
+
+        let btn_bind = cc.find("phone_bg/btn_bind",this.panel_set);
+        Global.btnClickEvent(btn_bind,this.onClickBindPhone,this);
+
+        let btn_switch = this.panel_set.getChildByName("btn_switch");
+        Global.btnClickEvent(btn_switch,this.onClickSwitch,this);
+
+        let btn_quitGame = this.panel_set.getChildByName("btn_quitGame");
+        Global.btnClickEvent(btn_quitGame,this.onClickQuitGame,this);
+
+        this.slider_volum = this.panel_set.getChildByName("slider_volum");
+        this.progressBar_volum = this.slider_volum.getChildByName("progressBar_volum");
+        
+        let btn_effect = this.panel_set.getChildByName("btn_effect");
+        Global.btnClickEvent(btn_effect,this.setEffct,this);
+        this.btn_effect_mask = this.panel_set.getChildByName("btn_effect_mask");
+
+        let btn_music = this.panel_set.getChildByName("btn_music");
+        Global.btnClickEvent(btn_music,this.setMusic,this);
+        this.btn_music_mask = this.panel_set.getChildByName("btn_music_mask");
+
+        let btn_help = this.panel_set.getChildByName("btn_help");
+        Global.btnClickEvent(btn_help,this.onClickHelp,this);
+
+        let btn_protol = this.panel_set.getChildByName("btn_protol");
+        Global.btnClickEvent(btn_protol,this.onClickProtol,this);
+
+        let btn_clean = this.panel_set.getChildByName("btn_clean");
+        Global.btnClickEvent(btn_clean,this.onClickClean,this);
+        
+        //testgsl
+        // this.onClickSet();
+    },
+
+    onClickBindPhone(){
+
+    },
+
+    onClickSwitch(){
+
+    },
+
+    onClickQuitGame(){
+        let lan = cc.vv.Language.request_quit;
+        let sureCall = function () {
+            cc.game.end();
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show(lan, sureCall, cancelCall)
+    },
+
+    onSliderVolum(sliderEvent){
+        this._audioVolue = Math.floor(sliderEvent.progress * 100) / 100;
+        this.slider_volum.getComponent(cc.Slider).progress = this._audioVolue;
+        this.progressBar_volum.getComponent(cc.ProgressBar).progress = this._audioVolue;
+        cc.sys.localStorage.setItem("_audioVolue",this._audioVolue);
+        if (this._effectIsOpen) {
+            cc.vv.AudioManager.setEffVolume(this._audioVolue);
+        }
+        if (this._musicIsOpen) {
+            cc.vv.AudioManager.setBgmVolume(this._audioVolue);
+        }
+    },
+
+    // 设置音效
+    setEffct(){
+        this._effectIsOpen = this._effectIsOpen == 0 ? 1 : 0;
+        this.setOperate(this._effectIsOpen,this.btn_effect_mask);
+        cc.sys.localStorage.setItem("_effectIsOpen",this._effectIsOpen);
+        cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
+    },
+
+    // 设置音乐
+    setMusic(){
+        this._musicIsOpen = this._musicIsOpen == 0 ? 1 : 0;
+        this.setOperate(this._musicIsOpen,this.btn_music_mask);
+        cc.sys.localStorage.setItem("_musicIsOpen",this._musicIsOpen);
+        cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
+    },
+
+    setOperate(vol,node){
+        node.x = vol== 0 ? 55 : 140;
+    },
+
+    onClickHelp(){
+        
+    },
+
+    onClickProtol(){
+        
+    },
+
+    onClickClean(){
+        
+    },
+
+    onClickSet(){
+        this.panel_set.active = !this.panel_set.active;
+        if (this.panel_set.active) {
+            let node_userinfo = this.panel_set.getChildByName("node_userinfo");
+            let spr_head = cc.find("UserHead/radio_mask/spr_head",node_userinfo);
+            Global.setHead(spr_head,cc.vv.UserManager.userIcon);
+            node_userinfo.getChildByName("text_name").getComponent(cc.Label).string = cc.vv.UserManager.nickName;
+            node_userinfo.getChildByName("text_id").getComponent(cc.Label).string = "ID: " + cc.vv.UserManager.uid;
+            cc.find("phone_bg/text_num",this.panel_set).getComponent(cc.Label).string = cc.vv.UserManager.mobile;
+            cc.find("phone_bg/btn_bind",this.panel_set).active = (!cc.vv.UserManager.mobile);
+
+            this._audioVolue = Number(cc.sys.localStorage.getItem("_audioVolue"));
+            if(this._audioVolue === null) this._audioVolue = 1;
+            this.slider_volum.getComponent(cc.Slider).progress = this._audioVolue;
+            this.progressBar_volum.getComponent(cc.ProgressBar).progress = this._audioVolue;
+
+            this._effectIsOpen = parseInt(cc.sys.localStorage.getItem("_effectIsOpen"));
+            if(this._effectIsOpen === null) this._effectIsOpen = 1;
+            this.setOperate(this._effectIsOpen,this.btn_effect_mask);
+            cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
+
+            this._musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
+            if(this._musicIsOpen === null) this._musicIsOpen = 1;
+            this.setOperate(this._musicIsOpen,this.btn_music_mask);
+            cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
+        }
+    },
 
     onRecvSelfGpsData(data){
         cc.find("gps/label_city",this.node).getComponent(cc.Label).string = data.detail.city;
@@ -92,7 +231,7 @@ cc.Class({
     },
  
  	onClickShare(){
- 		this.shareNode.active = !this.shareNode.active;
+ 		this.panel_share.active = !this.panel_share.active;
  	},
 
  	onClickShareToSession(){

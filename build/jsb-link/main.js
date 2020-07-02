@@ -85,7 +85,7 @@
                 BK.Script.loadlib();
             }
 
-            cc.view.resizeWithBrowserSize(true);
+            // cc.view.resizeWithBrowserSize(true);
 
             if (!false && !false) {
                 // UC browser on many android devices have performance issue with retina display
