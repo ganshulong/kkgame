@@ -58,10 +58,11 @@ cc.Class({
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
                 if(err === null){
                     this._createLayer = cc.instantiate(prefab);
+                    this._createLayer.setContentSize(cc.size(this.node.width, this.node.height));
                     this._createLayer.parent = this.node;
                     this._createLayer.zIndex = 1;
-                    // this._createLayer.x = this.node.width/2;
-                    // this._createLayer.y = this.node.height/2;
+                    this._createLayer.x = this.node.width/2 - this.node.x;
+                    this._createLayer.y = this.node.height/2 - this.node.y;
                     this.clearPengHu();
 
                     let btn_back = this._createLayer.getChildByName("btn_back");

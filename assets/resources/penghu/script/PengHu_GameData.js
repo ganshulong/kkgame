@@ -444,7 +444,7 @@ cc.Class({
                 if (cc.vv.UserManager.currClubId) {
                     cc.vv.SceneMgr.enterScene('club');
                 } else {
-                    cc.vv.SceneMgr.enterScene('club_lobby');
+                    cc.vv.SceneMgr.enterScene('lobby');
                 }
             }
         }
