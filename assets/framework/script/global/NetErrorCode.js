@@ -60,6 +60,8 @@ codeCfg.code = {
     '613':'band_aren',
     '619':"该房间正在结算，请稍后",
 
+    '700':"room_id_non_existent",
+
     '710':'enter_game',
     '720':'房卡不足',
 	'803':'system_maintenance_tips',

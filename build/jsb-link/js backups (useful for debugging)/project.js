@@ -997,7 +997,8 @@ dollar: "价格:%s美元",
 show_ad: "金币不足，您可以观看完整广告来获得金币奖励，您是否观看?",
 email: "邮箱",
 email_tips: "提示：邮箱账号是您找回密码的凭证。",
-email_empty: "邮箱不能为空"
+email_empty: "邮箱不能为空",
+room_id_non_existent: "房号不存在"
 };
 cc._RF.pop();
 }, {} ],
@@ -1559,25 +1560,25 @@ cc._RF.push(t, "fdc262NLV9DTpLVRj+Ez++E", "CreateRoom");
 cc.Class({
 extends: cc.Component,
 properties: {
-_createLayer: null
+_createLayer: null,
+_isClubRoom: !1
 },
 start: function() {
 Global.registerEvent(EventId.GAME_CREATEROOM, this.showCreateRoom, this);
 cc.vv.NetManager.registerMsg(MsgId.ADDGAME, this.onRcvAddGameResult, this);
 },
-showCreateRoom: function() {
+showCreateRoom: function(e) {
 var a = this;
-null === this._createLayer ? cc.loader.loadRes("common/prefab/create_home_layer", cc.Prefab, function(e, t) {
+this._isClubRoom = e;
+null === this._createLayer ? cc.loader.loadRes("common/prefab/create_room", cc.Prefab, function(e, t) {
 if (null === e) {
 a._createLayer = cc.instantiate(t);
 a._createLayer.parent = a.node;
 a._createLayer.zIndex = 1;
-a._createLayer.x = -a.node.width / 2;
-a._createLayer.y = -a.node.height / 2;
 a.clearPengHu();
-var n = a._createLayer.getChildByName("btn_create_home_back");
+var n = a._createLayer.getChildByName("btn_back");
 Global.btnClickEvent(n, a.onClose, a);
-var i = cc.find("penghu/btn_create_home", a._createLayer);
+var i = cc.find("img_bg/right_bg/penghu/btn_create_room", a._createLayer);
 Global.btnClickEvent(i, a.onCreatePengHu, a);
 }
 }) : this._createLayer.active = !0;
@@ -1592,46 +1593,43 @@ cc.vv.FloatTip.show("创建桌子成功!");
 }
 },
 onCreatePengHu: function() {
-var e = this._createLayer.getChildByName("penghu"), t = e.getChildByName("input_name").getComponent(cc.EditBox).string;
-if (0 !== t.length) {
-var n = {};
-n.clubid = cc.vv.UserManager.currClubId;
-n.gameid = 1;
-n.gamenum = 8;
-n.param1 = 0;
-n.score = 1;
-n.seat = 4;
-n.speed = 0;
-for (var i = 1; i < 4; ++i) {
-cc.find("round/toggle" + i, e).getComponent(cc.Toggle).isChecked && (n.gamenum = 1 === i ? 8 : 2 === i ? 16 : 24);
-var a = cc.find("zhongzhuang/toggle" + i, e);
-a.getComponent(cc.Toggle).isChecked && (n.param1 = 1 === i ? 0 : 2 === i ? 1 : 2);
-cc.find("jifen/toggle" + i, e);
-a.getComponent(cc.Toggle).isChecked && (n.score = 1 === i ? 1 : 2 === i ? 2 : 4);
-if (i < 3) {
-cc.find("player_num/toggle" + i, e).getComponent(cc.Toggle).isChecked && (1 === i ? n.seat = 4 : 2 === i && (n.seat = 2));
-cc.find("speed/toggle" + i, e).getComponent(cc.Toggle).isChecked && (1 === i ? n.speed = 0 : 2 === i && (n.speed = 1));
+var e = cc.find("img_bg/right_bg/penghu", this._createLayer), t = {};
+this._isClubRoom && (t.clubid = cc.vv.UserManager.currClubId);
+t.gameid = 3;
+t.gamenum = 8;
+t.param1 = 0;
+t.score = 1;
+t.seat = 4;
+t.speed = 0;
+for (var n = 1; n < 4; ++n) {
+cc.find("round/toggle" + n, e).getComponent(cc.Toggle).isChecked && (t.gamenum = 1 === n ? 8 : 2 === n ? 16 : 24);
+var i = cc.find("zhongzhuang/toggle" + n, e);
+i.getComponent(cc.Toggle).isChecked && (t.param1 = 1 === n ? 0 : 2 === n ? 1 : 2);
+cc.find("score/toggle" + n, e);
+i.getComponent(cc.Toggle).isChecked && (t.score = 1 === n ? 1 : 2 === n ? 2 : 4);
+if (n < 3) {
+cc.find("player_num/toggle" + n, e).getComponent(cc.Toggle).isChecked && (1 === n ? t.seat = 4 : 2 === n && (t.seat = 2));
+cc.find("speed/toggle" + n, e).getComponent(cc.Toggle).isChecked && (1 === n ? t.speed = 0 : 2 === n && (t.speed = 1));
 }
 }
-var o = cc.find("force/toggle1", e);
-n.trustee = o.getComponent(cc.Toggle).isChecked ? 1 : 0;
-var r = cc.find("other/toggle1", e);
-n.ipcheck = r.getComponent(cc.Toggle).isChecked ? 1 : 0;
-var s = cc.find("other/toggle2", e);
-n.distance = s.getComponent(cc.Toggle).isChecked ? 1 : 0;
-n.tname = t;
-var c = {
-c: MsgId.ADDGAME
+var a = cc.find("force/toggle1", e);
+t.trustee = a.getComponent(cc.Toggle).isChecked ? 1 : 0;
+var o = cc.find("other/toggle1", e);
+t.ipcheck = o.getComponent(cc.Toggle).isChecked ? 1 : 0;
+var r = cc.find("other/toggle2", e);
+t.distance = r.getComponent(cc.Toggle).isChecked ? 1 : 0;
+t.tname = "";
+var s = {
+c: MsgId.GAME_CREATEROOM
 };
-c.gameInfo = n;
-cc.vv.NetManager.send(c);
-} else cc.vv.FloatTip.show("请输入桌子名称!");
+s.gameInfo = t;
+cc.vv.NetManager.send(s);
 },
 clearPengHu: function() {
-for (var e = this._createLayer.getChildByName("penghu"), t = 1; t < 4; ++t) {
+for (var e = cc.find("img_bg/right_bg/penghu", this._createLayer), t = 1; t < 4; ++t) {
 cc.find("round/toggle" + t, e).getComponent(cc.Toggle).isChecked = 1 === t;
 cc.find("zhongzhuang/toggle" + t, e).getComponent(cc.Toggle).isChecked = 1 === t;
-cc.find("jifen/toggle" + t, e).getComponent(cc.Toggle).isChecked = 1 === t;
+cc.find("score/toggle" + t, e).getComponent(cc.Toggle).isChecked = 1 === t;
 if (t < 3) {
 cc.find("player_num/toggle" + t, e).getComponent(cc.Toggle).isChecked = 1 === t;
 cc.find("speed/toggle" + t, e).getComponent(cc.Toggle).isChecked = !0;
@@ -1640,7 +1638,6 @@ cc.find("speed/toggle" + t, e).getComponent(cc.Toggle).isChecked = !0;
 cc.find("force/toggle1", e).getComponent(cc.Toggle).isChecked = !1;
 cc.find("other/toggle1", e).getComponent(cc.Toggle).isChecked = !0;
 cc.find("other/toggle2", e).getComponent(cc.Toggle).isChecked = !1;
-e.getChildByName("input_name").getComponent(cc.EditBox).string = "";
 },
 onDestroy: function() {
 cc.vv.NetManager.unregisterMsg(MsgId.ADDGAME, this.onRcvAddGameResult, !1, this);
@@ -2179,7 +2176,7 @@ this.sendEnterGameReq(i);
 }
 },
 onRecNetCreateOrJoinRoom: function(e) {
-if (200 == e.code && 1 === e.deskInfo.conf.gameid && null === cc.vv.gameData) {
+if (200 == e.code && (1 === e.deskInfo.conf.gameid || 3 === e.deskInfo.conf.gameid) && null === cc.vv.gameData) {
 var t = n("PengHu_GameData");
 cc.vv.gameData = new t();
 cc.vv.gameData.init(e.deskInfo);
@@ -3270,7 +3267,11 @@ extends: cc.Component,
 properties: {
 _effectIsOpen: 1,
 _musicIsOpen: 1,
-_audioVolue: 1
+_audioVolue: 1,
+_numList: [],
+_inputIndex: 0,
+_numLength: 6,
+numAtlas: cc.SpriteAtlas
 },
 onLoad: function() {
 cc.vv.gameData && cc.vv.gameData.clear();
@@ -3291,14 +3292,21 @@ Global.btnClickEvent(n, this.onClickShareToSession, this);
 var i = cc.find("share_bg/btn_shareToTimeline", this.panel_share);
 Global.btnClickEvent(i, this.onClickShareToTimeline, this);
 this.initSetBtn();
-var a = e.getChildByName("info");
-a.active = 0 < cc.vv.UserManager.clubs.length;
-0 < cc.vv.UserManager.clubs.length && this.initClub(a);
-var o = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
-Global.setHead(o, cc.vv.UserManager.userIcon);
+this.initJoinGame();
+var a = cc.find("right_list/scrollview/view/content/item", this.node);
+Global.btnClickEvent(a, this.onClickCreateRoom, this);
+this.CreateRoomJS = this.node.getComponent("CreateRoom");
+var o = e.getChildByName("info");
+o.active = 0 < cc.vv.UserManager.clubs.length;
+0 < cc.vv.UserManager.clubs.length && this.initClub(o);
+var r = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
+Global.setHead(r, cc.vv.UserManager.userIcon);
 cc.find("gps/label_city", this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
 Global.playBgm(Global.SOUNDS.bgm_hall);
 Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData, this);
+},
+onClickCreateRoom: function() {
+this.CreateRoomJS.showCreateRoom(!1);
 },
 initSetBtn: function() {
 var e = cc.find("dt_xmt/setting_btn", this.node);
@@ -3383,6 +3391,66 @@ this._musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
 null === this._musicIsOpen && (this._musicIsOpen = 1);
 this.setOperate(this._musicIsOpen, this.btn_music_mask);
 cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
+}
+},
+initJoinGame: function() {
+var e = this.node.getChildByName("btn_join_game");
+Global.btnClickEvent(e, this.onClickJoinGame, this);
+this.panel_join_game = this.node.getChildByName("panel_join_game");
+this.panel_join_game.active = !1;
+var t = cc.find("bg/btn_close", this.panel_join_game);
+Global.btnClickEvent(t, this.onCloseJoinClub, this);
+for (var n = 0; n < 10; ++n) {
+var i = cc.find("bg/btn_number" + n, this.panel_join_game);
+i._index = n;
+Global.btnClickEvent(i, this.inputNum, this);
+}
+var a = cc.find("bg/btn_delete", this.panel_join_game);
+Global.btnClickEvent(a, this.onDelete, this);
+var o = cc.find("bg/btn_reset", this.panel_join_game);
+Global.btnClickEvent(o, this.onReset, this);
+for (var r = 0; r < this._numLength; ++r) {
+var s = cc.find("bg/num" + r, this.panel_join_game).getChildByName("num");
+s.active = !1;
+this._numList.push(s);
+}
+},
+onClickJoinGame: function() {
+this.panel_join_game.active = !0;
+this.onReset();
+},
+onCloseJoinClub: function() {
+this.panel_join_game.active = !1;
+},
+inputNum: function(e) {
+if (this._inputIndex < this._numLength) {
+var t = e.target._index;
+this._numList[this._inputIndex].active = !0;
+this._numList[this._inputIndex].getComponent(cc.Sprite).spriteFrame = this.numAtlas.getSpriteFrame("hallClub-img-member-img-img_" + t);
+this._numList[this._inputIndex]._index = t;
+++this._inputIndex;
+if (this._inputIndex >= this._numLength) {
+for (var n = "", i = 0; i < this._numLength; ++i) n += this._numList[i]._index;
+var a = {
+c: MsgId.GAME_JOINROOM
+};
+a.deskId = n;
+cc.vv.NetManager.send(a);
+}
+}
+},
+onReset: function() {
+for (var e = this._inputIndex = 0; e < this._numList.length; ++e) {
+this._numList[e].active = !1;
+this._numList[e]._index = -1;
+}
+},
+onDelete: function() {
+--this._inputIndex;
+this._inputIndex < 0 && (this._inputIndex = 0);
+if (0 <= this._inputIndex) {
+this._numList[this._inputIndex].active = !1;
+this._numList[this._inputIndex]._index = -1;
 }
 },
 onRecvSelfGpsData: function(e) {
@@ -3823,6 +3891,7 @@ e("GlobalVar").code = (a(i = {
 612: "coins_lack",
 613: "band_aren",
 619: "该房间正在结算，请稍后",
+700: "room_id_non_existent",
 710: "enter_game",
 720: "房卡不足",
 803: "system_maintenance_tips",
@@ -4750,7 +4819,7 @@ if (200 === e.code) {
 cc.vv.UserManager.currClubId = this._deskInfo.conf.clubid;
 this.clear();
 cc.vv.gameData = null;
-cc.vv.SceneMgr && cc.vv.SceneMgr.enterScene("club");
+cc.vv.SceneMgr && (cc.vv.UserManager.currClubId ? cc.vv.SceneMgr.enterScene("club") : cc.vv.SceneMgr.enterScene("club_lobby"));
 }
 },
 getMySeatIndex: function() {
@@ -5560,7 +5629,7 @@ t._clickNode.active = e;
 },
 recvDeskInfoMsg: function() {
 var e = cc.vv.gameData.getUserInfo(cc.vv.gameData.getMySeatIndex());
-this.showReady(0 === e.state);
+e && this.showReady(0 === e.state);
 },
 recvCloseRoundView: function() {
 this.showReady(!0);

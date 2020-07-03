@@ -312,8 +312,9 @@ cc.Class({
 
     recvDeskInfoMsg(){
         let user = cc.vv.gameData.getUserInfo(cc.vv.gameData.getMySeatIndex());
-        this.showReady(user.state === 0);
-
+        if (user) {
+            this.showReady(user.state === 0);
+        }
     },
 
     recvCloseRoundView(){

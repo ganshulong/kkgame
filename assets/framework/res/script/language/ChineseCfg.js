@@ -607,5 +607,6 @@ Wild只出现在2~5列",
     email:"邮箱",
     email_tips: "提示：邮箱账号是您找回密码的凭证。",
     email_empty:"邮箱不能为空",
+    room_id_non_existent:"房号不存在",
 };
 
