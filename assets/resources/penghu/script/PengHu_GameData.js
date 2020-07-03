@@ -439,8 +439,13 @@ cc.Class({
 
             this.clear();
             cc.vv.gameData = null;
+
             if (cc.vv.SceneMgr){
-                cc.vv.SceneMgr.enterScene('club');
+                if (cc.vv.UserManager.currClubId) {
+                    cc.vv.SceneMgr.enterScene('club');
+                } else {
+                    cc.vv.SceneMgr.enterScene('club_lobby');
+                }
             }
         }
     },
