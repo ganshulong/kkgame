@@ -54,8 +54,20 @@ cc.Class({
         cc.find("money_bg/gold_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
         cc.find("room_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
-        let club_btn = this.node.getChildByName("club_btn");
-        Global.btnClickEvent(club_btn,this.onClub,this);
+        let notHaveClub_btn = this.node.getChildByName("notHaveClub_btn");
+        Global.btnClickEvent(notHaveClub_btn,this.onToClubLobby,this);
+        let haveClub_btn = this.node.getChildByName("haveClub_btn");
+        Global.btnClickEvent(haveClub_btn,this.onClub,this);
+        let moreClub_btn = this.node.getChildByName("moreClub_btn");
+        Global.btnClickEvent(moreClub_btn,this.onToClubLobby,this);
+
+        notHaveClub_btn.active = (0 == cc.vv.UserManager.clubs.length);
+        haveClub_btn.active = (0 < cc.vv.UserManager.clubs.length);
+        moreClub_btn.active = (0 < cc.vv.UserManager.clubs.length);
+        if(0 < cc.vv.UserManager.clubs.length){
+            let info = haveClub_btn.getChildByName("info");
+            this.initClub(info);
+        }
 
         let share_btn = cc.find("dt_xmt/share_btn",this.node)
         Global.btnClickEvent(share_btn,this.onClickShare,this);
@@ -75,10 +87,6 @@ cc.Class({
 
         let gameItem = cc.find("right_list/scrollview/view/content/item",this.node)
         Global.btnClickEvent(gameItem,this.onClickCreateRoom,this);
-
-        let info = club_btn.getChildByName("info");
-        info.active = cc.vv.UserManager.clubs.length>0;
-        if(cc.vv.UserManager.clubs.length>0) this.initClub(info);
 
         let head = cc.find("head_bg/UserHead/radio_mask/spr_head",this.node);
         Global.setHead(head,cc.vv.UserManager.userIcon);
@@ -328,6 +336,10 @@ cc.Class({
     onClub(){
         if(cc.vv.UserManager.clubs.length>0) cc.vv.UserManager.currClubId = cc.vv.UserManager.clubs[0].clubid;
         cc.vv.SceneMgr.enterScene(cc.vv.UserManager.clubs.length>0?"club":"club_lobby");
+    },
+
+    onToClubLobby(){
+        cc.vv.SceneMgr.enterScene("club_lobby");
     },
  
     onClickShare(){
