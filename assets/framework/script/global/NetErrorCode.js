@@ -31,6 +31,8 @@ codeCfg.code = {
     '423':'in_table',
     '427':'red_packet_limit',
     '430':'login_err',
+    '436':"distance less200",
+    '437':"forbid same ip",
     '500':'login_fail_again',
     '501':'物品不足',
     '502':'该用户已准备',

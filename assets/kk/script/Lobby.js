@@ -68,12 +68,13 @@ cc.Class({
 
         this.initSetBtn();
 
+        let history_btn = cc.find("dt_xmt/history_btn",this.node)
+        Global.btnClickEvent(history_btn,this.onClickHistory,this);
+
         this.initJoinGame();
 
         let gameItem = cc.find("right_list/scrollview/view/content/item",this.node)
         Global.btnClickEvent(gameItem,this.onClickCreateRoom,this);
-
-        this.CreateRoomJS = this.node.getComponent("CreateRoom");
 
         let info = club_btn.getChildByName("info");
         info.active = cc.vv.UserManager.clubs.length>0;
@@ -84,9 +85,21 @@ cc.Class({
 
         cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
 
+        this.CreateRoomJS = this.node.getComponent("CreateRoom");
+        
+        this.node.addComponent("GameRecord");
+        this.GameRecordJS = this.node.getComponent("GameRecord");
+
         Global.playBgm(Global.SOUNDS.bgm_hall);
 
         Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData,this);
+
+        //testgsl
+        // this.onClickHistory();
+    },
+
+    onClickHistory(){
+        this.GameRecordJS.showGameRecord();
     },
 
     onClickCreateRoom(){
@@ -131,9 +144,6 @@ cc.Class({
 
         let btn_clean = this.panel_set.getChildByName("btn_clean");
         Global.btnClickEvent(btn_clean,this.onClickClean,this);
-        
-        //testgsl
-        // this.onClickSet();
     },
 
     onClickBindPhone(){

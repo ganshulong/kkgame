@@ -211,7 +211,7 @@ cc.Class({
     onDestroy(){
         cc.vv.NetManager.unregisterMsg(MsgId.ADDGAME, this.onRcvAddGameResult,false,this);
         if(this._createLayer){
-            cc.loader.releaseRes("common/prefab/create_home_layer",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/create_room",cc.Prefab);
         }
     },
     // update (dt) {},

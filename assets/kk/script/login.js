@@ -74,7 +74,7 @@ cc.Class({
         }
 
         //testgsl
-        this.onWeChatLogin();
+        // this.onWeChatLogin();
     },
 
     onPhoneLogin() {

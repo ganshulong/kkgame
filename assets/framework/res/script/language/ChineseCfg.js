@@ -608,5 +608,7 @@ Wild只出现在2~5列",
     email_tips: "提示：邮箱账号是您找回密码的凭证。",
     email_empty:"邮箱不能为空",
     room_id_non_existent:"房号不存在",
+    distance less200:"距离其他玩家小于200米",
+    forbid same ip:"禁止同ip进入",
 };
 

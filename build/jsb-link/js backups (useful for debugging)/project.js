@@ -1573,8 +1573,11 @@ this._isClubRoom = e;
 null === this._createLayer ? cc.loader.loadRes("common/prefab/create_room", cc.Prefab, function(e, t) {
 if (null === e) {
 a._createLayer = cc.instantiate(t);
+a._createLayer.setContentSize(cc.size(a.node.width, a.node.height));
 a._createLayer.parent = a.node;
 a._createLayer.zIndex = 1;
+a._createLayer.x = a.node.width / 2 - a.node.x;
+a._createLayer.y = a.node.height / 2 - a.node.y;
 a.clearPengHu();
 var n = a._createLayer.getChildByName("btn_back");
 Global.btnClickEvent(n, a.onClose, a);
@@ -1641,7 +1644,7 @@ cc.find("other/toggle2", e).getComponent(cc.Toggle).isChecked = !1;
 },
 onDestroy: function() {
 cc.vv.NetManager.unregisterMsg(MsgId.ADDGAME, this.onRcvAddGameResult, !1, this);
-this._createLayer && cc.loader.releaseRes("common/prefab/create_home_layer", cc.Prefab);
+this._createLayer && cc.loader.releaseRes("common/prefab/create_room", cc.Prefab);
 }
 });
 cc._RF.pop();
@@ -2276,6 +2279,102 @@ cc._RF.pop();
 }, {
 PengHu_GameData: "PengHu_GameData"
 } ],
+GameRecord: [ function(e, t, n) {
+"use strict";
+cc._RF.push(t, "85333QxlARB0qGgRPWe9q2q", "GameRecord");
+cc.Class({
+extends: cc.Component,
+properties: {
+_gameRecordLayer: null,
+_posXScale: 1,
+_gameRecordItemList: [],
+_isShowDetailList: [],
+_detailPlayerRowList: []
+},
+start: function() {
+cc.vv.NetManager.registerMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
+},
+showGameRecord: function() {
+var r = this;
+null === this._gameRecordLayer ? cc.loader.loadRes("common/prefab/GameRecord", cc.Prefab, function(e, t) {
+if (null === e) {
+r._gameRecordLayer = cc.instantiate(t);
+r._gameRecordLayer.scaleX = r.node.width / r._gameRecordLayer.width;
+r._gameRecordLayer.scaleY = r.node.height / r._gameRecordLayer.height;
+r._gameRecordLayer.parent = r.node;
+r._gameRecordLayer.zIndex = 1;
+r._gameRecordLayer.x = r.node.width / 2 - r.node.x;
+r._gameRecordLayer.y = r.node.height / 2 - r.node.y;
+var n = cc.find("bg_top/btn_back", r._gameRecordLayer);
+Global.btnClickEvent(n, r.onClose, r);
+for (var i = 0; i < 4; i++) {
+var a = cc.find("bg_buttons/left_list_view/btn_" + i, r._gameRecordLayer);
+a._index = i;
+Global.btnClickEvent(a, r.onClickRecordType, r);
+}
+var o = cc.find("selectData_node/btn_selecteData", r._gameRecordLayer);
+Global.btnClickEvent(o, r.onClickSelectData, r);
+r.gameRecordItem = cc.find("scroll_gameRecord/content/gameRecordItem", r._gameRecordLayer);
+r.gameRecordItem.active = !1;
+}
+}) : this._gameRecordLayer.active = !0;
+for (var e = 0; e < this._gameRecordItemList.length; e++) this._gameRecordItemList[e].removeFromParent();
+this._gameRecordItemList = [];
+var t = {
+c: MsgId.GAME_RECORD,
+selectTime: "2020-7-5",
+clubid: 0
+};
+cc.vv.NetManager.send(t);
+},
+onClose: function() {
+this._gameRecordLayer.active = !1;
+},
+onClickRecordType: function(e) {
+var t = e.target._index, n = {
+c: MsgId.GAME_RECORD,
+selectTime: "2020-7-5"
+};
+n.clubid = t;
+cc.vv.NetManager.send(n);
+},
+onClickSelectData: function() {},
+onRcvGameRecord: function(e) {
+if (200 === e.code) for (var t = 0; t < 5; t++) {
+this._gameRecordItemList.push(cc.instantiate(this.gameRecordItem));
+var n = this._gameRecordItemList[t].getChildByName("roomInfo").getChildByName("btn_detail");
+n._index = t;
+Global.btnClickEvent(n, this.onClickDetail, this);
+for (var i = this._gameRecordItemList[t].getChildByName("playersInfo"), a = t % 4 + 1, o = 0; o < a; o++) {
+i.getChildByName("playerInfoItem" + o).active = !0;
+}
+for (o = a; o < 4; o++) {
+i.getChildByName("playerInfoItem" + o).active = !1;
+}
+this._gameRecordItemList[t].active = !0;
+this._isShowDetailList[t] = !1;
+this._detailPlayerRowList[t] = 2 < a ? 1 : 2;
+}
+this.updateItemPosX();
+},
+onClickDetail: function(e) {
+var t = e.target._index;
+this._isShowDetailList[t] = !this._isShowDetailList[t];
+this._gameRecordItemList[t].getChildByName("playersInfo").active = this._isShowDetailList[t];
+this.updateItemPosX();
+},
+updateItemPosX: function() {
+for (var e = [ 122, 287, 392 ], t = 0, n = 0; n < this._gameRecordItemList.length; n++) {
+this._gameRecordItemList[n].x = t;
+this._isShowDetailList[n] ? t -= e[0] : t -= e[this._detailPlayerRowList[n]];
+}
+},
+onDestroy: function() {
+this._gameRecordLayer && cc.loader.releaseRes("common/prefab/GameRecord", cc.Prefab);
+}
+});
+cc._RF.pop();
+}, {} ],
 GlobalCfg: [ function(e, t, n) {
 "use strict";
 cc._RF.push(t, "400cfFA/jxGw4u2CwwaF0u9", "GlobalCfg");
@@ -3292,18 +3391,25 @@ Global.btnClickEvent(n, this.onClickShareToSession, this);
 var i = cc.find("share_bg/btn_shareToTimeline", this.panel_share);
 Global.btnClickEvent(i, this.onClickShareToTimeline, this);
 this.initSetBtn();
+var a = cc.find("dt_xmt/history_btn", this.node);
+Global.btnClickEvent(a, this.onClickHistory, this);
 this.initJoinGame();
-var a = cc.find("right_list/scrollview/view/content/item", this.node);
-Global.btnClickEvent(a, this.onClickCreateRoom, this);
-this.CreateRoomJS = this.node.getComponent("CreateRoom");
-var o = e.getChildByName("info");
-o.active = 0 < cc.vv.UserManager.clubs.length;
-0 < cc.vv.UserManager.clubs.length && this.initClub(o);
-var r = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
-Global.setHead(r, cc.vv.UserManager.userIcon);
+var o = cc.find("right_list/scrollview/view/content/item", this.node);
+Global.btnClickEvent(o, this.onClickCreateRoom, this);
+var r = e.getChildByName("info");
+r.active = 0 < cc.vv.UserManager.clubs.length;
+0 < cc.vv.UserManager.clubs.length && this.initClub(r);
+var s = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
+Global.setHead(s, cc.vv.UserManager.userIcon);
 cc.find("gps/label_city", this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
+this.CreateRoomJS = this.node.getComponent("CreateRoom");
+this.node.addComponent("GameRecord");
+this.GameRecordJS = this.node.getComponent("GameRecord");
 Global.playBgm(Global.SOUNDS.bgm_hall);
 Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData, this);
+},
+onClickHistory: function() {
+this.GameRecordJS.showGameRecord();
 },
 onClickCreateRoom: function() {
 this.CreateRoomJS.showCreateRoom(!1);
@@ -3822,6 +3928,8 @@ i.OFFLINE_NOTIFY = 2009;
 i.SELF_GPS_DATA = 163;
 i.PLAYER_DISTANCE_DATA = 8813;
 i.GPS_TIPS_NOTIFY = 18809;
+i.GAME_RECORD = 165;
+i.ROUND_RECORD = 166;
 cc._RF.pop();
 }, {} ],
 NetErrorCode: [ function(e, t, n) {
@@ -4819,7 +4927,7 @@ if (200 === e.code) {
 cc.vv.UserManager.currClubId = this._deskInfo.conf.clubid;
 this.clear();
 cc.vv.gameData = null;
-cc.vv.SceneMgr && (cc.vv.UserManager.currClubId ? cc.vv.SceneMgr.enterScene("club") : cc.vv.SceneMgr.enterScene("club_lobby"));
+cc.vv.SceneMgr && (cc.vv.UserManager.currClubId ? cc.vv.SceneMgr.enterScene("club") : cc.vv.SceneMgr.enterScene("lobby"));
 }
 },
 getMySeatIndex: function() {
@@ -9038,7 +9146,6 @@ if (Global.isAndroid()) {
 var a = Global.setAppidWithAppsecretForJS("wx82256d3bda922e13", "b87d6ec883757e530cdf55794df03e92");
 console.log(a + "@@@@@@@@");
 } else Global.isIOS();
-this.onWeChatLogin();
 },
 onPhoneLogin: function() {},
 onWeChatLoginCallBack: function(e) {
@@ -9812,13 +9919,13 @@ return i.call(e.buffer, t, w);
 };
 }
 function p(e) {
-return new y(this, e).toNumber();
+return new A(this, e).toNumber();
 }
 function m(e) {
 return new S(this, e).toNumber();
 }
 function b(e) {
-return new y(this, e);
+return new A(this, e);
 }
 function C(e) {
 return new S(this, e);
@@ -9829,7 +9936,7 @@ return I.read(this, e, !1, 23, 4);
 function N(e) {
 return I.read(this, e, !1, 52, 8);
 }
-var I = e("ieee754"), A = e("int64-buffer"), y = A.Uint64BE, S = A.Int64BE;
+var I = e("ieee754"), y = e("int64-buffer"), A = y.Uint64BE, S = y.Int64BE;
 n.getReadFormat = function(e) {
 var t = R.hasArrayBuffer && e && e.binarraybuffer, n = e && e.int64;
 return {
@@ -10287,8 +10394,8 @@ r = 56320 | 1023 & r), i.push(r), a += s;
 }
 return function(e) {
 var t = e.length;
-if (t <= P) return String.fromCharCode.apply(String, e);
-for (var n = "", i = 0; i < t; ) n += String.fromCharCode.apply(String, e.slice(i, i += P));
+if (t <= k) return String.fromCharCode.apply(String, e);
+for (var n = "", i = 0; i < t; ) n += String.fromCharCode.apply(String, e.slice(i, i += k));
 return n;
 }(i);
 }
@@ -10327,19 +10434,19 @@ function I(e, t, n, i) {
 t < 0 && (t = 65535 + t + 1);
 for (var a = 0, o = Math.min(e.length - n, 2); a < o; ++a) e[n + a] = (t & 255 << 8 * (i ? a : 1 - a)) >>> 8 * (i ? a : 1 - a);
 }
-function A(e, t, n, i) {
+function y(e, t, n, i) {
 t < 0 && (t = 4294967295 + t + 1);
 for (var a = 0, o = Math.min(e.length - n, 4); a < o; ++a) e[n + a] = t >>> 8 * (i ? a : 3 - a) & 255;
 }
-function y(e, t, n, i, a, o) {
+function A(e, t, n, i, a, o) {
 if (n + i > e.length) throw new RangeError("Index out of range");
 if (n < 0) throw new RangeError("Index out of range");
 }
 function S(e, t, n, i, a) {
-return a || y(e, 0, n, 4), O.write(e, t, n, i, 23, 4), n + 4;
+return a || A(e, 0, n, 4), O.write(e, t, n, i, 23, 4), n + 4;
 }
 function R(e, t, n, i, a) {
-return a || y(e, 0, n, 8), O.write(e, t, n, i, 52, 8), n + 8;
+return a || A(e, 0, n, 8), O.write(e, t, n, i, 52, 8), n + 8;
 }
 function M(e, t) {
 t = t || 1 / 0;
@@ -10382,7 +10489,7 @@ return o;
 }
 function T(e) {
 return L.toByteArray(function(e) {
-if ((e = (t = e, t.trim ? t.trim() : t.replace(/^\s+|\s+$/g, "")).replace(k, "")).length < 2) return "";
+if ((e = (t = e, t.trim ? t.trim() : t.replace(/^\s+|\s+$/g, "")).replace(P, "")).length < 2) return "";
 for (var t; e.length % 4 != 0; ) e += "=";
 return e;
 }(e));
@@ -10586,7 +10693,7 @@ type: "Buffer",
 data: Array.prototype.slice.call(this._arr || this, 0)
 };
 };
-var P = 4096;
+var k = 4096;
 d.prototype.slice = function(e, t) {
 var n, i = this.length;
 (e = ~~e) < 0 ? (e += i) < 0 && (e = 0) : i < e && (e = i), (t = void 0 === t ? i : ~~t) < 0 ? (t += i) < 0 && (t = 0) : i < t && (t = i), 
@@ -10670,11 +10777,11 @@ return e = +e, t |= 0, n || N(this, e, t, 2, 65535, 0), d.TYPED_ARRAY_SUPPORT ? 
 this[t + 1] = 255 & e) : I(this, e, t, !1), t + 2;
 }, d.prototype.writeUInt32LE = function(e, t, n) {
 return e = +e, t |= 0, n || N(this, e, t, 4, 4294967295, 0), d.TYPED_ARRAY_SUPPORT ? (this[t + 3] = e >>> 24, 
-this[t + 2] = e >>> 16, this[t + 1] = e >>> 8, this[t] = 255 & e) : A(this, e, t, !0), 
+this[t + 2] = e >>> 16, this[t + 1] = e >>> 8, this[t] = 255 & e) : y(this, e, t, !0), 
 t + 4;
 }, d.prototype.writeUInt32BE = function(e, t, n) {
 return e = +e, t |= 0, n || N(this, e, t, 4, 4294967295, 0), d.TYPED_ARRAY_SUPPORT ? (this[t] = e >>> 24, 
-this[t + 1] = e >>> 16, this[t + 2] = e >>> 8, this[t + 3] = 255 & e) : A(this, e, t, !1), 
+this[t + 1] = e >>> 16, this[t + 2] = e >>> 8, this[t + 3] = 255 & e) : y(this, e, t, !1), 
 t + 4;
 }, d.prototype.writeIntLE = function(e, t, n, i) {
 if (e = +e, t |= 0, !i) {
@@ -10705,12 +10812,12 @@ return e = +e, t |= 0, n || N(this, e, t, 2, 32767, -32768), d.TYPED_ARRAY_SUPPO
 this[t + 1] = 255 & e) : I(this, e, t, !1), t + 2;
 }, d.prototype.writeInt32LE = function(e, t, n) {
 return e = +e, t |= 0, n || N(this, e, t, 4, 2147483647, -2147483648), d.TYPED_ARRAY_SUPPORT ? (this[t] = 255 & e, 
-this[t + 1] = e >>> 8, this[t + 2] = e >>> 16, this[t + 3] = e >>> 24) : A(this, e, t, !0), 
+this[t + 1] = e >>> 8, this[t + 2] = e >>> 16, this[t + 3] = e >>> 24) : y(this, e, t, !0), 
 t + 4;
 }, d.prototype.writeInt32BE = function(e, t, n) {
 return e = +e, t |= 0, n || N(this, e, t, 4, 2147483647, -2147483648), e < 0 && (e = 4294967295 + e + 1), 
 d.TYPED_ARRAY_SUPPORT ? (this[t] = e >>> 24, this[t + 1] = e >>> 16, this[t + 2] = e >>> 8, 
-this[t + 3] = 255 & e) : A(this, e, t, !1), t + 4;
+this[t + 3] = 255 & e) : y(this, e, t, !1), t + 4;
 }, d.prototype.writeFloatLE = function(e, t, n) {
 return S(this, e, t, !0, n);
 }, d.prototype.writeFloatBE = function(e, t, n) {
@@ -10750,7 +10857,7 @@ for (o = 0; o < n - t; ++o) this[o + t] = r[o % s];
 }
 return this;
 };
-var k = /[^+\/0-9A-Za-z-_]/g;
+var P = /[^+\/0-9A-Za-z-_]/g;
 }).call(this, "undefined" != typeof n ? n : "undefined" != typeof self ? self : "undefined" != typeof window ? window : {});
 }, {
 "base64-js": 30,
@@ -10880,7 +10987,7 @@ function e(e, t, c) {
 function a(e, t, n, i) {
 return this instanceof a ? function(e, t, n, i, a) {
 if (O && G && (t instanceof G && (t = new O(t)), i instanceof G && (i = new O(i))), 
-!(t || n || i || T)) return void (e.buffer = A(P, 0));
+!(t || n || i || T)) return void (e.buffer = y(k, 0));
 if (!N(t, n)) {
 var o = T || Array;
 a = n, i = t, n = 0, t = new o(8);
@@ -10891,16 +10998,16 @@ var a = 0, o = n.length, r = 0, s = 0;
 for (var c = a; a < o; ) {
 var l = parseInt(n[a++], i);
 if (!(0 <= l)) break;
-s = s * i + l, r = r * i + Math.floor(s / k), s %= k;
+s = s * i + l, r = r * i + Math.floor(s / P), s %= P;
 }
-c && (r = ~r, s ? s = k - s : r++), h(e, t + d, r), h(e, t + u, s);
+c && (r = ~r, s ? s = P - s : r++), h(e, t + d, r), h(e, t + u, s);
 }(t, n, i, a || 10) : N(i, a) ? I(t, n, i, a) : "number" == typeof a ? (h(t, n + d, i), 
-h(t, n + u, a)) : 0 < i ? g(t, n, i) : i < 0 ? f(t, n, i) : I(t, n, P, 0));
+h(t, n + u, a)) : 0 < i ? g(t, n, i) : i < 0 ? f(t, n, i) : I(t, n, k, 0));
 }(this, e, t, n, i) : new a(e, t, n, i);
 }
 function n() {
 var e = this.buffer, t = this.offset, n = l(e, t + d), i = l(e, t + u);
-return c || (n |= 0), n ? n * k + i : i;
+return c || (n |= 0), n ? n * P + i : i;
 }
 function h(e, t, n) {
 e[t + s] = 255 & n, n >>= 8, e[t + r] = 255 & n, n >>= 8, e[t + o] = 255 & n, n >>= 8, 
@@ -10909,11 +11016,11 @@ e[t + i] = 255 & n;
 function l(e, t) {
 return 16777216 * e[t + i] + (e[t + o] << 16) + (e[t + r] << 8) + e[t + s];
 }
-var d = t ? 0 : 4, u = t ? 4 : 0, i = t ? 0 : 3, o = t ? 1 : 2, r = t ? 2 : 1, s = t ? 3 : 0, g = t ? y : R, f = t ? S : M, _ = a.prototype, v = "is" + e, p = "_" + v;
+var d = t ? 0 : 4, u = t ? 4 : 0, i = t ? 0 : 3, o = t ? 1 : 2, r = t ? 2 : 1, s = t ? 3 : 0, g = t ? A : R, f = t ? S : M, _ = a.prototype, v = "is" + e, p = "_" + v;
 return _.buffer = void 0, _.offset = 0, _[p] = !0, _.toNumber = n, _.toString = function(e) {
 var t = this.buffer, n = this.offset, i = l(t, n + d), a = l(t, n + u), o = "", r = !c && 2147483648 & i;
-for (r && (i = ~i, a = k - a), e = e || 10; ;) {
-var s = i % e * k + a;
+for (r && (i = ~i, a = P - a), e = e || 10; ;) {
+var s = i % e * P + a;
 if (i = Math.floor(i / e), a = Math.floor(s / e), o = (s % e).toString(e) + o, !i && !a) break;
 }
 return r && (o = "-" + o), o;
@@ -10924,7 +11031,7 @@ return !(!e || !e[p]);
 }
 function b(e) {
 var t = this.buffer, n = this.offset;
-return T = null, !1 !== e && 0 === n && 8 === t.length && i(t) ? t : A(t, n);
+return T = null, !1 !== e && 0 === n && 8 === t.length && i(t) ? t : y(t, n);
 }
 function C(e) {
 var t = this.buffer, n = this.offset;
@@ -10946,10 +11053,10 @@ function I(e, t, n, i) {
 t |= 0, i |= 0;
 for (var a = 0; a < 8; a++) e[t++] = 255 & n[i++];
 }
-function A(e, t) {
+function y(e, t) {
 return Array.prototype.slice.call(e, t, t + 8);
 }
-function y(e, t, n) {
+function A(e, t, n) {
 for (var i = t + 8; t < i; ) e[--i] = 255 & n, n /= 256;
 }
 function S(e, t, n) {
@@ -10963,9 +11070,9 @@ function M(e, t, n) {
 var i = t + 8;
 for (n++; t < i; ) e[t++] = 255 & -n ^ 255, n /= 256;
 }
-var T, w = "undefined", L = w !== ("undefined" == typeof a ? "undefined" : D(a)) && a, O = w !== ("undefined" == typeof Uint8Array ? "undefined" : D(Uint8Array)) && Uint8Array, G = w !== ("undefined" == typeof ArrayBuffer ? "undefined" : D(ArrayBuffer)) && ArrayBuffer, P = [ 0, 0, 0, 0, 0, 0, 0, 0 ], i = Array.isArray || function(e) {
+var T, w = "undefined", L = w !== ("undefined" == typeof a ? "undefined" : D(a)) && a, O = w !== ("undefined" == typeof Uint8Array ? "undefined" : D(Uint8Array)) && Uint8Array, G = w !== ("undefined" == typeof ArrayBuffer ? "undefined" : D(ArrayBuffer)) && ArrayBuffer, k = [ 0, 0, 0, 0, 0, 0, 0, 0 ], i = Array.isArray || function(e) {
 return !!e && "[object Array]" == Object.prototype.toString.call(e);
-}, k = 4294967296;
+}, P = 4294967296;
 e("Uint64BE", !0, !0), e("Int64BE", !0, !1), e("Uint64LE", !1, !0), e("Int64LE", !1, !1);
 }("object" == ("undefined" == typeof n ? "undefined" : D(n)) && "string" != typeof n.nodeName ? n : this || {});
 }).call(this, e("buffer").Buffer);
@@ -11017,4 +11124,4 @@ c = Math.ceil((s + 1) * a) - Math.floor(s * a);
 });
 cc._RF.pop();
 }, {} ]
-}, {}, [ "AlertView", "AlertViewMgr", "ClickEffListener", "FloatTip", "LoadingTip", "Poker", "WifiMgr", "gray.frag", "gray.vert", "RollSpeak", "UserHead", "showQRcode", "ImageLoader", "SubGameUpdate", "hall_pre_loading", "hotupdate", "ChineseCfg", "md5.min", "msgpack.min", "AnimationFrameEvent", "GameCommUtil", "GameEventId", "gameAudioSwitch", "AniFrameEvent", "AppLog", "AssetManager", "AudioManager", "EventDef", "EventManager", "GameManager", "GlobalCfg", "GlobalFunc", "HeadLoaderMgr", "Http", "Md5", "MsgIdDef", "NetErrorCode", "NetManager", "PayMgr", "PlatformApi", "SceneMgr", "ShaderUtils", "SpeakerMgr", "UserManager", "WebsocketMgr", "WxMgr", "Club", "ClubLobby", "ClubMessage", "CreateRoom", "GlobalVar", "Lobby", "lauch", "login", "PengHu_Action", "PengHu_Card", "PengHu_Chat", "PengHu_GameData", "PengHu_GameOver", "PengHu_HandCard", "PengHu_MainScne", "PengHu_Menu", "PengHu_Operate", "PengHu_OperatePai", "PengHu_OutCard", "PengHu_Player", "PengHu_RemainCard", "PengHu_RoundOver", "PengHu_Setting", "PengHu_ShowCard", "PengHu_Sound", "PengHu_Tips" ]);
+}, {}, [ "AlertView", "AlertViewMgr", "ClickEffListener", "FloatTip", "LoadingTip", "Poker", "WifiMgr", "gray.frag", "gray.vert", "RollSpeak", "UserHead", "showQRcode", "ImageLoader", "SubGameUpdate", "hall_pre_loading", "hotupdate", "ChineseCfg", "md5.min", "msgpack.min", "AnimationFrameEvent", "GameCommUtil", "GameEventId", "gameAudioSwitch", "AniFrameEvent", "AppLog", "AssetManager", "AudioManager", "EventDef", "EventManager", "GameManager", "GlobalCfg", "GlobalFunc", "HeadLoaderMgr", "Http", "Md5", "MsgIdDef", "NetErrorCode", "NetManager", "PayMgr", "PlatformApi", "SceneMgr", "ShaderUtils", "SpeakerMgr", "UserManager", "WebsocketMgr", "WxMgr", "Club", "ClubLobby", "ClubMessage", "CreateRoom", "GameRecord", "GlobalVar", "Lobby", "lauch", "login", "PengHu_Action", "PengHu_Card", "PengHu_Chat", "PengHu_GameData", "PengHu_GameOver", "PengHu_HandCard", "PengHu_MainScne", "PengHu_Menu", "PengHu_Operate", "PengHu_OperatePai", "PengHu_OutCard", "PengHu_Player", "PengHu_RemainCard", "PengHu_RoundOver", "PengHu_Setting", "PengHu_ShowCard", "PengHu_Sound", "PengHu_Tips" ]);
