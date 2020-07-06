@@ -243,7 +243,9 @@ cc.Class({
 
                 let roomInfo = this._gameRecordItemList[i].getChildByName("roomInfo");
 
-                roomInfo.getChildByName("text_daily_time").getComponent(cc.Label).string = msg.data[i].beginTime + "\n至\n" + msg.data[i].endTime;
+                roomInfo.getChildByName("text_begin_time").getComponent(cc.Label).string = msg.data[i].beginTime;
+                roomInfo.getChildByName("text_end_time").getComponent(cc.Label).string = msg.data[i].endTime;
+
                 let text_roomInfo = roomInfo.getChildByName("text_roomInfo");
                 text_roomInfo.getChildByName("text_roomID").getComponent(cc.Label).string = "房间号：" + msg.data[i].deskid;
                 text_roomInfo.getChildByName("text_game_name").getComponent(cc.Label).string = "碰胡";
@@ -254,13 +256,8 @@ cc.Class({
                 let roomTypeStr = ["代开房房间","亲友圈房间","代开房房间","他人房间"]
                 bg_clubInfo.getChildByName("text_roomType").getComponent(cc.Label).string = roomTypeStr[msg.data[i].clubid];
                 bg_clubInfo.getChildByName("text_houseOwner").getComponent(cc.Label).string = msg.data[i].houseOwner;
- 
                 
-                if (0 < msg.data[i].score) {
-                    cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score;
-                } else {
-                    cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = '/' + Math.abs(msg.data[i].score);
-                }
+                cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score;
 
                 let btn_detail = roomInfo.getChildByName("btn_detail");
                 btn_detail._index = i;
@@ -292,7 +289,7 @@ cc.Class({
                     let playerInfoItem = playersInfo.getChildByName("playerInfoItem" + j);
 
                     Global.setHead(playerInfoItem.getChildByName("user_head"),playerData[j].usericon);
-                    playerInfoItem.getChildByName("img_owner").active = (playerData[j].uid == msg.data[i].uid);
+                    playerInfoItem.getChildByName("img_owner").active = (playerData[j].uid == msg.data[i].houseOwnerUid);
                     playerInfoItem.getChildByName("text_player_name").getComponent(cc.Label).string = playerData[j].playername;
                     playerInfoItem.getChildByName("text_player_id").getComponent(cc.Label).string = playerData[j].uid;
                     playerInfoItem.getChildByName("img_big_winner").active = (playerData[j].score >= maxScore && maxScore > 0);
