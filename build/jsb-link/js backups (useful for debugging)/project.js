@@ -998,7 +998,9 @@ show_ad: "金币不足，您可以观看完整广告来获得金币奖励，您�
 email: "邮箱",
 email_tips: "提示：邮箱账号是您找回密码的凭证。",
 email_empty: "邮箱不能为空",
-room_id_non_existent: "房号不存在"
+room_id_non_existent: "房号不存在",
+distance_less200: "距离其他玩家小于200米",
+forbid_same_ip: "禁止同ip进入"
 };
 cc._RF.pop();
 }, {} ],
@@ -2286,76 +2288,229 @@ cc.Class({
 extends: cc.Component,
 properties: {
 _gameRecordLayer: null,
-_posXScale: 1,
 _gameRecordItemList: [],
 _isShowDetailList: [],
-_detailPlayerRowList: []
+_detailPlayerRowList: [],
+_roundRecordItemList: []
 },
 start: function() {
 cc.vv.NetManager.registerMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
+cc.vv.NetManager.registerMsg(MsgId.ROUND_RECORD, this.onRcvRoundRecord, this);
 },
 showGameRecord: function() {
-var r = this;
-null === this._gameRecordLayer ? cc.loader.loadRes("common/prefab/GameRecord", cc.Prefab, function(e, t) {
+var n = this;
+if (null === this._gameRecordLayer) cc.loader.loadRes("common/prefab/GameRecord", cc.Prefab, function(e, t) {
 if (null === e) {
-r._gameRecordLayer = cc.instantiate(t);
-r._gameRecordLayer.scaleX = r.node.width / r._gameRecordLayer.width;
-r._gameRecordLayer.scaleY = r.node.height / r._gameRecordLayer.height;
-r._gameRecordLayer.parent = r.node;
-r._gameRecordLayer.zIndex = 1;
-r._gameRecordLayer.x = r.node.width / 2 - r.node.x;
-r._gameRecordLayer.y = r.node.height / 2 - r.node.y;
-var n = cc.find("bg_top/btn_back", r._gameRecordLayer);
-Global.btnClickEvent(n, r.onClose, r);
-for (var i = 0; i < 4; i++) {
-var a = cc.find("bg_buttons/left_list_view/btn_" + i, r._gameRecordLayer);
-a._index = i;
-Global.btnClickEvent(a, r.onClickRecordType, r);
+n._gameRecordLayer = cc.instantiate(t);
+n._gameRecordLayer.scaleX = n.node.width / n._gameRecordLayer.width;
+n._gameRecordLayer.scaleY = n.node.height / n._gameRecordLayer.height;
+n._gameRecordLayer.parent = n.node;
+n._gameRecordLayer.zIndex = 1;
+n._gameRecordLayer.x = n.node.width / 2 - n.node.x;
+n._gameRecordLayer.y = n.node.height / 2 - n.node.y;
+n.initUI();
+n.initShow();
 }
-var o = cc.find("selectData_node/btn_selecteData", r._gameRecordLayer);
-Global.btnClickEvent(o, r.onClickSelectData, r);
-r.gameRecordItem = cc.find("scroll_gameRecord/content/gameRecordItem", r._gameRecordLayer);
-r.gameRecordItem.active = !1;
+}); else {
+this._gameRecordLayer.active = !0;
+this.initShow();
 }
-}) : this._gameRecordLayer.active = !0;
-for (var e = 0; e < this._gameRecordItemList.length; e++) this._gameRecordItemList[e].removeFromParent();
-this._gameRecordItemList = [];
-var t = {
-c: MsgId.GAME_RECORD,
-selectTime: "2020-7-5",
-clubid: 0
+},
+initUI: function() {
+var e = cc.find("bg_top/btn_back", this._gameRecordLayer);
+Global.btnClickEvent(e, this.onClose, this);
+for (var t = 0; t < 4; t++) {
+var n = cc.find("bg_buttons/left_list_view/btn_" + t, this._gameRecordLayer);
+n._index = t;
+Global.btnClickEvent(n, this.onClickRecordType, this);
+}
+var i = cc.find("selectData_node/btn_selecteData", this._gameRecordLayer);
+Global.btnClickEvent(i, this.onClickSelectData, this);
+this.text_data = cc.find("selectData_node/bg_data/text_data", this._gameRecordLayer);
+this.panel_dateSelect = cc.find("selectData_node/panel_dateSelect", this._gameRecordLayer);
+Global.btnClickEvent(this.panel_dateSelect, this.onClickCloseSelectData, this);
+this.panel_dateSelect.active = !1;
+this.bg_dateSelect = this.panel_dateSelect.getChildByName("bg_dateSelect");
+var a = this.bg_dateSelect.getChildByName("btn_left");
+Global.btnClickEvent(a, this.onClickLeft, this);
+var o = this.bg_dateSelect.getChildByName("btn_right");
+Global.btnClickEvent(o, this.onClickRight, this);
+this.text_year_month = this.bg_dateSelect.getChildByName("text_year_month");
+this.scroll_gameRecord = this._gameRecordLayer.getChildByName("scroll_gameRecord");
+this.scroll_gameRecord.active = !0;
+this.gameRecordContent = this.scroll_gameRecord.getChildByName("content");
+this.gameRecordItem = this.gameRecordContent.getChildByName("gameRecordItem");
+this.gameRecordItem.active = !1;
+this.scroll_roundRecord = this._gameRecordLayer.getChildByName("scroll_roundRecord");
+this.scroll_roundRecord.active = !1;
+var r = this.scroll_roundRecord.getChildByName("btn_closeRoundRecord");
+Global.btnClickEvent(r, this.onClickCloseRoundRecord, this);
+this.roundRecordContent = this.scroll_roundRecord.getChildByName("content");
+this.roundRecordItem = this.roundRecordContent.getChildByName("roundRecordItem");
+this.roundRecordItem.active = !1;
+},
+initShow: function() {
+this.onClickCloseRoundRecord();
+this.panel_dateSelect.active = !1;
+var e = new Date();
+this.curData = {};
+this.curData.year = e.getFullYear();
+this.curData.month = e.getMonth();
+this.curData.day = e.getDate();
+this.selectData = JSON.parse(JSON.stringify(this.curData));
+var t = this.getDataStr(this.selectData.year, this.selectData.month, this.selectData.day);
+this.text_data.getComponent(cc.Label).string = t;
+this.curShowRecordType = 0;
+var n = {
+c: MsgId.GAME_RECORD
 };
-cc.vv.NetManager.send(t);
+n.selectTime = t;
+n.clubid = this.curShowRecordType;
+cc.vv.NetManager.send(n);
+},
+getDataStr: function(e, t, n) {
+var i = e + "-";
+i += 9 < t ? t + 1 : "0" + (t + 1);
+if (n) {
+i += "-";
+i += 9 < n ? n : "0" + n;
+}
+return i;
 },
 onClose: function() {
 this._gameRecordLayer.active = !1;
 },
 onClickRecordType: function(e) {
-var t = e.target._index, n = {
-c: MsgId.GAME_RECORD,
-selectTime: "2020-7-5"
+this.curShowRecordType = e.target._index;
+var t = {
+c: MsgId.GAME_RECORD
 };
-n.clubid = t;
+t.selectTime = this.getDataStr(this.selectData.year, this.selectData.month, this.selectData.day);
+t.clubid = this.curShowRecordType;
+cc.vv.NetManager.send(t);
+},
+onClickSelectData: function() {
+this.panel_dateSelect.active = !0;
+this.curSelectYear = this.selectData.year;
+this.curSelectMonth = this.selectData.month;
+this.onShowDataItem(this.curSelectYear, this.curSelectMonth);
+},
+onShowDataItem: function(e, t) {
+this.text_year_month.getComponent(cc.Label).string = this.getDataStr(e, t);
+var n = null, i = null;
+if (t == this.curData.month) {
+(n = this.curData.day - 14) < 1 && (n = 1);
+i = this.curData.day;
+} else n = (i = new Date(e, t + 1, 0).getDate()) - (14 - this.curData.day);
+for (var a = n; a <= i; a++) {
+var o = this.bg_dateSelect.getChildByName("dataItem_node" + (a - n));
+o._index = n;
+Global.btnClickEvent(o, this.onClickDataItem, this);
+o.active = !0;
+o._year = e;
+o._month = t;
+o._day = a;
+o.getChildByName("bg_dateItem").active = a == this.selectData.day;
+o.getChildByName("text_dataItem").getComponent(cc.Label).string = a;
+}
+for (a = i - n + 1; a < 15; a++) this.bg_dateSelect.getChildByName("dataItem_node" + a).active = !1;
+},
+onClickCloseSelectData: function() {
+this.panel_dateSelect.active = !1;
+},
+onClickLeft: function() {
+if (this.curSelectMonth == this.curData.month && this.curData.day < 15) {
+if (0 == this.curSelectMonth) {
+this.curSelectYear -= 1;
+this.curSelectMonth = 11;
+} else this.curSelectMonth -= 1;
+this.onShowDataItem(this.curSelectYear, this.curSelectMonth);
+}
+},
+onClickRight: function() {
+if ((this.curSelectMonth + 1) % 12 == this.curData.month) {
+if (11 == this.curSelectMonth) {
+this.curSelectYear += 1;
+this.curSelectMonth = 0;
+} else this.curSelectMonth += 1;
+this.onShowDataItem(this.curSelectYear, this.curSelectMonth);
+}
+},
+onClickDataItem: function(e) {
+this.panel_dateSelect.active = !1;
+this.selectData.year = e.target._year;
+this.selectData.month = e.target._month;
+this.selectData.day = e.target._day;
+var t = this.getDataStr(this.selectData.year, this.selectData.month, this.selectData.day);
+this.text_data.getComponent(cc.Label).string = t;
+this.onClickCloseRoundRecord();
+var n = {
+c: MsgId.GAME_RECORD
+};
+n.selectTime = t;
+n.clubid = this.curShowRecordType;
 cc.vv.NetManager.send(n);
 },
-onClickSelectData: function() {},
+onClickCloseRoundRecord: function() {
+this.scroll_gameRecord.active = !0;
+this.scroll_roundRecord.active = !1;
+},
 onRcvGameRecord: function(e) {
-if (200 === e.code) for (var t = 0; t < 5; t++) {
+if (this._gameRecordItemList) for (var t = 0; t < this._gameRecordItemList.length; t++) this._gameRecordItemList[t].removeFromParent();
+this._gameRecordItemList = [];
+this._isShowDetailList = [];
+this._detailPlayerRowList = [];
+if (200 === e.code && e.data) {
+for (t = 0; t < e.data.length; t++) {
 this._gameRecordItemList.push(cc.instantiate(this.gameRecordItem));
-var n = this._gameRecordItemList[t].getChildByName("roomInfo").getChildByName("btn_detail");
-n._index = t;
-Global.btnClickEvent(n, this.onClickDetail, this);
-for (var i = this._gameRecordItemList[t].getChildByName("playersInfo"), a = t % 4 + 1, o = 0; o < a; o++) {
-i.getChildByName("playerInfoItem" + o).active = !0;
+this._gameRecordItemList[t].parent = this.gameRecordContent;
+var n = this._gameRecordItemList[t].getChildByName("roomInfo");
+n.getChildByName("text_daily_time").getComponent(cc.Label).string = e.data[t].beginTime + "\n至\n" + e.data[t].endTime;
+var i = n.getChildByName("text_roomInfo");
+i.getChildByName("text_roomID").getComponent(cc.Label).string = "房间号：" + e.data[t].deskid;
+i.getChildByName("text_game_name").getComponent(cc.Label).string = "碰胡";
+i.getChildByName("text_game_jushu").getComponent(cc.Label).string = e.data[t].gameNum + "局";
+i.getChildByName("text_people_num").getComponent(cc.Label).string = e.data[t].presonNum;
+var a = n.getChildByName("bg_clubInfo");
+a.getChildByName("text_roomType").getComponent(cc.Label).string = [ "代开房房间", "亲友圈房间", "代开房房间", "他人房间" ][e.data[t].clubid];
+a.getChildByName("text_houseOwner").getComponent(cc.Label).string = e.data[t].houseOwner;
+0 < e.data[t].score ? cc.find("bg_score/text_score", n).getComponent(cc.Label).string = e.data[t].score : cc.find("bg_score/text_score", n).getComponent(cc.Label).string = "/" + Math.abs(e.data[t].score);
+var o = n.getChildByName("btn_detail");
+o._index = t;
+Global.btnClickEvent(o, this.onClickDetail, this);
+var r = this._gameRecordItemList[t].getChildByName("playersInfo");
+r.active = !1;
+var s = r.getChildByName("timeShareDetail");
+s.getChildByName("text_timeValue").getComponent(cc.Label).string = e.data[t].beginTime;
+var c = s.getChildByName("btn_share");
+o._index = t;
+Global.btnClickEvent(c, this.onClickShare, this);
+var l = s.getChildByName("btn_checkRoundDetail");
+l._index = e.data[t].deskid;
+Global.btnClickEvent(l, this.onClickCheckRoundDetail, this);
+for (var h = JSON.parse(e.data[t].data), d = 0, u = 0; u < h.length; u++) d < h[u].score && (d = h[u].score);
+for (u = 0; u < h.length; u++) {
+var g = r.getChildByName("playerInfoItem" + u);
+Global.setHead(g.getChildByName("user_head"), h[u].usericon);
+g.getChildByName("img_owner").active = h[u].uid == e.data[t].uid;
+g.getChildByName("text_player_name").getComponent(cc.Label).string = h[u].playername;
+g.getChildByName("text_player_id").getComponent(cc.Label).string = h[u].uid;
+g.getChildByName("img_big_winner").active = h[u].score >= d && 0 < d;
+g.getChildByName("text_score_win").active = 0 < h[u].score;
+g.getChildByName("text_score_lose").active = h[u].score <= 0;
+0 < h[u].score ? g.getChildByName("text_score_win").getComponent(cc.Label).string = h[u].score : g.getChildByName("text_score_lose").getComponent(cc.Label).string = "/" + Math.abs(h[u].score);
+g.active = !0;
 }
-for (o = a; o < 4; o++) {
-i.getChildByName("playerInfoItem" + o).active = !1;
+for (u = h.length; u < 4; u++) {
+r.getChildByName("playerInfoItem" + u).active = !1;
 }
 this._gameRecordItemList[t].active = !0;
 this._isShowDetailList[t] = !1;
-this._detailPlayerRowList[t] = 2 < a ? 1 : 2;
+this._detailPlayerRowList[t] = 2 < h.length ? 2 : 1;
 }
 this.updateItemPosX();
+}
+this._gameRecordLayer.getChildByName("tips").active = 0 == this._gameRecordItemList.length;
 },
 onClickDetail: function(e) {
 var t = e.target._index;
@@ -2363,11 +2518,49 @@ this._isShowDetailList[t] = !this._isShowDetailList[t];
 this._gameRecordItemList[t].getChildByName("playersInfo").active = this._isShowDetailList[t];
 this.updateItemPosX();
 },
+onClickShare: function(e) {
+e.target._index;
+},
+onClickCheckRoundDetail: function(e) {
+var t = {
+c: MsgId.ROUND_RECORD
+};
+t.deskid = e.target._index;
+cc.vv.NetManager.send(t);
+},
+onRcvRoundRecord: function(e) {
+if (this._roundRecordItemList) for (var t = 0; t < this._roundRecordItemList.length; t++) this._roundRecordItemList[t].removeFromParent();
+this._roundRecordItemList = [];
+if (200 === e.code && e.data) {
+for (t = 0; t < e.data.length; t++) {
+this._roundRecordItemList.push(cc.instantiate(this.roundRecordItem));
+this._roundRecordItemList[t].parent = this.roundRecordContent;
+this._roundRecordItemList[t].y = -80 - t * this._roundRecordItemList[t].height;
+cc.find("bg_num/text_roundIndex", this._roundRecordItemList[t]).getComponent(cc.Label).string = t + 1;
+this._roundRecordItemList[t].getChildByName("text_time").getComponent(cc.Label).string = e.data[t].beginTime;
+for (var n = JSON.parse(e.data[t].data), i = this._roundRecordItemList[t].getChildByName("bg_score"), a = 0; a < n.length; a++) {
+i.getChildByName("text_name" + a).getComponent(cc.Label).string = n[a].playername;
+i.getChildByName("text_score_win" + a).active = 0 < n[a].roundScore;
+i.getChildByName("text_score_lose" + a).active = n[a].roundScore <= 0;
+0 < n[a].roundScore ? i.getChildByName("text_score_win" + a).getComponent(cc.Label).string = n[a].roundScore : i.getChildByName("text_score_lose" + a).getComponent(cc.Label).string = "/" + Math.abs(n[a].roundScore);
+}
+for (a = n.length; a < 4; a++) {
+i.getChildByName("text_name" + a).active = !1;
+i.getChildByName("text_score_win" + a).active = !1;
+i.getChildByName("text_score_lose" + a).active = !1;
+}
+this._roundRecordItemList[t].active = !0;
+}
+this.scroll_gameRecord.active = !1;
+this.scroll_roundRecord.active = !0;
+}
+},
 updateItemPosX: function() {
 for (var e = [ 122, 287, 392 ], t = 0, n = 0; n < this._gameRecordItemList.length; n++) {
-this._gameRecordItemList[n].x = t;
-this._isShowDetailList[n] ? t -= e[0] : t -= e[this._detailPlayerRowList[n]];
+this._gameRecordItemList[n].y = t;
+this._isShowDetailList[n] ? t -= e[this._detailPlayerRowList[n]] : t -= e[0];
 }
+this.gameRecordContent.height = -t;
 },
 onDestroy: function() {
 this._gameRecordLayer && cc.loader.releaseRes("common/prefab/GameRecord", cc.Prefab);
@@ -3380,27 +3573,35 @@ cc.find("head_bg/UserHead/name", this.node).getComponent(cc.Label).string = cc.v
 cc.find("head_bg/id", this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
 cc.find("money_bg/gold_num", this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
 cc.find("room_bg/roomcard_num", this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
-var e = this.node.getChildByName("club_btn");
-Global.btnClickEvent(e, this.onClub, this);
-var t = cc.find("dt_xmt/share_btn", this.node);
-Global.btnClickEvent(t, this.onClickShare, this);
+var e = this.node.getChildByName("notHaveClub_btn");
+Global.btnClickEvent(e, this.onToClubLobby, this);
+var t = this.node.getChildByName("haveClub_btn");
+Global.btnClickEvent(t, this.onClub, this);
+var n = this.node.getChildByName("moreClub_btn");
+Global.btnClickEvent(n, this.onToClubLobby, this);
+e.active = 0 == cc.vv.UserManager.clubs.length;
+t.active = 0 < cc.vv.UserManager.clubs.length;
+n.active = 0 < cc.vv.UserManager.clubs.length;
+if (0 < cc.vv.UserManager.clubs.length) {
+var i = t.getChildByName("info");
+this.initClub(i);
+}
+var a = cc.find("dt_xmt/share_btn", this.node);
+Global.btnClickEvent(a, this.onClickShare, this);
 this.panel_share = this.node.getChildByName("panel_share");
 this.panel_share.active = !1;
-var n = cc.find("share_bg/btn_shareToSession", this.panel_share);
-Global.btnClickEvent(n, this.onClickShareToSession, this);
-var i = cc.find("share_bg/btn_shareToTimeline", this.panel_share);
-Global.btnClickEvent(i, this.onClickShareToTimeline, this);
+var o = cc.find("share_bg/btn_shareToSession", this.panel_share);
+Global.btnClickEvent(o, this.onClickShareToSession, this);
+var r = cc.find("share_bg/btn_shareToTimeline", this.panel_share);
+Global.btnClickEvent(r, this.onClickShareToTimeline, this);
 this.initSetBtn();
-var a = cc.find("dt_xmt/history_btn", this.node);
-Global.btnClickEvent(a, this.onClickHistory, this);
+var s = cc.find("dt_xmt/history_btn", this.node);
+Global.btnClickEvent(s, this.onClickHistory, this);
 this.initJoinGame();
-var o = cc.find("right_list/scrollview/view/content/item", this.node);
-Global.btnClickEvent(o, this.onClickCreateRoom, this);
-var r = e.getChildByName("info");
-r.active = 0 < cc.vv.UserManager.clubs.length;
-0 < cc.vv.UserManager.clubs.length && this.initClub(r);
-var s = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
-Global.setHead(s, cc.vv.UserManager.userIcon);
+var c = cc.find("right_list/scrollview/view/content/item", this.node);
+Global.btnClickEvent(c, this.onClickCreateRoom, this);
+var l = cc.find("head_bg/UserHead/radio_mask/spr_head", this.node);
+Global.setHead(l, cc.vv.UserManager.userIcon);
 cc.find("gps/label_city", this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
 this.CreateRoomJS = this.node.getComponent("CreateRoom");
 this.node.addComponent("GameRecord");
@@ -3572,6 +3773,9 @@ e.getChildByName("club_name").getComponent(cc.Label).string = cc.vv.UserManager.
 onClub: function() {
 0 < cc.vv.UserManager.clubs.length && (cc.vv.UserManager.currClubId = cc.vv.UserManager.clubs[0].clubid);
 cc.vv.SceneMgr.enterScene(0 < cc.vv.UserManager.clubs.length ? "club" : "club_lobby");
+},
+onToClubLobby: function() {
+cc.vv.SceneMgr.enterScene("club_lobby");
 },
 onClickShare: function() {
 this.panel_share.active = !this.panel_share.active;
@@ -3972,6 +4176,8 @@ e("GlobalVar").code = (a(i = {
 423: "in_table",
 427: "red_packet_limit",
 430: "login_err",
+436: "distance_less200",
+437: "forbid_same_ip",
 500: "login_fail_again",
 501: "物品不足",
 502: "该用户已准备",
@@ -9940,7 +10146,7 @@ var I = e("ieee754"), y = e("int64-buffer"), A = y.Uint64BE, S = y.Int64BE;
 n.getReadFormat = function(e) {
 var t = R.hasArrayBuffer && e && e.binarraybuffer, n = e && e.int64;
 return {
-map: T && e && e.usemap ? a : i,
+map: L && e && e.usemap ? a : i,
 array: o,
 str: r,
 bin: t ? c : s,
@@ -9957,7 +10163,7 @@ float32: v(4, E),
 float64: v(8, N)
 };
 }, n.readUint8 = h;
-var R = e("./bufferish"), M = e("./bufferish-proto"), T = "undefined" != typeof Map, w = !0;
+var R = e("./bufferish"), M = e("./bufferish-proto"), L = "undefined" != typeof Map, w = !0;
 }, {
 "./bufferish": 8,
 "./bufferish-proto": 6,
@@ -10298,7 +10504,7 @@ case "hex":
 return n >>> 1;
 
 case "base64":
-return T(e).length;
+return L(e).length;
 
 default:
 if (i) return M(e).length;
@@ -10487,8 +10693,8 @@ o.push(n >> 18 | 240, n >> 12 & 63 | 128, n >> 6 & 63 | 128, 63 & n | 128);
 }
 return o;
 }
-function T(e) {
-return L.toByteArray(function(e) {
+function L(e) {
+return T.toByteArray(function(e) {
 if ((e = (t = e, t.trim ? t.trim() : t.replace(/^\s+|\s+$/g, "")).replace(P, "")).length < 2) return "";
 for (var t; e.length % 4 != 0; ) e += "=";
 return e;
@@ -10498,7 +10704,7 @@ function w(e, t, n, i) {
 for (var a = 0; a < i && !(a + n >= t.length || a >= e.length); ++a) t[a + n] = e[a];
 return a;
 }
-var L = t("base64-js"), O = t("ieee754"), G = t("isarray");
+var T = t("base64-js"), O = t("ieee754"), G = t("isarray");
 D.Buffer = d, D.SlowBuffer = function(e) {
 return +e != e && (e = 0), d.alloc(+e);
 }, D.INSPECT_MAX_BYTES = 50, d.TYPED_ARRAY_SUPPORT = void 0 !== e.TYPED_ARRAY_SUPPORT ? e.TYPED_ARRAY_SUPPORT : function() {
@@ -10607,7 +10813,7 @@ case "binary":
 return m(this, t, n);
 
 case "base64":
-return i = this, o = n, 0 === (a = t) && o === i.length ? L.fromByteArray(i) : L.fromByteArray(i.slice(a, o));
+return i = this, o = n, 0 === (a = t) && o === i.length ? T.fromByteArray(i) : T.fromByteArray(i.slice(a, o));
 
 case "ucs2":
 case "ucs-2":
@@ -10671,7 +10877,7 @@ case "binary":
 return v(this, e, t, n);
 
 case "base64":
-return s = this, c = t, l = n, w(T(e), s, c, l);
+return s = this, c = t, l = n, w(L(e), s, c, l);
 
 case "ucs2":
 case "ucs-2":
@@ -10987,9 +11193,9 @@ function e(e, t, c) {
 function a(e, t, n, i) {
 return this instanceof a ? function(e, t, n, i, a) {
 if (O && G && (t instanceof G && (t = new O(t)), i instanceof G && (i = new O(i))), 
-!(t || n || i || T)) return void (e.buffer = y(k, 0));
+!(t || n || i || L)) return void (e.buffer = y(k, 0));
 if (!N(t, n)) {
-var o = T || Array;
+var o = L || Array;
 a = n, i = t, n = 0, t = new o(8);
 }
 e.buffer = t, e.offset = n |= 0, w !== ("undefined" == typeof i ? "undefined" : D(i)) && ("string" == typeof i ? function(e, t, n, i) {
@@ -11024,24 +11230,24 @@ var s = i % e * P + a;
 if (i = Math.floor(i / e), a = Math.floor(s / e), o = (s % e).toString(e) + o, !i && !a) break;
 }
 return r && (o = "-" + o), o;
-}, _.toJSON = n, _.toArray = b, L && (_.toBuffer = C), O && (_.toArrayBuffer = E), 
+}, _.toJSON = n, _.toArray = b, T && (_.toBuffer = C), O && (_.toArrayBuffer = E), 
 a[v] = function(e) {
 return !(!e || !e[p]);
 }, m[e] = a;
 }
 function b(e) {
 var t = this.buffer, n = this.offset;
-return T = null, !1 !== e && 0 === n && 8 === t.length && i(t) ? t : y(t, n);
+return L = null, !1 !== e && 0 === n && 8 === t.length && i(t) ? t : y(t, n);
 }
 function C(e) {
 var t = this.buffer, n = this.offset;
-if (T = L, !1 !== e && 0 === n && 8 === t.length && a.isBuffer(t)) return t;
-var i = new L(8);
+if (L = T, !1 !== e && 0 === n && 8 === t.length && a.isBuffer(t)) return t;
+var i = new T(8);
 return I(i, 0, t, n), i;
 }
 function E(e) {
 var t = this.buffer, n = this.offset, i = t.buffer;
-if (T = O, !1 !== e && 0 === n && i instanceof G && 8 === i.byteLength) return i;
+if (L = O, !1 !== e && 0 === n && i instanceof G && 8 === i.byteLength) return i;
 var a = new O(8);
 return I(a, 0, t, n), a.buffer;
 }
@@ -11070,7 +11276,7 @@ function M(e, t, n) {
 var i = t + 8;
 for (n++; t < i; ) e[t++] = 255 & -n ^ 255, n /= 256;
 }
-var T, w = "undefined", L = w !== ("undefined" == typeof a ? "undefined" : D(a)) && a, O = w !== ("undefined" == typeof Uint8Array ? "undefined" : D(Uint8Array)) && Uint8Array, G = w !== ("undefined" == typeof ArrayBuffer ? "undefined" : D(ArrayBuffer)) && ArrayBuffer, k = [ 0, 0, 0, 0, 0, 0, 0, 0 ], i = Array.isArray || function(e) {
+var L, w = "undefined", T = w !== ("undefined" == typeof a ? "undefined" : D(a)) && a, O = w !== ("undefined" == typeof Uint8Array ? "undefined" : D(Uint8Array)) && Uint8Array, G = w !== ("undefined" == typeof ArrayBuffer ? "undefined" : D(ArrayBuffer)) && ArrayBuffer, k = [ 0, 0, 0, 0, 0, 0, 0, 0 ], i = Array.isArray || function(e) {
 return !!e && "[object Array]" == Object.prototype.toString.call(e);
 }, P = 4294967296;
 e("Uint64BE", !0, !0), e("Int64BE", !0, !1), e("Uint64LE", !1, !0), e("Int64LE", !1, !1);
