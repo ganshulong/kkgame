@@ -231,5 +231,13 @@ GlobalMsgId.SELF_GPS_DATA = 163;       		// 发送定位数据
 GlobalMsgId.PLAYER_DISTANCE_DATA = 8813; 	// 玩家距离数据
 GlobalMsgId.GPS_TIPS_NOTIFY = 18809; 		// 玩家距离提示通知
 
-GlobalMsgId.GAME_RECORD = 165; 		// 大局战绩
-GlobalMsgId.ROUND_RECORD = 166; 		// 小局战绩
+GlobalMsgId.GAME_RECORD = 165; 				// 大局战绩
+GlobalMsgId.ROUND_RECORD = 166; 			// 小局战绩
+
+GlobalMsgId.APPLY_DISMISS = 65; 			// 发起解散
+GlobalMsgId.AGREE_DISMISS = 66;				// 同意解散
+GlobalMsgId.REFUSE_DISMISS = 67; 			// 拒绝解散
+GlobalMsgId.APPLY_DISMISS_NOTIFY = 1019; 	// 发起解散通知
+GlobalMsgId.AGREE_DISMISS_NOTIFY  = 1020; 	// 同意解散通知
+GlobalMsgId.REFUSE_DISMISS_NOTIFY  = 1021; 	// 拒绝解散通知
+GlobalMsgId.SUCCESS_DISMISS_NOTIFY = 1023; 	// 成功解散通知

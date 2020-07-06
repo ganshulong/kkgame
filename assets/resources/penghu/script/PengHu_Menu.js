@@ -32,6 +32,7 @@ cc.Class({
         _canClick:true,
         _clickNode:null,
         _clickBtnSeat:-1,
+        _isPlaying:false,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -56,12 +57,31 @@ cc.Class({
         this._clickNode.active = false;
 
         let exit = cc.find("btn_leave",this._panelSettingNode);
-        Global.btnClickEvent(exit,this.onExit,this);
+        Global.btnClickEvent(exit,this.onClickDismiss,this);
 
-        let settingBtn = cc.find("btn_setting",this._panelSettingNode);
+        let btn_dismiss = this._panelSettingNode.getChildByName("btn_dismiss");
+        Global.btnClickEvent(btn_dismiss,this.onClickDismiss,this);
+        this.panel_dismiss = cc.find("scene/panel_dismiss",this.node);
+        this.panel_dismiss.active = false;
+        this.dismiss_small_bg = this.panel_dismiss.getChildByName("dismiss_small_bg");
+        this.dismiss_big_bg = this.panel_dismiss.getChildByName("dismiss_big_bg");
+
+        let btn_cancel = cc.find("dismiss_small_bg/btn_cancel",this.panel_dismiss);
+        Global.btnClickEvent(btn_cancel,this.onClickCancelDismiss,this);
+        let btn_closeDismiss = cc.find("dismiss_small_bg/btn_closeDismiss",this.panel_dismiss);
+        Global.btnClickEvent(btn_closeDismiss,this.onClickCancelDismiss,this);
+        let btn_define = cc.find("dismiss_small_bg/btn_define",this.panel_dismiss);
+        Global.btnClickEvent(btn_define,this.onClickDefineDismiss,this);
+        
+        let btn_agree = cc.find("dismiss_big_bg/btn_agree",this.panel_dismiss);
+        Global.btnClickEvent(btn_agree,this.onClickAgreeDismiss,this);
+        let btn_refuse = cc.find("dismiss_big_bg/btn_refuse",this.panel_dismiss);
+        Global.btnClickEvent(btn_refuse,this.onClickRefuseDismiss,this);
+
+        let settingBtn = this._panelSettingNode.getChildByName("btn_setting");
         Global.btnClickEvent(settingBtn,this.onShowSetting,this);
 
-        let btn_close = cc.find("btn_close",this._panelSettingNode);
+        let btn_close = this._panelSettingNode.getChildByName("btn_close");
         Global.btnClickEvent(btn_close,this.onClose,this);
 
         let btn_invite_wx = cc.find("scene/operate_btn_view/btn_invite_wx",this.node)
@@ -90,7 +110,122 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData,this);
         Global.registerEvent(EventId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify,this);
+        Global.registerEvent(EventId.DISMISS_NOTIFY, this.onRcvDismissNotify,this);
+
         this.recvDeskInfoMsg();
+    },
+
+    onRcvDismissNotify(data){
+        this.panel_dismiss.active = true;
+
+        if (MsgId.APPLY_DISMISS_NOTIFY == data.detail.c || MsgId.AGREE_DISMISS_NOTIFY == data.detail.c) {
+            let dissolveInfo = data.detail.dissolveInfo;
+            if (!dissolveInfo) {
+                return;
+            }
+            this.dismiss_small_bg.active = false;
+            this.dismiss_big_bg.active = true;
+
+            this.dismiss_big_bg.getChildByName("text_title").getComponent(cc.Label).string = "申请解散游戏";
+
+            let tipStr = "玩家[" + dissolveInfo.startPlayername + "]申请解散游戏，等待其他玩家选择，超过[" + dissolveInfo.time + "]秒未做选择，则默认同意！"
+            this.dismiss_big_bg.getChildByName("text_tip").getComponent(cc.Label).string = tipStr;
+
+            let selfIsAgree = true;
+            let palyerStateStr = "";
+            for (var i = 0; i < dissolveInfo.agreeUsers.length; i++) {
+                if (-1 == dissolveInfo.agreeUsers[i].isargee) {
+                    palyerStateStr += "【" + dissolveInfo.agreeUsers[i].playername + "】";
+                    if (cc.vv.UserManager.uid == dissolveInfo.agreeUsers[i].uid) {
+                        selfIsAgree = false;
+                    }
+                }
+            }   
+            if (palyerStateStr) {
+                palyerStateStr += "等待选择";
+            }
+            this.dismiss_big_bg.getChildByName("text_palyerState").getComponent(cc.Label).string = palyerStateStr;
+
+            this.dismiss_big_bg.getChildByName("btn_agree").active = !selfIsAgree;
+            this.dismiss_big_bg.getChildByName("btn_refuse").active = !selfIsAgree;
+            
+            let text_downCount = this.dismiss_big_bg.getChildByName("text_downCount");
+            text_downCount.getComponent(cc.Label).string = dissolveInfo.time;
+            text_downCount.runAction(
+            cc.repeatForever(
+                cc.sequence(
+                    cc.delayTime(1), 
+                    cc.callFunc(()=>{
+                        text_downCount.getComponent(cc.Label).string = --dissolveInfo.time;
+                        if (0 == dissolveInfo.time) {
+                            text_downCount.stopAllActions();
+                        }
+                    })
+                )
+            )
+        )
+
+        } else if (MsgId.REFUSE_DISMISS_NOTIFY == data.detail.c || MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c){
+            this.dismiss_small_bg.active = true;
+            this.dismiss_big_bg.active = false;
+
+            this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "提示";
+            let tipStr = "游戏解散成功";
+            if (MsgId.REFUSE_DISMISS_NOTIFY == data.detail.c) {
+                tipStr = "游戏解散失败！玩家[" + data.detail.playername + "]不同意解散";
+            }
+            this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = tipStr;
+
+            this.dismiss_small_bg.getChildByName("btn_cancel").active = false;
+            this.dismiss_small_bg.getChildByName("btn_define").active = false;
+            this.dismiss_small_bg.getChildByName("btn_closeDismiss").active = true;
+        }
+    },
+
+    onClickDismiss(){
+        let createUid = cc.vv.gameData.getRoomConf().createUserInfo.uid;
+        this.panel_dismiss.active = true;
+        this.dismiss_small_bg.active = true;
+        this.dismiss_big_bg.active = false;
+        this.dismiss_small_bg.getChildByName("btn_cancel").active = true;
+        this.dismiss_small_bg.getChildByName("btn_define").active = true;
+        this.dismiss_small_bg.getChildByName("btn_closeDismiss").active = false;
+        if (this._isPlaying) {  //游戏中
+            this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "解散游戏";
+            this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "您正在申请解散游戏操作，是否确认？";
+        } else {                //未开始游戏
+            if (createUid == cc.vv.UserManager.uid) {   //房主
+                this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "解散游戏";
+                this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "解散游戏后返还豆，是否确定解散？";
+            } else {
+                this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "返回大厅";
+                this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "您确定要离开游戏吗？";
+            }
+        }
+    },
+
+    onClickCancelDismiss(){
+        this.panel_dismiss.active = false;
+    },
+
+    onClickDefineDismiss(){
+        this.panel_dismiss.active = false;
+        if (this._isPlaying) {
+            let req = {c: MsgId.APPLY_DISMISS};
+            cc.vv.NetManager.send(req);
+        } else {
+            this.onExit();
+        }
+    },
+
+    onClickAgreeDismiss(){
+        let req = {c: MsgId.AGREE_DISMISS};
+        cc.vv.NetManager.send(req);
+    },
+
+    onClickRefuseDismiss(){
+        let req = {c: MsgId.REFUSE_DISMISS};
+        cc.vv.NetManager.send(req);
     },
 
     //1绿色，2黄色，3红色
@@ -314,6 +449,7 @@ cc.Class({
         let user = cc.vv.gameData.getUserInfo(cc.vv.gameData.getMySeatIndex());
         if (user) {
             this.showReady(user.state === 0);
+            this.showInviteWxCopyRoomId(user.state != 2);
         }
     },
 
@@ -364,6 +500,7 @@ cc.Class({
     showInviteWxCopyRoomId(bShow){
         cc.find("scene/operate_btn_view/btn_invite_wx",this.node).active = bShow;
         cc.find("scene/operate_btn_view/btn_copy_roomId",this.node).active = bShow;
+        this._isPlaying = !bShow;
     },
 
     onDestroy(){
