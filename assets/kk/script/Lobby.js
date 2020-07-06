@@ -49,6 +49,27 @@ cc.Class({
         this.node.parent.name = "lobby";
         Global.autoAdaptDevices(false);
 
+        let head = cc.find("head_bg/UserHead/radio_mask/spr_head",this.node);
+        Global.setHead(head,cc.vv.UserManager.userIcon);
+
+        cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
+
+        let text_dialogue = cc.find("bg_dialogue/mask/text_dialogue",this.node);
+        text_dialogue.x = 120;
+        text_dialogue.runAction(
+            cc.repeatForever(
+                cc.sequence(
+                    cc.moveTo(6, cc.v2(-300, text_dialogue.y)),
+                    cc.callFunc(()=>{
+                        text_dialogue.x = 120;
+                    })
+                )
+            )
+        )
+
+        let gameItem = cc.find("right_list/scrollview/view/content/item",this.node)
+        Global.btnClickEvent(gameItem,this.onClickCreateRoom,this);
+
         cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;
         cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
         cc.find("money_bg/gold_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
@@ -84,14 +105,6 @@ cc.Class({
         Global.btnClickEvent(history_btn,this.onClickHistory,this);
 
         this.initJoinGame();
-
-        let gameItem = cc.find("right_list/scrollview/view/content/item",this.node)
-        Global.btnClickEvent(gameItem,this.onClickCreateRoom,this);
-
-        let head = cc.find("head_bg/UserHead/radio_mask/spr_head",this.node);
-        Global.setHead(head,cc.vv.UserManager.userIcon);
-
-        cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
 
         this.CreateRoomJS = this.node.getComponent("CreateRoom");
         
@@ -159,7 +172,7 @@ cc.Class({
     },
 
     onClickSwitch(){
-
+        cc.vv.SceneMgr.enterScene("login");
     },
 
     onClickQuitGame(){
