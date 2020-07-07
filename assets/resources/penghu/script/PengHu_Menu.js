@@ -62,14 +62,17 @@ cc.Class({
         let btn_dismiss = this._panelSettingNode.getChildByName("btn_dismiss");
         Global.btnClickEvent(btn_dismiss,this.onClickDismiss,this);
         this.panel_dismiss = cc.find("scene/panel_dismiss",this.node);
+        this.panel_dismiss.zIndex = 4;
         this.panel_dismiss.active = false;
         this.dismiss_small_bg = this.panel_dismiss.getChildByName("dismiss_small_bg");
         this.dismiss_big_bg = this.panel_dismiss.getChildByName("dismiss_big_bg");
 
         let btn_cancel = cc.find("dismiss_small_bg/btn_cancel",this.panel_dismiss);
         Global.btnClickEvent(btn_cancel,this.onClickCancelDismiss,this);
-        let btn_closeDismiss = cc.find("dismiss_small_bg/btn_closeDismiss",this.panel_dismiss);
-        Global.btnClickEvent(btn_closeDismiss,this.onClickCancelDismiss,this);
+        let btn_define_refuse = cc.find("dismiss_small_bg/btn_define_refuse",this.panel_dismiss);
+        Global.btnClickEvent(btn_define_refuse,this.onClickCancelDismiss,this);
+        let btn_define_success = cc.find("dismiss_small_bg/btn_define_success",this.panel_dismiss);
+        Global.btnClickEvent(btn_define_success,this.onClickDefineDismissSuceess,this);
         let btn_define = cc.find("dismiss_small_bg/btn_define",this.panel_dismiss);
         Global.btnClickEvent(btn_define,this.onClickDefineDismiss,this);
         
@@ -191,7 +194,8 @@ cc.Class({
 
             this.dismiss_small_bg.getChildByName("btn_cancel").active = false;
             this.dismiss_small_bg.getChildByName("btn_define").active = false;
-            this.dismiss_small_bg.getChildByName("btn_closeDismiss").active = true;
+            this.dismiss_small_bg.getChildByName("btn_define_refuse").active = (MsgId.REFUSE_DISMISS_NOTIFY == data.detail.c);
+            this.dismiss_small_bg.getChildByName("btn_define_success").active = (MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c);
         }
     },
 
@@ -202,7 +206,8 @@ cc.Class({
         this.dismiss_big_bg.active = false;
         this.dismiss_small_bg.getChildByName("btn_cancel").active = true;
         this.dismiss_small_bg.getChildByName("btn_define").active = true;
-        this.dismiss_small_bg.getChildByName("btn_closeDismiss").active = false;
+        this.dismiss_small_bg.getChildByName("btn_define_refuse").active = false;
+        this.dismiss_small_bg.getChildByName("btn_define_success").active = false;
         if (this._isPlaying) {  //游戏中
             this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "解散游戏";
             this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "您正在申请解散游戏操作，是否确认？";
@@ -219,6 +224,17 @@ cc.Class({
 
     onClickCancelDismiss(){
         this.panel_dismiss.active = false;
+    },
+
+    onClickDefineDismissSuceess(){
+        let createUid = cc.vv.gameData.getRoomConf().createUserInfo.uid;
+        if (createUid == cc.vv.UserManager.uid) {
+            cc.vv.FloatTip.show("游戏已解散");
+        } else {
+            cc.vv.FloatTip.show("游戏已被创建者解散");
+        }
+        // cc.vv.SceneMgr.enterScene('lobby');
+        cc.vv.gameData.onRcvNetExitRoom({code:200});
     },
 
     onClickDefineDismiss(){
