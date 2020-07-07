@@ -165,14 +165,14 @@ cc.Class({
             
             if (MsgId.APPLY_DISMISS_NOTIFY == data.detail.c) {
                 let text_downCount = this.dismiss_big_bg.getChildByName("text_downCount");
-                text_downCount.getComponent(cc.Label).string = dissolveInfo.time;
+                text_downCount.getComponent(cc.Label).string = dissolveInfo.distimeoutIntervel;
                 text_downCount.runAction(
                     cc.repeatForever(
                         cc.sequence(
                             cc.delayTime(1), 
                             cc.callFunc(()=>{
-                                text_downCount.getComponent(cc.Label).string = --dissolveInfo.time;
-                                if (0 == dissolveInfo.time) {
+                                text_downCount.getComponent(cc.Label).string = --dissolveInfo.distimeoutIntervel;
+                                if (0 == dissolveInfo.distimeoutIntervel) {
                                     text_downCount.stopAllActions();
                                 }
                             })
@@ -184,7 +184,8 @@ cc.Class({
         } else if (MsgId.REFUSE_DISMISS_NOTIFY == data.detail.c || MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c){
             this.dismiss_small_bg.active = true;
             this.dismiss_big_bg.active = false;
-
+            this.dismiss_big_bg.getChildByName("text_downCount").stopAllActions();
+            
             this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "提示";
             let tipStr = "游戏解散成功";
             if (MsgId.REFUSE_DISMISS_NOTIFY == data.detail.c) {
