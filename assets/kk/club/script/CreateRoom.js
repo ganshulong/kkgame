@@ -68,13 +68,16 @@ cc.Class({
                     let btn_back = this._createLayer.getChildByName("btn_back");
                     Global.btnClickEvent(btn_back,this.onClose,this);
 
-                    let btn_create_room = cc.find("img_bg/right_bg/penghu/btn_create_room",this._createLayer);
+                    let btn_create_room = cc.find("img_bg/right_bg/btn_create_room",this._createLayer);
                     Global.btnClickEvent(btn_create_room,this.onCreatePengHu,this);
                 }
             })
         }
         else{
             this._createLayer.active = true;
+            let input_roomName = cc.find("img_bg/right_bg/scrollview/content/input_roomName",this._createLayer);
+            input_roomName.getComponent(cc.EditBox).string = "";
+            input_roomName.active = this._isClubRoom;
         }
     },
 
@@ -92,17 +95,21 @@ cc.Class({
 
     // 创建碰胡
     onCreatePengHu(){
-        let layer = cc.find("img_bg/right_bg/penghu",this._createLayer);
-        // let str = layer.getChildByName("input_name").getComponent(cc.EditBox).string;
-        // if(str.length===0){
-        //     cc.vv.FloatTip.show("请输入桌子名称!");
-        //     return;
-        // }
+        let layer = cc.find("img_bg/right_bg/scrollview/content",this._createLayer);
+
+        let roomNameStr = "";
+        if (this._isClubRoom) {
+            roomNameStr = layer.getChildByName("input_roomName").getComponent(cc.EditBox).string;
+            if(roomNameStr.length===0){
+                cc.vv.FloatTip.show("请输入桌子名称!");
+                return;
+            }
+        }
         let req = {};
         if (this._isClubRoom) {
             req.clubid = cc.vv.UserManager.currClubId;
         }
-        req.gameid = 3;
+        req.gameid = this._isClubRoom ? 1 : 3;
         req.gamenum = 8;
         req.param1 = 0;
         req.score = 1;
@@ -154,23 +161,28 @@ cc.Class({
         let trusteeship = cc.find("force/toggle1",layer);
         req.trustee = trusteeship.getComponent(cc.Toggle).isChecked?1:0;
 
+        // 解散
+        let dismiss = cc.find("dismiss/toggle1",layer);
+        req.isdissolve = dismiss.getComponent(cc.Toggle).isChecked?1:0;
+
         // 同IP
         let sameIp = cc.find("other/toggle1",layer);
         req.ipcheck = sameIp.getComponent(cc.Toggle).isChecked?1:0;
 
-        // 托管
+        // 距离
         let distance = cc.find("other/toggle2",layer);
         req.distance = distance.getComponent(cc.Toggle).isChecked?1:0;
 
-        req.tname = "";
+        req.tname = roomNameStr;
 
-        var data = { 'c': MsgId.GAME_CREATEROOM};
+        var data = {};
+        data.c = this._isClubRoom ? MsgId.ADDGAME : MsgId.GAME_CREATEROOM;
         data.gameInfo = req;
         cc.vv.NetManager.send(data);
     },
 
     clearPengHu(){
-        let layer = cc.find("img_bg/right_bg/penghu",this._createLayer);
+        let layer = cc.find("img_bg/right_bg/scrollview/content",this._createLayer);
         for(let i=1;i<4;++i){
             // 局数
             let round = cc.find("round/toggle"+i,layer);
@@ -205,7 +217,8 @@ cc.Class({
         let distance = cc.find("other/toggle2",layer);
         distance.getComponent(cc.Toggle).isChecked = false;
 
-        // layer.getChildByName("input_name").getComponent(cc.EditBox).string = "";
+        layer.getChildByName("input_roomName").getComponent(cc.EditBox).string = "";
+        layer.getChildByName("input_roomName").active = this._isClubRoom;
     },
 
     onDestroy(){

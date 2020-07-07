@@ -199,7 +199,7 @@ cc.Class({
         }
     },
 
-    onClickDismiss(){       
+    onClickDismiss(){
         let createUid = cc.vv.gameData.getRoomConf().createUserInfo.uid;
         this.panel_dismiss.active = true;
         this.dismiss_small_bg.active = true;
@@ -243,6 +243,14 @@ cc.Class({
         //           俱乐部房+闲家： 发退出
         //             大厅房+房主： 发解散
         //             大厅房+闲家： 发退出
+        if (this._isPlaying) {
+            let roomConf = cc.vv.gameData.getRoomConf();
+            if (0 == roomConf.isdissolve) {
+                this.panel_dismiss.active = false;
+                cc.vv.FloatTip.show("该房间不可解散");
+                return;
+            }
+        }
         let createUid = cc.vv.gameData.getRoomConf().createUserInfo.uid;
         this.panel_dismiss.active = false;
         if (this._isPlaying || (createUid == cc.vv.UserManager.uid) && !cc.vv.UserManager.currClubId) {
