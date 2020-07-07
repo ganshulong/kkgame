@@ -73,8 +73,14 @@ cc.Class({
 
         }
 
-        //testgsl
-        this.onWeChatLogin();
+        if (!Global.noAutoLogin) {
+            let historyOpenid = cc.sys.localStorage.getItem("openid");
+            let pssswd  = cc.sys.localStorage.getItem("passwd");
+            if (historyOpenid && historyOpenid.length > 0){
+                //14 表示二次登录，FIX ME. 后续将14 改为常量
+                cc.vv.GameManager.reqLogin(historyOpenid, pssswd, 14, historyOpenid, "", "");
+            }
+        }
     },
 
     onPhoneLogin() {

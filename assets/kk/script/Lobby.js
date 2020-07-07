@@ -174,6 +174,7 @@ cc.Class({
     onClickSwitch(){
         cc.vv.NetManager.send({c:MsgId.LOGIN_OUT});
         cc.vv.NetManager.close();
+        Global.noAutoLogin = true;
         cc.vv.SceneMgr.enterScene("login");
     },
 

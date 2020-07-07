@@ -135,21 +135,25 @@ cc.Class({
             let playerStateNode = this.dismiss_big_bg.getChildByName("playerStateNode");
             playerStateNode.removeAllChildren();
             let text_palyerStateTemplate = this.dismiss_big_bg.getChildByName("text_palyerStateTemplate");
+            let posY = 0;
             for (var i = 0; i < dissolveInfo.agreeUsers.length; i++) {
-                let text_palyerState = cc.instantiate(text_palyerStateTemplate);
-                text_palyerState.active = true;
-                text_palyerState.parent = playerStateNode;
-                text_palyerState.x = 0;
-                text_palyerState.y = i * -30;
-                if (1 == dissolveInfo.agreeUsers[i].isargee) {
-                    text_palyerState.getComponent(cc.Label).string = "【" + dissolveInfo.agreeUsers[i].playername + "】同意解散";
-                    text_palyerState.color = cc.Color.GREEN;
-                    if (cc.vv.UserManager.uid == dissolveInfo.agreeUsers[i].uid) {
-                        selfIsAgree = true;
+                if (dissolveInfo.startUid != dissolveInfo.agreeUsers[i].uid) {
+                    let text_palyerState = cc.instantiate(text_palyerStateTemplate);
+                    text_palyerState.active = true;
+                    text_palyerState.parent = playerStateNode;
+                    text_palyerState.x = 0;
+                    text_palyerState.y = posY;
+                    posY -=30;
+                    if (1 == dissolveInfo.agreeUsers[i].isargee) {
+                        text_palyerState.getComponent(cc.Label).string = "【" + dissolveInfo.agreeUsers[i].playername + "】同意解散";
+                        text_palyerState.color = new cc.Color(0,180,0);
+                        if (cc.vv.UserManager.uid == dissolveInfo.agreeUsers[i].uid) {
+                            selfIsAgree = true;
+                        }
+                    } else {
+                        text_palyerState.getComponent(cc.Label).string = "【" + dissolveInfo.agreeUsers[i].playername + "】等待选择";
+                        text_palyerState.color = new cc.Color(227,80,26);
                     }
-                } else {
-                    text_palyerState.getComponent(cc.Label).string = "【" + dissolveInfo.agreeUsers[i].playername + "】等待选择";
-                    text_palyerState.color = new cc.Color(227,80,26);
                 }
             }
 
@@ -465,6 +469,17 @@ cc.Class({
         if (user) {
             this.showReady(user.state === 0);
             this.showInviteWxCopyRoomId(user.state != 2);
+        }
+
+        //解散重连处理
+        let deskInfo = cc.vv.gameData.getDeskInfo();
+        if (deskInfo.dissolveInfo && deskInfo.dissolveInfo.iStart) {
+            let msg = {c: MsgId.APPLY_DISMISS_NOTIFY};
+            let data = {};
+            data.detail = {};
+            data.detail.c = MsgId.APPLY_DISMISS_NOTIFY;
+            data.detail.dissolveInfo = deskInfo.dissolveInfo;
+            this.onRcvDismissNotify(data);
         }
     },
 
