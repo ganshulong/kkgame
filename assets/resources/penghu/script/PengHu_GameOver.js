@@ -127,7 +127,7 @@ cc.Class({
             player.getChildByName("txt_id").getComponent(cc.Label).string = "ID:"+user.uid;
 
             let img_bg = player.getChildByName("img_bg");
-            img_bg.getComponent(cc.Sprite).spriteFrame = user.score>0?this._winBgSpr:this._loseBgSpr;
+            img_bg.getComponent(cc.Sprite).spriteFrame = user.score >= 0 ? this._winBgSpr : this._loseBgSpr;
 
             img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
