@@ -69,10 +69,10 @@ cc.Class({
 
         let btn_cancel = cc.find("dismiss_small_bg/btn_cancel",this.panel_dismiss);
         Global.btnClickEvent(btn_cancel,this.onClickCancelDismiss,this);
-        let btn_define_refuse = cc.find("dismiss_small_bg/btn_define_refuse",this.panel_dismiss);
-        Global.btnClickEvent(btn_define_refuse,this.onClickCancelDismiss,this);
-        let btn_define_success = cc.find("dismiss_small_bg/btn_define_success",this.panel_dismiss);
-        Global.btnClickEvent(btn_define_success,this.onClickDefineDismissSuceess,this);
+        let btn_close_dismiss = cc.find("dismiss_small_bg/btn_close_dismiss",this.panel_dismiss);
+        Global.btnClickEvent(btn_close_dismiss,this.onClickCancelDismiss,this);
+        let btn_exit_to_hall = cc.find("dismiss_small_bg/btn_exit_to_hall",this.panel_dismiss);
+        Global.btnClickEvent(btn_exit_to_hall,this.onClickExitToHall,this);
         let btn_define = cc.find("dismiss_small_bg/btn_define",this.panel_dismiss);
         Global.btnClickEvent(btn_define,this.onClickDefineDismiss,this);
         
@@ -134,7 +134,7 @@ cc.Class({
             let tipStr = "玩家[" + dissolveInfo.startPlayername + "]申请解散游戏，等待其他玩家选择，超过[" + dissolveInfo.time + "]秒未做选择，则默认同意！"
             this.dismiss_big_bg.getChildByName("text_tip").getComponent(cc.Label).string = tipStr;
 
-            let selfIsAgree = false;
+            let selfIsAgree = true;
             let playerStateNode = this.dismiss_big_bg.getChildByName("playerStateNode");
             playerStateNode.removeAllChildren();
             let text_palyerStateTemplate = this.dismiss_big_bg.getChildByName("text_palyerStateTemplate");
@@ -150,12 +150,12 @@ cc.Class({
                     if (1 == dissolveInfo.agreeUsers[i].isargee) {
                         text_palyerState.getComponent(cc.Label).string = "【" + dissolveInfo.agreeUsers[i].playername + "】同意解散";
                         text_palyerState.color = new cc.Color(0,180,0);
-                        if (cc.vv.UserManager.uid == dissolveInfo.agreeUsers[i].uid) {
-                            selfIsAgree = true;
-                        }
                     } else {
                         text_palyerState.getComponent(cc.Label).string = "【" + dissolveInfo.agreeUsers[i].playername + "】等待选择";
                         text_palyerState.color = new cc.Color(227,80,26);
+                        if (cc.vv.UserManager.uid == dissolveInfo.agreeUsers[i].uid) {
+                            selfIsAgree = false;
+                        }
                     }
                 }
             }
@@ -194,8 +194,8 @@ cc.Class({
 
             this.dismiss_small_bg.getChildByName("btn_cancel").active = false;
             this.dismiss_small_bg.getChildByName("btn_define").active = false;
-            this.dismiss_small_bg.getChildByName("btn_define_refuse").active = (MsgId.REFUSE_DISMISS_NOTIFY == data.detail.c);
-            this.dismiss_small_bg.getChildByName("btn_define_success").active = (MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c);
+            this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = !(MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c && !cc.vv.UserManager.currClubId);
+            this.dismiss_small_bg.getChildByName("btn_exit_to_hall").active = (MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c && !cc.vv.UserManager.currClubId);
         }
     },
 
@@ -206,8 +206,8 @@ cc.Class({
         this.dismiss_big_bg.active = false;
         this.dismiss_small_bg.getChildByName("btn_cancel").active = true;
         this.dismiss_small_bg.getChildByName("btn_define").active = true;
-        this.dismiss_small_bg.getChildByName("btn_define_refuse").active = false;
-        this.dismiss_small_bg.getChildByName("btn_define_success").active = false;
+        this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = false;
+        this.dismiss_small_bg.getChildByName("btn_exit_to_hall").active = false;
         if (this._isPlaying) {  //游戏中
             this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "解散游戏";
             this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "您正在申请解散游戏操作，是否确认？";
@@ -226,7 +226,7 @@ cc.Class({
         this.panel_dismiss.active = false;
     },
 
-    onClickDefineDismissSuceess(){
+    onClickExitToHall(){
         let createUid = cc.vv.gameData.getRoomConf().createUserInfo.uid;
         if (createUid == cc.vv.UserManager.uid) {
             cc.vv.FloatTip.show("游戏已解散");
