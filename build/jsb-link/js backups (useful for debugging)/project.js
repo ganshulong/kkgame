@@ -3656,6 +3656,7 @@ cc.vv.NetManager.send({
 c: MsgId.LOGIN_OUT
 });
 cc.vv.NetManager.close();
+Global.noAutoLogin = !0;
 cc.vv.SceneMgr.enterScene("login");
 },
 onClickQuitGame: function() {
@@ -5304,7 +5305,7 @@ if (e) {
 e.getChildByName("txt_name").getComponent(cc.Label).string = t.playername;
 e.getChildByName("txt_id").getComponent(cc.Label).string = "ID:" + t.uid;
 var a = e.getChildByName("img_bg");
-a.getComponent(cc.Sprite).spriteFrame = 0 < t.score ? this._winBgSpr : this._loseBgSpr;
+a.getComponent(cc.Sprite).spriteFrame = 0 <= t.score ? this._winBgSpr : this._loseBgSpr;
 a.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = 0 < t.score ? this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num") : this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
 a.getChildByName("title_zhongzhuang_num").getComponent(cc.Sprite).spriteFrame = 0 < t.score ? this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_zhongzhuang_num") : this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_zhongzhuang_num");
 a.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = 0 < t.score ? this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_dianpao_num") : this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_dianpao_num");
@@ -5797,37 +5798,40 @@ Global.btnClickEvent(n, this.onClickDismiss, this);
 var i = this._panelSettingNode.getChildByName("btn_dismiss");
 Global.btnClickEvent(i, this.onClickDismiss, this);
 this.panel_dismiss = cc.find("scene/panel_dismiss", this.node);
+this.panel_dismiss.zIndex = 4;
 this.panel_dismiss.active = !1;
 this.dismiss_small_bg = this.panel_dismiss.getChildByName("dismiss_small_bg");
 this.dismiss_big_bg = this.panel_dismiss.getChildByName("dismiss_big_bg");
 var a = cc.find("dismiss_small_bg/btn_cancel", this.panel_dismiss);
 Global.btnClickEvent(a, this.onClickCancelDismiss, this);
-var o = cc.find("dismiss_small_bg/btn_closeDismiss", this.panel_dismiss);
+var o = cc.find("dismiss_small_bg/btn_close_dismiss", this.panel_dismiss);
 Global.btnClickEvent(o, this.onClickCancelDismiss, this);
-var s = cc.find("dismiss_small_bg/btn_define", this.panel_dismiss);
-Global.btnClickEvent(s, this.onClickDefineDismiss, this);
-var r = cc.find("dismiss_big_bg/btn_agree", this.panel_dismiss);
-Global.btnClickEvent(r, this.onClickAgreeDismiss, this);
-var c = cc.find("dismiss_big_bg/btn_refuse", this.panel_dismiss);
-Global.btnClickEvent(c, this.onClickRefuseDismiss, this);
-var l = this._panelSettingNode.getChildByName("btn_setting");
-Global.btnClickEvent(l, this.onShowSetting, this);
-var h = this._panelSettingNode.getChildByName("btn_close");
-Global.btnClickEvent(h, this.onClose, this);
-var d = cc.find("scene/operate_btn_view/btn_invite_wx", this.node);
-Global.btnClickEvent(d, this.onClickInviteToWx, this);
-var u = cc.find("scene/operate_btn_view/btn_copy_roomId", this.node);
-Global.btnClickEvent(u, this.onClickCopyRoomIdToWx, this);
+var s = cc.find("dismiss_small_bg/btn_exit_to_hall", this.panel_dismiss);
+Global.btnClickEvent(s, this.onClickExitToHall, this);
+var r = cc.find("dismiss_small_bg/btn_define", this.panel_dismiss);
+Global.btnClickEvent(r, this.onClickDefineDismiss, this);
+var c = cc.find("dismiss_big_bg/btn_agree", this.panel_dismiss);
+Global.btnClickEvent(c, this.onClickAgreeDismiss, this);
+var l = cc.find("dismiss_big_bg/btn_refuse", this.panel_dismiss);
+Global.btnClickEvent(l, this.onClickRefuseDismiss, this);
+var h = this._panelSettingNode.getChildByName("btn_setting");
+Global.btnClickEvent(h, this.onShowSetting, this);
+var d = this._panelSettingNode.getChildByName("btn_close");
+Global.btnClickEvent(d, this.onClose, this);
+var u = cc.find("scene/operate_btn_view/btn_invite_wx", this.node);
+Global.btnClickEvent(u, this.onClickInviteToWx, this);
+var g = cc.find("scene/operate_btn_view/btn_copy_roomId", this.node);
+Global.btnClickEvent(g, this.onClickCopyRoomIdToWx, this);
 this.btn_gps = cc.find("scene/operate_btn_view/btn_gps", this.node);
 this.setGpsBtnColour(1);
 this.panel_gps = cc.find("scene/panel_gps", this.node);
 this.onSetShowGps(!1);
 this.panel_player = cc.find("scene/panel_player", this.node);
 this.onClickClosePlayerInfo();
-var g = cc.find("spr_bg/btn_exit", this.panel_gps);
-Global.btnClickEvent(g, this.onClickExitGame, this);
-var _ = cc.find("spr_bg/btn_continue", this.panel_gps);
-Global.btnClickEvent(_, this.onClickContinueGame, this);
+var _ = cc.find("spr_bg/btn_exit", this.panel_gps);
+Global.btnClickEvent(_, this.onClickExitGame, this);
+var f = cc.find("spr_bg/btn_continue", this.panel_gps);
+Global.btnClickEvent(f, this.onClickContinueGame, this);
 Global.registerEvent(EventId.CLOSE_ROUNDVIEW, this.recvCloseRoundView, this);
 Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO, this.recvDeskInfoMsg, this);
 Global.registerEvent(EventId.READY_NOTIFY, this.onRcvReadyNotice, this);
@@ -5847,30 +5851,45 @@ this.dismiss_big_bg.active = !0;
 this.dismiss_big_bg.getChildByName("text_title").getComponent(cc.Label).string = "申请解散游戏";
 var n = "玩家[" + t.startPlayername + "]申请解散游戏，等待其他玩家选择，超过[" + t.time + "]秒未做选择，则默认同意！";
 this.dismiss_big_bg.getChildByName("text_tip").getComponent(cc.Label).string = n;
-for (var i = !0, a = "", o = 0; o < t.agreeUsers.length; o++) if (-1 == t.agreeUsers[o].isargee) {
-a += "【" + t.agreeUsers[o].playername + "】";
-cc.vv.UserManager.uid == t.agreeUsers[o].uid && (i = !1);
+var i = !0, a = this.dismiss_big_bg.getChildByName("playerStateNode");
+a.removeAllChildren();
+for (var o = this.dismiss_big_bg.getChildByName("text_palyerStateTemplate"), s = 0, r = 0; r < t.agreeUsers.length; r++) if (t.startUid != t.agreeUsers[r].uid) {
+var c = cc.instantiate(o);
+c.active = !0;
+c.parent = a;
+c.x = 0;
+c.y = s;
+s -= 30;
+if (1 == t.agreeUsers[r].isargee) {
+c.getComponent(cc.Label).string = "【" + t.agreeUsers[r].playername + "】同意解散";
+c.color = new cc.Color(0, 180, 0);
+} else {
+c.getComponent(cc.Label).string = "【" + t.agreeUsers[r].playername + "】等待选择";
+c.color = new cc.Color(227, 80, 26);
+cc.vv.UserManager.uid == t.agreeUsers[r].uid && (i = !1);
 }
-a && (a += "等待选择");
-this.dismiss_big_bg.getChildByName("text_palyerState").getComponent(cc.Label).string = a;
+}
 this.dismiss_big_bg.getChildByName("btn_agree").active = !i;
 this.dismiss_big_bg.getChildByName("btn_refuse").active = !i;
-var s = this.dismiss_big_bg.getChildByName("text_downCount");
-s.getComponent(cc.Label).string = t.time;
-s.runAction(cc.repeatForever(cc.sequence(cc.delayTime(1), cc.callFunc(function() {
-s.getComponent(cc.Label).string = --t.time;
-0 == t.time && s.stopAllActions();
+if (MsgId.APPLY_DISMISS_NOTIFY == e.detail.c) {
+var l = this.dismiss_big_bg.getChildByName("text_downCount");
+l.getComponent(cc.Label).string = t.time;
+l.runAction(cc.repeatForever(cc.sequence(cc.delayTime(1), cc.callFunc(function() {
+l.getComponent(cc.Label).string = --t.time;
+0 == t.time && l.stopAllActions();
 }))));
+}
 } else if (MsgId.REFUSE_DISMISS_NOTIFY == e.detail.c || MsgId.SUCCESS_DISMISS_NOTIFY == e.detail.c) {
 this.dismiss_small_bg.active = !0;
 this.dismiss_big_bg.active = !1;
 this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "提示";
-var r = "游戏解散成功";
-MsgId.REFUSE_DISMISS_NOTIFY == e.detail.c && (r = "游戏解散失败！玩家[" + e.detail.playername + "]不同意解散");
-this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = r;
+var h = "游戏解散成功";
+MsgId.REFUSE_DISMISS_NOTIFY == e.detail.c && (h = "游戏解散失败！玩家[" + e.detail.playername + "]不同意解散");
+this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = h;
 this.dismiss_small_bg.getChildByName("btn_cancel").active = !1;
 this.dismiss_small_bg.getChildByName("btn_define").active = !1;
-this.dismiss_small_bg.getChildByName("btn_closeDismiss").active = !0;
+this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = !(MsgId.SUCCESS_DISMISS_NOTIFY == e.detail.c && !cc.vv.UserManager.currClubId);
+this.dismiss_small_bg.getChildByName("btn_exit_to_hall").active = MsgId.SUCCESS_DISMISS_NOTIFY == e.detail.c && !cc.vv.UserManager.currClubId;
 }
 },
 onClickDismiss: function() {
@@ -5880,7 +5899,8 @@ this.dismiss_small_bg.active = !0;
 this.dismiss_big_bg.active = !1;
 this.dismiss_small_bg.getChildByName("btn_cancel").active = !0;
 this.dismiss_small_bg.getChildByName("btn_define").active = !0;
-this.dismiss_small_bg.getChildByName("btn_closeDismiss").active = !1;
+this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = !1;
+this.dismiss_small_bg.getChildByName("btn_exit_to_hall").active = !1;
 if (this._isPlaying) {
 this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "解散游戏";
 this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "您正在申请解散游戏操作，是否确认？";
@@ -5895,13 +5915,20 @@ this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string =
 onClickCancelDismiss: function() {
 this.panel_dismiss.active = !1;
 },
+onClickExitToHall: function() {
+cc.vv.gameData.getRoomConf().createUserInfo.uid == cc.vv.UserManager.uid ? cc.vv.FloatTip.show("游戏已解散") : cc.vv.FloatTip.show("游戏已被创建者解散");
+cc.vv.gameData.onRcvNetExitRoom({
+code: 200
+});
+},
 onClickDefineDismiss: function() {
+var e = cc.vv.gameData.getRoomConf().createUserInfo.uid;
 this.panel_dismiss.active = !1;
-if (this._isPlaying) {
-var e = {
+if (this._isPlaying || e == cc.vv.UserManager.uid && !cc.vv.UserManager.currClubId) {
+var t = {
 c: MsgId.APPLY_DISMISS
 };
-cc.vv.NetManager.send(e);
+cc.vv.NetManager.send(t);
 } else this.onExit();
 },
 onClickAgreeDismiss: function() {
@@ -6074,6 +6101,16 @@ var e = cc.vv.gameData.getUserInfo(cc.vv.gameData.getMySeatIndex());
 if (e) {
 this.showReady(0 === e.state);
 this.showInviteWxCopyRoomId(2 != e.state);
+}
+var t = cc.vv.gameData.getDeskInfo();
+if (t.dissolveInfo && t.dissolveInfo.iStart) {
+MsgId.APPLY_DISMISS_NOTIFY;
+var n = {
+detail: {}
+};
+n.detail.c = MsgId.APPLY_DISMISS_NOTIFY;
+n.detail.dissolveInfo = t.dissolveInfo;
+this.onRcvDismissNotify(n);
 }
 },
 recvCloseRoundView: function() {
@@ -9448,7 +9485,7 @@ PlatformApi: "PlatformApi",
 SceneMgr: "SceneMgr",
 WxMgr: "WxMgr"
 } ],
-login: [ function(o, e, t) {
+login: [ function(r, e, t) {
 "use strict";
 cc._RF.push(e, "27525iCX4lKSruZwKK1s4UV", "login");
 cc.Class({
@@ -9459,15 +9496,15 @@ this.node.parent.name = "login";
 Global.autoAdaptDevices(!1);
 cc.vv = cc.vv || {};
 if (!cc.vv.GameManager) {
-var e = o("GameManager");
+var e = r("GameManager");
 e.init();
 cc.vv.GameManager = e;
 }
-var t = o("UserManager");
+var t = r("UserManager");
 t.init();
 cc.vv.UserManager = t;
 cc.vv.UserManager.clearNotice();
-var n = o("SpeakerMgr");
+var n = r("SpeakerMgr");
 n.init();
 cc.vv.SpeakerMgr = n;
 cc.find("ver", this.node).getComponent(cc.Label).string = Global.resVersion;
@@ -9484,7 +9521,10 @@ if (Global.isAndroid()) {
 var a = Global.setAppidWithAppsecretForJS("wx82256d3bda922e13", "b87d6ec883757e530cdf55794df03e92");
 console.log(a + "@@@@@@@@");
 } else Global.isIOS();
-this.onWeChatLogin();
+if (!Global.noAutoLogin) {
+var o = cc.sys.localStorage.getItem("openid"), s = cc.sys.localStorage.getItem("passwd");
+o && 0 < o.length && cc.vv.GameManager.reqLogin(o, s, 14, o, "", "");
+}
 },
 onPhoneLogin: function() {},
 onWeChatLoginCallBack: function(e) {

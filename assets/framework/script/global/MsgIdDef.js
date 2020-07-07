@@ -160,7 +160,7 @@ GlobalMsgId.DS_CONTROL_NOTIFY=100510;          // 推送控制消息
 GlobalMsgId.DS_PLAYERLIST = 122;               // 获取玩家列表
 GlobalMsgId.DS_OPEN_REDPACKET = 115;           // 开红包
 GlobalMsgId.DS_SHOW_REDPACKET = 123;           // 显示红包
-GlobalMsgId.BIND_MOBILE = 124;                 // 绑定手机号
+// GlobalMsgId.BIND_MOBILE = 124;                 // 绑定手机号
 GlobalMsgId.ROOM_LEAVE = 63;                   // 离开房间
 GlobalMsgId.NN_ROOM_LIST = 64;                 // nn列表
 GlobalMsgId.ENVELOPEGET = 152;                 // 红包提取
@@ -241,3 +241,6 @@ GlobalMsgId.APPLY_DISMISS_NOTIFY = 1019; 	// 发起解散通知
 GlobalMsgId.AGREE_DISMISS_NOTIFY  = 1020; 	// 同意解散通知
 GlobalMsgId.REFUSE_DISMISS_NOTIFY  = 1021; 	// 拒绝解散通知
 GlobalMsgId.SUCCESS_DISMISS_NOTIFY = 1023; 	// 成功解散通知
+
+GlobalMsgId.GER_PHONE_CODE = 164; 			// 获取验证码
+GlobalMsgId.BIND_PHONE = 124; 				// 绑定手机

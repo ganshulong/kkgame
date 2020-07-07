@@ -99,8 +99,6 @@ cc.Class({
         let btn_shareToTimeline = cc.find("share_bg/btn_shareToTimeline",this.panel_share)
         Global.btnClickEvent(btn_shareToTimeline,this.onClickShareToTimeline,this);
 
-        this.initSetBtn();
-
         let history_btn = cc.find("dt_xmt/history_btn",this.node)
         Global.btnClickEvent(history_btn,this.onClickHistory,this);
 
@@ -110,6 +108,12 @@ cc.Class({
         
         this.node.addComponent("GameRecord");
         this.GameRecordJS = this.node.getComponent("GameRecord");
+
+        this.node.addComponent("LobbySet");
+        this.LobbySetJS = this.node.getComponent("LobbySet");
+
+        let setting_btn = cc.find("dt_xmt/setting_btn",this.node)
+        Global.btnClickEvent(setting_btn,this.onClickSet,this);
 
         Global.playBgm(Global.SOUNDS.bgm_hall);
 
@@ -127,138 +131,8 @@ cc.Class({
         this.CreateRoomJS.showCreateRoom(false);
     },
 
-    initSetBtn(){
-        let setting_btn = cc.find("dt_xmt/setting_btn",this.node)
-        Global.btnClickEvent(setting_btn,this.onClickSet,this);
-
-        this.panel_set = this.node.getChildByName("panel_set");
-        this.panel_set.active = false;
-
-        let btn_closeSet = this.panel_set.getChildByName("btn_closeSet");
-        Global.btnClickEvent(btn_closeSet,this.onClickSet,this);
-
-        let btn_bind = cc.find("phone_bg/btn_bind",this.panel_set);
-        Global.btnClickEvent(btn_bind,this.onClickBindPhone,this);
-
-        let btn_switch = this.panel_set.getChildByName("btn_switch");
-        Global.btnClickEvent(btn_switch,this.onClickSwitch,this);
-
-        let btn_quitGame = this.panel_set.getChildByName("btn_quitGame");
-        Global.btnClickEvent(btn_quitGame,this.onClickQuitGame,this);
-
-        this.slider_volum = this.panel_set.getChildByName("slider_volum");
-        this.progressBar_volum = this.slider_volum.getChildByName("progressBar_volum");
-        
-        let btn_effect = this.panel_set.getChildByName("btn_effect");
-        Global.btnClickEvent(btn_effect,this.setEffct,this);
-        this.btn_effect_mask = this.panel_set.getChildByName("btn_effect_mask");
-
-        let btn_music = this.panel_set.getChildByName("btn_music");
-        Global.btnClickEvent(btn_music,this.setMusic,this);
-        this.btn_music_mask = this.panel_set.getChildByName("btn_music_mask");
-
-        let btn_help = this.panel_set.getChildByName("btn_help");
-        Global.btnClickEvent(btn_help,this.onClickHelp,this);
-
-        let btn_protol = this.panel_set.getChildByName("btn_protol");
-        Global.btnClickEvent(btn_protol,this.onClickProtol,this);
-
-        let btn_clean = this.panel_set.getChildByName("btn_clean");
-        Global.btnClickEvent(btn_clean,this.onClickClean,this);
-    },
-
-    onClickBindPhone(){
-
-    },
-
-    onClickSwitch(){
-        cc.vv.NetManager.send({c:MsgId.LOGIN_OUT});
-        cc.vv.NetManager.close();
-        Global.noAutoLogin = true;
-        cc.vv.SceneMgr.enterScene("login");
-    },
-
-    onClickQuitGame(){
-        let lan = cc.vv.Language.request_quit;
-        let sureCall = function () {
-            cc.game.end();
-        }
-        let cancelCall = function () {
-        }
-        cc.vv.AlertView.show(lan, sureCall, cancelCall)
-    },
-
-    onSliderVolum(sliderEvent){
-        this._audioVolue = Math.floor(sliderEvent.progress * 100) / 100;
-        this.slider_volum.getComponent(cc.Slider).progress = this._audioVolue;
-        this.progressBar_volum.getComponent(cc.ProgressBar).progress = this._audioVolue;
-        cc.sys.localStorage.setItem("_audioVolue",this._audioVolue);
-        if (this._effectIsOpen) {
-            cc.vv.AudioManager.setEffVolume(this._audioVolue);
-        }
-        if (this._musicIsOpen) {
-            cc.vv.AudioManager.setBgmVolume(this._audioVolue);
-        }
-    },
-
-    // 设置音效
-    setEffct(){
-        this._effectIsOpen = this._effectIsOpen == 0 ? 1 : 0;
-        this.setOperate(this._effectIsOpen,this.btn_effect_mask);
-        cc.sys.localStorage.setItem("_effectIsOpen",this._effectIsOpen);
-        cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
-    },
-
-    // 设置音乐
-    setMusic(){
-        this._musicIsOpen = this._musicIsOpen == 0 ? 1 : 0;
-        this.setOperate(this._musicIsOpen,this.btn_music_mask);
-        cc.sys.localStorage.setItem("_musicIsOpen",this._musicIsOpen);
-        cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
-    },
-
-    setOperate(vol,node){
-        node.x = vol== 0 ? 55 : 140;
-    },
-
-    onClickHelp(){
-        
-    },
-
-    onClickProtol(){
-        
-    },
-
-    onClickClean(){
-        
-    },
-
     onClickSet(){
-        this.panel_set.active = !this.panel_set.active;
-        if (this.panel_set.active) {
-            let node_userinfo = this.panel_set.getChildByName("node_userinfo");
-            let spr_head = cc.find("UserHead/radio_mask/spr_head",node_userinfo);
-            Global.setHead(spr_head,cc.vv.UserManager.userIcon);
-            node_userinfo.getChildByName("text_name").getComponent(cc.Label).string = cc.vv.UserManager.nickName;
-            node_userinfo.getChildByName("text_id").getComponent(cc.Label).string = "ID: " + cc.vv.UserManager.uid;
-            cc.find("phone_bg/text_num",this.panel_set).getComponent(cc.Label).string = cc.vv.UserManager.mobile;
-            cc.find("phone_bg/btn_bind",this.panel_set).active = (!cc.vv.UserManager.mobile);
-
-            this._audioVolue = Number(cc.sys.localStorage.getItem("_audioVolue"));
-            if(this._audioVolue === null) this._audioVolue = 1;
-            this.slider_volum.getComponent(cc.Slider).progress = this._audioVolue;
-            this.progressBar_volum.getComponent(cc.ProgressBar).progress = this._audioVolue;
-
-            this._effectIsOpen = parseInt(cc.sys.localStorage.getItem("_effectIsOpen"));
-            if(this._effectIsOpen === null) this._effectIsOpen = 1;
-            this.setOperate(this._effectIsOpen,this.btn_effect_mask);
-            cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
-
-            this._musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
-            if(this._musicIsOpen === null) this._musicIsOpen = 1;
-            this.setOperate(this._musicIsOpen,this.btn_music_mask);
-            cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
-        }
+        this.LobbySetJS.showLobbySet();
     },
     
     initJoinGame(){
