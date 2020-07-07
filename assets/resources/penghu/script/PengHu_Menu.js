@@ -131,39 +131,48 @@ cc.Class({
             let tipStr = "玩家[" + dissolveInfo.startPlayername + "]申请解散游戏，等待其他玩家选择，超过[" + dissolveInfo.time + "]秒未做选择，则默认同意！"
             this.dismiss_big_bg.getChildByName("text_tip").getComponent(cc.Label).string = tipStr;
 
-            let selfIsAgree = true;
-            let palyerStateStr = "";
+            let selfIsAgree = false;
+            let playerStateNode = this.dismiss_big_bg.getChildByName("playerStateNode");
+            playerStateNode.removeAllChildren();
+            let text_palyerStateTemplate = this.dismiss_big_bg.getChildByName("text_palyerStateTemplate");
             for (var i = 0; i < dissolveInfo.agreeUsers.length; i++) {
-                if (-1 == dissolveInfo.agreeUsers[i].isargee) {
-                    palyerStateStr += "【" + dissolveInfo.agreeUsers[i].playername + "】";
+                let text_palyerState = cc.instantiate(text_palyerStateTemplate);
+                text_palyerState.active = true;
+                text_palyerState.parent = playerStateNode;
+                text_palyerState.x = 0;
+                text_palyerState.y = i * -30;
+                if (1 == dissolveInfo.agreeUsers[i].isargee) {
+                    text_palyerState.getComponent(cc.Label).string = "【" + dissolveInfo.agreeUsers[i].playername + "】同意解散";
+                    text_palyerState.color = cc.Color.GREEN;
                     if (cc.vv.UserManager.uid == dissolveInfo.agreeUsers[i].uid) {
-                        selfIsAgree = false;
+                        selfIsAgree = true;
                     }
+                } else {
+                    text_palyerState.getComponent(cc.Label).string = "【" + dissolveInfo.agreeUsers[i].playername + "】等待选择";
+                    text_palyerState.color = new cc.Color(227,80,26);
                 }
-            }   
-            if (palyerStateStr) {
-                palyerStateStr += "等待选择";
             }
-            this.dismiss_big_bg.getChildByName("text_palyerState").getComponent(cc.Label).string = palyerStateStr;
 
             this.dismiss_big_bg.getChildByName("btn_agree").active = !selfIsAgree;
             this.dismiss_big_bg.getChildByName("btn_refuse").active = !selfIsAgree;
             
-            let text_downCount = this.dismiss_big_bg.getChildByName("text_downCount");
-            text_downCount.getComponent(cc.Label).string = dissolveInfo.time;
-            text_downCount.runAction(
-            cc.repeatForever(
-                cc.sequence(
-                    cc.delayTime(1), 
-                    cc.callFunc(()=>{
-                        text_downCount.getComponent(cc.Label).string = --dissolveInfo.time;
-                        if (0 == dissolveInfo.time) {
-                            text_downCount.stopAllActions();
-                        }
-                    })
+            if (MsgId.APPLY_DISMISS_NOTIFY == data.detail.c) {
+                let text_downCount = this.dismiss_big_bg.getChildByName("text_downCount");
+                text_downCount.getComponent(cc.Label).string = dissolveInfo.time;
+                text_downCount.runAction(
+                    cc.repeatForever(
+                        cc.sequence(
+                            cc.delayTime(1), 
+                            cc.callFunc(()=>{
+                                text_downCount.getComponent(cc.Label).string = --dissolveInfo.time;
+                                if (0 == dissolveInfo.time) {
+                                    text_downCount.stopAllActions();
+                                }
+                            })
+                        )
+                    )
                 )
-            )
-        )
+            }
 
         } else if (MsgId.REFUSE_DISMISS_NOTIFY == data.detail.c || MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c){
             this.dismiss_small_bg.active = true;
@@ -182,7 +191,7 @@ cc.Class({
         }
     },
 
-    onClickDismiss(){
+    onClickDismiss(){       
         let createUid = cc.vv.gameData.getRoomConf().createUserInfo.uid;
         this.panel_dismiss.active = true;
         this.dismiss_small_bg.active = true;
@@ -209,8 +218,14 @@ cc.Class({
     },
 
     onClickDefineDismiss(){
+        //游戏已开始：               发解散
+        //游戏未开始，俱乐部房+房主： 发退出
+        //           俱乐部房+闲家： 发退出
+        //             大厅房+房主： 发解散
+        //             大厅房+闲家： 发退出
+        let createUid = cc.vv.gameData.getRoomConf().createUserInfo.uid;
         this.panel_dismiss.active = false;
-        if (this._isPlaying) {
+        if (this._isPlaying || (createUid == cc.vv.UserManager.uid) && !cc.vv.UserManager.currClubId) {
             let req = {c: MsgId.APPLY_DISMISS};
             cc.vv.NetManager.send(req);
         } else {
