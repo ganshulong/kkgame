@@ -80,7 +80,7 @@ cc.Class({
         btn_msg.active = (info.createUid == cc.vv.UserManager.uid);
 
         let createRoomBtn = cc.find("Layer/img_bottomBg/btn_switch",this.node);
-        // Global.btnClickEvent(createRoomBtn,this.onCreateRoom,this);
+        Global.btnClickEvent(createRoomBtn,this.onCreateRoom,this);
         createRoomBtn.active = (info.createUid == cc.vv.UserManager.uid);
 
         let btn_member = cc.find("Layer/img_bottomBg/btn_member",this.node);
@@ -89,7 +89,7 @@ cc.Class({
 
         let btn_statistics = cc.find("Layer/img_bottomBg/btn_statistics",this.node);
         // Global.btnClickEvent(btn_statistics,this.onCreateRoom,this);
-        btn_statistics.x = (info.createUid == cc.vv.UserManager.uid) ? 450 : 80;
+        // btn_statistics.x = (info.createUid == cc.vv.UserManager.uid) ? 450 : 80;
 
         this._content = cc.find("Layer/list/view/content",this.node);
         this._content.active = false;
