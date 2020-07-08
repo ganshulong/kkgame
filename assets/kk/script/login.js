@@ -80,7 +80,12 @@ cc.Class({
             let pssswd  = cc.sys.localStorage.getItem("passwd");
             if (historyOpenid && historyOpenid.length > 0){
                 //14 表示二次登录，FIX ME. 后续将14 改为常量
-                cc.vv.GameManager.reqLogin(historyOpenid, pssswd, 14, historyOpenid, "", "");
+                // cc.vv.GameManager.reqLogin(historyOpenid, pssswd, 14, historyOpenid, "", "");
+
+                cc.vv.FloatTip.show('微信自动登陆')
+                if (Global.isWXAppInstalled()) {
+                    Global.onWxAuthorize(this.onWeChatLoginCallBack, this);
+                }
             }
         }
     },
@@ -228,13 +233,13 @@ cc.Class({
     // 微信登录
     onWeChatLogin() {
         if (Global.isNative()) {
-            let historyOpenid = cc.sys.localStorage.getItem("openid");
-            let pssswd  = cc.sys.localStorage.getItem("passwd");
-            if (historyOpenid && historyOpenid.length > 0){
-                //14 表示二次登录，FIX ME. 后续将14 改为常量
-                cc.vv.GameManager.reqLogin(historyOpenid, pssswd, 14, historyOpenid, "", "");
-            }
-            else {
+            // let historyOpenid = cc.sys.localStorage.getItem("openid");
+            // let pssswd  = cc.sys.localStorage.getItem("passwd");
+            // if (historyOpenid && historyOpenid.length > 0){
+            //     //14 表示二次登录，FIX ME. 后续将14 改为常量
+            //     cc.vv.GameManager.reqLogin(historyOpenid, pssswd, 14, historyOpenid, "", "");
+            // }
+            // else {
                 //没有登录过，或更换了新手机等，重新拉取微信客户端
                 //未安装微信客户端，则提示
                 if (!Global.isWXAppInstalled()) {
@@ -246,7 +251,7 @@ cc.Class({
                 // Global.setWXRequestCallBack(this.onWeChatLoginCallBack, this);
                 //开始拉起微信客户端
                 Global.onWxAuthorize(this.onWeChatLoginCallBack, this);
-            }
+            // }
         }else {
             //web端模拟，调试用
             //首次拉起微信的登录，才有这个值

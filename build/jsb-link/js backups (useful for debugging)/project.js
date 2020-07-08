@@ -9606,7 +9606,7 @@ PlatformApi: "PlatformApi",
 SceneMgr: "SceneMgr",
 WxMgr: "WxMgr"
 } ],
-login: [ function(r, e, t) {
+login: [ function(s, e, t) {
 "use strict";
 cc._RF.push(e, "27525iCX4lKSruZwKK1s4UV", "login");
 cc.Class({
@@ -9617,15 +9617,15 @@ this.node.parent.name = "login";
 Global.autoAdaptDevices(!1);
 cc.vv = cc.vv || {};
 if (!cc.vv.GameManager) {
-var e = r("GameManager");
+var e = s("GameManager");
 e.init();
 cc.vv.GameManager = e;
 }
-var t = r("UserManager");
+var t = s("UserManager");
 t.init();
 cc.vv.UserManager = t;
 cc.vv.UserManager.clearNotice();
-var n = r("SpeakerMgr");
+var n = s("SpeakerMgr");
 n.init();
 cc.vv.SpeakerMgr = n;
 cc.find("ver", this.node).getComponent(cc.Label).string = Global.resVersion;
@@ -9644,8 +9644,12 @@ var a = Global.setAppidWithAppsecretForJS("wx82256d3bda922e13", "b87d6ec883757e5
 console.log(a + "@@@@@@@@");
 } else Global.isIOS();
 if (!Global.noAutoLogin) {
-var o = cc.sys.localStorage.getItem("openid"), s = cc.sys.localStorage.getItem("passwd");
-o && 0 < o.length && cc.vv.GameManager.reqLogin(o, s, 14, o, "", "");
+var o = cc.sys.localStorage.getItem("openid");
+cc.sys.localStorage.getItem("passwd");
+if (o && 0 < o.length) {
+cc.vv.FloatTip.show("微信自动登陆");
+Global.isWXAppInstalled() && Global.onWxAuthorize(this.onWeChatLoginCallBack, this);
+}
 }
 },
 initBindPhoneUI: function() {
@@ -9674,22 +9678,25 @@ this.number_countDown.string = "";
 onClickGetCode: function() {
 var e = this.input_phoneNumStr.string, t = parseInt(e);
 if (11 == e.length && t) {
-var n = {
-c: MsgId.GER_PHONE_CODE
+var n = "http://106.12.7.114:8080/?mod=sms&act=sendCode&mobile=" + t, i = cc.loader.getXMLHttpRequest();
+i.timeout = 5e3;
+i.responseType = "json";
+i.open("GET", n, !0);
+i.onreadystatechange = function() {
+cc.log(JSON.parse(i));
 };
-n.mobile = t;
-cc.vv.NetManager.send(n);
+i.send();
 this.btn_getCode.getComponent(cc.Button).interactable = !1;
 this.spr_countDown.active = !0;
-var i = 90;
-this.number_countDown.string = i;
-var a = this;
-a.btn_getCode.runAction(cc.repeatForever(cc.sequence(cc.delayTime(1), cc.callFunc(function() {
-a.number_countDown.string = --i;
-if (0 == i) {
-a.btn_getCode.getComponent(cc.Button).interactable = !0;
-a.spr_countDown.active = !1;
-a.btn_getCode.stopAllActions();
+var a = 90;
+this.number_countDown.string = a;
+var o = this;
+o.btn_getCode.runAction(cc.repeatForever(cc.sequence(cc.delayTime(1), cc.callFunc(function() {
+o.number_countDown.string = --a;
+if (0 == a) {
+o.btn_getCode.getComponent(cc.Button).interactable = !0;
+o.spr_countDown.active = !1;
+o.btn_getCode.stopAllActions();
 }
 }))));
 } else cc.vv.FloatTip.show("手机号输入错误");
@@ -9720,19 +9727,16 @@ Global.playEff(Global.SOUNDS.eff_click);
 },
 onWeChatLogin: function() {
 if (Global.isNative()) {
-var e = cc.sys.localStorage.getItem("openid"), t = cc.sys.localStorage.getItem("passwd");
-if (e && 0 < e.length) cc.vv.GameManager.reqLogin(e, t, 14, e, "", ""); else {
 if (!Global.isWXAppInstalled()) {
 cc.warn("请先下载微信客户端，或web端暂不支持");
 cc.vv.FloatTip.show("请先下载微信客户端，或web端暂不支持微信客户端");
 return;
 }
 Global.onWxAuthorize(this.onWeChatLoginCallBack, this);
-}
 } else {
-var n = "oJtfO5gD5B2WVXlfmXeSkP4fQsCk";
-cc.sys.localStorage.setItem("openid", n);
-cc.vv.GameManager.reqLogin(n, "Aa123456", 14, n, "", "");
+var e = "oJtfO5gD5B2WVXlfmXeSkP4fQsCk";
+cc.sys.localStorage.setItem("openid", e);
+cc.vv.GameManager.reqLogin(e, "Aa123456", 14, e, "", "");
 }
 },
 onVisitorLogin: function() {
