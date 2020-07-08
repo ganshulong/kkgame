@@ -11,7 +11,7 @@ var GlobalVar = cc.Class({
 
     statics: {
   		// 登录游戏服地址
-        loginServerAddress:"www.zonzu.net:9180",
+        loginServerAddress:"106.12.7.114:9180",        // 106.12.7.114 www.zonzu.net
         localVersion:true,
 
         //非常用的配置

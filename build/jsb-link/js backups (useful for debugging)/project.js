@@ -1410,22 +1410,24 @@ cc.find("Layer/bg/img_club_name_bg/txt_clubId", this.node).getComponent(cc.Label
 cc.find("Layer/bg/img_club_name_bg/txt_clubName", this.node).getComponent(cc.Label).string = t ? t.name : "";
 cc.find("Layer/bg/bg_top/btn_invite", this.node).active = t.createUid == cc.vv.UserManager.uid;
 cc.find("Layer/bg/bg_top/btn_msg", this.node).active = t.createUid == cc.vv.UserManager.uid;
-cc.find("Layer/img_bottomBg/btn_switch", this.node).active = t.createUid == cc.vv.UserManager.uid;
+var a = cc.find("Layer/img_bottomBg/btn_switch", this.node);
+Global.btnClickEvent(a, this.onCreateRoom, this);
+a.active = t.createUid == cc.vv.UserManager.uid;
 cc.find("Layer/img_bottomBg/btn_member", this.node).active = t.createUid == cc.vv.UserManager.uid;
-cc.find("Layer/img_bottomBg/btn_statistics", this.node).x = t.createUid == cc.vv.UserManager.uid ? 450 : 80;
+cc.find("Layer/img_bottomBg/btn_statistics", this.node);
 this._content = cc.find("Layer/list/view/content", this.node);
 this._content.active = !1;
-var a = cc.find("Layer/bg_dialogue/mask/txt_dialogue", this.node);
-a.x = 200;
-a.runAction(cc.repeatForever(cc.sequence(cc.moveTo(10, cc.v2(-200, a.y)), cc.callFunc(function() {
-a.x = 200;
+var o = cc.find("Layer/bg_dialogue/mask/txt_dialogue", this.node);
+o.x = 200;
+o.runAction(cc.repeatForever(cc.sequence(cc.moveTo(10, cc.v2(-200, o.y)), cc.callFunc(function() {
+o.x = 200;
 }))));
 this._startPos = cc.v2(this._content.children[0].x, this._content.children[0].y);
-var o = {
+var s = {
 c: MsgId.ENTERCLUB
 };
-o.clubid = cc.vv.UserManager.currClubId;
-cc.vv.NetManager.send(o);
+s.clubid = cc.vv.UserManager.currClubId;
+cc.vv.NetManager.send(s);
 },
 onRcvClubInfo: function(e) {
 if (200 == e.code) {

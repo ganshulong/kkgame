@@ -120,9 +120,16 @@ cc.Class({
         let phoneNumStr = this.input_phoneNumStr.string;
         let phoneNum = parseInt(phoneNumStr);
         if (11 == phoneNumStr.length && phoneNum) {
-            var req = { 'c': MsgId.GER_PHONE_CODE};
-            req.mobile = phoneNum;
-            cc.vv.NetManager.send(req);
+            var url = "http://106.12.7.114:8080/?mod=sms&act=sendCode&mobile="+phoneNum;
+            var xhr = cc.loader.getXMLHttpRequest();
+            xhr.timeout = 5000;
+            xhr.responseType = "json";
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function () {
+                cc.log(JSON.parse(xhr));
+            };
+            xhr.send();
+
             this.btn_getCode.getComponent(cc.Button).interactable = false;
             this.spr_countDown.active = true;
             let countDown = 90;
