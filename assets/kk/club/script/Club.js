@@ -71,6 +71,8 @@ cc.Class({
         let clubName = cc.find("Layer/bg/img_club_name_bg/txt_clubName",this.node);
         clubName.getComponent(cc.Label).string = info?info.name:"";
 
+        cc.find("Layer/img_card_bg",this.node).active = (info.createUid == cc.vv.UserManager.uid);
+
         let btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
         // Global.btnClickEvent(btn_invite,this.onCreateRoom,this);
         btn_invite.active = (info.createUid == cc.vv.UserManager.uid);
@@ -89,7 +91,6 @@ cc.Class({
 
         let btn_statistics = cc.find("Layer/img_bottomBg/btn_statistics",this.node);
         // Global.btnClickEvent(btn_statistics,this.onCreateRoom,this);
-        // btn_statistics.x = (info.createUid == cc.vv.UserManager.uid) ? 450 : 80;
 
         this._content = cc.find("Layer/list/view/content",this.node);
         this._content.active = false;
