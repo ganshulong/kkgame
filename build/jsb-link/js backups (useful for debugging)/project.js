@@ -1408,21 +1408,24 @@ var i = cc.find("Layer/bg/UserHead/radio_mask/spr_head", this.node);
 Global.setHead(i, t ? t.createIcon : "");
 cc.find("Layer/bg/img_club_name_bg/txt_clubId", this.node).getComponent(cc.Label).string = t ? "ID:" + t.clubid : "";
 cc.find("Layer/bg/img_club_name_bg/txt_clubName", this.node).getComponent(cc.Label).string = t ? t.name : "";
-var a = cc.find("Layer/img_bottomBg/btn_switch", this.node);
-Global.btnClickEvent(a, this.onCreateRoom, this);
+cc.find("Layer/bg/bg_top/btn_invite", this.node).active = t.createUid == cc.vv.UserManager.uid;
+cc.find("Layer/bg/bg_top/btn_msg", this.node).active = t.createUid == cc.vv.UserManager.uid;
+cc.find("Layer/img_bottomBg/btn_switch", this.node).active = t.createUid == cc.vv.UserManager.uid;
+cc.find("Layer/img_bottomBg/btn_member", this.node).active = t.createUid == cc.vv.UserManager.uid;
+cc.find("Layer/img_bottomBg/btn_statistics", this.node).x = t.createUid == cc.vv.UserManager.uid ? 450 : 80;
 this._content = cc.find("Layer/list/view/content", this.node);
 this._content.active = !1;
-var o = cc.find("Layer/bg_dialogue/mask/txt_dialogue", this.node);
-o.x = 200;
-o.runAction(cc.repeatForever(cc.sequence(cc.moveTo(10, cc.v2(-200, o.y)), cc.callFunc(function() {
-o.x = 200;
+var a = cc.find("Layer/bg_dialogue/mask/txt_dialogue", this.node);
+a.x = 200;
+a.runAction(cc.repeatForever(cc.sequence(cc.moveTo(10, cc.v2(-200, a.y)), cc.callFunc(function() {
+a.x = 200;
 }))));
 this._startPos = cc.v2(this._content.children[0].x, this._content.children[0].y);
-var s = {
+var o = {
 c: MsgId.ENTERCLUB
 };
-s.clubid = cc.vv.UserManager.currClubId;
-cc.vv.NetManager.send(s);
+o.clubid = cc.vv.UserManager.currClubId;
+cc.vv.NetManager.send(o);
 },
 onRcvClubInfo: function(e) {
 if (200 == e.code) {
@@ -3617,13 +3620,16 @@ Global.btnClickEvent(r, this.onClickProtol, this);
 var c = this._lobbySetLayer.getChildByName("btn_clean");
 Global.btnClickEvent(c, this.onClickClean, this);
 this.panel_bind_phone = this._lobbySetLayer.getChildByName("panel_bind_phone");
-this.panel_bind_phone.active = !1;
 var l = cc.find("bg_bind_phone/btn_close", this.panel_bind_phone);
 Global.btnClickEvent(l, this.onClickBindPhone, this);
-var h = cc.find("bg_bind_phone/btn_getCode", this.panel_bind_phone);
-Global.btnClickEvent(h, this.onClickGetCode, this);
-var d = cc.find("bg_bind_phone/btn_confirm", this.panel_bind_phone);
-Global.btnClickEvent(d, this.onClickConfirm, this);
+this.input_phoneNumStr = cc.find("bg_bind_phone/input_phoneNum", this.panel_bind_phone).getComponent(cc.EditBox);
+this.input_codeStr = cc.find("bg_bind_phone/input_code", this.panel_bind_phone).getComponent(cc.EditBox);
+this.btn_getCode = cc.find("bg_bind_phone/btn_getCode", this.panel_bind_phone);
+Global.btnClickEvent(this.btn_getCode, this.onClickGetCode, this);
+this.spr_countDown = this.btn_getCode.getChildByName("spr_countDown");
+this.number_countDown = this.spr_countDown.getChildByName("number_countDown").getComponent(cc.Label);
+var h = cc.find("bg_bind_phone/btn_confirm", this.panel_bind_phone);
+Global.btnClickEvent(h, this.onClickConfirm, this);
 },
 initShow: function() {
 var e = this._lobbySetLayer.getChildByName("node_userinfo"), t = cc.find("UserHead/radio_mask/spr_head", e);
@@ -3644,8 +3650,7 @@ this._musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
 null == this._musicIsOpen && (this._musicIsOpen = 1);
 this.setOperate(this._musicIsOpen, this.btn_music_mask);
 cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
-cc.find("bg_bind_phone/input_phoneNum", this.panel_bind_phone).getComponent(cc.EditBox).string = "";
-cc.find("bg_bind_phone/input_code", this.panel_bind_phone).getComponent(cc.EditBox).string = "";
+this.panel_bind_phone.active = !1;
 },
 onClose: function() {
 this._lobbySetLayer.active = !1;
@@ -3653,22 +3658,38 @@ this._lobbySetLayer.active = !1;
 onClickBindPhone: function() {
 this.panel_bind_phone.active = !this.panel_bind_phone.active;
 if (this.panel_bind_phone.active) {
-cc.find("bg_bind_phone/input_phoneNum", this.panel_bind_phone).getComponent(cc.EditBox).string = "";
-cc.find("bg_bind_phone/input_code", this.panel_bind_phone).getComponent(cc.EditBox).string = "";
+this.input_phoneNumStr.string = "";
+this.input_codeStr.string = "";
+this.btn_getCode.getComponent(cc.Button).interactable = !0;
+this.spr_countDown.active = !1;
+this.number_countDown.string = "";
 }
 },
 onClickGetCode: function() {
-var e = cc.find("bg_bind_phone/input_phoneNum", this.panel_bind_phone).getComponent(cc.EditBox).string, t = parseInt(e);
+var e = this.input_phoneNumStr.string, t = parseInt(e);
 if (11 == e.length && t) {
 var n = {
 c: MsgId.GER_PHONE_CODE
 };
 n.mobile = t;
 cc.vv.NetManager.send(n);
+this.btn_getCode.getComponent(cc.Button).interactable = !1;
+this.spr_countDown.active = !0;
+var i = 90;
+this.number_countDown.string = i;
+var a = this;
+a.btn_getCode.runAction(cc.repeatForever(cc.sequence(cc.delayTime(1), cc.callFunc(function() {
+a.number_countDown.string = --i;
+if (0 == i) {
+a.btn_getCode.getComponent(cc.Button).interactable = !0;
+a.spr_countDown.active = !1;
+a.btn_getCode.stopAllActions();
+}
+}))));
 } else cc.vv.FloatTip.show("手机号输入错误");
 },
 onClickConfirm: function() {
-var e = cc.find("bg_bind_phone/input_phoneNum", this.panel_bind_phone).getComponent(cc.EditBox).string, t = parseInt(e), n = cc.find("bg_bind_phone/input_code", this.panel_bind_phone).getComponent(cc.EditBox).string;
+var e = this.input_phoneNumStr.string, t = parseInt(e), n = this.input_codeStr.string;
 if (11 == e.length && t && 6 == n.length) {
 var i = {
 c: MsgId.BIND_PHONE
@@ -5970,6 +5991,10 @@ l.getComponent(cc.Label).string = --t.distimeoutIntervel;
 }))));
 }
 } else if (MsgId.REFUSE_DISMISS_NOTIFY == e.detail.c || MsgId.SUCCESS_DISMISS_NOTIFY == e.detail.c) {
+if (!cc.vv.UserManager.currClubId && !this._isPlaying) {
+this.onClickExitToHall();
+return;
+}
 this.dismiss_small_bg.active = !0;
 this.dismiss_big_bg.active = !1;
 this.dismiss_big_bg.getChildByName("text_downCount").stopAllActions();
@@ -9614,7 +9639,8 @@ Global.btnClickEvent(this._visitor_btn, this.onVisitorLogin, this);
 this._wechat_login = this.node.getChildByName("wechat_login");
 Global.btnClickEvent(this._wechat_login, this.onWeChatLogin, this);
 var i = this.node.getChildByName("phone_login");
-Global.btnClickEvent(i, this.onPhoneLogin, this);
+Global.btnClickEvent(i, this.onClickBindPhone, this);
+this.initBindPhoneUI();
 if (Global.isAndroid()) {
 var a = Global.setAppidWithAppsecretForJS("wx82256d3bda922e13", "b87d6ec883757e530cdf55794df03e92");
 console.log(a + "@@@@@@@@");
@@ -9623,6 +9649,56 @@ if (!Global.noAutoLogin) {
 var o = cc.sys.localStorage.getItem("openid"), s = cc.sys.localStorage.getItem("passwd");
 o && 0 < o.length && cc.vv.GameManager.reqLogin(o, s, 14, o, "", "");
 }
+},
+initBindPhoneUI: function() {
+this.panel_bind_phone = this.node.getChildByName("panel_bind_phone");
+var e = cc.find("bg_bind_phone/btn_close", this.panel_bind_phone);
+Global.btnClickEvent(e, this.onClickBindPhone, this);
+this.input_phoneNumStr = cc.find("bg_bind_phone/input_phoneNum", this.panel_bind_phone).getComponent(cc.EditBox);
+this.input_codeStr = cc.find("bg_bind_phone/input_code", this.panel_bind_phone).getComponent(cc.EditBox);
+this.btn_getCode = cc.find("bg_bind_phone/btn_getCode", this.panel_bind_phone);
+Global.btnClickEvent(this.btn_getCode, this.onClickGetCode, this);
+this.spr_countDown = this.btn_getCode.getChildByName("spr_countDown");
+this.number_countDown = this.spr_countDown.getChildByName("number_countDown").getComponent(cc.Label);
+var t = cc.find("bg_bind_phone/btn_confirm", this.panel_bind_phone);
+Global.btnClickEvent(t, this.onClickConfirm, this);
+},
+onClickBindPhone: function() {
+this.panel_bind_phone.active = !this.panel_bind_phone.active;
+if (this.panel_bind_phone.active) {
+this.input_phoneNumStr.string = "";
+this.input_codeStr.string = "";
+this.btn_getCode.getComponent(cc.Button).interactable = !0;
+this.spr_countDown.active = !1;
+this.number_countDown.string = "";
+}
+},
+onClickGetCode: function() {
+var e = this.input_phoneNumStr.string, t = parseInt(e);
+if (11 == e.length && t) {
+var n = {
+c: MsgId.GER_PHONE_CODE
+};
+n.mobile = t;
+cc.vv.NetManager.send(n);
+this.btn_getCode.getComponent(cc.Button).interactable = !1;
+this.spr_countDown.active = !0;
+var i = 90;
+this.number_countDown.string = i;
+var a = this;
+a.btn_getCode.runAction(cc.repeatForever(cc.sequence(cc.delayTime(1), cc.callFunc(function() {
+a.number_countDown.string = --i;
+if (0 == i) {
+a.btn_getCode.getComponent(cc.Button).interactable = !0;
+a.spr_countDown.active = !1;
+a.btn_getCode.stopAllActions();
+}
+}))));
+} else cc.vv.FloatTip.show("手机号输入错误");
+},
+onClickConfirm: function() {
+var e = this.input_phoneNumStr.string;
+parseInt(e), this.input_codeStr.string;
 },
 onPhoneLogin: function() {},
 onWeChatLoginCallBack: function(e) {
@@ -10392,7 +10468,7 @@ return n[t++] << 24 | n[t++] << 16 | n[t++] << 8 | n[t];
 function v(n, i) {
 return function(e) {
 var t = e.reserve(n);
-return i.call(e.buffer, t, T);
+return i.call(e.buffer, t, w);
 };
 }
 function p(e) {
@@ -10434,7 +10510,7 @@ float32: v(4, E),
 float64: v(8, N)
 };
 }, n.readUint8 = h;
-var R = e("./bufferish"), M = e("./bufferish-proto"), L = "undefined" != typeof Map, T = !0;
+var R = e("./bufferish"), M = e("./bufferish-proto"), L = "undefined" != typeof Map, w = !0;
 }, {
 "./bufferish": 8,
 "./bufferish-proto": 6,
@@ -10838,7 +10914,7 @@ e[n + s] = r;
 return s;
 }
 function v(e, t, n, i) {
-return T(function(e) {
+return w(function(e) {
 for (var t = [], n = 0; n < e.length; ++n) t.push(255 & e.charCodeAt(n));
 return t;
 }(t), e, n, i);
@@ -10965,17 +11041,17 @@ o.push(n >> 18 | 240, n >> 12 & 63 | 128, n >> 6 & 63 | 128, 63 & n | 128);
 return o;
 }
 function L(e) {
-return w.toByteArray(function(e) {
+return T.toByteArray(function(e) {
 if ((e = (t = e, t.trim ? t.trim() : t.replace(/^\s+|\s+$/g, "")).replace(D, "")).length < 2) return "";
 for (var t; e.length % 4 != 0; ) e += "=";
 return e;
 }(e));
 }
-function T(e, t, n, i) {
+function w(e, t, n, i) {
 for (var a = 0; a < i && !(a + n >= t.length || a >= e.length); ++a) t[a + n] = e[a];
 return a;
 }
-var w = t("base64-js"), O = t("ieee754"), G = t("isarray");
+var T = t("base64-js"), O = t("ieee754"), G = t("isarray");
 P.Buffer = d, P.SlowBuffer = function(e) {
 return +e != e && (e = 0), d.alloc(+e);
 }, P.INSPECT_MAX_BYTES = 50, d.TYPED_ARRAY_SUPPORT = void 0 !== e.TYPED_ARRAY_SUPPORT ? e.TYPED_ARRAY_SUPPORT : function() {
@@ -11084,7 +11160,7 @@ case "binary":
 return m(this, t, n);
 
 case "base64":
-return i = this, o = n, 0 === (a = t) && o === i.length ? w.fromByteArray(i) : w.fromByteArray(i.slice(a, o));
+return i = this, o = n, 0 === (a = t) && o === i.length ? T.fromByteArray(i) : T.fromByteArray(i.slice(a, o));
 
 case "ucs2":
 case "ucs-2":
@@ -11138,7 +11214,7 @@ return f(this, e, t, n);
 
 case "utf8":
 case "utf-8":
-return d = t, u = n, T(M(e, (h = this).length - d), h, d, u);
+return d = t, u = n, w(M(e, (h = this).length - d), h, d, u);
 
 case "ascii":
 return v(this, e, t, n);
@@ -11148,13 +11224,13 @@ case "binary":
 return v(this, e, t, n);
 
 case "base64":
-return r = this, c = t, l = n, T(L(e), r, c, l);
+return r = this, c = t, l = n, w(L(e), r, c, l);
 
 case "ucs2":
 case "ucs-2":
 case "utf16le":
 case "utf-16le":
-return o = t, s = n, T(function(e, t) {
+return o = t, s = n, w(function(e, t) {
 for (var n, i, a, o = [], s = 0; s < e.length && !((t -= 2) < 0); ++s) n = e.charCodeAt(s), 
 i = n >> 8, a = n % 256, o.push(a), o.push(i);
 return o;
@@ -11469,7 +11545,7 @@ if (!N(t, n)) {
 var o = L || Array;
 a = n, i = t, n = 0, t = new o(8);
 }
-e.buffer = t, e.offset = n |= 0, T !== ("undefined" == typeof i ? "undefined" : P(i)) && ("string" == typeof i ? function(e, t, n, i) {
+e.buffer = t, e.offset = n |= 0, w !== ("undefined" == typeof i ? "undefined" : P(i)) && ("string" == typeof i ? function(e, t, n, i) {
 var a = 0, o = n.length, s = 0, r = 0;
 "-" === n[0] && a++;
 for (var c = a; a < o; ) {
@@ -11501,7 +11577,7 @@ var r = i % e * D + a;
 if (i = Math.floor(i / e), a = Math.floor(r / e), o = (r % e).toString(e) + o, !i && !a) break;
 }
 return s && (o = "-" + o), o;
-}, f.toJSON = n, f.toArray = b, w && (f.toBuffer = C), O && (f.toArrayBuffer = E), 
+}, f.toJSON = n, f.toArray = b, T && (f.toBuffer = C), O && (f.toArrayBuffer = E), 
 a[v] = function(e) {
 return !(!e || !e[p]);
 }, m[e] = a;
@@ -11512,8 +11588,8 @@ return L = null, !1 !== e && 0 === n && 8 === t.length && i(t) ? t : y(t, n);
 }
 function C(e) {
 var t = this.buffer, n = this.offset;
-if (L = w, !1 !== e && 0 === n && 8 === t.length && a.isBuffer(t)) return t;
-var i = new w(8);
+if (L = T, !1 !== e && 0 === n && 8 === t.length && a.isBuffer(t)) return t;
+var i = new T(8);
 return I(i, 0, t, n), i;
 }
 function E(e) {
@@ -11547,7 +11623,7 @@ function M(e, t, n) {
 var i = t + 8;
 for (n++; t < i; ) e[t++] = 255 & -n ^ 255, n /= 256;
 }
-var L, T = "undefined", w = T !== ("undefined" == typeof a ? "undefined" : P(a)) && a, O = T !== ("undefined" == typeof Uint8Array ? "undefined" : P(Uint8Array)) && Uint8Array, G = T !== ("undefined" == typeof ArrayBuffer ? "undefined" : P(ArrayBuffer)) && ArrayBuffer, k = [ 0, 0, 0, 0, 0, 0, 0, 0 ], i = Array.isArray || function(e) {
+var L, w = "undefined", T = w !== ("undefined" == typeof a ? "undefined" : P(a)) && a, O = w !== ("undefined" == typeof Uint8Array ? "undefined" : P(Uint8Array)) && Uint8Array, G = w !== ("undefined" == typeof ArrayBuffer ? "undefined" : P(ArrayBuffer)) && ArrayBuffer, k = [ 0, 0, 0, 0, 0, 0, 0, 0 ], i = Array.isArray || function(e) {
 return !!e && "[object Array]" == Object.prototype.toString.call(e);
 }, D = 4294967296;
 e("Uint64BE", !0, !0), e("Int64BE", !0, !1), e("Uint64LE", !1, !0), e("Int64LE", !1, !1);

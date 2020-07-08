@@ -71,8 +71,6 @@ cc.Class({
         Global.btnClickEvent(btn_cancel,this.onClickCancelDismiss,this);
         let btn_close_dismiss = cc.find("dismiss_small_bg/btn_close_dismiss",this.panel_dismiss);
         Global.btnClickEvent(btn_close_dismiss,this.onClickCancelDismiss,this);
-        let btn_exit_to_hall = cc.find("dismiss_small_bg/btn_exit_to_hall",this.panel_dismiss);
-        Global.btnClickEvent(btn_exit_to_hall,this.onClickExitToHall,this);
         let btn_define = cc.find("dismiss_small_bg/btn_define",this.panel_dismiss);
         Global.btnClickEvent(btn_define,this.onClickDefineDismiss,this);
         
@@ -200,8 +198,7 @@ cc.Class({
 
             this.dismiss_small_bg.getChildByName("btn_cancel").active = false;
             this.dismiss_small_bg.getChildByName("btn_define").active = false;
-            this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = !(MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c && !cc.vv.UserManager.currClubId);
-            this.dismiss_small_bg.getChildByName("btn_exit_to_hall").active = (MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c && !cc.vv.UserManager.currClubId);
+            this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = true;
         }
     },
 
@@ -213,7 +210,6 @@ cc.Class({
         this.dismiss_small_bg.getChildByName("btn_cancel").active = true;
         this.dismiss_small_bg.getChildByName("btn_define").active = true;
         this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = false;
-        this.dismiss_small_bg.getChildByName("btn_exit_to_hall").active = false;
         if (this._isPlaying) {  //游戏中
             this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "解散游戏";
             this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "您正在申请解散游戏操作，是否确认？";
