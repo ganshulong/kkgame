@@ -78,13 +78,18 @@ cc.Class({
         Global.btnClickEvent(btn_clean,this.onClickClean,this);
 
         this.panel_bind_phone = this._lobbySetLayer.getChildByName("panel_bind_phone");
-        this.panel_bind_phone.active = false;
 
         let btn_close = cc.find("bg_bind_phone/btn_close",this.panel_bind_phone);
         Global.btnClickEvent(btn_close,this.onClickBindPhone,this);
 
-        let btn_getCode = cc.find("bg_bind_phone/btn_getCode",this.panel_bind_phone);
-        Global.btnClickEvent(btn_getCode,this.onClickGetCode,this);
+        this.input_phoneNumStr = cc.find("bg_bind_phone/input_phoneNum",this.panel_bind_phone).getComponent(cc.EditBox);
+        this.input_codeStr = cc.find("bg_bind_phone/input_code",this.panel_bind_phone).getComponent(cc.EditBox);
+        
+        this.btn_getCode = cc.find("bg_bind_phone/btn_getCode",this.panel_bind_phone);
+        Global.btnClickEvent(this.btn_getCode,this.onClickGetCode,this);
+
+        this.spr_countDown = this.btn_getCode.getChildByName("spr_countDown");
+        this.number_countDown = this.spr_countDown.getChildByName("number_countDown").getComponent(cc.Label);
 
         let btn_confirm = cc.find("bg_bind_phone/btn_confirm",this.panel_bind_phone);
         Global.btnClickEvent(btn_confirm,this.onClickConfirm,this);
@@ -114,8 +119,7 @@ cc.Class({
         this.setOperate(this._musicIsOpen,this.btn_music_mask);
         cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
 
-        cc.find("bg_bind_phone/input_phoneNum",this.panel_bind_phone).getComponent(cc.EditBox).string = "";
-        cc.find("bg_bind_phone/input_code",this.panel_bind_phone).getComponent(cc.EditBox).string = "";
+        this.panel_bind_phone.active = false;
     },
 
     onClose(){
@@ -125,27 +129,50 @@ cc.Class({
     onClickBindPhone(){
         this.panel_bind_phone.active = !this.panel_bind_phone.active;
         if (this.panel_bind_phone.active) {
-            cc.find("bg_bind_phone/input_phoneNum",this.panel_bind_phone).getComponent(cc.EditBox).string = "";
-            cc.find("bg_bind_phone/input_code",this.panel_bind_phone).getComponent(cc.EditBox).string = "";
+            this.input_phoneNumStr.string = "";
+            this.input_codeStr.string = "";
+            this.btn_getCode.getComponent(cc.Button).interactable = true;
+            this.spr_countDown.active = false;
+            this.number_countDown.string = "";
         }
     },
 
     onClickGetCode(){
-        let phoneNumStr = cc.find("bg_bind_phone/input_phoneNum",this.panel_bind_phone).getComponent(cc.EditBox).string;
+        let phoneNumStr = this.input_phoneNumStr.string;
         let phoneNum = parseInt(phoneNumStr);
         if (11 == phoneNumStr.length && phoneNum) {
             var req = { 'c': MsgId.GER_PHONE_CODE};
             req.mobile = phoneNum;
             cc.vv.NetManager.send(req);
+            this.btn_getCode.getComponent(cc.Button).interactable = false;
+            this.spr_countDown.active = true;
+            let countDown = 90;
+            this.number_countDown.string = countDown;
+            let that = this;
+            that.btn_getCode.runAction(
+                cc.repeatForever(
+                    cc.sequence(
+                        cc.delayTime(1), 
+                        cc.callFunc(()=>{
+                            that.number_countDown.string = --countDown;
+                            if (0 == countDown) {
+                                that.btn_getCode.getComponent(cc.Button).interactable = true;
+                                that.spr_countDown.active = false;
+                                that.btn_getCode.stopAllActions();
+                            }
+                        })
+                    )
+                )
+            )
         } else {
             cc.vv.FloatTip.show("手机号输入错误");
         }
     },
 
     onClickConfirm(){
-        let phoneNumStr = cc.find("bg_bind_phone/input_phoneNum",this.panel_bind_phone).getComponent(cc.EditBox).string;
+        let phoneNumStr = this.input_phoneNumStr.string;
         let phoneNum = parseInt(phoneNumStr);
-        let codeStr = cc.find("bg_bind_phone/input_code",this.panel_bind_phone).getComponent(cc.EditBox).string;
+        let codeStr = this.input_codeStr.string;
         if (11 == phoneNumStr.length && phoneNum && 6 == codeStr.length) {
             var req = { 'c': MsgId.BIND_PHONE};
             req.mobile = phoneNum;
