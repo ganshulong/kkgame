@@ -182,6 +182,11 @@ cc.Class({
             }
 
         } else if (MsgId.REFUSE_DISMISS_NOTIFY == data.detail.c || MsgId.SUCCESS_DISMISS_NOTIFY == data.detail.c){
+            //大厅房+未开始，收到解散成功消息后直接退出
+            if (!cc.vv.UserManager.currClubId && !this._isPlaying) {
+                this.onClickExitToHall();
+                return;
+            }            
             this.dismiss_small_bg.active = true;
             this.dismiss_big_bg.active = false;
             this.dismiss_big_bg.getChildByName("text_downCount").stopAllActions();
