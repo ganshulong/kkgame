@@ -16,7 +16,7 @@ cc.Class({
     },
 
     start () {
-        Global.registerEvent(EventId.BIND_PHONE,this.onRcvBindPhone,this);
+        cc.vv.NetManager.registerMsg(MsgId.BIND_PHONE, this.onRcvBindPhone, this); 
     },
 
     showLobbySet(){
@@ -141,14 +141,22 @@ cc.Class({
         let phoneNumStr = this.input_phoneNumStr.string;
         let phoneNum = parseInt(phoneNumStr);
         if (11 == phoneNumStr.length && phoneNum) {
-            var req = { 'c': MsgId.GER_PHONE_CODE};
-            req.mobile = phoneNum;
-            cc.vv.NetManager.send(req);
+            var url = "http://106.12.7.114:8080/?mod=sms&act=sendCode&mobile="+phoneNum;
+            var xhr = cc.loader.getXMLHttpRequest();
+            xhr.timeout = 5000;
+            xhr.responseType = "json";
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function () {
+                cc.log(JSON.parse(xhr));
+            };
+            xhr.send();
+
             this.btn_getCode.getComponent(cc.Button).interactable = false;
             this.spr_countDown.active = true;
             let countDown = 90;
             this.number_countDown.string = countDown;
             let that = this;
+            that.btn_getCode.stopAllActions();
             that.btn_getCode.runAction(
                 cc.repeatForever(
                     cc.sequence(
@@ -168,7 +176,7 @@ cc.Class({
             cc.vv.FloatTip.show("手机号输入错误");
         }
     },
-
+   
     onClickConfirm(){
         let phoneNumStr = this.input_phoneNumStr.string;
         let phoneNum = parseInt(phoneNumStr);
@@ -183,7 +191,10 @@ cc.Class({
 
     onRcvBindPhone(msg){
         if(msg.code === 200){
+            cc.vv.UserManager.mobile = msg.mobile
             this.onClose();
+        } else {
+            cc.vv.FloatTip.show("绑定失败");
         }
     },
 

@@ -79,10 +79,6 @@ cc.Class({
             let historyOpenid = cc.sys.localStorage.getItem("openid");
             let pssswd  = cc.sys.localStorage.getItem("passwd");
             if (historyOpenid && historyOpenid.length > 0){
-                //14 表示二次登录，FIX ME. 后续将14 改为常量
-                // cc.vv.GameManager.reqLogin(historyOpenid, pssswd, 14, historyOpenid, "", "");
-
-                cc.vv.FloatTip.show('微信自动登陆')
                 if (Global.isWXAppInstalled()) {
                     Global.onWxAuthorize(this.onWeChatLoginCallBack, this);
                 }
@@ -140,6 +136,7 @@ cc.Class({
             let countDown = 90;
             this.number_countDown.string = countDown;
             let that = this;
+            that.btn_getCode.stopAllActions();
             that.btn_getCode.runAction(
                 cc.repeatForever(
                     cc.sequence(
@@ -164,13 +161,10 @@ cc.Class({
         let phoneNumStr = this.input_phoneNumStr.string;
         let phoneNum = parseInt(phoneNumStr);
         let codeStr = this.input_codeStr.string;
-        // if (11 == phoneNumStr.length && phoneNum && 6 == codeStr.length) {
-        //     var req = { 'c': MsgId.BIND_PHONE};
-        //     req.mobile = phoneNum;
-        //     req.code = codeStr;
-        //     cc.vv.NetManager.send(req);
-        // }
-        // cc.vv.GameManager.reqLogin(self._nickname, "", 11, "", "", "");
+        if (11 == phoneNumStr.length && phoneNum && 6 == codeStr.length) {
+            cc.vv.GameManager.reqLogin(phoneNum, "", 9,  "",   "", "", codeStr);
+        }
+        
     },
 
     onPhoneLogin() {
@@ -205,30 +199,6 @@ cc.Class({
         cc.vv.GameManager.reqLogin(code, "", 10, code, "", "");
 
         Global.playEff(Global.SOUNDS.eff_click);
-
-        // cc.vv.GameManager.checkIsPhone(false);
-        //
-        // if (!cc.vv.GameManager.accountAutoLogin()) {
-        //     var WxMgr = require('WxMgr');
-        //     WxMgr.init();
-        //     cc.vv.WxMgr = WxMgr;
-        //
-        //     let loginSyncCall = function (data) {
-        //         cc.log("微信===  data： " + JSON.stringify(data));
-        //         if (data.result === 1) {
-        //             let code = data.token
-        //             let uid = data.uid
-        //             let openid = "";
-        //             let token = "";
-        //             // self.reqLogin(token, token, Global.LoginType.WX, uid)
-        //             cc.vv.GameManager.reqWxLogin(code, openid, token, "");
-        //         } else {
-        //             cc.vv.FloatTip.show('微信授权失败！')
-        //         }
-        //
-        //     }
-        //     cc.vv.WxMgr.wxLogin(loginSyncCall)
-        // }
     },
     // 微信登录
     onWeChatLogin() {
