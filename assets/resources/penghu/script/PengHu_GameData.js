@@ -70,6 +70,12 @@ cc.Class({
         return ret;
     },
 
+    getUISeatBylocalSeat(localSeat){
+        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,2,-1,-1],[0,1,3,-1],[0,1,2,3]];
+        let maxSeat = cc.vv.gameData.getRoomConf().seat;
+        return localSeatToUISeatArr[maxSeat][localSeat];
+    },
+
     init(data){
         this.OPERATETYPE={
             GU0:1,  // 过

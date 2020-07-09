@@ -174,6 +174,37 @@ cc.Class({
             for(let i=0;i<list.length;++i){
                 if(list[i].seat === this._seatIndex){
                     this.setHuXi(list[i].roundScore);
+                    if (0 > list[i].roundScore) {   //扣分 飞金币动画
+                        let toServerSeat = 0;
+                        for (let j = 0; j < list.length; j++) {
+                            if (0 < list[j].roundScore) {
+                                toServerSeat = list[j].seat;
+                                break;
+                            }
+                        }
+                        if (0 < toServerSeat) {
+                            let toLocalSeat = cc.vv.gameData.getLocalChair(toServerSeat);
+                            let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
+                            let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
+                            let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
+                            for (var j = 0; j < -list[i].roundScore; j++) {
+                                let icon = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
+                                icon.parent = this._playerNode.parent;
+                                icon.position = this._playerNode.position;
+                                icon.active = true;
+                                icon.runAction(
+                                    cc.sequence(
+                                        cc.delayTime(j * 0.1), 
+                                        cc.moveBy(0.6, moveByPos),
+                                        cc.delayTime(0.2), 
+                                        cc.callFunc(()=>{
+                                            icon.removeFromParent();
+                                        })
+                                    )
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
