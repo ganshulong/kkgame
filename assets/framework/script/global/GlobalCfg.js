@@ -64,6 +64,7 @@ GlobalMgr.SOUNDS.bgm_hall = {path: '' , filename:'music_bg0', common: true};    
 GlobalMgr.SOUNDS.eff_click = {path: '' , filename:'effect_btn', common: true};             //按钮音效
 GlobalMgr.SOUNDS.eff_ui_pop = {path: '' , filename:'effect_return', common: true};               //ui弹窗音效
 GlobalMgr.SOUNDS.eff_ui_close = {path: '' , filename:'effect_close', common: true};           //ui关闭音效
+GlobalMgr.SOUNDS.fly_icon = {path: '' , filename:'effect_fly_icon', common: true};           		//飞金币
 
 
 

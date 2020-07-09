@@ -211,6 +211,9 @@ cc.Class({
                     cc.sequence(
                         cc.delayTime(j * 0.1), 
                         cc.moveBy(0.6, moveByPos),
+                        cc.callFunc(()=>{
+                            Global.playEff(Global.SOUNDS.fly_icon);
+                        }),
                         cc.delayTime(0.2), 
                         cc.callFunc(()=>{
                             icon.removeFromParent();
