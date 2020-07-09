@@ -53,10 +53,12 @@ cc.Class({
         let btn_back = cc.find("bg_top/btn_back",this._gameRecordLayer);
         Global.btnClickEvent(btn_back,this.onClose,this);
 
-        for (var i = 0; i < 4; i++) {
-            let btn_recordType = cc.find("bg_buttons/left_list_view/btn_" + i,this._gameRecordLayer);
-            btn_recordType._index = i;
-            Global.btnClickEvent(btn_recordType,this.onClickRecordType,this);
+        this.recordTypeBtnArr = [];
+        this.left_list_view = cc.find("bg_buttons/left_list_view",this._gameRecordLayer);
+        for (var i = 0; i < 2; i++) {
+            let btnTypeNor = this.left_list_view.getChildByName("btn_" + i + "_nor");
+            btnTypeNor._index = i;
+            Global.btnClickEvent(btnTypeNor,this.onClickRecordType,this);
         }
 
         let btn_selecteData = cc.find("selectData_node/btn_selecteData",this._gameRecordLayer);
@@ -102,11 +104,7 @@ cc.Class({
         let dataStr = this.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);       
         this.text_data.getComponent(cc.Label).string = dataStr;
 
-        this.curShowRecordType = 0;
-        var req = { 'c': MsgId.GAME_RECORD};
-        req.selectTime = dataStr;
-        req.clubid = this.curShowRecordType;
-        cc.vv.NetManager.send(req);
+        this.onShowRecordType(0)
     },
 
     getDataStr(year,month,day){
@@ -132,7 +130,16 @@ cc.Class({
     },
 
     onClickRecordType(event){
-        this.curShowRecordType = event.target._index;
+        this.onShowRecordType(parseInt(event.target._index));
+    },
+
+    onShowRecordType(type){
+        this.curShowRecordType = type;
+        for (var i = 0; i < 2; i++) {
+            let isShowDis = (i == type);
+            this.left_list_view.getChildByName("btn_" + i + "_nor").active = (i != this.curShowRecordType);
+            this.left_list_view.getChildByName("btn_" + i + "_dis").active = (i == this.curShowRecordType);
+        }
         var req = { 'c': MsgId.GAME_RECORD};
         req.selectTime = this.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
         req.clubid = this.curShowRecordType;
