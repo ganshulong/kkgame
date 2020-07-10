@@ -88,6 +88,7 @@ cc.Class({
 
     initBindPhoneUI() {
         this.panel_bind_phone = this.node.getChildByName("panel_bind_phone");
+        this.panel_bind_phone.active = false;
 
         let btn_close = cc.find("bg_bind_phone/btn_close",this.panel_bind_phone);
         Global.btnClickEvent(btn_close,this.onClickBindPhone,this);
