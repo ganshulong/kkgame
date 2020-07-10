@@ -354,7 +354,9 @@ cc.Class({
                     this.delHandCard(list[1]);
                     if(data.chiInfo.luoData){
                         for(let i=0;i<data.chiInfo.luoData.length;++i){
-                            this.delHandCard(data.chiInfo.luoData[i]);
+                            for (var j = 0; j < data.chiInfo.luoData[i].length; j++) {
+                                this.delHandCard(data.chiInfo.luoData[i][j]);
+                            }
                         }
                     }
                     this.resetCardPos();

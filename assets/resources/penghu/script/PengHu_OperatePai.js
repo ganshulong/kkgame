@@ -154,6 +154,9 @@ cc.Class({
         data = data.detail;
         if(this._seatIndex === data.actionInfo.curaction.seat){
             this.showCard(data.chiInfo.chiData,data.actionInfo.curaction.type,0,true);
+            for (var i = 0; i < data.chiInfo.luoData.length; i++) {
+                this.showCard(data.chiInfo.luoData[i],data.actionInfo.curaction.type,0,true);
+            }
         }
     },
 

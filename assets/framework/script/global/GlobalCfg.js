@@ -15,7 +15,8 @@ GlobalMgr.ChatType = {
 GlobalMgr.LoginType = {
 	Guest:11,	//游客登录
 
-	WX:2,		//微信登录
+	WXFIRST:10,		//微信登录
+	WX:14,		//微信登录
 	FB:13,		//fb登录
 	ACCOUNT: 14, //账号登录
 	REGISTER: 12, //注册

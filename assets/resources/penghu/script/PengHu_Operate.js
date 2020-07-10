@@ -131,13 +131,14 @@ cc.Class({
                 item.parent = this._luoItemsList[0].parent;
                 this._luoItemsList.push(item);
             }
+            item.getComponent(cc.Button).interactable = true;
             item.x = -list.length*0.5*item.width+item.width*i;
             item.data = list[i];
             Global.btnClickEvent(item,this.onSelectLuo,this);
             width += item.width;
 
             let temp = list[i].slice(0);
-            temp.unshift(this._currActionCard);
+            // temp.unshift(this._currActionCard);
 
             for(let j=0;j<3;++j){
                 let card = cc.find("img_bg/card"+j,item);

@@ -173,6 +173,9 @@ cc.Class({
                     if(reloginData.t === Global.LoginType.REGISTER){
                         reloginData.t = Global.LoginType.ACCOUNT;
                     }
+                    if(reloginData.t === Global.LoginType.WXFIRST){
+                        reloginData.t = Global.LoginType.WX;
+                    }
                     cc.vv.NetManager.send(reloginData);
                     //清除超时连接
                     cc.vv.UserManager.setLoginType(reloginData.t);
