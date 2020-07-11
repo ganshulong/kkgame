@@ -81,6 +81,7 @@ cc.Class({
                     this._selectChiNode.parent = this.node;
                     this._selectChiNode.zIndex = 1;
                     let item = cc.find("img_bg/item",this._selectChiNode);
+                    Global.btnClickEvent(item,this.onSelectChi,this);
                     this._chiItemsList.push(item);
                     let closeBtn = cc.find("img_bg/btn_close",this._selectChiNode);
                     this._selectChiNode.active = true;
@@ -88,12 +89,14 @@ cc.Class({
                         this.onCloseSelectChi();
                         this._operateNode.active = true;
                     });
+                    this._selectChiNode.getChildByName("selectedChi_bg").active = false;
 
                     this._selectLuoNode = cc.instantiate(prefab);
                     this._selectLuoNode.parent = this.node;
                     this._selectLuoNode.zIndex = 2;
 
                     item = cc.find("img_bg/item",this._selectLuoNode);
+                    Global.btnClickEvent(item,this.onSelectLuo,this);
                     this._luoItemsList.push(item);
                     closeBtn = cc.find("img_bg/btn_close",this._selectLuoNode);
                     this._selectLuoNode.active = false;
@@ -117,54 +120,6 @@ cc.Class({
         }
     },
 
-    initLuoData(list){
-        let width = 0;
-        this._selectLuoNode.active = true;
-        let bg = this._selectLuoNode.getChildByName("img_bg");
-        for(let i=0;i<list.length;++i){
-            let item = null;
-            if(i<this._luoItemsList.length){
-                item = this._luoItemsList[i];
-            }
-            else{
-                item = cc.instantiate(this._luoItemsList[0]);
-                item.parent = this._luoItemsList[0].parent;
-                this._luoItemsList.push(item);
-            }
-            item.getComponent(cc.Button).interactable = true;
-            item.x = -list.length*0.5*item.width+item.width*i;
-            item.data = list[i];
-            Global.btnClickEvent(item,this.onSelectLuo,this);
-            width += item.width;
-
-            let temp = list[i].slice(0);
-            // temp.unshift(this._currActionCard);
-
-            for(let j=0;j<3;++j){
-                let card = cc.find("img_bg/card"+j,item);
-                this.node.getComponent("PengHu_Card").createCard(temp[j],1,false,card);
-            }
-        }
-        for(let i=list.length;i<this._luoItemsList.length;++i){
-            this._luoItemsList[i].active = false;
-            this._luoItemsList[i].data = null;
-        }
-        bg.width = width+80;
-        let closeBtn = cc.find("img_bg/btn_close",this._selectLuoNode);
-        closeBtn.getComponent(cc.Widget).updateAlignment();
-    },
-
-    // 选择落牌
-    onSelectLuo(event){
-        event.target.getComponent(cc.Button).interactable = false;
-        event.target.opacity = 200;
-        this._chi.luoData.push(event.target.data);
-        if(this._chi.luoCount === this._chi.luoData.length){
-            cc.vv.gameData.chi(this._chi);
-            this._selectLuoNode.active = false;
-        }
-    },
-
     initChi(list){
         let width = 0;
          let bg = this._selectChiNode.getChildByName("img_bg");
@@ -175,14 +130,12 @@ cc.Class({
             }
             else{
                 item = cc.instantiate(this._chiItemsList[0]);
+                Global.btnClickEvent(item,this.onSelectChi,this);
                 item.parent = this._chiItemsList[0].parent;
                 this._chiItemsList.push(item);
             }
             item.x = -list.length*0.5*item.width+item.width*i;
             item.data = list[i];
-            item.getComponent(cc.Button).interactable = true;
-            item.opacity = 255;
-            Global.btnClickEvent(item,this.onSelectChi,this);
             width += item.width;
 
             let temp = list[i].chiData.slice(0);
@@ -193,8 +146,13 @@ cc.Class({
                 this.node.getComponent("PengHu_Card").createCard(temp[j],1,false,card);
             }
         }
+        for(let i=0;i<list.length;++i){
+            this._chiItemsList[i].active = true;
+            this._chiItemsList[i].getComponent(cc.Button).interactable = true;
+        }
         for(let i=list.length;i<this._chiItemsList.length;++i){
             this._chiItemsList[i].active = false;
+            this._chiItemsList[i].getComponent(cc.Button).interactable = false;
             this._chiItemsList[i].data = null;
         }
         bg.width = width+80;
@@ -222,12 +180,143 @@ cc.Class({
                     this._chi.chiData = list.chiData;
                 }
                 this._chi.luoCount = list.luoCount;
+                this._chi.isChoose = list.isChoose;
+                this._chi.handInCards = list.handInCards;
                 this.initLuoData(list.luoData);
             }
         }
-
     },
 
+    initLuoData(list){
+        let selectedChiItem_bg = cc.find("selectedChi_bg/item/selectedChiItem_bg",this._selectLuoNode);
+        this.node.getComponent("PengHu_Card").createCard(this._currActionCard,1,false,selectedChiItem_bg.getChildByName("card"+0));
+        this.node.getComponent("PengHu_Card").createCard(this._chi.chiData[0],1,false,selectedChiItem_bg.getChildByName("card"+1));
+        this.node.getComponent("PengHu_Card").createCard(this._chi.chiData[1],1,false,selectedChiItem_bg.getChildByName("card"+2));
+
+        this.handCard = JSON.parse(JSON.stringify(this._chi.handInCards));
+        this.selectedItemCount = 0;
+        this.chedCardCount = 0;
+        this.luoDataList = list;        //落牌数组数据
+        this.luoItemIsSelected = [];    //落牌项是否已选
+        this.luoItemIsLackCard = [];    //落牌项是否缺牌
+        for (let i = 0; i < this.luoDataList.length; i++) {
+            this.luoItemIsSelected.push(false);
+            this.luoItemIsLackCard.push(false);
+        }
+        let width = 0;
+        this._selectLuoNode.active = true;
+        let bg = this._selectLuoNode.getChildByName("img_bg");
+        for(let i=0;i<list.length;++i){
+            let item = null;
+            if(i<this._luoItemsList.length){
+                item = this._luoItemsList[i];
+            }
+            else{
+                item = cc.instantiate(this._luoItemsList[0]);
+                Global.btnClickEvent(item,this.onSelectLuo,this);
+                item.parent = this._luoItemsList[0].parent;
+                this._luoItemsList.push(item);
+            }
+            item.x = -list.length*0.5*item.width+item.width*i;
+            item.index = i;
+            // Global.btnClickEvent(item,this.onSelectLuo,this);
+            width += item.width;
+
+            let temp = list[i].slice(0);
+            // temp.unshift(this._currActionCard);
+
+            for(let j=0;j<3;++j){
+                let card = cc.find("img_bg/card"+j,item);
+                this.node.getComponent("PengHu_Card").createCard(temp[j],1,false,card);
+            }
+        }
+        for(let i=0;i<list.length;++i){
+            this._luoItemsList[i].active = true;
+            this._luoItemsList[i].getComponent(cc.Button).interactable = true;
+            this._luoItemsList[i].getChildByName("selectedLuo_mask").active = false;
+            this._luoItemsList[i].getChildByName("img_bg").opacity = 255;
+        }
+        for(let i=list.length;i<this._luoItemsList.length;++i){
+            this._luoItemsList[i].active = false;
+            this._luoItemsList[i].getComponent(cc.Button).interactable = false;
+            this._luoItemsList[i].data = null;
+        }
+        bg.width = width+80;
+        let closeBtn = cc.find("img_bg/btn_close",this._selectLuoNode);
+        closeBtn.getComponent(cc.Widget).updateAlignment();
+    },
+
+    // 选择落牌
+    onSelectLuo(event){
+        let index = event.target.index;
+        if (this.luoItemIsLackCard[index]) {
+            cc.vv.FloatTip.show("该组牌无法加入落牌");
+            return;
+        }
+        if (this.luoItemIsSelected[index]) {        //已选项
+            this.luoItemIsSelected[index] = false;
+            --this.selectedItemCount;
+            for (var i = 0; i < this.luoDataList[index].length; i++) {
+                this.handCard.push(this.luoDataList[index][i]);
+                if (this.luoDataList[index][i] == this._currActionCard) {
+                    --this.chedCardCount;
+                }
+            }
+        } else {        
+            let susurplusHandCard = JSON.parse(JSON.stringify(this.handCard));                            
+            for (let i = 0; i < this.luoDataList[index].length; i++) {
+                for (let j = 0; j < susurplusHandCard.length; j++) {
+                    if (this.luoDataList[index][i] == susurplusHandCard[j]) {
+                        susurplusHandCard.splice(j,1);
+                        break;
+                    }
+                }
+            }
+            if (this.handCard.length == susurplusHandCard.length + 3) {
+                this.luoItemIsSelected[index] = true;
+                ++this.selectedItemCount;
+                for (let i = 0; i < this.luoDataList[index].length; i++) {
+                    if (this.luoDataList[index][i] == this._currActionCard) {
+                        ++this.chedCardCount;
+                    }
+                }
+                this.handCard = susurplusHandCard;
+
+                if (this.selectedItemCount == this._chi.luoCount || (this._chi.isChoose && this.chedCardCount == this._chi.luoCount)) {
+                    this._chi.luoData = [];
+                    for (let i = 0; i < this.luoItemIsSelected.length; i++) {
+                        if (this.luoItemIsSelected[i]) {
+                            this._chi.luoData.push(this.luoDataList[i]);
+                        }
+                    }
+                    cc.vv.gameData.chi(this._chi);
+                    this._selectLuoNode.active = false;
+                    return;
+                }
+            }
+        }
+
+        this._luoItemsList[index].getChildByName("selectedLuo_mask").active = this.luoItemIsSelected[index];
+        this._luoItemsList[index].getChildByName("img_bg").opacity = this.luoItemIsSelected[index] ? 150 : 255;
+
+        //缺牌组置灰
+        for (let i = 0; i < this.luoItemIsLackCard.length; i++) {
+            this.luoItemIsLackCard[i] = false;
+            if (!this.luoItemIsSelected[i]) {
+                let susurplusHandCard = JSON.parse(JSON.stringify(this.handCard));  
+                for (let j = 0; j < this.luoDataList[i].length; j++) {
+                    let indexResult = susurplusHandCard.indexOf(this.luoDataList[i][j]);
+                    if(-1 < indexResult){
+                        susurplusHandCard.splice(indexResult,1);
+                    } else {
+                        this.luoItemIsLackCard[i] = true;
+                        break;  
+                    }
+                }
+                this._luoItemsList[i].getChildByName("img_bg").opacity = this.luoItemIsLackCard[i] ? 150 : 255;
+            }
+        }
+    },
 
     onHu(){
 
