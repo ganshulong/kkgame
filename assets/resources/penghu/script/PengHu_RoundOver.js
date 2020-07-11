@@ -275,8 +275,7 @@ cc.Class({
                 menzilist=[typeData.card,typeData.card,typeData.card,typeData.card];
             }
             else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
-                if(typeData.source > 0) menzilist=[typeData.card,typeData.card,typeData.card];
-                else menzilist=[typeData.card,typeData.card];
+                menzilist=[typeData.card,typeData.card,typeData.card];
             }
             else if(typeData.type === cc.vv.gameData.OPERATETYPE.CHI){
                 menzilist=typeData.data;

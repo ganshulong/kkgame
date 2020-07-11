@@ -311,10 +311,7 @@ cc.Class({
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
             let card = data.actionInfo.curaction.card;
-            if(data.actionInfo.curaction.source !== 0){
-                this.showCard([card,card],data.actionInfo.curaction.type,0,true);
-            }
-            else this.showCard([card,card,card],data.actionInfo.curaction.type,0,true);
+            this.showCard([card,card,card],data.actionInfo.curaction.type,0,true);
         }
     },
 

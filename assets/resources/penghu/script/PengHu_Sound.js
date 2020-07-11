@@ -82,9 +82,9 @@ cc.Class({
         data = data.detail;
         let type = data.actionInfo.curaction.type;
         let seat = data.actionInfo.curaction.seat;
-        if(seat === cc.vv.gameData.getMySeatIndex()){
+        // if(seat === cc.vv.gameData.getMySeatIndex()){
             this.playOperateType(seat,type);
-        }
+        // }
     },
 
     recvKanNotify(data){
@@ -92,16 +92,15 @@ cc.Class({
         let seat = data.actionInfo.curaction.seat;
         if(seat === cc.vv.gameData.getMySeatIndex()){
             this.playOperateType(seat,data.kanType);
-
         }
     },
 
     recvPengNotify(data){
         data = data.detail;
         let seat = data.actionInfo.curaction.seat;
-        if(seat === cc.vv.gameData.getMySeatIndex()){
+        // if(seat === cc.vv.gameData.getMySeatIndex()){
             this.playOperateType(seat,data.pengType);
-        }
+        // }
     },
 
     playOperateType(seat,type){
@@ -140,7 +139,8 @@ cc.Class({
     // 出牌
     recvOutCardNotify(data){
         data = data.detail;
-        if(data.actionInfo.curaction.source > 0 && data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
+        // if(data.actionInfo.curaction.source > 0 && data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
+        if(data.actionInfo.curaction.source > 0){
             this.playCardSound(data.actionInfo.curaction.card,data.actionInfo.curaction.seat);
         }
 
@@ -150,7 +150,7 @@ cc.Class({
     recvMoPaiNotify(data){
         data = data.detail;
         let seat = data.seat;
-        if(seat === cc.vv.gameData.getMySeatIndex()){
+        // if(seat === cc.vv.gameData.getMySeatIndex()){
             this.playCardSound(data.card,data.seat);
         }
     },
