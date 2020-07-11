@@ -226,7 +226,7 @@ cc.Class({
             // temp.unshift(this._currActionCard);
 
             for(let j=0;j<3;++j){
-                let card = cc.find("img_bg/card"+j,item);
+                let card = cc.find("img_bg/card"+(2-j),item);
                 this.node.getComponent("PengHu_Card").createCard(temp[j],1,false,card);
             }
         }
