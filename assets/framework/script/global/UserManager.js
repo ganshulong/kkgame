@@ -276,5 +276,38 @@ cc.Class({
         getGpsCity(){
             return this.GpsCity
         },
+
+        getCurClubInfo(){
+            let info = null;
+            if (this.currClubId) {
+                for(let i=0;i<this.clubs.length;++i){
+                    if(this.currClubId === this.clubs[i].clubid){
+                        info = this.clubs[i];
+                    }
+                }
+            }
+            return info;
+        },
+
+        setClubFreezeState(state){
+            if (this.currClubId) {
+                for(let i=0;i<this.clubs.length;++i){
+                    if(this.currClubId === this.clubs[i].clubid){
+                        this.clubs[i].state = state;
+                    }
+                }
+            }
+        },
+
+        dismissExitCurClub(){
+            if (this.currClubId) {
+                for(let i=0;i<this.clubs.length;++i){
+                    if(this.currClubId === this.clubs[i].clubid){
+                        this.clubs.splice(i,1);
+                        return;
+                    }
+                }
+            }
+        },
     },
 });

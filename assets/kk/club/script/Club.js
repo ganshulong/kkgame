@@ -36,6 +36,7 @@ cc.Class({
         },
         _startPos:null,
         _sendSit:false,
+        _clubInfo:null,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -49,18 +50,17 @@ cc.Class({
         }
         this.registerMsg();
         Global.autoAdaptDevices(false);
-        let back = cc.find("Layer/bg/btn_back",this.node);
-        Global.btnClickEvent(back,this.onBack,this);
 
         this.node.addComponent("ClubMessage");
         this.node.addComponent("CreateRoom");
 
-        let info = null;
-        for(let i=0;i<cc.vv.UserManager.clubs.length;++i){
-            if(cc.vv.UserManager.currClubId === cc.vv.UserManager.clubs[i].clubid){
-                info = cc.vv.UserManager.clubs[i];
-            }
-        }
+        let info = cc.vv.UserManager.getCurClubInfo();
+        this._clubInfo = info;
+
+        let back = cc.find("Layer/bg/btn_back",this.node);
+        Global.btnClickEvent(back,this.onBack,this);
+
+        cc.find("Layer/bg/txt_freeze",this.node).active = (0 == info.state);
 
         let spr_head = cc.find("Layer/bg/UserHead/radio_mask/spr_head",this.node);
         Global.setHead(spr_head, (info?info.createIcon:""));
@@ -80,6 +80,12 @@ cc.Class({
         let btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
         // Global.btnClickEvent(btn_msg,this.onCreateRoom,this);
         btn_msg.active = (info.createUid == cc.vv.UserManager.uid);
+
+        this.node.addComponent("ClubSetting");
+        this.ClubSettingJS = this.node.getComponent("ClubSetting");
+
+        let btn_setting = cc.find("Layer/bg/bg_top/btn_setting",this.node);
+        Global.btnClickEvent(btn_setting,this.onClickSetting,this);
 
         let createRoomBtn = cc.find("Layer/img_bottomBg/btn_switch",this.node);
         Global.btnClickEvent(createRoomBtn,this.onCreateRoom,this);
@@ -276,6 +282,10 @@ cc.Class({
         }
         this._content.active = list.length>0;
         this._content.width = width+50;
+    },
+
+    onClickSetting(){
+        this.ClubSettingJS.showClubSetting();
     },
 
     onCreateRoom(){

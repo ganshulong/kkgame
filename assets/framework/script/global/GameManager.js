@@ -122,7 +122,35 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.SELF_GPS_DATA, this.onRcvSelfGpsData, this);
 
+            cc.vv.NetManager.registerMsg(MsgId.FREEZE_CLUB, this.onRcvFreezeClubNotify, this);
+            cc.vv.NetManager.registerMsg(MsgId.DISMISS_CLUB, this.onRcvDismissClubNotify, this);
+            cc.vv.NetManager.registerMsg(MsgId.EXIT_CLUB, this.onRcvExitClubNotify, this);
+        
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvFreezeClubNotify(msg){
+            if(msg.code === 200){
+                cc.vv.UserManager.setClubFreezeState(msg.state);
+                cc.vv.FloatTip.show(msg.state ? "亲友圈解冻成功" : "亲友圈冻结成功");
+                cc.vv.SceneMgr.enterScene("club_lobby");
+            }
+        },
+
+        onRcvDismissClubNotify(msg){
+            if(msg.code === 200){
+                cc.vv.UserManager.dismissExitCurClub();
+                cc.vv.SceneMgr.enterScene("club_lobby");
+                cc.vv.FloatTip.show("成功解散亲友圈");
+            }
+        },
+
+        onRcvExitClubNotify(msg){
+            if(msg.code === 200){
+                cc.vv.UserManager.dismissExitCurClub();
+                cc.vv.SceneMgr.enterScene("club_lobby");
+                cc.vv.FloatTip.show("成功退出亲友圈");
+            }
         },
 
         onRcvSelfGpsData(msg){

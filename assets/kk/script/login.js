@@ -84,6 +84,9 @@ cc.Class({
                 }
             }
         }
+
+        //testgsl
+        this.onWeChatLogin();
     },
 
     initBindPhoneUI() {

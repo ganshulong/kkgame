@@ -244,3 +244,7 @@ GlobalMsgId.SUCCESS_DISMISS_NOTIFY = 1023; 	// 成功解散通知
 
 GlobalMsgId.GER_PHONE_CODE = 164; 			// 获取验证码
 GlobalMsgId.BIND_PHONE = 124; 				// 绑定手机
+
+GlobalMsgId.FREEZE_CLUB = 8814; 			// 冻结俱乐部
+GlobalMsgId.DISMISS_CLUB = 8815; 			// 解散俱乐部
+GlobalMsgId.EXIT_CLUB = 8816; 				// 退出俱乐部

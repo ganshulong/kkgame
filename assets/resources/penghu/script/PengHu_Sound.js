@@ -152,7 +152,7 @@ cc.Class({
         let seat = data.seat;
         // if(seat === cc.vv.gameData.getMySeatIndex()){
             this.playCardSound(data.card,data.seat);
-        }
+        // }
     },
 
     getSex(seat){
