@@ -122,8 +122,8 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.SELF_GPS_DATA, this.onRcvSelfGpsData, this);
 
-            cc.vv.NetManager.registerMsg(MsgId.FREEZE_CLUB_NNOTIFY, this.onRcvFreezeClubNotify, this);
-            cc.vv.NetManager.registerMsg(MsgId.DISMISS_CLUB, this.onRcvDismissClubNotify, this);
+            cc.vv.NetManager.registerMsg(MsgId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify, this);
+            cc.vv.NetManager.registerMsg(MsgId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify, this);
             cc.vv.NetManager.registerMsg(MsgId.EXIT_CLUB, this.onRcvExitClubNotify, this);
         
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
@@ -132,15 +132,14 @@ cc.Class({
         onRcvFreezeClubNotify(msg){
             if(msg.code === 200){
                 cc.vv.UserManager.setClubFreezeState(msg.response.clubid, msg.response.state);
-                Global.dispatchEvent(EventId.FREEZE_CLUB_NNOTIFY, msg.response);
+                Global.dispatchEvent(EventId.FREEZE_CLUB_NOTIFY, msg.response);
             }
         },
 
         onRcvDismissClubNotify(msg){
             if(msg.code === 200){
                 cc.vv.UserManager.dismissExitCurClub();
-                cc.vv.SceneMgr.enterScene("club_lobby");
-                cc.vv.FloatTip.show("成功解散亲友圈");
+                Global.dispatchEvent(EventId.DISMISS_CLUB_NOTIFY, msg.response);
             }
         },
 

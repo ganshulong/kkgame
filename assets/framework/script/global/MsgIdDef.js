@@ -249,4 +249,5 @@ GlobalMsgId.FREEZE_CLUB = 8814; 			// 冻结俱乐部
 GlobalMsgId.DISMISS_CLUB = 8815; 			// 解散俱乐部
 GlobalMsgId.EXIT_CLUB = 8816; 				// 退出俱乐部
 
-GlobalMsgId.FREEZE_CLUB_NNOTIFY  = 18811; 	// 冻结/解冻通知
+GlobalMsgId.FREEZE_CLUB_NOTIFY = 18811; 	// 冻结/解冻俱乐部通知
+GlobalMsgId.DISMISS_CLUB_NOTIFY = 18810; 	// 解散俱乐部通知

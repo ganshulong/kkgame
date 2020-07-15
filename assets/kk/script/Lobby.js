@@ -72,20 +72,14 @@ cc.Class({
         cc.find("money_bg/gold_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
         cc.find("room_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
-        let notHaveClub_btn = this.node.getChildByName("notHaveClub_btn");
-        Global.btnClickEvent(notHaveClub_btn,this.onToClubLobby,this);
-        let haveClub_btn = this.node.getChildByName("haveClub_btn");
-        Global.btnClickEvent(haveClub_btn,this.onClub,this);
-        let moreClub_btn = this.node.getChildByName("moreClub_btn");
-        Global.btnClickEvent(moreClub_btn,this.onToClubLobby,this);
+        this.notHaveClub_btn = this.node.getChildByName("notHaveClub_btn");
+        Global.btnClickEvent(this.notHaveClub_btn,this.onToClubLobby,this);
+        this.haveClub_btn = this.node.getChildByName("haveClub_btn");
+        Global.btnClickEvent(this.haveClub_btn,this.onClub,this);
+        this.moreClub_btn = this.node.getChildByName("moreClub_btn");
+        Global.btnClickEvent(this.moreClub_btn,this.onToClubLobby,this);
 
-        notHaveClub_btn.active = (0 == cc.vv.UserManager.clubs.length);
-        haveClub_btn.active = (0 < cc.vv.UserManager.clubs.length);
-        moreClub_btn.active = (0 < cc.vv.UserManager.clubs.length);
-        if(0 < cc.vv.UserManager.clubs.length){
-            let info = haveClub_btn.getChildByName("info");
-            this.initClub(info);
-        }
+        this.initClubBtn();
 
         let share_btn = cc.find("dt_xmt/share_btn",this.node)
         Global.btnClickEvent(share_btn,this.onClickShare,this);
@@ -115,10 +109,22 @@ cc.Class({
         Global.playBgm(Global.SOUNDS.bgm_hall);
 
         Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData,this);
+        Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
 
         //testgsl
         // this.onClickHistory();
     },
+
+    initClubBtn(){
+        this.notHaveClub_btn.active = (0 == cc.vv.UserManager.clubs.length);
+        this.haveClub_btn.active = (0 < cc.vv.UserManager.clubs.length);
+        this.moreClub_btn.active = (0 < cc.vv.UserManager.clubs.length);
+        if(0 < cc.vv.UserManager.clubs.length){
+            let info = this.haveClub_btn.getChildByName("info");
+            this.initClub(info);
+        }
+    },
+
 
     onClickHistory(){
         this.GameRecordJS.showGameRecord();
@@ -208,6 +214,10 @@ cc.Class({
 
     onRecvSelfGpsData(data){
         cc.find("gps/label_city",this.node).getComponent(cc.Label).string = data.detail.city;
+    },
+
+    onRcvDismissClubNotify(data){
+        this.initClubBtn();
     },
 
     initClub(info){

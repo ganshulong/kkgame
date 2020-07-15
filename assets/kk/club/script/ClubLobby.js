@@ -177,9 +177,10 @@ cc.Class({
 
     registerMsg(){
         Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
+        Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
+        
         cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvCreatClubResult, this);
         cc.vv.NetManager.registerMsg(MsgId.JOINCULB, this.onRcvJoinClubResult, this);
-
     },
 
     unregisterMsg(){
@@ -192,7 +193,6 @@ cc.Class({
         Global.btnClickEvent(closeBtn,this.onCloseCreateClub,this);
         let comfirmBtn = cc.find("bg/btn_confirm_create",this._createClubNode);
         Global.btnClickEvent(comfirmBtn,this.onCreateClub,this);
-
     },
 
     // 创建亲友圈
@@ -310,6 +310,10 @@ cc.Class({
             cc.vv.AlertView.show("申请成功，等待管理员审核！",()=>{});
             this.onCloseJoinClub();
         }
+    },
+
+    onRcvDismissClubNotify(data){
+        this.updateClubList();
     },
 
     onDestroy(){
