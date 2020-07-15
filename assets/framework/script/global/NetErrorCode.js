@@ -182,6 +182,7 @@ codeCfg.code = {
     '965':'envelope_already_get',
     '811':'bank_coin_not_enough',
     '812':'bank_passwd_error',
+    '440':"club_freeze",
 
 
 }

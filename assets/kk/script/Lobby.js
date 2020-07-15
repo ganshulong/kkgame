@@ -31,9 +31,6 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
-        _effectIsOpen:1,
-        _musicIsOpen:1,
-        _audioVolue:1,
 
         _numList:[],
         _inputIndex:0,

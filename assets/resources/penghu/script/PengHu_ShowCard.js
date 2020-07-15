@@ -204,8 +204,8 @@ cc.Class({
             }
             else{
                 if(data.seat === this._seatIndex){
-                    this.showCard(data.hcard);
-                    this.node.getComponent("PengHu_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
+                    // this.showCard(data.hcard);
+                    // this.node.getComponent("PengHu_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
                 }
             }
         }

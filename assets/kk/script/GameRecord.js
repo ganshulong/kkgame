@@ -81,9 +81,10 @@ cc.Class({
         this.gameRecordItem = this.gameRecordContent.getChildByName("gameRecordItem");
         this.gameRecordItem.active = false;
 
-        this.scroll_roundRecord = this._gameRecordLayer.getChildByName("scroll_roundRecord");
-        this.scroll_roundRecord.active = false;
-        let btn_closeRoundRecord = this.scroll_roundRecord.getChildByName("btn_closeRoundRecord");
+        this.panel_roundRecord = this._gameRecordLayer.getChildByName("panel_roundRecord");
+        this.panel_roundRecord.active = false;
+        this.scroll_roundRecord = this.panel_roundRecord.getChildByName("scroll_roundRecord");
+        let btn_closeRoundRecord = this.panel_roundRecord.getChildByName("btn_closeRoundRecord");
         Global.btnClickEvent(btn_closeRoundRecord,this.onClickCloseRoundRecord,this);
         this.roundRecordContent = this.scroll_roundRecord.getChildByName("content");
         this.roundRecordItem = this.roundRecordContent.getChildByName("roundRecordItem");
@@ -230,7 +231,7 @@ cc.Class({
 
     onClickCloseRoundRecord(){
         this.scroll_gameRecord.active = true;
-        this.scroll_roundRecord.active = false;
+        this.panel_roundRecord.active = false;
     },
 
     onRcvGameRecord(msg){
@@ -260,8 +261,8 @@ cc.Class({
                 text_roomInfo.getChildByName("text_people_num").getComponent(cc.Label).string = msg.data[i].presonNum;
 
                 let bg_clubInfo = roomInfo.getChildByName("bg_clubInfo");
-                let roomTypeStr = ["代开房房间","亲友圈房间","代开房房间","他人房间"]
-                bg_clubInfo.getChildByName("text_roomType").getComponent(cc.Label).string = roomTypeStr[msg.data[i].clubid];
+                let roomTypeStr = ["代开房房间","亲友圈房间","代开房房间","个人房间"]
+                bg_clubInfo.getChildByName("text_roomType").getComponent(cc.Label).string = roomTypeStr[msg.data[i].gameid];
                 bg_clubInfo.getChildByName("text_houseOwner").getComponent(cc.Label).string = msg.data[i].houseOwner;
                 
                 cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score;
@@ -353,7 +354,7 @@ cc.Class({
             for (var i = 0; i < msg.data.length; i++) {
                 this._roundRecordItemList.push(cc.instantiate(this.roundRecordItem));
                 this._roundRecordItemList[i].parent = this.roundRecordContent;
-                this._roundRecordItemList[i].y = -80 - i * this._roundRecordItemList[i].height;
+                this._roundRecordItemList[i].y = -i * this._roundRecordItemList[i].height;
 
                 cc.find("bg_num/text_roundIndex",this._roundRecordItemList[i]).getComponent(cc.Label).string = i + 1;
                 this._roundRecordItemList[i].getChildByName("text_time").getComponent(cc.Label).string = msg.data[i].beginTime;
@@ -377,8 +378,9 @@ cc.Class({
                 }
                 this._roundRecordItemList[i].active = true;
             }
+            this.roundRecordContent.height = msg.data.length * this.roundRecordItem.height;
             this.scroll_gameRecord.active = false;
-            this.scroll_roundRecord.active = true;
+            this.panel_roundRecord.active = true;
         }
     },
 

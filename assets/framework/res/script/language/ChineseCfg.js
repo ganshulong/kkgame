@@ -610,5 +610,7 @@ Wild只出现在2~5列",
     room_id_non_existent:"房号不存在",
     distance_less200:"距离其他玩家小于200米",
     forbid_same_ip:"禁止同ip进入",
+    club_freeze:"亲友圈已冻结",
+    
 };
 
