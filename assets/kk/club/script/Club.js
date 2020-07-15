@@ -129,7 +129,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_TABLEINFO, this.onRecvTableinfo, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable, this);
 
-
+        Global.registerEvent(EventId.FREEZE_CLUB_NNOTIFY, this.onRcvFreezeClubNotify,this);
     },
 
     unregisterMsg(){
@@ -138,6 +138,13 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.SEATDOWN, this.onEnterDeskResult,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_TABLEINFO, this.onRecvTableinfo,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable,false,this);
+    },
+
+    onRcvFreezeClubNotify(data){
+        if (cc.vv.UserManager.currClubId == data.detail.clubid) {
+            cc.find("Layer/bg/txt_freeze",this.node).active = (0 == data.detail.state);
+            cc.vv.FloatTip.show((0 == data.detail) ? "亲友圈冻结成功" : "亲友圈解冻成功");
+        }
     },
 
     onRecvDeleteTable(msg){

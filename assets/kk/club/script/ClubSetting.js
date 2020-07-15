@@ -121,13 +121,12 @@ cc.Class({
             }
             req.clubid = cc.vv.UserManager.currClubId;
             cc.vv.NetManager.send(req);
+
+            this._Layer.active = false;
         }
     },
 
     onDestroy(){
-        // cc.vv.NetManager.unregisterMsg(MsgId.FREEZE_CLUB, this.onRcvFreezeClubNotify, false, this);
-        // cc.vv.NetManager.unregisterMsg(MsgId.DISMISS_CLUB, this.onRcvDismissClubNotify, false, this);
-        // cc.vv.NetManager.unregisterMsg(MsgId.EXIT_CLUB, this.onRcvExitClubNotify, false, this);
         if(this._Layer){
             cc.loader.releaseRes("common/prefab/club_setting",cc.Prefab);
         }

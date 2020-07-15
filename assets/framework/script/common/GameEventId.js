@@ -75,4 +75,5 @@ EventId.SELF_GPS_DATA = "sele_gps_data";	  			  // 获得gps数据
 EventId.PLAYER_DISTANCE_DATA = "player_distance_data";	  // 玩家距离数据	
 EventId.GPS_TIPS_NOTIFY = "gps_tips_notify";			  // 玩家距离提示通知
 EventId.DISMISS_NOTIFY = "dismidd_notify";				  // 解散通知
+EventId.FREEZE_CLUB_NNOTIFY = "freeze_club_notify";		  // 冻结通知
 

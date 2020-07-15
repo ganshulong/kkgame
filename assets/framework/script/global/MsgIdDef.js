@@ -248,3 +248,5 @@ GlobalMsgId.BIND_PHONE = 124; 				// 绑定手机
 GlobalMsgId.FREEZE_CLUB = 8814; 			// 冻结俱乐部
 GlobalMsgId.DISMISS_CLUB = 8815; 			// 解散俱乐部
 GlobalMsgId.EXIT_CLUB = 8816; 				// 退出俱乐部
+
+GlobalMsgId.FREEZE_CLUB_NNOTIFY  = 18811; 	// 冻结/解冻通知

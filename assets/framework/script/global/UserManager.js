@@ -289,12 +289,11 @@ cc.Class({
             return info;
         },
 
-        setClubFreezeState(state){
-            if (this.currClubId) {
-                for(let i=0;i<this.clubs.length;++i){
-                    if(this.currClubId === this.clubs[i].clubid){
-                        this.clubs[i].state = state;
-                    }
+        setClubFreezeState(clubID, state){
+            for(let i=0;i<this.clubs.length;++i){
+                if(clubID === this.clubs[i].clubid){
+                    this.clubs[i].state = state;
+                    break;
                 }
             }
         },
