@@ -202,6 +202,10 @@ cc.Class({
                     if(reloginData.t === Global.LoginType.WXFIRST){
                         reloginData.t = Global.LoginType.WX;
                     }
+                    let historyOpenid = cc.sys.localStorage.getItem("openid");
+                    if (historyOpenid && historyOpenid.length > 0){
+                        reloginData.user = historyOpenid;
+                    }
                     cc.vv.NetManager.send(reloginData);
                     //清除超时连接
                     cc.vv.UserManager.setLoginType(reloginData.t);
@@ -326,7 +330,7 @@ cc.Class({
                 Global.shareLink = msgDic.shareLink;
                 Global.iconUrl = msgDic.iconUrl;
 
-                cc.sys.localStorage.setItem("account",msgDic.openid);
+                cc.sys.localStorage.setItem("account",msgDic.account);
                 cc.sys.localStorage.setItem("passwd",msgDic.passwd);
 
                 //首次拉起微信的登录，才有这个值
@@ -334,7 +338,6 @@ cc.Class({
                 if (openid && openid.length > 0) {
                     cc.sys.localStorage.setItem("openid", openid);
                 }
-
 
                 //首次登陆下发的信息
                 cc.vv.UserManager.initLoginServer(msgDic)
