@@ -40,6 +40,38 @@ cc.Class({
 
     start () {
         Global.autoAdaptDevices(false);
+
+        Global.starBatteryReceiver();
+        // this.onRcvBatteryChangeNotify();
+
+        this.txt_date = cc.find("scene/room_info/txt_date",this.node);
+        let that = this;
+        that.txt_date.runAction(
+            cc.repeatForever(
+                cc.sequence(
+                    cc.callFunc(()=>{
+                        let date = new Date();
+                        let dateStr = "";
+                        let month = date.getMonth() + 1;
+                        dateStr += (10 > month) ? "0" : "";
+                        dateStr += month + "月";
+                        let day = date.getDate();
+                        dateStr += (10 > day) ? "0" : "";
+                        dateStr += day + "日";
+                        dateStr += date.toTimeString().split(' ')[0];
+                        that.txt_date.getComponent(cc.Label).string = dateStr;
+                    }), 
+                    cc.delayTime(1)
+                )
+            )
+        )
+
+        let selectData = new Date();
+        this.curData = {};
+        this.curData.year = selectData.getFullYear();
+        this.curData.month = selectData.getMonth();     //比实际小1
+        this.curData.day = selectData.getDate();
+
         let conf = cc.vv.gameData.getRoomConf();
         let roomId = cc.find("scene/room_info/txt_room_id",this.node);
         roomId.getComponent(cc.Label).string = "游戏号:"+conf.deskId;
@@ -53,9 +85,6 @@ cc.Class({
             str += list[i];
             if(i===2) str += "\n";
         }
-
-
-
         let desc = cc.find("scene/room_info/txt_game_desc",this.node);
         desc.getComponent(cc.Label).string = str;
 
@@ -84,9 +113,8 @@ cc.Class({
         this.node.addComponent("PengHu_Chat");
         this.node.addComponent("PengHu_Setting");
 
-
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
-
+        Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
 
         //  let data ={notyScoreChang:[{seat:2,roundScore:6},{seat:1,roundScore:-6}],
         //      c:101405,code:200,seat:2,gameid:1,hcard:203,hupaiType:1,
@@ -119,7 +147,10 @@ cc.Class({
         // },1,1,1)
     },
 
-
+    onRcvBatteryChangeNotify(data){
+        let spr_battery = cc.find("scene/room_info/bg_battery/spr_battery",this.node);
+        spr_battery.scaleX = parseInt(data.detail) / 100;
+    },
 
     onRecvHandCard(data){
         data = data.detail;
@@ -133,6 +164,10 @@ cc.Class({
 
     onShowMsg(){
         Global.dispatchEvent(EventId.SHOW_CHAT);
-    }
+    },
+
+    onDestroy(){
+        this.txt_date.stopAllActions();
+    },
     // update (dt) {},
 });

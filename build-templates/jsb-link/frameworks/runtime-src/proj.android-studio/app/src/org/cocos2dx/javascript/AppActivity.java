@@ -62,6 +62,9 @@ import com.amap.api.location.AMapLocationClientOption.AMapLocationProtocol;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.AMapLocationQualityReport;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 
 public class AppActivity extends Cocos2dxActivity {
     public static AppActivity instance;
@@ -122,6 +125,26 @@ public class AppActivity extends Cocos2dxActivity {
 
         //初始化定位
         initLocation();
+    }
+
+    // 创建BroadcastReceiver 
+    private static BroadcastReceiver mBatInfoReveiver = new BroadcastReceiver() { 
+        @Override 
+        public void onReceive(Context context, Intent intent) { 
+            final int intLevel = intent.getExtras().getInt("level");// 获得当前电量
+            final int intScale = intent.getExtras().getInt("scale");// 获得总电量
+            instance.runOnGLThread(new Runnable() {
+                @Override
+                public void run() {
+                    String jsCallStr = "Global.GetBatteryChange('"+ intLevel +"')";
+                    Cocos2dxJavascriptJavaBridge.evalString(jsCallStr);
+                }
+            });
+        }
+    }; 
+
+    public static void starBatteryReceiver(){
+        instance.registerReceiver(mBatInfoReveiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
     public void initLocation(){
@@ -186,12 +209,23 @@ public class AppActivity extends Cocos2dxActivity {
     protected void onResume() {
         super.onResume();
         SDKWrapper.getInstance().onResume();
+        
+        // if (batteryReceiver == null) {
+        //     intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        //     batteryReceiver = new BatteryReceiver();
+        //     this.registerReceiver(batteryReceiver, intentFilter);
+        // }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         SDKWrapper.getInstance().onPause();
+
+        // if (batteryReceiver == null) {
+        //     this.unregisterReceiver(batteryReceiver);
+        //     batteryReceiver = null;
+        // }
     }
 
     @Override

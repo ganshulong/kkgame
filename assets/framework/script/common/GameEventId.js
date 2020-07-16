@@ -77,4 +77,6 @@ EventId.GPS_TIPS_NOTIFY = "gps_tips_notify";			  // 玩家距离提示通知
 EventId.DISMISS_NOTIFY = "dismidd_notify";				  // 解散通知
 EventId.FREEZE_CLUB_NOTIFY = "freeze_club_notify";		  // 冻结通知
 EventId.DISMISS_CLUB_NOTIFY = "dismiss_club_notify";	  // 解散通知
+EventId.BATTERY_CHANGE_NOTIFY = "battery_change_notify";  // 电量改变通知
+
 

@@ -1420,3 +1420,17 @@ Global.GetGPSData = function (parameterStr) {
     req.city = GPSDataStrArr[2];    //区域
     cc.vv.NetManager.send(req);
 }
+
+GlobalFunc.starBatteryReceiver = function () {
+    if (GlobalFunc.isAndroid()) {
+        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "starBatteryReceiver", "()V");
+    } else if (GlobalFunc.isIOS()) {
+
+    } else {
+        
+    }
+}
+
+Global.GetBatteryChange = function (parameterStr) {
+    Global.dispatchEvent(EventId.BATTERY_CHANGE_NOTIFY, parameterStr);
+}
