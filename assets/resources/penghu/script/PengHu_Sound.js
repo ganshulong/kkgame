@@ -81,6 +81,9 @@ cc.Class({
     playOperate(data){
         data = data.detail;
         let type = data.actionInfo.curaction.type;
+        if(type == cc.vv.gameData.OPERATETYPE.CHI && 0 < data.chiInfo.luoData.length){
+            type = cc.vv.gameData.OPERATETYPE.CHI_LUO;
+        }
         let seat = data.actionInfo.curaction.seat;
         // if(seat === cc.vv.gameData.getMySeatIndex()){
             this.playOperateType(seat,type);
@@ -108,6 +111,7 @@ cc.Class({
         if(type === cc.vv.gameData.OPERATETYPE.PENG) soundName = "peng";
         else if(type === cc.vv.gameData.OPERATETYPE.KAN) soundName = "sao";
         else if(type === cc.vv.gameData.OPERATETYPE.CHI) soundName = "chi";
+        else if(type === cc.vv.gameData.OPERATETYPE.CHI_LUO) soundName = "chiluo";
         else if(type === cc.vv.gameData.OPERATETYPE.LONG) soundName = "tilong";
         else if(type === cc.vv.gameData.OPERATETYPE.PAO) soundName = "pao";
         else if(type === cc.vv.gameData.OPERATETYPE.PENGSAN) soundName = "pengsanda";
@@ -125,6 +129,21 @@ cc.Class({
         data = data.detail;
         if(data.hupaiType>0){
             let path = "effect/"+this.getLanguage()+this.getSex(data.seat)+"hu";
+            if (2 == data.hupaiType) {
+                path += "_tian";
+            } else if (3 == data.hupaiType) {
+                path += "_dihu";
+            } else if (4 == data.hupaiType) {
+                path += "_tilong";
+            } else if (5 == data.hupaiType) {
+                path += "_paohu";
+            } else if (6 == data.hupaiType) {
+                path += "_saohu";
+            } else if (7 == data.hupaiType) {
+                path += "_penghu";
+            } else if (12 == data.hupaiType) {
+                path += "_shuanglong";
+            }
             cc.vv.AudioManager.playEff(this._soundPath, path,true);
 
             if(cc.vv.gameData.getMySeatIndex() === data.seat){

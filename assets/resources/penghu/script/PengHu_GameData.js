@@ -92,7 +92,7 @@ cc.Class({
             KANSAN:12,  // 坎三
             PENGSI:13, // 碰三
             KANSI:14,  // 坎三
-
+            CHI_LUO:15,  // 吃落
         },
 
         this.registerMsg();
