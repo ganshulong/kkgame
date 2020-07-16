@@ -230,7 +230,7 @@ cc.Class({
             for(let i=0;i<deskInfo.users.length;++i){
                 if(this._seatIndex === deskInfo.users[i].seat){
                     this.initPlayerInfo(deskInfo.users[i]);
-                    this.showZhuang(deskInfo.bankerInfo.seat === this._seatIndex);
+                    this.showZhuang(deskInfo.bankerInfo.seat === this._seatIndex, deskInfo.bankerInfo.count);
                 }
             }
         }
@@ -301,8 +301,15 @@ cc.Class({
     },
 
     // 显示庄
-    showZhuang(bShow){
-        if(this._playerNode) this._playerNode.getChildByName("sp_flag").active = bShow;
+    showZhuang(bShow, count = 1){
+        if(this._playerNode) {
+            this._playerNode.getChildByName("sp_flag").active = bShow;
+            if (bShow && count) {
+                cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
+                cc.find("sp_flag/zhaung2",this._playerNode).active = (1 < count);
+                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < count) ? count : "";
+            }
+        }
     },
 
     recvSendCard(){

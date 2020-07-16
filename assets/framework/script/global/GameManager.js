@@ -326,7 +326,7 @@ cc.Class({
                 Global.shareLink = msgDic.shareLink;
                 Global.iconUrl = msgDic.iconUrl;
 
-                cc.sys.localStorage.setItem("account",msgDic.account);
+                cc.sys.localStorage.setItem("account",msgDic.openid);
                 cc.sys.localStorage.setItem("passwd",msgDic.passwd);
 
                 //首次拉起微信的登录，才有这个值

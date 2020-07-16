@@ -215,6 +215,8 @@ cc.Class({
                     this._joinClubNode = cc.instantiate(prefab);
                     this._joinClubNode.parent = this.node;
                     this._joinClubNode.zIndex = 1;
+                    this._joinClubNode.x = this.node.width/2 - this.node.x;
+                    this._joinClubNode.y = this.node.height/2 - this.node.y;
                     this._joinClubNode.active = true;
                     this.initJoinClub();
                 }
