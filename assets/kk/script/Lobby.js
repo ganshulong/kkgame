@@ -116,9 +116,9 @@ cc.Class({
     },
 
     initClubBtn(){
-        this.notHaveClub_btn.active = (0 == cc.vv.UserManager.clubs.length);
-        this.haveClub_btn.active = (0 < cc.vv.UserManager.clubs.length);
-        this.moreClub_btn.active = (0 < cc.vv.UserManager.clubs.length);
+        this.notHaveClub_btn.active = (!cc.vv.UserManager.clubs.length);
+        this.haveClub_btn.active = (cc.vv.UserManager.clubs.length);
+        this.moreClub_btn.active = (cc.vv.UserManager.clubs.length);
         if(0 < cc.vv.UserManager.clubs.length){
             let info = this.haveClub_btn.getChildByName("info");
             this.initClub(info);

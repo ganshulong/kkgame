@@ -1,0 +1,217 @@
+// Learn cc.Class:
+//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
+//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
+// Learn Attribute:
+//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
+//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
+//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
+
+cc.Class({
+    extends: cc.Component,
+
+    properties: {
+        _layer:null,
+    },
+
+    start () {
+        cc.vv.NetManager.registerMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
+    },
+
+    showLayer(){
+        if(this._layer === null){
+            cc.loader.loadRes("common/prefab/club_record",cc.Prefab,(err,prefab)=>{
+                if(err === null){
+                    this._layer = cc.instantiate(prefab);
+                    this._layer.scaleX = this.node.width / this._layer.width;
+                    this._layer.scaleY = this.node.height / this._layer.height;
+                    this._layer.parent = this.node;
+                    this._layer.zIndex = 1;
+                    this._layer.x = this.node.width/2 - this.node.x;
+                    this._layer.y = this.node.height/2 - this.node.y;
+
+                    this.initUI();
+                    this.initShow();
+                }
+            })
+        }
+        else{
+            this._layer.active = true;
+            this.initShow();
+        }
+    },
+
+    initUI(){
+        let btn_back = this._layer.getChildByName("btn_back");
+        Global.btnClickEvent(btn_back,this.onClose,this);
+
+        let btn_refresh = this._layer.getChildByName("btn_refresh");
+        Global.btnClickEvent(btn_refresh,this.onClickRefresh,this);
+
+        let btn_share = cc.find("bg_right/bg_top/btn_share",this._layer)
+        Global.btnClickEvent(btn_share,this.onClickShare,this);
+
+        this.btnContent = cc.find("bg_left/scrollview/view/content",this._layer);
+        this.recordContent = cc.find("bg_right/scrollview/view/content",this._layer);
+    },
+
+    onClickRefresh(){
+        this.sendRecordReq();
+    },
+
+    onClickShare(event){
+        Global.onWXShareImage(Global.ShareSceneType.WXSceneSession);
+    },
+
+    initShow(){
+        this.curDate = new Date();
+        for (var i = 0; i < 7; i++) {
+            let item = null;
+            if(i < this.btnContent.children.length) {
+                item = this.btnContent.children[i];
+            } else {
+                item = cc.instantiate(this.btnContent.children[0]);
+                item.parent = this.btnContent;
+            }
+            item.y = this.btnContent.children[0].y - i * (item.height+5);
+            item.getComponent(cc.Button).interactable = (0 == i);
+
+            let itemDate = new Date(this.curDate.getTime() - i*24*60*60*1000);
+            let year = itemDate.getFullYear();
+            let month = itemDate.getMonth();    //month比实际小1
+            let day = itemDate.getDate();
+
+            let itemDateStr = (month + 1) + "月" + day + "日";
+            item.getChildByName("text_date").getComponent(cc.Label).string = itemDateStr;
+            item.index = i;
+            item.dateStr = this.getDataStr(year,month,day);
+            Global.btnClickEvent(item,this.onClickDateItem,this);
+        }
+
+        this.curDateIndex = 0;
+        this.sendRecordReq();
+    },
+
+    onClickDateItem(event){
+        this.curDateIndex = event.target.index;
+        this.sendRecordReq();
+    },
+
+    sendRecordReq(){
+        for (var i = 0; i < this.btnContent.children.length; i++) {
+            this.btnContent.children[i].getComponent(cc.Button).interactable = (i != this.curDateIndex);
+        }
+        var req = { 'c': MsgId.GAME_RECORD};
+        req.selectTime = this.btnContent.children[this.curDateIndex].dateStr;
+        req.clubid = cc.vv.UserManager.currClubId;
+        cc.vv.NetManager.send(req);
+    },
+
+    onRcvGameRecord(msg){
+        if (200 == msg.code && msg.data && 1 < msg.clubid) {
+            let bigWinerCount = 0;
+            for (var i = 0; i < msg.data.length; i++) {
+                let item = null;
+                if(i < this.recordContent.children.length) {
+                    item = this.recordContent.children[i];
+                } else {
+                    item = cc.instantiate(this.recordContent.children[0]);
+                    item.parent = this.recordContent;
+                }
+                item.y = this.recordContent.children[0].y - i * (item.height + 5);
+                item.active = true;
+
+                let strArr = msg.data[i].beginTime.split(" ");
+                item.getChildByName("text_time").getComponent(cc.Label).string = strArr[0];
+                item.getChildByName("text_time1").getComponent(cc.Label).string = strArr[1];
+                item.getChildByName("text_roomID").getComponent(cc.Label).string = msg.data[i].deskid;
+                item.getChildByName("text_round").getComponent(cc.Label).string = msg.data[i].gameNum;
+                
+                let maxScore = 0;
+                let bigWinerName = "";
+                let bigWinerID = "";
+                let userData = JSON.parse(msg.data[i].data);
+                let bg_score = item.getChildByName("bg_score");
+                for (var j = 0; j < userData.length; j++) {
+                    bg_score.getChildByName("text_name"+j).active = true;
+                    bg_score.getChildByName("text_score"+j).active = true;
+                    bg_score.getChildByName("text_name"+j).getComponent(cc.Label).string = userData[j].playername;
+                    if (0 <= userData[j].score) {
+                        if (0 < userData[j].score) {
+                            bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = "+" + userData[j].score;
+                        } else if (0 == userData[j].score){
+                            bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score;
+                        }
+                        bg_score.getChildByName("text_score"+j).color = new cc.Color(189,57,53);
+                    } else {
+                        bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score;
+                        bg_score.getChildByName("text_score"+j).color = new cc.Color(79,102,143);
+                    }
+                    if (maxScore < userData[j].score) {
+                        maxScore = userData[j].score;
+                        bigWinerName = userData[j].playername;
+                        bigWinerID = userData[j].uid;
+                    }
+                    if(cc.vv.UserManager.uid == userData[j].uid){
+                        item.getChildByName("mask_win").active = (0 <= userData[j].score);
+                        item.getChildByName("mask_lose").active = (0 > userData[j].score);
+                    }
+                }
+                for (var j = userData.length; j < 4; j++) {
+                    bg_score.getChildByName("text_name"+j).active = false;
+                    bg_score.getChildByName("text_score"+j).active = false;
+                }
+                item.getChildByName("text_bigWinerName").getComponent(cc.Label).string = bigWinerName;
+                item.getChildByName("text_bigWinerID").getComponent(cc.Label).string = "ID:" + bigWinerID;
+                if (bigWinerID == cc.vv.UserManager.uid) {
+                    ++bigWinerCount;
+                }
+
+                let btn_detail = item.getChildByName("btn_detail");
+                btn_detail.deskid = msg.data[i].deskid;
+                Global.btnClickEvent(btn_detail,this.onClickDetail,this);
+            }
+            this.recordContent.height = msg.data.length * (this.recordContent.children[0].height + 5);
+
+            for(let i = msg.data.length; i < this.recordContent.childrenCount; ++i){
+                this.recordContent.children[i].active = false;
+            }
+            cc.find("bg_right/bg_top/text_roundNum",this._layer).getComponent(cc.Label).string = msg.data.length;
+            cc.find("bg_right/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = bigWinerCount;
+        }
+    },
+
+    onClickDetail(event){
+
+    },
+
+    getDataStr(year,month,day){
+        let dataStr = year + '-';
+        if (9 < month) {
+            dataStr += (month + 1);         //month比实际小1
+        } else {
+            dataStr += '0' + (month + 1);   //month比实际小1
+        }
+        if (day) {
+            dataStr += '-';
+            if (9 < day) {
+                dataStr += day;
+            } else {
+                dataStr += '0' + day;
+            }
+        }
+        return dataStr;
+    },
+
+    onClose(){
+        this._layer.active = false;
+    },
+
+    onDestroy(){
+        cc.vv.NetManager.unregisterMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
+        if(this._layer){
+            cc.loader.releaseRes("common/prefab/club_record",cc.Prefab);
+        }
+    },
+});

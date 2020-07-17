@@ -1047,14 +1047,14 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "img_red",
+    "_name": "spr_redPoint",
     "_objFlags": 0,
     "_parent": {
       "__id__": 26
     },
     "_children": [],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 28
@@ -1085,8 +1085,8 @@
     },
     "_rotationX": 0,
     "_rotationY": 0,
-    "_scaleX": 0.8,
-    "_scaleY": 0.8,
+    "_scaleX": 0.6,
+    "_scaleY": 0.6,
     "_position": {
       "__type__": "cc.Vec2",
       "x": -24,
@@ -2107,8 +2107,8 @@
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 0,
-      "b": 0,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -2119,17 +2119,17 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 90,
-      "height": 22
+      "width": 86,
+      "height": 36
     },
     "_rotationX": 0,
     "_rotationY": 0,
-    "_scaleX": 1,
-    "_scaleY": 1,
+    "_scaleX": 0.8,
+    "_scaleY": 0.8,
     "_position": {
       "__type__": "cc.Vec2",
       "x": -616,
-      "y": 748
+      "y": 750
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -2139,28 +2139,30 @@
     "groupIndex": 0
   },
   {
-    "__type__": "cc.Label",
+    "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 60
     },
     "_enabled": true,
-    "_useOriginalSize": false,
-    "_actualFontSize": 22,
-    "_fontSize": 22,
-    "_lineHeight": 22,
-    "_enableWrapText": false,
-    "_N$file": {
-      "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
+    "_spriteFrame": {
+      "__uuid__": "ab95368a-543c-4231-b874-6017f04cd726"
     },
-    "_isSystemFontUsed": false,
-    "_spacingX": 0,
-    "_N$string": "已冻结",
-    "_N$horizontalAlign": 0,
-    "_N$verticalAlign": 1,
-    "_N$fontFamily": "Arial",
-    "_N$overflow": 2
+    "_type": 0,
+    "_sizeMode": 1,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_atlas": null
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -9061,7 +9063,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_statistics",
+    "_name": "btn_record",
     "_objFlags": 0,
     "_parent": {
       "__id__": 270

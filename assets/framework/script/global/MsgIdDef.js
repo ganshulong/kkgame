@@ -247,7 +247,14 @@ GlobalMsgId.BIND_PHONE = 124; 				// 绑定手机
 
 GlobalMsgId.FREEZE_CLUB = 8814; 			// 冻结俱乐部
 GlobalMsgId.DISMISS_CLUB = 8815; 			// 解散俱乐部
-GlobalMsgId.EXIT_CLUB = 8816; 				// 退出俱乐部
+GlobalMsgId.EXIT_CLUB_APPLY = 8816; 				// 退出俱乐部
+
+GlobalMsgId.CLUB_EXIT_APPLY_NOTIFY = 18812; // 俱乐部申请退出通知
+
+GlobalMsgId.CLUB_EXIT_APPLY_LIST = 8817; 	// 获取俱乐部申请退出列表
+GlobalMsgId.CLUB_REFUSE_EXIT = 8818; 		// 拒绝退出俱乐部
+GlobalMsgId.CLUB_ALL_AGREE_EXIT = 8819; 	// 全部同意退出俱乐部
+GlobalMsgId.CLUB_AGREE_EXIT = 8820; 		// 同意退出俱乐部
 
 GlobalMsgId.FREEZE_CLUB_NOTIFY = 18811; 	// 冻结/解冻俱乐部通知
 GlobalMsgId.DISMISS_CLUB_NOTIFY = 18810; 	// 解散俱乐部通知

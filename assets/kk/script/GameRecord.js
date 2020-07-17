@@ -235,6 +235,9 @@ cc.Class({
     },
 
     onRcvGameRecord(msg){
+        if (1 <= msg.clubid) {
+            return;
+        }
         if (this._gameRecordItemList) {
             for (var i = 0; i < this._gameRecordItemList.length; i++) {
                 this._gameRecordItemList[i].removeFromParent();

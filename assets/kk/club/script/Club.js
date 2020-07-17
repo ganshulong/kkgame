@@ -77,9 +77,16 @@ cc.Class({
         // Global.btnClickEvent(btn_invite,this.onCreateRoom,this);
         btn_invite.active = (info.createUid == cc.vv.UserManager.uid);
 
+
+        this.node.addComponent("ClubExitApplyMessage");
+        this.ClubExitApplyMessageJS = this.node.getComponent("ClubExitApplyMessage");
+
         let btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
-        // Global.btnClickEvent(btn_msg,this.onCreateRoom,this);
+        Global.btnClickEvent(btn_msg,this.onClickMsg,this);
         btn_msg.active = (info.createUid == cc.vv.UserManager.uid);
+
+        this.spr_redPoint = btn_msg.getChildByName("spr_redPoint");
+        this.spr_redPoint.active = this._clubInfo.exitHave;
 
         this.node.addComponent("ClubSetting");
         this.ClubSettingJS = this.node.getComponent("ClubSetting");
@@ -95,8 +102,11 @@ cc.Class({
         // Global.btnClickEvent(btn_member,this.onCreateRoom,this);
         btn_member.active = (info.createUid == cc.vv.UserManager.uid);
 
-        let btn_statistics = cc.find("Layer/img_bottomBg/btn_statistics",this.node);
-        // Global.btnClickEvent(btn_statistics,this.onCreateRoom,this);
+        this.node.addComponent("ClubRecord");
+        this.ClubRecordJS = this.node.getComponent("ClubRecord");
+
+        let btn_record = cc.find("Layer/img_bottomBg/btn_record",this.node);
+        Global.btnClickEvent(btn_record,this.onClickRecord,this);
 
         this._content = cc.find("Layer/list/view/content",this.node);
         this._content.active = false;
@@ -131,6 +141,8 @@ cc.Class({
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
+        Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
+        Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
     },
 
     unregisterMsg(){
@@ -139,6 +151,25 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.SEATDOWN, this.onEnterDeskResult,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_TABLEINFO, this.onRecvTableinfo,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable,false,this);
+    },
+
+    onRcvClubExitApplyNotify(data){
+        if(data.detail.clubid == cc.vv.UserManager.currClubId){
+            this.spr_redPoint.active = data.detail.isShow;
+        }
+    },
+
+    updateClubList(){
+        let currClubIsHave = false;
+        for (let i = 0; i < cc.vv.UserManager.clubs.length; ++i) {
+            if (cc.vv.UserManager.clubs[i].clubid == cc.vv.UserManager.currClubId) {
+                currClubIsHave = true;
+                break;
+            }
+        }
+        if (!currClubIsHave) {
+            cc.vv.SceneMgr.enterScene("club_lobby");
+        }
     },
 
     onRcvFreezeClubNotify(data){
@@ -299,12 +330,22 @@ cc.Class({
         this._content.width = width+50;
     },
 
+    onClickMsg(){
+        if (this.spr_redPoint.active) {
+            this.ClubExitApplyMessageJS.showLayer();
+        }
+    },
+
     onClickSetting(){
         this.ClubSettingJS.showClubSetting();
     },
 
     onCreateRoom(){
         Global.dispatchEvent(EventId.GAME_CREATEROOM);
+    },
+
+    onClickRecord(){
+        this.ClubRecordJS.showLayer();
     },
 
     onBack(){

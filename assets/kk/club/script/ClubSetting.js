@@ -12,22 +12,23 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        _Layer:null,
+        _layer:null,
         _clubInfo:null,
     },
 
     start () {
+        cc.vv.NetManager.registerMsg(MsgId.EXIT_CLUB_APPLY, this.onRcvExitClubApply, this);
     },
 
     showClubSetting(){
-        if(this._Layer === null){
+        if(this._layer === null){
             cc.loader.loadRes("common/prefab/club_setting",cc.Prefab,(err,prefab)=>{
                 if(err === null){
-                    this._Layer = cc.instantiate(prefab);
-                    this._Layer.parent = this.node;
-                    this._Layer.zIndex = 1;
-                    this._Layer.x = this.node.width/2 - this.node.x;
-                    this._Layer.y = this.node.height/2 - this.node.y;
+                    this._layer = cc.instantiate(prefab);
+                    this._layer.parent = this.node;
+                    this._layer.zIndex = 1;
+                    this._layer.x = this.node.width/2 - this.node.x;
+                    this._layer.y = this.node.height/2 - this.node.y;
 
                     this.initUI();
                     this.initShow();
@@ -35,16 +36,16 @@ cc.Class({
             })
         }
         else{
-            this._Layer.active = true;
+            this._layer.active = true;
             this.initShow();
         }
     },
 
     initUI(){
-        let btn_close = cc.find("bg_set/btn_close",this._Layer);
+        let btn_close = cc.find("bg_set/btn_close",this._layer);
         Global.btnClickEvent(btn_close,this.onClose,this);
 
-        let bg_content = cc.find("bg_set/bg_content",this._Layer);
+        let bg_content = cc.find("bg_set/bg_content",this._layer);
         this.ItemArr = [];
         for (let i = 0; i < 4; i++) {
             this.ItemArr.push(bg_content.getChildByName("bg_Item"+i));
@@ -61,7 +62,7 @@ cc.Class({
             DismissFre:3,
         },
 
-        this.panel_confirmTips = cc.find("bg_set/panel_confirmTips",this._Layer);
+        this.panel_confirmTips = cc.find("bg_set/panel_confirmTips",this._layer);
 
         let btn_closeTips = cc.find("confirmTips_bg/btn_closeTips",this.panel_confirmTips);
         Global.btnClickEvent(btn_closeTips,this.onCloseTips,this);
@@ -82,7 +83,7 @@ cc.Class({
     },
 
     onClose(){
-        this._Layer.active = false;
+        this._layer.active = false;
     },
 
     onClickItemConfirm(event){
@@ -111,7 +112,7 @@ cc.Class({
     },
 
     onClickConfirm(){
-        let msgIDArr = [MsgId.EXIT_CLUB,MsgId.DISMISS_CLUB,MsgId.FREEZE_CLUB,MsgId.FREEZE_CLUB];
+        let msgIDArr = [MsgId.EXIT_CLUB_APPLY,MsgId.DISMISS_CLUB,MsgId.FREEZE_CLUB,MsgId.FREEZE_CLUB];
         if (-1 < this.clickItemIndex) {
             var req = { 'c': msgIDArr[this.clickItemIndex]};
             if (2 == this.clickItemIndex) {
@@ -122,12 +123,20 @@ cc.Class({
             req.clubid = cc.vv.UserManager.currClubId;
             cc.vv.NetManager.send(req);
 
-            this._Layer.active = false;
+            this._layer.active = false;
+        }
+    },
+
+    onRcvExitClubApply(msg){
+        if(msg.code === 200){
+            cc.vv.FloatTip.show("成功申请退出亲友圈");
+            this.onClose();
         }
     },
 
     onDestroy(){
-        if(this._Layer){
+        cc.vv.NetManager.unregisterMsg(MsgId.EXIT_CLUB_APPLY, this.onRcvExitClubApply, this);
+        if(this._layer){
             cc.loader.releaseRes("common/prefab/club_setting",cc.Prefab);
         }
     },

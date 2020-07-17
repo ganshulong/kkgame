@@ -124,9 +124,17 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify, this);
             cc.vv.NetManager.registerMsg(MsgId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify, this);
-            cc.vv.NetManager.registerMsg(MsgId.EXIT_CLUB, this.onRcvExitClubNotify, this);
+
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
         
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvClubExitApplyNotify(msg){
+            if(msg.code === 200){
+                cc.vv.UserManager.setClubExitApplyState(msg.clubid, 1);
+                Global.dispatchEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, {clubid:msg.clubid, isShow:true});
+            }
         },
 
         onRcvFreezeClubNotify(msg){
@@ -140,14 +148,6 @@ cc.Class({
             if(msg.code === 200){
                 cc.vv.UserManager.dismissExitCurClub();
                 Global.dispatchEvent(EventId.DISMISS_CLUB_NOTIFY, msg.response);
-            }
-        },
-
-        onRcvExitClubNotify(msg){
-            if(msg.code === 200){
-                cc.vv.UserManager.dismissExitCurClub();
-                cc.vv.SceneMgr.enterScene("club_lobby");
-                cc.vv.FloatTip.show("成功退出亲友圈");
             }
         },
 
