@@ -187,7 +187,7 @@ cc.Class({
             for(let i=0;i<this._operateCardNode.childrenCount;++i){
                 let child = this._operateCardNode.children[i];
                 if(child.showBg && child.index==2){
-                    this.node.getComponent("PengHu_Card").createCard(child.cardValue,2,false,child);
+                    // this.node.getComponent("PengHu_Card").createCard(child.cardValue,2,false,child);
                 }
             }
         }
@@ -311,7 +311,11 @@ cc.Class({
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
             let card = data.actionInfo.curaction.card;
-            this.showCard([card,card,card],data.actionInfo.curaction.type,0,true);
+            if(data.actionInfo.curaction.source == 0){
+                this.showCard([card,card,card],data.actionInfo.curaction.type,0,true);      //扫显示三张
+            }else {
+                this.showCard([card,card],data.actionInfo.curaction.type,0,true);           //碰显示2张
+            }
         }
     },
 

@@ -216,7 +216,7 @@ cc.Class({
                 else {
                     if(node){
                         let pos = this.getEndPos(num);
-                        node.position = pos;
+                        this._outCardNode.children[i].position = pos;
                     }
                     ++num;
                 }

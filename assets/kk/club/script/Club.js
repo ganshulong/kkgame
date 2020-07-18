@@ -333,7 +333,8 @@ cc.Class({
     },
 
     onClickInviteToWx(){
-        Global.onWXShareText(Global.ShareSceneType.WXSceneSession, "俱乐部ID", this._clubInfo.clubid);
+        let des = "我在闲去棋牌的亲友圈ID是" + this._clubInfo.clubid + "，赶快来加入吧"
+        Global.onWXShareText(Global.ShareSceneType.WXSceneSession, "俱乐部邀请", des);
     },
 
     onClickMsg(){

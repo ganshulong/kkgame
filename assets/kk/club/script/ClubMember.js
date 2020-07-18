@@ -46,6 +46,7 @@ cc.Class({
         let btn_close = cc.find("bg_member/btn_close",this._layer);
         Global.btnClickEvent(btn_close,this.onClose,this);
 
+        this.input_nameID = cc.find("bg_member/bg_input/input_nameID",this._layer);
         let btn_search = cc.find("bg_member/bg_input/btn_search",this._layer);
         Global.btnClickEvent(btn_search,this.onClickSearch,this);
         
@@ -76,6 +77,7 @@ cc.Class({
     },
 
     initShow(){
+        this.input_nameID.getComponent(cc.EditBox).string = "";
         for (let i = 0; i < this.sortBtnArr.length; i++) {
             this.sortBtnArr[i].isSmallToBig = true;
         }
@@ -110,7 +112,16 @@ cc.Class({
     },
 
     onClickSearch(event){
-
+        let inputStr = this.input_nameID.getComponent(cc.EditBox).string;
+        if (inputStr && 0 < inputStr.length) {
+            let searchList = [];
+            for (var i = 0; i < this.memberList.length; i++) {
+                if (parseInt(inputStr) == this.memberList[i].uid || inputStr == this.memberList[i].playername) {
+                    searchList.push(this.memberList[i]);
+                }
+            }
+            this.updateMemberList(searchList);
+        }
     },
 
     onClickSelectData(event){
@@ -224,8 +235,9 @@ cc.Class({
         }
     },
 
-    updateMemberList(){
-        for (let i = 0; i < this.memberList.length; i++) {
+    updateMemberList(list){
+        let showList = list ? list : this.memberList;
+        for (let i = 0; i < showList.length; i++) {
             let item = null;
             if(i < this.memberListContent.children.length) {
                 item = this.memberListContent.children[i];
@@ -239,25 +251,25 @@ cc.Class({
             let bg_memberItem = item.getChildByName("bg_memberItem");
             let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
             spr_head.getComponent(cc.Sprite).spriteFrame = this.defaultSpriteFrame;
-            Global.setHead(spr_head, this.memberList[i].usericon);
+            Global.setHead(spr_head, showList[i].usericon);
 
-            bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = this.memberList[i].playername;
-            bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = this.memberList[i].uid;
-            bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = this.memberList[i].isOnLine ? "在线" : "离线";
-            bg_memberItem.getChildByName("text_state").color = this.memberList[i].isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
-            bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = this.memberList[i].totalScore;
-            bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = this.memberList[i].jushu;
-            bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = this.memberList[i].bigWinCnt;
-            bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = this.memberList[i].cost;
-            bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = this.memberList[i].totalScore;
+            bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = showList[i].playername;
+            bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = showList[i].uid;
+            bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = showList[i].isOnLine ? "在线" : "离线";
+            bg_memberItem.getChildByName("text_state").color = showList[i].isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
+            bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = showList[i].totalScore;
+            bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = showList[i].jushu;
+            bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
+            bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;
+            bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = showList[i].totalScore;
             let btn_tickout = bg_memberItem.getChildByName("btn_tickout");
-            btn_tickout.uid = this.memberList[i].uid;
+            btn_tickout.uid = showList[i].uid;
             Global.btnClickEvent(btn_tickout,this.onClickTickout,this);
 
         }
-        this.memberListContent.height = this.memberList.length * (this.memberListContent.children[0].height + 5);
+        this.memberListContent.height = showList.length * (this.memberListContent.children[0].height + 5);
 
-        for(let i = this.memberList.length; i < this.memberListContent.children.length; ++i){
+        for(let i = showList.length; i < this.memberListContent.children.length; ++i){
             this.memberListContent.children[i].active = false;
         }
     },
