@@ -97,8 +97,8 @@ cc.Class({
 
         this.CreateRoomJS = this.node.getComponent("CreateRoom");
         
-        this.node.addComponent("GameRecord");
-        this.GameRecordJS = this.node.getComponent("GameRecord");
+        this.node.addComponent("HallRecord");
+        this.HallRecordJS = this.node.getComponent("HallRecord");
 
         this.node.addComponent("LobbySet");
         this.LobbySetJS = this.node.getComponent("LobbySet");
@@ -127,7 +127,7 @@ cc.Class({
 
 
     onClickHistory(){
-        this.GameRecordJS.showGameRecord();
+        this.HallRecordJS.showGameRecord();
     },
 
     onClickCreateRoom(){

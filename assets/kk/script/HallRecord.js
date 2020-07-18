@@ -28,7 +28,7 @@ cc.Class({
 
     showGameRecord(){
         if(this._gameRecordLayer === null){
-            cc.loader.loadRes("common/prefab/GameRecord",cc.Prefab,(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/hall_record",cc.Prefab,(err,prefab)=>{
                 if(err === null){
                     this._gameRecordLayer = cc.instantiate(prefab);
                     this._gameRecordLayer.scaleX = this.node.width / this._gameRecordLayer.width;
@@ -102,28 +102,10 @@ cc.Class({
         this.curData.day = selectData.getDate();
         this.selectData = JSON.parse(JSON.stringify(this.curData));
 
-        let dataStr = this.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);       
+        let dataStr = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);       
         this.text_data.getComponent(cc.Label).string = dataStr;
 
         this.onShowRecordType(0)
-    },
-
-    getDataStr(year,month,day){
-        let dataStr = year + '-';
-        if (9 < month) {
-            dataStr += (month + 1);         //month比实际小1
-        } else {
-            dataStr += '0' + (month + 1);   //month比实际小1
-        }
-        if (day) {
-            dataStr += '-';
-            if (9 < day) {
-                dataStr += day;
-            } else {
-                dataStr += '0' + day;
-            }
-        }
-        return dataStr;
     },
 
     onClose(){
@@ -142,7 +124,7 @@ cc.Class({
             this.left_list_view.getChildByName("btn_" + i + "_dis").active = (i == this.curShowRecordType);
         }
         var req = { 'c': MsgId.GAME_RECORD};
-        req.selectTime = this.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
+        req.selectTime = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
         req.clubid = this.curShowRecordType;
         cc.vv.NetManager.send(req);
     },
@@ -155,7 +137,7 @@ cc.Class({
     },
 
     onShowDataItem(year,month){
-        this.text_year_month.getComponent(cc.Label).string = this.getDataStr(year, month);
+        this.text_year_month.getComponent(cc.Label).string = Global.getDataStr(year, month);
         let firstDay = null;
         let lastDay = null;
         if (month == this.curData.month) {
@@ -218,7 +200,7 @@ cc.Class({
         this.selectData.month = event.target._month;
         this.selectData.day = event.target._day;
         
-        let dataStr = this.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
+        let dataStr = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
         this.text_data.getComponent(cc.Label).string = dataStr;
 
         this.onClickCloseRoundRecord();
@@ -405,7 +387,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
         cc.vv.NetManager.unregisterMsg(MsgId.ROUND_RECORD, this.onRcvRoundRecord, this);
         if(this._gameRecordLayer){
-            cc.loader.releaseRes("common/prefab/GameRecord",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/hall_record",cc.Prefab);
         }
     },
 });

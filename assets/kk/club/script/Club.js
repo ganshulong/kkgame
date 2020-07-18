@@ -97,8 +97,11 @@ cc.Class({
         Global.btnClickEvent(createRoomBtn,this.onCreateRoom,this);
         createRoomBtn.active = (info.createUid == cc.vv.UserManager.uid);
 
+        this.node.addComponent("ClubMember");
+        this.ClubMemberJS = this.node.getComponent("ClubMember");
+
         let btn_member = cc.find("Layer/img_bottomBg/btn_member",this.node);
-        // Global.btnClickEvent(btn_member,this.onCreateRoom,this);
+        Global.btnClickEvent(btn_member,this.onClickMember,this);
         btn_member.active = (info.createUid == cc.vv.UserManager.uid);
 
         this.node.addComponent("ClubRecord");
@@ -345,6 +348,10 @@ cc.Class({
 
     onCreateRoom(){
         Global.dispatchEvent(EventId.GAME_CREATEROOM);
+    },
+
+    onClickMember(){
+        this.ClubMemberJS.showLayer();
     },
 
     onClickRecord(){

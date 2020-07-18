@@ -83,7 +83,7 @@ cc.Class({
             let itemDateStr = (month + 1) + "月" + day + "日";
             item.getChildByName("text_date").getComponent(cc.Label).string = itemDateStr;
             item.index = i;
-            item.dateStr = this.getDataStr(year,month,day);
+            item.dateStr = Global.getDataStr(year,month,day);
             Global.btnClickEvent(item,this.onClickDateItem,this);
         }
 
@@ -265,24 +265,6 @@ cc.Class({
                 this.roundRecordContent.children[i].active = false;
             }
         }
-    },
-
-    getDataStr(year,month,day){
-        let dataStr = year + '-';
-        if (9 < month) {
-            dataStr += (month + 1);         //month比实际小1
-        } else {
-            dataStr += '0' + (month + 1);   //month比实际小1
-        }
-        if (day) {
-            dataStr += '-';
-            if (9 < day) {
-                dataStr += day;
-            } else {
-                dataStr += '0' + day;
-            }
-        }
-        return dataStr;
     },
 
     onDestroy(){

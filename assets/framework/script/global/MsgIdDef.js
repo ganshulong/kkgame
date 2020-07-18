@@ -256,5 +256,7 @@ GlobalMsgId.CLUB_REFUSE_EXIT = 8818; 		// 拒绝退出俱乐部
 GlobalMsgId.CLUB_ALL_AGREE_EXIT = 8819; 	// 全部同意退出俱乐部
 GlobalMsgId.CLUB_AGREE_EXIT = 8820; 		// 同意退出俱乐部
 
+GlobalMsgId.CLUB_MEMBER_LIST = 8821; 		// 俱乐部成员列表
+
 GlobalMsgId.FREEZE_CLUB_NOTIFY = 18811; 	// 冻结/解冻俱乐部通知
 GlobalMsgId.DISMISS_CLUB_NOTIFY = 18810; 	// 解散俱乐部通知
