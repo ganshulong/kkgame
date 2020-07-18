@@ -17,6 +17,7 @@ cc.Class({
 
     start () {
         cc.vv.NetManager.registerMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
+        cc.vv.NetManager.registerMsg(MsgId.ROUND_RECORD, this.onRcvRoundRecord, this);
     },
 
     showLayer(){
@@ -45,23 +46,20 @@ cc.Class({
     initUI(){
         let btn_back = this._layer.getChildByName("btn_back");
         Global.btnClickEvent(btn_back,this.onClose,this);
-
         let btn_refresh = this._layer.getChildByName("btn_refresh");
         Global.btnClickEvent(btn_refresh,this.onClickRefresh,this);
 
-        let btn_share = cc.find("bg_right/bg_top/btn_share",this._layer)
-        Global.btnClickEvent(btn_share,this.onClickShare,this);
-
         this.btnContent = cc.find("bg_left/scrollview/view/content",this._layer);
-        this.recordContent = cc.find("bg_right/scrollview/view/content",this._layer);
-    },
 
-    onClickRefresh(){
-        this.sendRecordReq();
-    },
+        this.panel_gameRecord = cc.find("bg_right/panel_gameRecord",this._layer);
+        let btn_share = cc.find("bg_top/btn_share",this.panel_gameRecord)
+        Global.btnClickEvent(btn_share,this.onClickShare,this);
+        this.gameRecordContent = cc.find("scrollview/view/content",this.panel_gameRecord);
 
-    onClickShare(event){
-        Global.onWXShareImage(Global.ShareSceneType.WXSceneSession);
+        this.panel_roundRecord = cc.find("bg_right/panel_roundRecord",this._layer);
+        let btn_closeRoundRecord = this.panel_roundRecord.getChildByName("btn_closeRoundRecord");
+        Global.btnClickEvent(btn_closeRoundRecord,this.onShowGameRecord,this);
+        this.roundRecordContent = cc.find("scrollview/content",this.panel_roundRecord);
     },
 
     initShow(){
@@ -90,15 +88,40 @@ cc.Class({
         }
 
         this.curDateIndex = 0;
-        this.sendRecordReq();
+        this.onShowGameRecord();
+        this.onClickRefresh();
+
+        this.curRoomID = null;
+    },
+
+    onClose(){
+        this._layer.active = false;
+    },
+
+    onClickRefresh(){
+        if (this.panel_gameRecord.active) {
+            this.sendGameRecordReq();
+        } else {
+            this.sendRoundRecordReq();
+        }
     },
 
     onClickDateItem(event){
         this.curDateIndex = event.target.index;
-        this.sendRecordReq();
+        this.onShowGameRecord();
+        this.sendGameRecordReq();
     },
 
-    sendRecordReq(){
+    onClickShare(event){
+        Global.onWXShareImage(Global.ShareSceneType.WXSceneSession);
+    },
+
+    onShowGameRecord(){
+        this.panel_gameRecord.active = true;
+        this.panel_roundRecord.active = false;
+    },
+
+    sendGameRecordReq(){
         for (var i = 0; i < this.btnContent.children.length; i++) {
             this.btnContent.children[i].getComponent(cc.Button).interactable = (i != this.curDateIndex);
         }
@@ -108,18 +131,29 @@ cc.Class({
         cc.vv.NetManager.send(req);
     },
 
+    onClickDetail(event){
+        this.curRoomID = event.target.deskid;
+        this.sendRoundRecordReq();
+    },
+
+    sendRoundRecordReq(){
+        var req = { 'c': MsgId.ROUND_RECORD};
+        req.deskid = this.curRoomID;
+        cc.vv.NetManager.send(req);
+    },
+
     onRcvGameRecord(msg){
         if (200 == msg.code && msg.data && 1 < msg.clubid) {
             let bigWinerCount = 0;
             for (var i = 0; i < msg.data.length; i++) {
                 let item = null;
-                if(i < this.recordContent.children.length) {
-                    item = this.recordContent.children[i];
+                if(i < this.gameRecordContent.children.length) {
+                    item = this.gameRecordContent.children[i];
                 } else {
-                    item = cc.instantiate(this.recordContent.children[0]);
-                    item.parent = this.recordContent;
+                    item = cc.instantiate(this.gameRecordContent.children[0]);
+                    item.parent = this.gameRecordContent;
                 }
-                item.y = this.recordContent.children[0].y - i * (item.height + 5);
+                item.y = this.gameRecordContent.children[0].y - i * (item.height + 5);
                 item.active = true;
 
                 let strArr = msg.data[i].beginTime.split(" ");
@@ -172,18 +206,58 @@ cc.Class({
                 btn_detail.deskid = msg.data[i].deskid;
                 Global.btnClickEvent(btn_detail,this.onClickDetail,this);
             }
-            this.recordContent.height = msg.data.length * (this.recordContent.children[0].height + 5);
+            this.gameRecordContent.height = msg.data.length * (this.gameRecordContent.children[0].height + 5);
 
-            for(let i = msg.data.length; i < this.recordContent.childrenCount; ++i){
-                this.recordContent.children[i].active = false;
+            for(let i = msg.data.length; i < this.gameRecordContent.childrenCount; ++i){
+                this.gameRecordContent.children[i].active = false;
             }
-            cc.find("bg_right/bg_top/text_roundNum",this._layer).getComponent(cc.Label).string = msg.data.length;
-            cc.find("bg_right/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = bigWinerCount;
+            cc.find("bg_right/panel_gameRecord/bg_top/text_roundNum",this._layer).getComponent(cc.Label).string = msg.data.length;
+            cc.find("bg_right/panel_gameRecord/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = bigWinerCount;
         }
     },
 
-    onClickDetail(event){
+    onRcvRoundRecord(msg){
+        this.panel_gameRecord.active = false;
+        this.panel_roundRecord.active = true;
+        if (200 == msg.code && msg.data) {
+            for (var i = 0; i < msg.data.length; i++) {
+                let item = null;
+                if(i < this.roundRecordContent.children.length) {
+                    item = this.roundRecordContent.children[i];
+                } else {
+                    item = cc.instantiate(this.roundRecordContent.children[0]);
+                    item.parent = this.roundRecordContent;
+                }
+                item.y = this.roundRecordContent.children[0].y - i * (item.height + 5);
+                item.active = true;
 
+                cc.find("bg_num/text_roundIndex",item).getComponent(cc.Label).string = i + 1;
+                item.getChildByName("text_time").getComponent(cc.Label).string = msg.data[i].beginTime;
+
+                let playerData =JSON.parse(msg.data[i].data);
+                let bg_score = item.getChildByName("bg_score");
+                for (var j = 0; j < playerData.length; j++) {
+                    bg_score.getChildByName("text_name" + j).getComponent(cc.Label).string = playerData[j].playername;
+                    bg_score.getChildByName("text_score_win" + j).active = (0 < playerData[j].roundScore);
+                    bg_score.getChildByName("text_score_lose" + j).active = (0 >= playerData[j].roundScore);
+                    if (0 < playerData[j].roundScore) {
+                        bg_score.getChildByName("text_score_win" + j).getComponent(cc.Label).string = playerData[j].roundScore;
+                    } else {
+                        bg_score.getChildByName("text_score_lose" + j).getComponent(cc.Label).string = '/' + Math.abs(playerData[j].roundScore);
+                    }
+                }
+                for (var j = playerData.length; j < 4; j++) {
+                    bg_score.getChildByName("text_name" + j).active = false;
+                    bg_score.getChildByName("text_score_win" + j).active = false;
+                    bg_score.getChildByName("text_score_lose" + j).active = false;
+                }
+            }
+            this.roundRecordContent.height = msg.data.length * (this.roundRecordContent.children[0].height + 5);
+
+            for(let i = msg.data.length; i < this.roundRecordContent.childrenCount; ++i){
+                this.roundRecordContent.children[i].active = false;
+            }
+        }
     },
 
     getDataStr(year,month,day){
@@ -204,12 +278,9 @@ cc.Class({
         return dataStr;
     },
 
-    onClose(){
-        this._layer.active = false;
-    },
-
     onDestroy(){
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.ROUND_RECORD, this.onRcvRoundRecord, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_record",cc.Prefab);
         }

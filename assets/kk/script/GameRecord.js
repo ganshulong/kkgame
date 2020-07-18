@@ -402,6 +402,8 @@ cc.Class({
     },
 
     onDestroy(){
+        cc.vv.NetManager.unregisterMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.ROUND_RECORD, this.onRcvRoundRecord, this);
         if(this._gameRecordLayer){
             cc.loader.releaseRes("common/prefab/GameRecord",cc.Prefab);
         }
