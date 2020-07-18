@@ -235,7 +235,7 @@ cc.Class({
     },
 
     onRcvGameRecord(msg){
-        if (1 <= msg.clubid) {
+        if (1 < msg.clubid) {
             return;
         }
         if (this._gameRecordItemList) {

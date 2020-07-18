@@ -74,9 +74,8 @@ cc.Class({
         cc.find("Layer/img_card_bg",this.node).active = (info.createUid == cc.vv.UserManager.uid);
 
         let btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
-        // Global.btnClickEvent(btn_invite,this.onCreateRoom,this);
+        Global.btnClickEvent(btn_invite,this.onClickInviteToWx,this);
         btn_invite.active = (info.createUid == cc.vv.UserManager.uid);
-
 
         this.node.addComponent("ClubExitApplyMessage");
         this.ClubExitApplyMessageJS = this.node.getComponent("ClubExitApplyMessage");
@@ -328,6 +327,10 @@ cc.Class({
         }
         this._content.active = list.length>0;
         this._content.width = width+50;
+    },
+
+    onClickInviteToWx(){
+        Global.onWXShareText(Global.ShareSceneType.WXSceneSession, "俱乐部ID", this._clubInfo.clubid);
     },
 
     onClickMsg(){

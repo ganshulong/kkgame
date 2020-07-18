@@ -87,6 +87,13 @@ cc.Class({
             Global.btnClickEvent(item,this.onClickDateItem,this);
         }
 
+        for(let i = 0; i < this.gameRecordContent.children.length; ++i){
+            this.gameRecordContent.children[i].active = false;
+        }
+        for(let i = 0; i < this.roundRecordContent.children.length; ++i){
+            this.roundRecordContent.children[i].active = false;
+        }
+
         this.curDateIndex = 0;
         this.onShowGameRecord();
         this.onClickRefresh();
@@ -208,7 +215,7 @@ cc.Class({
             }
             this.gameRecordContent.height = msg.data.length * (this.gameRecordContent.children[0].height + 5);
 
-            for(let i = msg.data.length; i < this.gameRecordContent.childrenCount; ++i){
+            for(let i = msg.data.length; i < this.gameRecordContent.children.length; ++i){
                 this.gameRecordContent.children[i].active = false;
             }
             cc.find("bg_right/panel_gameRecord/bg_top/text_roundNum",this._layer).getComponent(cc.Label).string = msg.data.length;
@@ -254,7 +261,7 @@ cc.Class({
             }
             this.roundRecordContent.height = msg.data.length * (this.roundRecordContent.children[0].height + 5);
 
-            for(let i = msg.data.length; i < this.roundRecordContent.childrenCount; ++i){
+            for(let i = msg.data.length; i < this.roundRecordContent.children.length; ++i){
                 this.roundRecordContent.children[i].active = false;
             }
         }
