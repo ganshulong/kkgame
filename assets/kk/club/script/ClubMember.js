@@ -17,6 +17,7 @@ cc.Class({
 
     start () {
         cc.vv.NetManager.registerMsg(MsgId.CLUB_MEMBER_LIST, this.onRcvMemberList, this);
+        cc.vv.NetManager.registerMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
     },
 
     showLayer(){
@@ -47,8 +48,7 @@ cc.Class({
         Global.btnClickEvent(btn_close,this.onClose,this);
 
         this.input_nameID = cc.find("bg_member/bg_input/input_nameID",this._layer);
-        let btn_search = cc.find("bg_member/bg_input/btn_search",this._layer);
-        Global.btnClickEvent(btn_search,this.onClickSearch,this);
+        this.input_nameID.on('editing-did-ended',this.onClickSearch,this);
         
         this.text_data = cc.find("bg_member/bg_data/text_data",this._layer);
         let btn_selecteData = cc.find("bg_member/bg_data/btn_selecteData",this._layer);
@@ -115,8 +115,8 @@ cc.Class({
         let inputStr = this.input_nameID.getComponent(cc.EditBox).string;
         if (inputStr && 0 < inputStr.length) {
             let searchList = [];
-            for (var i = 0; i < this.memberList.length; i++) {
-                if (parseInt(inputStr) == this.memberList[i].uid || inputStr == this.memberList[i].playername) {
+            for (let i = 0; i < this.memberList.length; i++) {
+                if (0 <= this.memberList[i].uid.toString().indexOf(inputStr) || 0 <= this.memberList[i].playername.indexOf(inputStr)) {
                     searchList.push(this.memberList[i]);
                 }
             }
@@ -223,20 +223,29 @@ cc.Class({
 
     onRcvMemberList(msg){
         if (200 == msg.code && msg.memberList) {
+            for (let i = 0; i < this.sortBtnArr.length; i++) {
+                this.sortBtnArr[i].isSmallToBig = true;
+            }
             this.memberList = msg.memberList;
-            this.initSortBtn();
+            this.clubTotalScore = 0;
+            for (let i = 0; i < this.memberList.length; i++) {
+                this.clubTotalScore += this.memberList[i].totalScore;
+            }
             this.updateMemberList();
-        }
-    },
-
-    initSortBtn(){
-        for (var i = 0; i < this.sortBtnArr.length; i++) {
-            this.sortBtnArr[i].isSmallToBig = true;
         }
     },
 
     updateMemberList(list){
         let showList = list ? list : this.memberList;
+        let clubCeateUid = cc.vv.UserManager.getCurClubInfo().createUid;
+        for (let i = 0; i < showList.length; i++) {
+            if (showList[i].uid == clubCeateUid) {
+                let clubCeateInfo = showList[i];
+                showList.splice(i, 1);
+                showList.unshift(clubCeateInfo);
+                break;
+            }
+        }
         for (let i = 0; i < showList.length; i++) {
             let item = null;
             if(i < this.memberListContent.children.length) {
@@ -249,6 +258,9 @@ cc.Class({
             item.active = true;
             
             let bg_memberItem = item.getChildByName("bg_memberItem");
+
+            bg_memberItem.getChildByName("spr_creater").active = (clubCeateUid == showList[i].uid);
+
             let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
             spr_head.getComponent(cc.Sprite).spriteFrame = this.defaultSpriteFrame;
             Global.setHead(spr_head, showList[i].usericon);
@@ -257,13 +269,15 @@ cc.Class({
             bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = showList[i].uid;
             bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = showList[i].isOnLine ? "在线" : "离线";
             bg_memberItem.getChildByName("text_state").color = showList[i].isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
-            bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = showList[i].totalScore;
+            bg_memberItem.getChildByName("text_score1").active = (clubCeateUid == showList[i].uid);
+            bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = (clubCeateUid == showList[i].uid) ? this.clubTotalScore : "";
             bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = showList[i].jushu;
             bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
             bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;
             bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = showList[i].totalScore;
             let btn_tickout = bg_memberItem.getChildByName("btn_tickout");
             btn_tickout.uid = showList[i].uid;
+            btn_tickout.playername = showList[i].playername;
             Global.btnClickEvent(btn_tickout,this.onClickTickout,this);
 
         }
@@ -275,11 +289,29 @@ cc.Class({
     },
 
     onClickTickout(event){
-        cc.log(event.target.uid);
+        let self = this;
+        self.kickUid = event.target.uid;
+        let sureCall = function () {
+            let req = { 'c': MsgId.TICKOUT_CLUB_MEMBER};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.kickUid = self.kickUid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将" + event.target.playername + "踢出亲友圈吗", sureCall, cancelCall);
+    },
+
+    onRcvTickoutMember(msg){
+        if (200 == msg.code) {
+            this.sendMemberListReq();
+            cc.vv.FloatTip.show("踢出玩家成功");
+        }
     },
 
     onDestroy(){
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_MEMBER_LIST, this.onRcvMemberList, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_member",cc.Prefab);
         }

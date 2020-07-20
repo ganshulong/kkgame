@@ -112,7 +112,7 @@ cc.Class({
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
 
         //testgsl
-        // this.onClickHistory();
+        this.onClub();
     },
 
     initClubBtn(){
