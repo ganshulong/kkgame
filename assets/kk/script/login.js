@@ -86,7 +86,7 @@ cc.Class({
         }
 
         //testgsl
-        this.onWeChatLogin();
+        // this.onWeChatLogin();
     },
 
     initBindPhoneUI() {
