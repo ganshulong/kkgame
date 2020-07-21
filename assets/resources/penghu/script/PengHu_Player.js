@@ -140,7 +140,7 @@ cc.Class({
                             break;
                         }
                     }
-                    this.showFlyIcon(data.users, -data.users[i].changeScore);
+                    this.showFlyIcon(toServerSeat, -data.users[i].changeScore);
                 }
                 break;
             }
