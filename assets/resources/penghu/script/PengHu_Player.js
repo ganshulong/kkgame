@@ -110,7 +110,15 @@ cc.Class({
         data = data.detail;
         if(data.seat === this._seatIndex){
             if (0 < data.isBaoJin) {
-                this._playerNode.getChildByName("ani_warn").active = true;
+                let self = this;
+                this._playerNode.runAction(
+                    cc.sequence(
+                        cc.delayTime(1),
+                        cc.callFunc(()=>{
+                            self._playerNode.getChildByName("ani_warn").active = true;
+                        })
+                    )
+                )
             }
         }
     },
@@ -124,7 +132,15 @@ cc.Class({
 
 
     recvRoundOver(data){
-        this._playerNode.getChildByName("ani_warn").active = false;
+        let self = this;
+        this._playerNode.runAction(
+            cc.sequence(
+                cc.delayTime(1.5),
+                cc.callFunc(()=>{
+                    self._playerNode.getChildByName("ani_warn").active = false;
+                })
+            )
+        )
         data = data.detail;
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){

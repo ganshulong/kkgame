@@ -162,7 +162,18 @@ cc.Class({
         if(data.actionInfo.curaction.source > 0){
             this.playCardSound(data.actionInfo.curaction.card,data.actionInfo.curaction.seat);
         }
-
+        if (0 < data.isBaoJin) {
+            let self = this;
+            this.node.runAction(
+                cc.sequence(
+                    cc.delayTime(1),
+                    cc.callFunc(()=>{
+                        let path = "effect/"+self.getLanguage()+self.getSex(data.seat)+"baojing";
+                        cc.vv.AudioManager.playEff(self._soundPath, path, true);
+                    })
+                )
+            )
+        }
     },
 
     // 摸牌
