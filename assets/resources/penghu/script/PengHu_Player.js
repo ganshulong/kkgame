@@ -91,14 +91,12 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, this);
 
-
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
         Global.registerEvent(EventId.OFFLINE_NOTIFY,this.onRcvOfflineNotice,this);
-
-
+        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.onRcvOutCardNotify,this);
 
         Global.registerEvent(EventId.KAN_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.PENG_NOTIFY,this.updateScore,this);
@@ -106,6 +104,15 @@ cc.Class({
         Global.registerEvent(EventId.LONG_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.HANDCARD,this.updateScore,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+    },
+
+    onRcvOutCardNotify(data){
+        data = data.detail;
+        if(data.seat === this._seatIndex){
+            if (0 < data.isBaoJin) {
+                this._playerNode.getChildByName("ani_warn").active = true;
+            }
+        }
     },
 
     onRcvOfflineNotice(data){
@@ -117,6 +124,7 @@ cc.Class({
 
 
     recvRoundOver(data){
+        this._playerNode.getChildByName("ani_warn").active = false;
         data = data.detail;
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){
@@ -125,7 +133,14 @@ cc.Class({
                 this.setHuXi(data.users[i].roundScore);
                 if (0 > data.users[i].changeScore) {
                     //该玩家输了，金币飞向其他人
-                    this.showFlyIcon(data.users);
+                    let toServerSeat = 0;
+                    for (let j = 0; j < data.users.length; j++) {
+                        if (0 < data.users[j].changeScore) {
+                            toServerSeat = data.users[j].seat;
+                            break;
+                        }
+                    }
+                    this.showFlyIcon(data.users, -data.users[i].changeScore);
                 }
                 break;
             }
@@ -180,23 +195,21 @@ cc.Class({
                     this.setHuXi(list[i].roundScore);
                     if (0 > list[i].changeScore) {   
                         //该玩家输了，金币飞向其他人
-                        this.showFlyIcon(list);
+                        let toServerSeat = 0;
+                        for (let j = 0; j < list.length; j++) {
+                            if (0 < list[j].changeScore) {
+                                toServerSeat = list[j].seat;
+                                break;
+                            }
+                        }
+                        this.showFlyIcon(toServerSeat, -list[i].changeScore);
                     }
                 }
             }
         }
     },
 
-    showFlyIcon(list){
-        let toServerSeat = 0;
-        let iconNum = 0;
-        for (let j = 0; j < list.length; j++) {
-            if (0 < list[j].changeScore) {
-                toServerSeat = list[j].seat;
-                iconNum = list[j].changeScore;
-                break;
-            }
-        }
+    showFlyIcon(toServerSeat,iconNum){
         if (0 < toServerSeat && 0 < iconNum) {
             let toLocalSeat = cc.vv.gameData.getLocalChair(toServerSeat);
             let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
@@ -204,7 +217,7 @@ cc.Class({
             let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
             for (var j = 0; j < iconNum; j++) {
                 let icon = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
-                icon.parent = this._playerNode.parent;
+                icon.parent = this._playerNode.parent.getChildByName("ndoe_fly_icon");
                 icon.position = this._playerNode.position;
                 icon.active = true;
                 icon.runAction(
@@ -281,6 +294,7 @@ cc.Class({
             this.showZhuang(false);
             this.setHuXi(user.roundScore?user.roundScore:0);
             this.showReady(user.state === 1);
+            this._playerNode.getChildByName("ani_warn").active = (0 < user.isBaoJin);
         }
     },
 

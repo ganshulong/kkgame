@@ -54,7 +54,7 @@ cc.Class({
                     chairId = 2;
                 }
                 let node = cc.find("scene/playback_handle/player"+chairId,this.node);
-                this.showHandCard(users[i].handInCards,node);
+                this.showHandCard(users[i].handInCards, node, (1 == chairId));
             }
         }
 
@@ -69,14 +69,18 @@ cc.Class({
         }
     },
 
-    showHandCard(list,parent){
+    showHandCard(list,parent,isRightPlayer){
         let tempList = cc.vv.gameData.sortCard(list);
         for(let i=0;i<tempList.length;++i){
             for(let j=0;j<tempList[i].length;++j) {
                 let node = this.node.getComponent("PengHu_Card").createCard(tempList[i][j],2);
 
                 node.y = node.height*j;
-                node.x = node.width*i;
+                if (isRightPlayer) {
+                    node.x = -node.width*i;
+                } else {
+                    node.x = node.width*i;
+                }
                 node.parent = parent;
             }
         }

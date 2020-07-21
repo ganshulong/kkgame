@@ -262,3 +262,6 @@ GlobalMsgId.TICKOUT_CLUB_MEMBER = 8822; 	// 踢出俱乐部成员
 
 GlobalMsgId.FREEZE_CLUB_NOTIFY = 18811; 	// 冻结/解冻俱乐部通知
 GlobalMsgId.DISMISS_CLUB_NOTIFY = 18810; 	// 解散俱乐部通知
+
+GlobalMsgId.WARN_5_FU = 167; 				//5福警报
+

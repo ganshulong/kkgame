@@ -83,11 +83,14 @@ cc.Class({
 
             let endPos = cc.v2(0,0);
             endPos.y = 36*i;
-            if(cc.vv.gameData.getPlayerNum() === 4 && this._chairId == 1) endPos.x = -37*this._num;
-            else endPos.x = 37*this._num;
+            if(cc.vv.gameData.getPlayerNum() === 4 && this._chairId == 1) {
+                endPos.x = -37*this._num;
+            } else {
+                endPos.x = 37*this._num;
+            }
             // 2排
             if(this._chairId === 3){
-                endPos.x = -37*this._num;
+                // endPos.x = -37*this._num;
             }
 
             if(showAction){
@@ -235,8 +238,6 @@ cc.Class({
                             }
                             this.showCard(list,typeData.type,source);
                         }
-
-
                         break;
                     }
                 }

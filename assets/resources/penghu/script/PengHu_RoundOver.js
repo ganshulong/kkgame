@@ -236,6 +236,11 @@ cc.Class({
     },
 
     onClose(){
+        let ndoe_fly_icon = this._overRoundNode.parent.getChildByName("ndoe_fly_icon");
+        for(let i = 0; i < ndoe_fly_icon.children.length; ++i){
+            ndoe_fly_icon.children[i].stopAllActions();
+            ndoe_fly_icon.children[i].removeFromParent();
+        }
         this._overRoundNode.removeFromParent(true);
         this._overRoundNode = null;
         this._show = false;

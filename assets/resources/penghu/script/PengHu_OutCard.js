@@ -67,7 +67,7 @@ cc.Class({
 
     getEndPos(cardsNum){
         let endPos = cc.v2(0,0);
-        let y = parseInt(cardsNum/5);
+        let y = parseInt(cardsNum/5);   //竖行
         let x = cardsNum%5;
         let width = 37;
         let height = 36;
@@ -76,14 +76,17 @@ cc.Class({
             endPos.x = width*x;
             endPos.y = height*y;
         }
+        //右
         else if(this._playerNum === 4 && this._chairId === 1){
-            endPos.y = height*y;
-            endPos.x = -width*x;
+            endPos.y = height*x;
+            endPos.x = -width*y;
         }
+        //上
         else if((this._playerNum === 2 && this._chairId === 1) || this._chairId === 2){
             endPos.x = width*x;
             endPos.y = -height*y;
         }
+        //左
         else if(this._chairId === 3){
             endPos.y = height*x;
             endPos.x = -width*y;
