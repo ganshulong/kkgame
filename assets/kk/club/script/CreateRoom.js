@@ -151,7 +151,7 @@ cc.Class({
         if (this._isClubRoom) {
             req.clubid = cc.vv.UserManager.currClubId;
         }
-        req.gameid = this._isClubRoom ? 3 : 1;
+        req.gameid = this._isClubRoom ? 1 : 3;
         req.gamenum = 8;
         req.param1 = 0;
         req.score = 1;
@@ -281,7 +281,7 @@ cc.Class({
         if (this._isClubRoom) {
             req.clubid = cc.vv.UserManager.currClubId;
         }
-        req.gameid = this._isClubRoom ? 4 : 2;
+        req.gameid = this._isClubRoom ? 2 : 4;
 
         let round = layer.getChildByName("round");
         for (var i = 0; i < round.children.length; i++) {

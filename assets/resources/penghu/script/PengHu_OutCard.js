@@ -89,7 +89,7 @@ cc.Class({
         //左
         else if(this._chairId === 3){
             endPos.y = height*x;
-            endPos.x = -width*y;
+            endPos.x = width*y;
         }
         return endPos;
     },
