@@ -207,6 +207,13 @@ cc.Class({
 
     recvPaoNotify(data){
         data = data.detail;
+        if (this._outCardValue) {
+            for (let j = 0; j < this._outCardValue.length; j++) {
+                if (data.actionInfo.curaction.card == this._outCardValue[j]) {
+                    this._outCardValue.splice(j,1)
+                }
+            }
+        }
         if(data.delQiPaiSeat === this._seatIndex){
             let card = data.delQiPaiCard;
             let node = null;
