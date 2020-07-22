@@ -27,7 +27,7 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
-        _overRoundNode:null,
+        _layer:null,
         _show:false,
         _isOver:false,
         _OverScoreNode:null,
@@ -83,19 +83,21 @@ cc.Class({
 
     recvRoundOver(data){
         data = data.detail;
-        if(this._overRoundNode === null){
+        if(this._layer === null){
             cc.loader.loadRes("common/prefab/Paohuzi_round_over_view",(err,prefab)=>{
                 if(err === null){
-                    this._overRoundNode = cc.instantiate(prefab);
-                    this._overRoundNode.parent = this.node.getChildByName("scene");
-                    this._overRoundNode.zIndex = 3;
-                    this._overRoundNode.active = false;
-                    this._overRoundNode.x = this.node.width/2;
-                    this._overRoundNode.y = this.node.height/2;
+                    this._layer = cc.instantiate(prefab);
+                    this._layer.parent = this.node.getChildByName("scene");
+                    this._layer.scaleX = this.node.width / this._layer.width;
+                    this._layer.scaleY = this.node.height / this._layer.height;
+                    this._layer.zIndex = 3;
+                    this._layer.active = false;
+                    this._layer.x = this.node.width/2;
+                    this._layer.y = this.node.height/2;
                     this.initPlayerInfo(data.users,data.seat,data.hcard,data.source,data.hupaiType);
                     this.initRoomInfo(data.seat>0);
                     this.scheduleOnce(()=>{
-                        this._overRoundNode.active = true;
+                        this._layer.active = true;
                     },2);
                 }
             })
@@ -122,17 +124,16 @@ cc.Class({
         for(let i=0;i<3;++i){
             if(i<users.length){
                 let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
-                let player = cc.find("sp_bg/player"+chairId,this._overRoundNode);
+                let player = cc.find("sp_bg/player"+chairId,this._layer);
                 player.active = true;
-                let head = cc.find("overUser/head",player);
-                let name = head.getChildByName("name");
-                name.getComponent(cc.Label).string = users[i].playername;
 
-                let id = head.getChildByName("id");
-                id.getComponent(cc.Label).string = "ID:"+users[i].uid;
+                let spr_head = cc.find("head/radio_mask/spr_head",player);
+                Global.setHead(spr_head, users[i].usericon);
 
-                let icon = cc.find("radio_mask/spr_head",head);
-                Global.setHead(icon,users[i].usericon);
+                player.getChildByName("text_name").getComponent(cc.Label).string = users[i].playername;
+                player.getChildByName("text_id").getComponent(cc.Label).string = "ID:"+users[i].uid;
+
+                player.getChildByName("text_score").getComponent(cc.Label).string = users[i].roundScore;
 
                 let handCardNode = player.getChildByName("panel_cards");
                 let cardValue = null;
@@ -147,7 +148,7 @@ cc.Class({
                 }
 
                 // 胡息
-                let score = player.getChildByName("lbl_num");
+                let score = player.getChildByName("text_score");
                 score.getComponent(cc.Label).string = users[i].roundScore;
                 let img_signal = player.getChildByName("img_signal");
                 img_signal.active = users[i].roundScore<0;
@@ -174,7 +175,7 @@ cc.Class({
                 if(hupaiType>0) this.showHuType(hupaiType,huflag);
 
             }
-            else cc.find("sp_bg/player"+i,this._overRoundNode).active = false;
+            else cc.find("sp_bg/player"+i,this._layer).active = false;
         }
     },
 
@@ -216,13 +217,13 @@ cc.Class({
 
     initRoomInfo(isHu){
         let conf = cc.vv.gameData.getRoomConf();
-        let roomId = cc.find("sp_bg/roomInfoNode/txt_room_id",this._overRoundNode);
+        let roomId = cc.find("sp_bg/roomInfoNode/txt_room_id",this._layer);
         roomId.getComponent(cc.Label).string = "游戏号:" + conf.deskId;
 
-        let roundNum = cc.find("sp_bg/roomInfoNode/txt_round_num",this._overRoundNode);
+        let roundNum = cc.find("sp_bg/roomInfoNode/txt_round_num",this._layer);
         roundNum.getComponent(cc.Label).string = "(" + cc.vv.gameData.getDeskInfo().round + "/" + conf.gamenum + "局)";
 
-        let desc = cc.find("sp_bg/roomInfoNode/txt_game_desc",this._overRoundNode);
+        let desc = cc.find("sp_bg/roomInfoNode/txt_game_desc",this._layer);
         let str = "";
         let list = cc.vv.gameData.getWanFa();
         for(let i=0;i<list.length;++i){
@@ -230,19 +231,19 @@ cc.Class({
         }
         desc.getComponent(cc.Label).string = str;
 
-        let okBtn = this._overRoundNode.getChildByName("btn_comfirm");
+        let okBtn = this._layer.getChildByName("btn_comfirm");
         Global.btnClickEvent(okBtn,this.onClose,this);
 
     },
 
     onClose(){
-        let ndoe_fly_icon = this._overRoundNode.parent.getChildByName("ndoe_fly_icon");
+        let ndoe_fly_icon = this._layer.parent.getChildByName("ndoe_fly_icon");
         for(let i = 0; i < ndoe_fly_icon.children.length; ++i){
             ndoe_fly_icon.children[i].stopAllActions();
             ndoe_fly_icon.children[i].removeFromParent();
         }
-        this._overRoundNode.removeFromParent(true);
-        this._overRoundNode = null;
+        this._layer.removeFromParent(true);
+        this._layer = null;
         this._show = false;
         if(this._isOver) Global.dispatchEvent(EventId.SHOW_GAMEOVER);
         else Global.dispatchEvent(EventId.CLOSE_ROUNDVIEW);
@@ -329,16 +330,16 @@ cc.Class({
 
     clearDesk(){
         this._num = 0;
-        if(this._overRoundNode){
-            this._overRoundNode.removeFromParent(true);
-            this._overRoundNode = null;
+        if(this._layer){
+            this._layer.removeFromParent(true);
+            this._layer = null;
         }
         this._show = false;
         this._OverScoreNode.active = false;
     },
 
     onDestroy(){
-        if(this._overRoundNode){
+        if(this._layer){
             cc.loader.releaseRes("common/prefab/Paohuzi_round_over_view",cc.Prefab);
         }
     }

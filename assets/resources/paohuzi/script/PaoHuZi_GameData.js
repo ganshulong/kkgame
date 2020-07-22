@@ -226,14 +226,21 @@ cc.Class({
         let conf = this._deskInfo.conf;
         list.push(conf.gamenum+"局 ");
         list.push(conf.seat+ "人 ");
-        if(conf.param1 === 0) list.push("连中 ");
-        else if(conf.param1 === 1) list.push("中庄x2 ");
-        else if(conf.param1 === 2) list.push("四首相乘 ");
+        list.push(["蚂蚁上树 ","见三加一 ","见六加一 "][conf.scoreType-1]);
         list.push(conf.score+ "倍 ");
-        if(conf.speed === 1)list.push("快速 ");
-        if(conf.trustee) list.push("托管 ");
-        if(conf.ipcheck) list.push("同IP禁止进入 ");
-        if(conf.distance) list.push("距离相近200米禁止加入 ");
+        if(conf.speed === 1){
+            list.push("快速 ");
+        }
+        if(conf.trustee){
+            list.push("托管 ");
+        }
+        list.push(["禁止解散 ","允许解散 "][conf.isdissolve]);
+        if(conf.ipcheck){
+            list.push("同IP禁止进入 "); 
+        } 
+        if(conf.distance){
+            list.push("距离相近200米禁止加入 "); 
+        } 
         return list;
     },
 

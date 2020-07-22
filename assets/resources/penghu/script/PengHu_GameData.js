@@ -245,10 +245,19 @@ cc.Class({
         else if(conf.param1 === 1) list.push("中庄x2 ");
         else if(conf.param1 === 2) list.push("四首相乘 ");
         list.push(conf.score+ "倍 ");
-        if(conf.speed === 1)list.push("快速 ");
-        if(conf.trustee) list.push("托管 ");
-        if(conf.ipcheck) list.push("同IP禁止进入 ");
-        if(conf.distance) list.push("距离相近200米禁止加入 ");
+        if(conf.speed === 1){
+            list.push("快速 ");
+        }
+        if(conf.trustee){
+            list.push("托管 ");
+        }
+        list.push(["禁止解散 ","允许解散 "][conf.isdissolve]);
+        if(conf.ipcheck){
+            list.push("同IP禁止进入 "); 
+        } 
+        if(conf.distance){
+            list.push("距离相近200米禁止加入 "); 
+        } 
         return list;
     },
 

@@ -302,8 +302,14 @@ cc.Class({
             }
         }
 
-        let wanfa = cc.find("wanfa/toggle0",layer);
-        req.isYiwushi = wanfa.getComponent(cc.Toggle).isChecked ? 1 : 0;
+        let wanfa = layer.getChildByName("wanfa");
+        for (var i = 0; i < wanfa.children.length; i++) {
+            let toggle = wanfa.getChildByName("toggle" + i);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.scoreType = [1,2,3][i]
+                break;
+            }
+        }
 
         let score = layer.getChildByName("score");
         for (var i = 0; i < score.children.length; i++) {
@@ -356,8 +362,12 @@ cc.Class({
             break;
         }
 
-        let wanfa = cc.find("wanfa/toggle0",layer);
-        wanfa.getComponent(cc.Toggle).isChecked = true;
+        let wanfa = layer.getChildByName("wanfa");
+        for (var i = 0; i < wanfa.children.length; i++) {
+            let toggle = wanfa.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
+        }
 
         let score = layer.getChildByName("score");
         for (var i = 0; i < score.children.length; i++) {
