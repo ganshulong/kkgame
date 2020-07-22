@@ -139,17 +139,17 @@ cc.Class({
                 this._score = data.users[i].score;
                 this.setTotalScore(this._score);
                 this.setHuXi(data.users[i].roundScore);
-                if (0 > data.users[i].changeScore) {
-                    //该玩家输了，金币飞向其他人
-                    let toServerSeat = 0;
-                    for (let j = 0; j < data.users.length; j++) {
-                        if (0 < data.users[j].changeScore) {
-                            toServerSeat = data.users[j].seat;
-                            break;
-                        }
-                    }
-                    this.showFlyIcon(toServerSeat, -data.users[i].changeScore);
-                }
+                // if (0 > data.users[i].changeScore) {
+                //     //该玩家输了，金币飞向其他人
+                //     let toServerSeat = 0;
+                //     for (let j = 0; j < data.users.length; j++) {
+                //         if (0 < data.users[j].changeScore) {
+                //             toServerSeat = data.users[j].seat;
+                //             break;
+                //         }
+                //     }
+                //     this.showFlyIcon(toServerSeat, -data.users[i].changeScore);
+                // }
                 break;
             }
         }
@@ -201,17 +201,17 @@ cc.Class({
             for(let i=0;i<list.length;++i){
                 if(list[i].seat === this._seatIndex){
                     this.setHuXi(list[i].roundScore);
-                    if (0 > list[i].changeScore) {   
-                        //该玩家输了，金币飞向其他人
-                        let toServerSeat = 0;
-                        for (let j = 0; j < list.length; j++) {
-                            if (0 < list[j].changeScore) {
-                                toServerSeat = list[j].seat;
-                                break;
-                            }
-                        }
-                        this.showFlyIcon(toServerSeat, -list[i].changeScore);
-                    }
+                    // if (0 > list[i].changeScore) {   
+                    //     //该玩家输了，金币飞向其他人
+                    //     let toServerSeat = 0;
+                    //     for (let j = 0; j < list.length; j++) {
+                    //         if (0 < list[j].changeScore) {
+                    //             toServerSeat = list[j].seat;
+                    //             break;
+                    //         }
+                    //     }
+                    //     this.showFlyIcon(toServerSeat, -list[i].changeScore);
+                    // }
                 }
             }
         }

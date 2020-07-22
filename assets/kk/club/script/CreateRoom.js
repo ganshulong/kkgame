@@ -120,6 +120,7 @@ cc.Class({
             if (toggle.getComponent(cc.Toggle).isChecked) {
                 this.curGameIndex = i;
             }
+            this.toggle_gameBtns.children[i].getChildByName("selected_bg").active = toggle.getComponent(cc.Toggle).isChecked;
             this.gamePanels[i].active = toggle.getComponent(cc.Toggle).isChecked;
         }
     },
