@@ -230,11 +230,20 @@ cc.Class({
 
     onEnterDeskResult(msg){
         if(msg.code === 200){
-            if(cc.vv.gameData === null){
-                let data = require("PengHu_GameData");
-                cc.vv.gameData = new data();
-                cc.vv.gameData.init(msg.response.deskInfo);
-                cc.vv.SceneMgr.enterScene("penghu");
+            if(msg.response.deskInfo.conf.gameid === 2 || msg.response.deskInfo.conf.gameid === 4){
+                if(cc.vv.gameData === null){
+                    let data = require("PengHu_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("penghu");
+                }
+            } else if(msg.response.deskInfo.conf.gameid === 2 || msg.response.deskInfo.conf.gameid === 4){
+                if(cc.vv.gameData === null){
+                    let data = require("PaoHuZi_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("paohuzi");
+                }
             }
         }
     },

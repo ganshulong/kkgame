@@ -333,7 +333,7 @@ cc.Class({
         var data = {};
         data.c = this._isClubRoom ? MsgId.ADDGAME : MsgId.GAME_CREATEROOM;
         data.gameInfo = req;
-        // cc.vv.NetManager.send(data);
+        cc.vv.NetManager.send(data);
     },
 
     clearPaoHuZi(){
@@ -345,12 +345,14 @@ cc.Class({
         for (var i = 0; i < round.children.length; i++) {
             let toggle = round.getChildByName("toggle" + i);
             toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
         }
 
         let player_num = layer.getChildByName("player_num");
         for (var i = 0; i < player_num.children.length; i++) {
             let toggle = player_num.getChildByName("toggle" + i);
             toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
         }
 
         let wanfa = cc.find("wanfa/toggle0",layer);
@@ -360,12 +362,14 @@ cc.Class({
         for (var i = 0; i < score.children.length; i++) {
             let toggle = score.getChildByName("toggle" + i);
             toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
         }
 
         let speed = layer.getChildByName("speed");
         for (var i = 0; i < speed.children.length; i++) {
             let toggle = speed.getChildByName("toggle" + i);
             toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
         }
 
         let trusteeship = cc.find("trusteeship/toggle0",layer);

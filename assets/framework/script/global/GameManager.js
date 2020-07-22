@@ -425,6 +425,13 @@ cc.Class({
                         cc.vv.gameData.init(msgDic.deskInfo);
                         cc.vv.SceneMgr.enterScene("penghu");
                     }
+                } else if(msgDic.deskInfo.conf.gameid === 2 || msgDic.deskInfo.conf.gameid === 4){
+                    if(cc.vv.gameData === null){
+                        let data = require("PaoHuZi_GameData");
+                        cc.vv.gameData = new data();
+                        cc.vv.gameData.init(msgDic.deskInfo);
+                        cc.vv.SceneMgr.enterScene("paohuzi");
+                    }
                 }
             }
 
