@@ -197,10 +197,13 @@ cc.Class({
     updateScore(data){
         if(this._playerNode){
             data = data.detail;
-            let list = data.notyScoreChang;
-            for(let i=0;i<list.length;++i){
-                if(list[i].seat === this._seatIndex){
-                    this.setHuXi(list[i].roundScore);
+            if (data.seat === this._seatIndex) {
+                this.setHuXi(data.huxi);
+            }
+            // let list = data.notyScoreChang;
+            // for(let i=0;i<list.length;++i){
+                // if(list[i].seat === this._seatIndex){
+                    // this.setHuXi(list[i].roundScore);
                     // if (0 > list[i].changeScore) {   
                     //     //该玩家输了，金币飞向其他人
                     //     let toServerSeat = 0;
@@ -212,8 +215,8 @@ cc.Class({
                     //     }
                     //     this.showFlyIcon(toServerSeat, -list[i].changeScore);
                     // }
-                }
-            }
+                // }
+            // }
         }
     },
 
@@ -300,7 +303,7 @@ cc.Class({
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
             this.showZhuang(false);
-            this.setHuXi(user.roundScore?user.roundScore:0);
+            this.setHuXi(user.roundHuXi?user.roundHuXi:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("ani_warn").active = (0 < user.isBaoJin);
         }

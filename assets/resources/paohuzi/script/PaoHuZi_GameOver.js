@@ -54,7 +54,7 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        cc.loader.loadRes("common/prefab/gameOverView",(err,prefab)=>{
+        cc.loader.loadRes("common/prefab/Paohuzi_game_over_view",(err,prefab)=>{
             if(err === null){
                 this._gameOverNode = cc.instantiate(prefab);
                 this._gameOverNode.active = this._show;
@@ -160,7 +160,7 @@ cc.Class({
     },
 
     onDestroy(){
-        if(this._gameOverNode) cc.loader.releaseRes("common/prefab/gameOverView",cc.Prefab);
+        if(this._gameOverNode) cc.loader.releaseRes("common/prefab/Paohuzi_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });
