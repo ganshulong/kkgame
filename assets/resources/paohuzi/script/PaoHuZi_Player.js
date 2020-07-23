@@ -198,7 +198,9 @@ cc.Class({
         if(this._playerNode){
             data = data.detail;
             if (data.seat === this._seatIndex) {
-                this.setHuXi(data.huxi);
+                if (MsgId.SENDCARD != data.c) {
+                    this.setHuXi(data.huxi);
+                }
             }
             // let list = data.notyScoreChang;
             // for(let i=0;i<list.length;++i){
