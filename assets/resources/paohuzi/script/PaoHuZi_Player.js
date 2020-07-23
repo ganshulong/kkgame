@@ -90,6 +90,7 @@ cc.Class({
         Global.registerEvent(EventId.OFFLINE_NOTIFY,this.onRcvOfflineNotice,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.onRcvOutCardNotify,this);
 
+        Global.registerEvent(EventId.CHI_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.KAN_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.PENG_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.PAO_NOTIFY,this.updateScore,this);

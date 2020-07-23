@@ -627,6 +627,14 @@ cc.Class({
     recvPaoAndLongNotify(data){
         data = data.detail;
         if(this._chairId === 0){
+            if(data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
+                if (data.ishand) {
+                    for (var i = 0; i < 3; i++) {
+                        this.delHandCard(data.actionInfo.curaction.card);
+                    }
+                    this.resetCardPos();
+                }
+            }
             if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex()){
                 this._canOutCard = true;
                 this.showOutLine(this._canOutCard);

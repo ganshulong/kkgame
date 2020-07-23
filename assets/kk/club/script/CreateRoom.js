@@ -358,7 +358,7 @@ cc.Class({
         let player_num = layer.getChildByName("player_num");
         for (var i = 0; i < player_num.children.length; i++) {
             let toggle = player_num.getChildByName("toggle" + i);
-            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            toggle.getComponent(cc.Toggle).isChecked = (i === 1);
             break;
         }
 

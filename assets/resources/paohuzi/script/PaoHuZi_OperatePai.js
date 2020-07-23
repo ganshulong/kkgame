@@ -236,19 +236,27 @@ cc.Class({
     recvPaoNotify(data){
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
-            let card = data.actionInfo.curaction.card;
-            this.addCard(card,false);
+            if (data.ishand) {
+                let card = data.actionInfo.curaction.card;
+                this.showCard([card,card,card,card],cc.vv.gameData.OPERATETYPE.PAO,0,true);
+            } else {
+                let card = data.actionInfo.curaction.card;
+                this.addCard(card,false);
+            }
         }
-
     },
 
     recvLongNotify(data){
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
-            let card = data.actionInfo.curaction.card;
-            this.addCard(card,true);
+            if (data.ishand) {
+                let card = data.actionInfo.curaction.card;
+                this.showCard([card,card,card,card],cc.vv.gameData.OPERATETYPE.LONG,0,true);
+            } else {
+                let card = data.actionInfo.curaction.card;
+                this.addCard(card,true); 
+            }
         }
-
     },
 
     addCard(card,showBg){
