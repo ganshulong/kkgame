@@ -27,18 +27,18 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
-        _gameOverNode:null,
+        _layer:null,
         _loseBgSpr:null,
         _winBgSpr:null,
         _show:false,
-
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {},
-    init(atlas){
+    init(atlas,yinxiAtlas){
         this._atlas = atlas;
+        this._yinxiAtlas = yinxiAtlas;
     },
 
     start () {
@@ -49,34 +49,36 @@ cc.Class({
 
     recvShowGameOver(){
         this._show = true;
-        if(this._gameOverNode) this._gameOverNode.active = true;
+        if(this._layer) this._layer.active = true;
     },
 
     recvGameOver(data){
         data = data.detail;
         cc.loader.loadRes("common/prefab/Paohuzi_game_over_view",(err,prefab)=>{
             if(err === null){
-                this._gameOverNode = cc.instantiate(prefab);
-                this._gameOverNode.active = this._show;
-                this._gameOverNode.zIndex = 1;
-                this._gameOverNode.parent = this.node.getChildByName("scene");
-                this._gameOverNode.x = this.node.width/2;
-                this._gameOverNode.y = this.node.height/2;
+                this._layer = cc.instantiate(prefab);
+                this._layer.parent = this.node.getChildByName("scene");
+                this._layer.scaleX = this.node.width / this._layer.width;
+                this._layer.scaleY = this.node.height / this._layer.height;
+                this._layer.active = this._show;
+                this._layer.zIndex = 1;
+                this._layer.x = this.node.width/2;
+                this._layer.y = this.node.height/2;
 
-                this._winBgSpr = cc.find("game_end_bg/player0/img_bg",this._gameOverNode).getComponent(cc.Sprite).spriteFrame;
-                this._loseBgSpr = cc.find("game_end_bg/player1/img_bg",this._gameOverNode).getComponent(cc.Sprite).spriteFrame;
+                this._winBgSpr = cc.find("game_end_bg/player0/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
+                this._loseBgSpr = cc.find("game_end_bg/player1/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
 
-                let btnBtn = this._gameOverNode.getChildByName("btn_back");
+                let btnBtn = this._layer.getChildByName("btn_back");
                 Global.btnClickEvent(btnBtn,this.onBack,this);
 
-                let btn_share = this._gameOverNode.getChildByName("btn_share");
+                let btn_share = this._layer.getChildByName("btn_share");
                 Global.btnClickEvent(btn_share,this.onShare,this);
 
-                this._gameOverNode.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
-                this._gameOverNode.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
+                this._layer.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
+                this._layer.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
 
                 // 创建者
-                let creator = cc.find("game_end_bg/creator",this._gameOverNode);
+                let creator = cc.find("game_end_bg/creator",this._layer);
                 let icon = cc.find("radio_mask/spr_head",creator);
                 Global.setHead(icon,data.createUser.usericon);
 
@@ -88,25 +90,22 @@ cc.Class({
                     return b.dianPaoCount - a.dianPaoCount;
                 });
 
-
                 let scoreList = data.users.slice(0);
                 scoreList.sort((a,b)=>{
                     return b.score - a.score;
                 });
 
-                for(let i=0;i<3;++i){
-                    let player = cc.find("game_end_bg/player"+i,this._gameOverNode);
-                    if(i<data.users.length){
-                        this.initPlayer(player,data.users[i],paoList[0].dianPaoCount>0?paoList[0].uid:0,scoreList[0].uid);
-                        player.active = true;
-                    }
-                    else{
-                        player.active = false;
-                    }
-                    if(cc.vv.gameData.getPlayerNum()===2){
-                        if(i===0)player.x = -180;
-                        else if(i===1)player.x = 280;
-                    }
+                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-375,0,375]];
+                let dianPaoWangId = paoList[0].dianPaoCount > 0 ? paoList[0].uid : 0;
+                let bigWinerId = scoreList[0].uid;
+                for(let i = 0; i < data.users.length; ++i){
+                    let player = cc.find("game_end_bg/player"+i,this._layer);
+                    this.initPlayer(player,data.users[i], dianPaoWangId, bigWinerId);
+                    player.x = posArr[data.users.length][i];
+                    player.active = true;
+                }
+                for(let i = data.users.length; i < 3; ++i){
+                    cc.find("game_end_bg/player"+i,this._layer).active = false;
                 }
             }
         })
@@ -123,44 +122,43 @@ cc.Class({
 
     initPlayer(player,user,dianPaoWangId,dayingjiaID){
         if(player){
-            player.getChildByName("txt_name").getComponent(cc.Label).string = user.playername;
-            player.getChildByName("txt_id").getComponent(cc.Label).string = "ID:"+user.uid;
-
             let img_bg = player.getChildByName("img_bg");
             img_bg.getComponent(cc.Sprite).spriteFrame = user.score >= 0 ? this._winBgSpr : this._loseBgSpr;
-
-            img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
-                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
-
-            img_bg.getChildByName("title_zhongzhuang_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
-                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_zhongzhuang_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_zhongzhuang_num");
-            img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
-                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_dianpao_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_dianpao_num");
-
-            img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
-            img_bg.getChildByName("zhongzhuang_num").getComponent(cc.Label).string = user.zhongZhangCount;
-            img_bg.getChildByName("dianpao_num").getComponent(cc.Label).string = user.dianPaoCount;
-            let score = user.score + "";
-            if(score<0) score = "/"+ (-score);
-            img_bg.getChildByName("score").getComponent(cc.Label).string = score;
-            player.active = true;
-
-            player.getChildByName("flag_dianpao").active = user.uid === dianPaoWangId;
-            player.getChildByName("flag_dayingjia").active = user.uid === dayingjiaID;
 
             let head = player.getChildByName("head");
             let icon = cc.find("radio_mask/spr_head",head);
             Global.setHead(icon,user.usericon);
 
+            player.getChildByName("flag_dianpao").active = user.uid === dianPaoWangId;
+            player.getChildByName("flag_dayingjia").active = user.uid === dayingjiaID;
+
+            player.getChildByName("txt_name").getComponent(cc.Label).string = user.playername;
+            player.getChildByName("txt_id").getComponent(cc.Label).string = "ID:"+user.uid;
+
+            img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
+
+            img_bg.getChildByName("title_yinxi_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+                this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-win_all_huxi"):this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-lose_all_huxi");
+
+            img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
+            img_bg.getChildByName("yinxi_num").getComponent(cc.Label).string = user.totalHuXi;
+
+            let score = user.score + "";
+            if(score < 0) {
+                score = "/"+ (-score);
+            }
+            img_bg.getChildByName("score").getComponent(cc.Label).string = score;
+
             if(cc.vv.UserManager.uid === user.uid){
-                cc.find("game_end_bg/win_title",this._gameOverNode).active = user.score>=0;
-                cc.find("game_end_bg/lose_title",this._gameOverNode).active = user.score<0;
+                cc.find("game_end_bg/win_title",this._layer).active = user.score >= 0;
+                cc.find("game_end_bg/lose_title",this._layer).active = user.score < 0;
             }
         }
     },
 
     onDestroy(){
-        if(this._gameOverNode) cc.loader.releaseRes("common/prefab/Paohuzi_game_over_view",cc.Prefab);
+        if(this._layer) cc.loader.releaseRes("common/prefab/Paohuzi_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });

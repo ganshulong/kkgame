@@ -30,6 +30,7 @@ cc.Class({
         cardsAtlas:cc.SpriteAtlas,
         emjoAtlas:cc.SpriteAtlas,
         tableAtlas:cc.SpriteAtlas,
+        yinxiAtlas:cc.SpriteAtlas,
         _gameCount:0,
 
     },
@@ -108,7 +109,7 @@ cc.Class({
         this.node.addComponent("PaoHuZi_Action");
         this.node.addComponent("PaoHuZi_RemainCard");
         this.node.addComponent("PaoHuZi_RoundOver").init(this.tableAtlas);
-        this.node.addComponent("PaoHuZi_GameOver").init(this.tableAtlas);
+        this.node.addComponent("PaoHuZi_GameOver").init(this.tableAtlas,this.yinxiAtlas);
         this.node.addComponent("PaoHuZi_Sound");
         this.node.addComponent("PaoHuZi_Chat");
         this.node.addComponent("PaoHuZi_Setting");

@@ -141,13 +141,28 @@ cc.Class({
                 bgNode.parent = panel_CardInfo.getChildByName("card_last");
             }
 
-            if (winerInfo && winerInfo.menzi) {
+            if (winerInfo) {
                 let panel_cardArrs = panel_CardInfo.getChildByName("panel_cardArrs");
                 let cardArrItemTemp = panel_cardArrs.getChildByName("cardArrItemTemp");
-                for (let i = 0; i < winerInfo.menzi.length; i++) {
+
+                let tempList = cc.vv.gameData.sortCard(data.users[i].handInCards);
+                for(let i=0; i < tempList.length; ++i){
                     let cardArrItem = cc.instantiate(cardArrItemTemp);
                     cardArrItem.parent = panel_cardArrs;
                     cardArrItem.x = i * 70;
+
+                    for(let j = 0; j < tempList[i].length; ++j) {
+                        let node = this.node.getComponent("PaoHuZi_Card").createCard(tempList[i][j],2);
+                        node.y = node.height * j;
+                        node.x = node.width*i*node.scale+20;
+                        node.parent = cardArrItem;
+                    }
+                }
+
+                for (let i = 0; i < winerInfo.menzi.length; i++) {
+                    let cardArrItem = cc.instantiate(cardArrItemTemp);
+                    cardArrItem.parent = panel_cardArrs;
+                    cardArrItem.x = (tempList.length + i) * 70;
 
                     let cardArr = winerInfo.menzi[i].data;
                     if(winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.KAN ||
@@ -165,6 +180,7 @@ cc.Class({
                         node.y = node.height * j;
                         node.parent = cardArrItem;
                     }
+
                     let typeNode = this.createType(winerInfo.menzi[i].type);
                     typeNode.y = 200;
                     typeNode.parent = cardArrItem;

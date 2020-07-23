@@ -68,6 +68,7 @@ cc.Class({
                 let user = cc.vv.gameData.getUserInfo(this._seatIndex);
                 if(user.handInCards && user.handInCards.length>0){
                     let list = cc.vv.gameData.sortCard(user.handInCards);
+                    this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(user.handInCards);
                     for(let i=0;i<list.length;++i){
                         this.showCard(list[i],list.length);
                     }
@@ -129,6 +130,11 @@ cc.Class({
             if(this._num<this._cardBox.length && i<this._cardBox[this._num].length){
                 this._cardBox[this._num][i] = node;
             }
+
+            if (this._num < this.greyCardArrCount) {
+                node.color = new cc.Color(150,150,150);
+            }
+            node.isCanMove = (this._num >= this.greyCardArrCount);
         }
         ++this._num;
 
@@ -142,10 +148,9 @@ cc.Class({
     },
 
     onTouchStart(event){
-        if(this._canTouch){
+        if(this._canTouch && event.target.isCanMove){
             this._selectCard = event.target;
             this._selectCard.color = new cc.Color(200,200,200);
-
         }
     },
 
@@ -514,6 +519,7 @@ cc.Class({
         Global.dispatchEvent(EventId.SHOW_MENZI,this._handCardData);
         this.clearDesk();
         let list = cc.vv.gameData.sortCard(this._handCards);
+        this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(this._handCards);
         for(let i=0;i<list.length;++i){
             this.showCard(list[i],list.length);
         }
@@ -588,6 +594,7 @@ cc.Class({
                 if(cards.length !== this._handcardNode.childrenCount){
                     this.clearDesk();
                     let list = cc.vv.gameData.sortCard(cards);
+                    this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);
                     for(let i=0;i<list.length;++i){
                         this.showCard(list[i],list.length);
                     }

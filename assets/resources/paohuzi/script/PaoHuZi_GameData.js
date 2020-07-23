@@ -251,6 +251,21 @@ cc.Class({
         }
     },
 
+    getGreyCardArrCount(cards){
+        let tempList = cards.slice(0);
+        tempList.sort((a,b)=>{
+            return a-b;
+        });
+        let greyCardArrCount = 0;
+        for(let i = 0; i < tempList.length - 2; ++i){
+            if (tempList[i] == tempList[i+1] && tempList[i+1] == tempList[i+2]) {
+                ++greyCardArrCount;
+                i+=2;
+            }
+        }
+        return greyCardArrCount;
+    },
+
     // 手牌排序
     sortCard(cards){
         let tempList1 = cards.slice(0);
@@ -262,19 +277,26 @@ cc.Class({
         let value = -1;
         let temp = [];
         // 先查找相同的
-        for(let i=0;i<tempList1.length;++i){
-            if(value !== tempList1[i]){
+        let index = 0;
+        for(index = 0; index<tempList1.length; ++index){
+            if(value !== tempList1[index]){
                 if(temp.length>2){
                     list.push(temp);
                     for(let j=1;j<=temp.length;++j){
-                        tempList1[i-j] = -1;
+                        tempList1[index-j] = -1;
                     }
                 }
-                temp = [tempList1[i]];
-                value = tempList1[i];
+                temp = [tempList1[index]];
+                value = tempList1[index];
             }
             else{
-                temp.push(tempList1[i]);
+                temp.push(tempList1[index]);
+            }
+        }
+        if (2 < temp.length) {
+            list.push(temp);
+            for(let j=1;j<=temp.length;++j){
+                tempList1[index-j] = -1;
             }
         }
 
