@@ -41,8 +41,9 @@ cc.Class({
     // 创建牌
     createCard(cardValue,type,showBg=false,node=null){
         let spr = null;
-        if(node) spr = node;
-        else {
+        if(node) {
+            spr = node;
+        } else {
             spr = new cc.Node();
             spr.addComponent(cc.Sprite);
         }

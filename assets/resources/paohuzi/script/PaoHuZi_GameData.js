@@ -289,23 +289,37 @@ cc.Class({
 
         value = -1;
         // 先查找数字相同的
+        let otherCard = []
         for(let i=0;i<tempList2.length;++i){
-            if(value !== tempList2[i]%100){
-                if(list.length<10){
-                    temp = [tempList2[i]];
+            if(value !== tempList2[i]%100){     //新值
+                if (10 <= list.length) {
+                    otherCard.push(tempList2[i]);
+                    continue;
                 }
+                temp = [tempList2[i]];
                 list.push(temp);
                 value = tempList2[i]%100;
-            }
-            else
-            {
-                if(temp.length>2){
-                    if(list.length<10){
-                        temp = [tempList2[i]];
+            } else {
+                if(3 <= temp.length){
+                    if (10 <= list.length) {
+                        otherCard.push(tempList2[i]);
+                        continue;
                     }
+                    temp = [tempList2[i]];
                     list.push(temp);
+                } else {
+                    temp.push(tempList2[i]);
                 }
-                else temp.push(tempList2[i]);
+            }
+        }
+        for (let i = 0; i < otherCard.length; ++i) {
+            for (let j = list.length - 1; j >= 0; --j) {
+                for (let k = list[j].length; k < 3; k++) {
+                    list[j].push(otherCard[i++]);
+                    if (i == otherCard.length) {
+                        return list;
+                    }
+                }
             }
         }
 
