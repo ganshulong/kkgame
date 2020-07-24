@@ -145,7 +145,7 @@ cc.Class({
                 let panel_cardArrs = panel_CardInfo.getChildByName("panel_cardArrs");
                 let cardArrItemTemp = panel_cardArrs.getChildByName("cardArrItemTemp");
 
-                let tempList = cc.vv.gameData.sortCard(data.users[i].handInCards);
+                let tempList = cc.vv.gameData.sortCard(winerInfo.handInCards);
                 for(let i=0; i < tempList.length; ++i){
                     let cardArrItem = cc.instantiate(cardArrItemTemp);
                     cardArrItem.parent = panel_cardArrs;
@@ -154,7 +154,6 @@ cc.Class({
                     for(let j = 0; j < tempList[i].length; ++j) {
                         let node = this.node.getComponent("PaoHuZi_Card").createCard(tempList[i][j],2);
                         node.y = node.height * j;
-                        node.x = node.width*i*node.scale+20;
                         node.parent = cardArrItem;
                     }
                 }
@@ -186,7 +185,7 @@ cc.Class({
                     typeNode.parent = cardArrItem;
                 }
             }
-            
+            cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore
             panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("硬息： " + data.huXi);
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
@@ -212,10 +211,10 @@ cc.Class({
 
             player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
             player.getChildByName("text_id").getComponent(cc.Label).string = "ID:"+data.users[i].uid;
-            if (0 < data.users[i].roundScore) {
+            if (0 <= data.users[i].roundScore) {
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
-            } else if (0 > data.users[i].roundScore) {
+            } else {
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
             }
