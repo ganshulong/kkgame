@@ -266,15 +266,7 @@ cc.Class({
         let bankInfo = data.detail.bankerInfo;
         if(bankInfo.seat === this._seatIndex) {
             this.showZhuang(true);
-            let sp_flag = cc.find("sp_flag",this._playerNode);
-            sp_flag.active = bankInfo.count > 0;
-            if (0 < bankInfo.count) {
-                cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == bankInfo.count);
-                cc.find("sp_flag/zhaung2",this._playerNode).active = (1 < bankInfo.count);
-                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < bankInfo.count) ? bankInfo.count : "";
-            }
         }
-
     },
 
     onRcvPlayerExitNotice(msg){
@@ -334,8 +326,6 @@ cc.Class({
             this._playerNode.getChildByName("sp_flag").active = bShow;
             if (bShow && count) {
                 cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
-                cc.find("sp_flag/zhaung2",this._playerNode).active = (1 < count);
-                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < count) ? count : "";
             }
         }
     },

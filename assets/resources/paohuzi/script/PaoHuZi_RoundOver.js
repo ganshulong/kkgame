@@ -118,9 +118,9 @@ cc.Class({
     },
 
     showRoundInfo(data){
-        this._layer.getChildByName("spr_draw").active = (0 >= data.huXi);
+        this._layer.getChildByName("spr_draw").active = (0 >= data.huxi);
         let panel_CardInfo = this._layer.getChildByName("panel_CardInfo");
-        panel_CardInfo.active = (0 < data.huXi);
+        panel_CardInfo.active = (0 < data.huxi);
         if (panel_CardInfo.active) {
             let winerInfo = null;
             for(let i = 0; i < data.users.length; ++i){
@@ -186,7 +186,7 @@ cc.Class({
                 }
             }
             cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore
-            panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("硬息： " + data.huXi);
+            panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("硬息： " + data.huxi);
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
         for (let i = 0; i < data.diPai.length; i++) {
