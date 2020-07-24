@@ -119,7 +119,7 @@ cc.Class({
             }
             else node.y = node.height*i+node.height*0.5;
             if(this._chairId === 0){
-                node.x = this._handcardNode.parent.width*0.5-len*0.5*node.width+node.width*this._num-20;
+                node.x = this._handcardNode.parent.width*0.5-len*0.5*node.width+node.width*this._num;
             } else {
                 node.x = node.width*this._num;
             }
@@ -477,7 +477,8 @@ cc.Class({
                     list[index] = temp;
                 }
                 this.showCard(list,list.length,true);
-                let startX = this._handcardNode.parent.width*0.5-list.length*0.5*this._handcardNode.children[0].width+200;
+                let maxCol = 10 < list.length ? 10 : list.length;
+                let startX = this._handcardNode.parent.width*0.5-maxCol*0.5*this._handcardNode.children[0].width;
                 let startY =  this._handcardNode.children[0].height*0.5-20;
 
                 for(let i=0;i<this._handcardNode.childrenCount;++i){
