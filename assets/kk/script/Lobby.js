@@ -64,8 +64,11 @@ cc.Class({
             )
         )
 
-        let gameItem = cc.find("right_list/scrollview/view/content/item",this.node)
-        Global.btnClickEvent(gameItem,this.onClickCreateRoom,this);
+        let content = cc.find("right_list/scrollview/view/content",this.node)
+        for (var i = 0; i < content.children.length; i++) {
+            content.children[i].index = i;
+            Global.btnClickEvent(content.children[i],this.onClickCreateRoom,this);
+        }
 
         cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;
         cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
@@ -130,8 +133,8 @@ cc.Class({
         this.HallRecordJS.showGameRecord();
     },
 
-    onClickCreateRoom(){
-        this.CreateRoomJS.showCreateRoom(false);
+    onClickCreateRoom(event){
+        this.CreateRoomJS.showCreateRoom(false, event.target.index);
     },
 
     onClickSet(){

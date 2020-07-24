@@ -54,8 +54,9 @@ cc.Class({
         Global.registerEvent(EventId.GAME_CREATEROOM,this.showCreateRoom,this);
     },
 
-    showCreateRoom(isClubRoo){
+    showCreateRoom(isClubRoo, index){
         this._isClubRoom = isClubRoo;
+        this.curGameIndex = index ? index : 0;
         if(this._createLayer === null){
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
                 if(err === null){
@@ -67,13 +68,13 @@ cc.Class({
                     this._createLayer.y = this.node.height/2 - this.node.y;
 
                     this.initUI();
-                    this.initShow();
+                    this.showGameType();
                 }
             })
         }
         else{
             this._createLayer.active = true;
-            this.initShow();
+            this.showGameType();
         }
     },
 
@@ -86,9 +87,10 @@ cc.Class({
         let btn_back = this._createLayer.getChildByName("btn_back");
         Global.btnClickEvent(btn_back,this.onClose,this);
 
-        this.toggle_gameBtns = this._createLayer.getChildByName("toggle_gameBtns");
-        for (var i = 0; i < this.toggle_gameBtns.children.length; i++) {
-            Global.btnClickEvent(this.toggle_gameBtns.children[i],this.onClickGameType,this);
+        this.gameBtns = this._createLayer.getChildByName("gameBtns");
+        for (var i = 0; i < this.gameBtns.children.length; i++) {
+            this.gameBtns.children[i].index = i;
+            Global.btnClickEvent(this.gameBtns.children[i],this.onClickGameType,this);
         }
 
         let panel_penghu = cc.find("img_bg/panel_penghu",this._createLayer);
@@ -105,24 +107,17 @@ cc.Class({
         this.clearPaoHuZi();
     },
 
-    initShow(){
-        this.curGameIndex = this.gameTypeIndex.PaoHuZi;
-        for (var i = 0; i < this.toggle_gameBtns.children.length; i++) {
-            let toggle = this.toggle_gameBtns.getChildByName("toggle" + i);
+    showGameType(){
+        for (var i = 0; i < this.gameBtns.children.length; i++) {
+            let toggle = this.gameBtns.getChildByName("toggle" + i);
             toggle.getComponent(cc.Toggle).isChecked = (this.curGameIndex === i);
             this.gamePanels[i].active = (this.curGameIndex === i);
         }
     },
 
-    onClickGameType(){
-        for (var i = 0; i < this.toggle_gameBtns.children.length; i++) {
-            let toggle = this.toggle_gameBtns.getChildByName("toggle" + i);
-            if (toggle.getComponent(cc.Toggle).isChecked) {
-                this.curGameIndex = i;
-            }
-            this.toggle_gameBtns.children[i].getChildByName("selected_bg").active = toggle.getComponent(cc.Toggle).isChecked;
-            this.gamePanels[i].active = toggle.getComponent(cc.Toggle).isChecked;
-        }
+    onClickGameType(event){
+        this.curGameIndex = event.target.index;
+        this.showGameType();
     },
 
     onClose(){

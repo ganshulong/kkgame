@@ -34,11 +34,11 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 660
+        "__id__": 659
       }
     ],
     "_prefab": {
-      "__id__": 661
+      "__id__": 660
     },
     "_id": "",
     "_opacity": 255,
@@ -20967,7 +20967,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "toggle_gameBtns",
+    "_name": "gameBtns",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -20982,13 +20982,9 @@
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [
-      {
-        "__id__": 658
-      }
-    ],
+    "_components": [],
     "_prefab": {
-      "__id__": 659
+      "__id__": 658
     },
     "_id": "",
     "_opacity": 255,
@@ -21649,16 +21645,6 @@
     },
     "fileId": "2doF0zLApJDp5fyF8FTDwp",
     "sync": false
-  },
-  {
-    "__type__": "cc.ToggleContainer",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 639
-    },
-    "_enabled": true,
-    "allowSwitchOff": false
   },
   {
     "__type__": "cc.PrefabInfo",
