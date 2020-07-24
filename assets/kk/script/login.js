@@ -181,7 +181,7 @@ cc.Class({
         console.log("code is  " + code);
 
         let self = this;
-        self._nickname = "1";
+        self._nickname = "";
         if (self._nickname.length == 0) {
             let localNickname = Global.getLocal('account', '');
             self._nickname = localNickname;
