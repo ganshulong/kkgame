@@ -75,7 +75,7 @@ cc.Class({
 
         }
 
-        if (!Global.noAutoLogin) {
+        if (!Global.noAutoLogin && Global.isNative()) {
             let historyOpenid = cc.sys.localStorage.getItem("openid");
             let pssswd  = cc.sys.localStorage.getItem("passwd");
             if (historyOpenid && historyOpenid.length > 0){
@@ -181,7 +181,7 @@ cc.Class({
         console.log("code is  " + code);
 
         let self = this;
-        self._nickname = "";
+        self._nickname = "1";
         if (self._nickname.length == 0) {
             let localNickname = Global.getLocal('account', '');
             self._nickname = localNickname;
@@ -227,7 +227,7 @@ cc.Class({
     // 游客登录
     onVisitorLogin() {
         var self = this;
-        self._nickname = "";
+        self._nickname = this.node.getChildByName("input_name").getComponent(cc.EditBox).string;
         if (self._nickname.length == 0) {
             var localNickname = Global.getLocal('account', '');
             self._nickname = localNickname;
