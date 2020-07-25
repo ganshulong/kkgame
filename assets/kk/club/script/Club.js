@@ -280,20 +280,37 @@ cc.Class({
         let round = cc.find("node/img_round/txt_round",item);
         round.getComponent(cc.Label).string = config.gamenum+"局 " +config.seat+"人" ;
 
-        cc.find("node/char_3",item).active = (2 <= config.seat);
-        cc.find("node/char_2",item).active = (3 <= config.seat);
-        cc.find("node/char_4",item).active = (4 <= config.seat);
+        let tableChar24 = cc.find("node/tableChar24",item);
+        let tableChar3 = cc.find("node/tableChar3",item);
 
-        for (let i = 1; i <= 4; i++) {
-            cc.find("node/char_"+i+"/headNode",item).active = false;
+        let tableChar = null;
+        if (2 == config.seat || 4 == config.seat) {
+            tableChar3.active = false;
+            tableChar = tableChar24;
+            tableChar.getChildByName("char_3").active = (2 <= config.seat);
+            tableChar.getChildByName("char_2").active = (3 <= config.seat);
+            tableChar.getChildByName("char_4").active = (4 <= config.seat);
+            for (let i = 1; i <= 4; i++) {
+                cc.find("char_"+i+"/headNode",tableChar).active = false;
+            }
+            let bg = tableChar.getChildByName("bg");
+            bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4?this.tableBgs[0]:this.tableBgs[1];
+
+        } else if (3 == config.seat) {
+            tableChar24.active = false;
+            tableChar = tableChar3;
+            for (let i = 1; i <= 3; i++) {
+                cc.find("char_"+i+"/headNode",tableChar).active = false;
+            }
         }
-
+        tableChar.active = true;
+        
         if(data.users){
             let users = data.users;
             for(let j=0;j<users.length;++j){
-                let headNode = cc.find("node/char_"+(j+1)+"/headNode",item);
+                let headNode = cc.find("char_"+(j+1)+"/headNode",tableChar);
                 if(config.seat === 2 && j===1) {
-                    headNode = cc.find("node/char_3/headNode",item);
+                    headNode = cc.find("char_3/headNode",tableChar);
                 }
                 if(headNode){
                     headNode.active = true;
@@ -301,14 +318,10 @@ cc.Class({
                     Global.setHead(spr_head,users[j].usericon);
                     let name = cc.find("img_nameBg/txt_name",headNode);
                     name.getComponent(cc.Label).string = users[j].playername;
-
                     headNode.getChildByName("img_ready").active = users[j].state===1;
                 }
             }
         }
-
-        let bg = cc.find("node/bg",item);
-        bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4?this.tableBgs[0]:this.tableBgs[1];
     },
 
     initTables(list){

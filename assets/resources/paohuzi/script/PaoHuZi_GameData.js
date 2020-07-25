@@ -226,7 +226,7 @@ cc.Class({
         let conf = this._deskInfo.conf;
         list.push(conf.gamenum+"局 ");
         list.push(conf.seat+ "人 ");
-        list.push(["蚂蚁上树 ","见三加一 ","见六加一 "][conf.scoreType-1]);
+        list.push(["蚂蚁上树 ","见三加一 ","见六加一 "][conf.param1-1]);
         list.push(conf.score+ "倍 ");
         if(conf.speed === 1){
             list.push("快速 ");

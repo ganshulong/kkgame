@@ -301,7 +301,7 @@ cc.Class({
         for (var i = 0; i < wanfa.children.length; i++) {
             let toggle = wanfa.getChildByName("toggle" + i);
             if (toggle.getComponent(cc.Toggle).isChecked) {
-                req.scoreType = [1,2,3][i]
+                req.param1 = [1,2,3][i]
                 break;
             }
         }
