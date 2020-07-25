@@ -145,23 +145,10 @@ cc.Class({
                 let panel_cardArrs = panel_CardInfo.getChildByName("panel_cardArrs");
                 let cardArrItemTemp = panel_cardArrs.getChildByName("cardArrItemTemp");
 
-                let tempList = cc.vv.gameData.sortCard(winerInfo.handInCards);
-                for(let i=0; i < tempList.length; ++i){
-                    let cardArrItem = cc.instantiate(cardArrItemTemp);
-                    cardArrItem.parent = panel_cardArrs;
-                    cardArrItem.x = i * 70;
-
-                    for(let j = 0; j < tempList[i].length; ++j) {
-                        let node = this.node.getComponent("PaoHuZi_Card").createCard(tempList[i][j],2);
-                        node.y = node.height * j;
-                        node.parent = cardArrItem;
-                    }
-                }
-
                 for (let i = 0; i < winerInfo.menzi.length; i++) {
                     let cardArrItem = cc.instantiate(cardArrItemTemp);
                     cardArrItem.parent = panel_cardArrs;
-                    cardArrItem.x = (tempList.length + i) * 70;
+                    cardArrItem.x = i * 70;
 
                     let cardArr = winerInfo.menzi[i].data;
                     if(winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.KAN ||
@@ -183,6 +170,19 @@ cc.Class({
                     let typeNode = this.createType(winerInfo.menzi[i].type);
                     typeNode.y = 200;
                     typeNode.parent = cardArrItem;
+                }
+
+                let tempList = cc.vv.gameData.sortCard(winerInfo.handInCards);
+                for(let i=0; i < tempList.length; ++i){
+                    let cardArrItem = cc.instantiate(cardArrItemTemp);
+                    cardArrItem.parent = panel_cardArrs;
+                    cardArrItem.x = (winerInfo.menzi.length + i) * 70;
+
+                    for(let j = 0; j < tempList[i].length; ++j) {
+                        let node = this.node.getComponent("PaoHuZi_Card").createCard(tempList[i][j],2);
+                        node.y = node.height * j;
+                        node.parent = cardArrItem;
+                    }
                 }
             }
             cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore

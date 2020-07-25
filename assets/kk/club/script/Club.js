@@ -230,7 +230,7 @@ cc.Class({
 
     onEnterDeskResult(msg){
         if(msg.code === 200){
-            if(msg.response.deskInfo.conf.gameid === 2 || msg.response.deskInfo.conf.gameid === 4){
+            if(msg.response.deskInfo.conf.gameid === 1 || msg.response.deskInfo.conf.gameid === 3){
                 if(cc.vv.gameData === null){
                     let data = require("PengHu_GameData");
                     cc.vv.gameData = new data();
@@ -280,22 +280,21 @@ cc.Class({
         let round = cc.find("node/img_round/txt_round",item);
         round.getComponent(cc.Label).string = config.gamenum+"局 " +config.seat+"人" ;
 
-        let char2 = cc.find("node/char_2",item);
-        char2.active = config.seat === 4;
+        cc.find("node/char_3",item).active = (2 <= config.seat);
+        cc.find("node/char_2",item).active = (3 <= config.seat);
+        cc.find("node/char_4",item).active = (4 <= config.seat);
 
-        let char4 = cc.find("node/char_4",item);
-        char4.active = config.seat === 4;
-
-        cc.find("node/char_1/headNode",item).active = false;
-        cc.find("node/char_2/headNode",item).active = false;
-        cc.find("node/char_3/headNode",item).active = false;
-        cc.find("node/char_4/headNode",item).active = false;
+        for (let i = 1; i <= 4; i++) {
+            cc.find("node/char_"+i+"/headNode",item).active = false;
+        }
 
         if(data.users){
             let users = data.users;
             for(let j=0;j<users.length;++j){
                 let headNode = cc.find("node/char_"+(j+1)+"/headNode",item);
-                if(config.seat === 2 && j===1) headNode = cc.find("node/char_3/headNode",item);
+                if(config.seat === 2 && j===1) {
+                    headNode = cc.find("node/char_3/headNode",item);
+                }
                 if(headNode){
                     headNode.active = true;
                     let spr_head = cc.find("UserHead/radio_mask/spr_head",headNode);
