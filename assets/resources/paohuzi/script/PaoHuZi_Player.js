@@ -139,7 +139,7 @@ cc.Class({
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){
                 this.setTotalScore(data.users[i].score);
-                this.setHuXi(data.users[i].roundHuxi);
+                this.setHuXi(data.users[i].roundHuXi);
                 if (0 < data.users[i].roundScore) {
                     let ani_huPai = this._playerNode.getChildByName("ani_huPai");
                     ani_huPai.active = true;
