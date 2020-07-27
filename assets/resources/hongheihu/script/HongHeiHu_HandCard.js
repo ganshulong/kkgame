@@ -99,7 +99,7 @@ cc.Class({
 
     showCard(list,len,showBg=false){
         for(let i=0;i<list.length;++i){
-            let node = this.node.getComponent("PaoHuZi_Card").createCard(list[i],this._chairId==0?1:2);
+            let node = this.node.getComponent("HongHeiHu_Card").createCard(list[i],this._chairId==0?1:2);
             node.name = "card";
             if(this._chairId === 0) {
                 node.y = (node.height-22)*i+node.height*0.5-25;
@@ -112,7 +112,7 @@ cc.Class({
                 if(showBg){
                     let child = new cc.Node();
                     child.addComponent(cc.Sprite);
-                    this.node.getComponent("PaoHuZi_Card").createCard(0,1,true,child);
+                    this.node.getComponent("HongHeiHu_Card").createCard(0,1,true,child);
                     child.parent = node;
                     child.name = "bg";
                 }

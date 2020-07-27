@@ -56,7 +56,7 @@ cc.Class({
     showCard(cardValue){
         this._showCardNode.scale = 1;
         this._showCardNode.opacity = 255;
-        let node = this.node.getComponent("PaoHuZi_Card").createCard(cardValue,0,cardValue==0?true:false,this._showCardNode);
+        let node = this.node.getComponent("HongHeiHu_Card").createCard(cardValue,0,cardValue==0?true:false,this._showCardNode);
         this._showCardNode.active = true;
         this._cardValue = cardValue;
         return node;
@@ -77,7 +77,7 @@ cc.Class({
 
                 if(data.actionInfo.curaction.type === cc.vv.gameData.OPERATETYPE.PUT){
                     this.showCard(data.actionInfo.curaction.card);
-                    this.node.getComponent("PaoHuZi_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
+                    this.node.getComponent("HongHeiHu_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
                     let chairId = cc.vv.gameData.getLocalChair(data.actionInfo.curaction.seat);
                     let playerNode = cc.find("scene/player"+chairId,this.node);
                     let startPos = playerNode.position;
@@ -121,7 +121,7 @@ cc.Class({
         if(data.seat === this._seatIndex){
            this.showCard(data.card);
 
-            this.node.getComponent("PaoHuZi_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
+            this.node.getComponent("HongHeiHu_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
             this.showCardAction(this._cardBoXPos);
         }
         else this.clearDesk();
@@ -173,7 +173,7 @@ cc.Class({
                     if (deskInfo.actionInfo.curaction.seat === this._seatIndex) {
                         this._showCardNode.stopAllActions();
                         this.showCard(deskInfo.actionInfo.curaction.card);
-                        this.node.getComponent("PaoHuZi_Card").changCardBg(this._showCardNode.getChildByName("card_light"),
+                        this.node.getComponent("HongHeiHu_Card").changCardBg(this._showCardNode.getChildByName("card_light"),
                             deskInfo.actionInfo.curaction.source === 0);
                     }
                 }
@@ -190,13 +190,13 @@ cc.Class({
             if(data.source>0){
                 if(data.source === this._seatIndex){
                     this.showCard(data.hcard);
-                    this.node.getComponent("PaoHuZi_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
+                    this.node.getComponent("HongHeiHu_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
                 }
             }
             else{
                 if(data.seat === this._seatIndex){
                     // this.showCard(data.hcard);
-                    // this.node.getComponent("PaoHuZi_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
+                    // this.node.getComponent("HongHeiHu_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
                 }
             }
         }

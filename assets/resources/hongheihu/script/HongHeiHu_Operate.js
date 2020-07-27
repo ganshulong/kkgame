@@ -143,7 +143,7 @@ cc.Class({
 
             for(let j=0;j<3;++j){
                 let card = cc.find("img_bg/card"+j,item);
-                this.node.getComponent("PaoHuZi_Card").createCard(temp[j],1,false,card);
+                this.node.getComponent("HongHeiHu_Card").createCard(temp[j],1,false,card);
             }
         }
         for(let i=0;i<list.length;++i){
@@ -189,9 +189,9 @@ cc.Class({
 
     initLuoData(list){
         let selectedChiItem_bg = cc.find("selectedChi_bg/item/selectedChiItem_bg",this._selectLuoNode);
-        this.node.getComponent("PaoHuZi_Card").createCard(this._currActionCard,1,false,selectedChiItem_bg.getChildByName("card"+0));
-        this.node.getComponent("PaoHuZi_Card").createCard(this._chi.chiData[0],1,false,selectedChiItem_bg.getChildByName("card"+1));
-        this.node.getComponent("PaoHuZi_Card").createCard(this._chi.chiData[1],1,false,selectedChiItem_bg.getChildByName("card"+2));
+        this.node.getComponent("HongHeiHu_Card").createCard(this._currActionCard,1,false,selectedChiItem_bg.getChildByName("card"+0));
+        this.node.getComponent("HongHeiHu_Card").createCard(this._chi.chiData[0],1,false,selectedChiItem_bg.getChildByName("card"+1));
+        this.node.getComponent("HongHeiHu_Card").createCard(this._chi.chiData[1],1,false,selectedChiItem_bg.getChildByName("card"+2));
 
         this.handCard = JSON.parse(JSON.stringify(this._chi.handInCards));
         this.selectedItemCount = 0;
@@ -227,7 +227,7 @@ cc.Class({
 
             for(let j=0;j<3;++j){
                 let card = cc.find("img_bg/card"+(2-j),item);
-                this.node.getComponent("PaoHuZi_Card").createCard(temp[j],1,false,card);
+                this.node.getComponent("HongHeiHu_Card").createCard(temp[j],1,false,card);
             }
         }
         for(let i=0;i<list.length;++i){

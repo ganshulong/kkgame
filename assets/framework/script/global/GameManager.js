@@ -432,7 +432,7 @@ cc.Class({
                         cc.vv.gameData.init(msgDic.deskInfo);
                         cc.vv.SceneMgr.enterScene("paohuzi");
                     }
-                } else if(msgDic.deskInfo.conf.gameid === 3 || msgDic.deskInfo.conf.gameid === 6){
+                } else if(msgDic.deskInfo.conf.gameid === 5 || msgDic.deskInfo.conf.gameid === 6){
                     if(cc.vv.gameData === null){
                         let data = require("HongHeiHu_GameData");
                         cc.vv.gameData = new data();

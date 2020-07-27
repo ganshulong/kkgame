@@ -76,7 +76,7 @@ cc.Class({
                     showBg = true;
                 }
             }
-            let node = this.node.getComponent("PaoHuZi_Card").createCard(list[i],showAction?1:2,showBg);
+            let node = this.node.getComponent("HongHeiHu_Card").createCard(list[i],showAction?1:2,showBg);
 
             let endPos = cc.v2(0,0);
             endPos.y = 36*i;
@@ -116,7 +116,7 @@ cc.Class({
         node.opacity = 255;
         let time = cc.vv.gameData.getActionTime();
         node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos).easing(cc.easeOut(3)),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            this.node.getComponent("PaoHuZi_Card").createCard(node.cardValue,2,node.showBg,node);
+            this.node.getComponent("HongHeiHu_Card").createCard(node.cardValue,2,node.showBg,node);
             node.scale = 1;
             node.opacity = 255;
         })))
@@ -183,7 +183,7 @@ cc.Class({
             for(let i=0;i<this._operateCardNode.childrenCount;++i){
                 let child = this._operateCardNode.children[i];
                 if(child.showBg && child.index==2){
-                    // this.node.getComponent("PaoHuZi_Card").createCard(child.cardValue,2,false,child);
+                    // this.node.getComponent("HongHeiHu_Card").createCard(child.cardValue,2,false,child);
                 }
             }
         }
@@ -272,14 +272,14 @@ cc.Class({
                 startX = this._operateCardNode.children[i].x;
                 ++num;
                 if(this._operateCardNode.children[i].index !==3){
-                    this.node.getComponent("PaoHuZi_Card").createCard(card,2,showBg,this._operateCardNode.children[i]);
+                    this.node.getComponent("HongHeiHu_Card").createCard(card,2,showBg,this._operateCardNode.children[i]);
 
                 }
             }
         }
         if(num === 0){
             for(let i=0;i<4;++i){
-                let node = this.node.getComponent("PaoHuZi_Card").createCard(card,2,(i<3)?showBg:false);
+                let node = this.node.getComponent("HongHeiHu_Card").createCard(card,2,(i<3)?showBg:false);
                 node.y = node.height*(num+i);
                 node.x = startX;
                 node.cardValue = card;
@@ -289,7 +289,7 @@ cc.Class({
         }
         else {
             for(let i=0;i<4-num;++i){
-                let node = this.node.getComponent("PaoHuZi_Card").createCard(card,2,(num<3&&i==0)?showBg:false);
+                let node = this.node.getComponent("HongHeiHu_Card").createCard(card,2,(num<3&&i==0)?showBg:false);
                 node.y = node.height*(num+i);
                 node.x = startX;
                 node.cardValue = card;

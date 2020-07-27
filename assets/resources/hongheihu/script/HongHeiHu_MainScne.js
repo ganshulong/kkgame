@@ -89,30 +89,30 @@ cc.Class({
         let desc = cc.find("scene/room_info/txt_game_desc",this.node);
         desc.getComponent(cc.Label).string = str;
 
-        this.node.addComponent("PaoHuZi_Card").init(this.cardsAtlas);
+        this.node.addComponent("HongHeiHu_Card").init(this.cardsAtlas);
 
         let btnMsg = cc.find("scene/operate_btn_view/btn_msg",this.node);
         Global.btnClickEvent(btnMsg,this.onShowMsg,this);
 
-        // this.node.addComponent("PaoHuZi_Menu");
+        // this.node.addComponent("HongHeiHu_Menu");
 
         for(let i=0;i<3;++i){
-            this.node.addComponent("PaoHuZi_ShowCard").init(i,conf.seat);
-            this.node.addComponent("PaoHuZi_Player").init(i,conf.seat,this.emjoAtlas);
-            this.node.addComponent("PaoHuZi_OutCard").init(i,conf.seat);
-            this.node.addComponent("PaoHuZi_OperatePai").init(i,conf.seat);
-            this.node.addComponent("PaoHuZi_HandCard").init(i,conf.seat);
+            this.node.addComponent("HongHeiHu_ShowCard").init(i,conf.seat);
+            this.node.addComponent("HongHeiHu_Player").init(i,conf.seat,this.emjoAtlas);
+            this.node.addComponent("HongHeiHu_OutCard").init(i,conf.seat);
+            this.node.addComponent("HongHeiHu_OperatePai").init(i,conf.seat);
+            this.node.addComponent("HongHeiHu_HandCard").init(i,conf.seat);
         }
-        this.node.addComponent("PaoHuZi_HandCard").init();
-        this.node.addComponent("PaoHuZi_Operate");
-        this.node.addComponent("PaoHuZi_Tips");
-        this.node.addComponent("PaoHuZi_Action");
-        this.node.addComponent("PaoHuZi_RemainCard");
-        this.node.addComponent("PaoHuZi_RoundOver").init(this.tableAtlas);
-        this.node.addComponent("PaoHuZi_GameOver").init(this.tableAtlas,this.yinxiAtlas);
-        this.node.addComponent("PaoHuZi_Sound");
-        this.node.addComponent("PaoHuZi_Chat");
-        this.node.addComponent("PaoHuZi_Setting");
+        this.node.addComponent("HongHeiHu_HandCard").init();
+        this.node.addComponent("HongHeiHu_Operate");
+        this.node.addComponent("HongHeiHu_Tips");
+        this.node.addComponent("HongHeiHu_Action");
+        this.node.addComponent("HongHeiHu_RemainCard");
+        this.node.addComponent("HongHeiHu_RoundOver").init(this.tableAtlas);
+        this.node.addComponent("HongHeiHu_GameOver").init(this.tableAtlas,this.yinxiAtlas);
+        this.node.addComponent("HongHeiHu_Sound");
+        this.node.addComponent("HongHeiHu_Chat");
+        this.node.addComponent("HongHeiHu_Setting");
 
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);

@@ -418,7 +418,7 @@ cc.Class({
         if (this._isClubRoom) {
             req.clubid = cc.vv.UserManager.currClubId;
         }
-        req.gameid = this._isClubRoom ? 3 : 6;
+        req.gameid = this._isClubRoom ? 5 : 6;
 
         let round = layer.getChildByName("round");
         for (var i = 0; i < round.children.length; i++) {

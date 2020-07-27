@@ -82,7 +82,7 @@ cc.Class({
     },
 
     showCard(value,showAction = false){
-        let node = this.node.getComponent("PaoHuZi_Card").createCard(value,showAction?0:2);
+        let node = this.node.getComponent("HongHeiHu_Card").createCard(value,showAction?0:2);
 
         let endPos = this.getEndPos(this._cardsNum);
 
@@ -258,7 +258,7 @@ cc.Class({
         node.opacity = 255;
 
         node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            this.node.getComponent("PaoHuZi_Card").createCard(node.cardValue,2,node.showBg,node);
+            this.node.getComponent("HongHeiHu_Card").createCard(node.cardValue,2,node.showBg,node);
             node.scale = 1;
             node.rotation = 0;
             node.opacity = 255;
