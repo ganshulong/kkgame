@@ -313,6 +313,8 @@ cc.Class({
             bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4?this.tableBgs[0]:this.tableBgs[1];
         } else if (2 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[2];
+        } else if (3 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[3];
         }
             
         tableChar.active = true;
@@ -338,6 +340,9 @@ cc.Class({
 
     initTables(list){
         let width = 0;
+        list.sort((obj1, obj2)=>{
+            return (obj2.users.length || 0) - (obj1.users.length || 0);
+        });
         for(let i=0;i<list.length;++i){
             let config = list[i].config;
             let item = null;
