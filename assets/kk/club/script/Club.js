@@ -293,9 +293,6 @@ cc.Class({
             for (let i = 1; i <= 4; i++) {
                 cc.find("char_"+i+"/headNode",tableChar).active = false;
             }
-            let bg = tableChar.getChildByName("bg");
-            bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4?this.tableBgs[0]:this.tableBgs[1];
-
         } else if (3 == config.seat) {
             tableChar24.active = false;
             tableChar = tableChar3;
@@ -303,6 +300,14 @@ cc.Class({
                 cc.find("char_"+i+"/headNode",tableChar).active = false;
             }
         }
+
+        let bg = tableChar.getChildByName("bg");
+        if (1 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4?this.tableBgs[0]:this.tableBgs[1];
+        } else if (2 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[2];
+        }
+            
         tableChar.active = true;
         
         if(data.users){

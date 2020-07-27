@@ -592,7 +592,7 @@ cc.Class({
             if(this._seatIndex === deskInfo.users[i].seat){
                 let cards = deskInfo.users[i].handInCards;
 
-                if(cards.length !== this._handcardNode.childrenCount){
+                if(cards && cards.length !== this._handcardNode.childrenCount){
                     this.clearDesk();
                     let list = cc.vv.gameData.sortCard(cards);
                     this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);

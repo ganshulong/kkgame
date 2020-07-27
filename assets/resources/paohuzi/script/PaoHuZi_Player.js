@@ -137,9 +137,8 @@ cc.Class({
         data = data.detail;
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){
-                this._score = data.users[i].score;
-                this.setTotalScore(this._score);
-                this.setHuXi(data.users[i].roundScore);
+                this.setTotalScore(data.users[i].score);
+                this.setHuXi(data.users[i].roundHuxi);
                 // if (0 > data.users[i].changeScore) {
                 //     //该玩家输了，金币飞向其他人
                 //     let toServerSeat = 0;

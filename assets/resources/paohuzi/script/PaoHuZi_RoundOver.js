@@ -172,14 +172,13 @@ cc.Class({
                     typeNode.parent = cardArrItem;
                 }
 
-                let tempList = cc.vv.gameData.sortCard(winerInfo.handInCards);
-                for(let i=0; i < tempList.length; ++i){
+                for(let i=0; i < data.huCards.length; ++i){
                     let cardArrItem = cc.instantiate(cardArrItemTemp);
                     cardArrItem.parent = panel_cardArrs;
                     cardArrItem.x = (winerInfo.menzi.length + i) * 70;
 
-                    for(let j = 0; j < tempList[i].length; ++j) {
-                        let node = this.node.getComponent("PaoHuZi_Card").createCard(tempList[i][j],2);
+                    for(let j = 0; j < data.huCards[i].length; ++j) {
+                        let node = this.node.getComponent("PaoHuZi_Card").createCard(data.huCards[i][j],2);
                         node.y = node.height * j;
                         node.parent = cardArrItem;
                     }

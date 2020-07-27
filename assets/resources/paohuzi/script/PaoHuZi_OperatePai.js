@@ -69,7 +69,7 @@ cc.Class({
                 else showBg = true;
             }
             else if(type === cc.vv.gameData.OPERATETYPE.LONG || type === cc.vv.gameData.OPERATETYPE.SHE){
-                showBg = i!==3;
+                showBg = true;
             }
             let node = this.node.getComponent("PaoHuZi_Card").createCard(list[i],showAction?1:2,showBg);
 
