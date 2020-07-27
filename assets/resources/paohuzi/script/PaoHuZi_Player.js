@@ -72,6 +72,7 @@ cc.Class({
         data = data.detail;
         if(data.seat === this._seatIndex){
             this.showReady(true);
+            this._playerNode.getChildByName("ani_huPai").active = false;
         }
     },
 
@@ -139,17 +140,17 @@ cc.Class({
             if(data.users[i].seat === this._seatIndex){
                 this.setTotalScore(data.users[i].score);
                 this.setHuXi(data.users[i].roundHuxi);
-                // if (0 > data.users[i].changeScore) {
-                //     //该玩家输了，金币飞向其他人
-                //     let toServerSeat = 0;
-                //     for (let j = 0; j < data.users.length; j++) {
-                //         if (0 < data.users[j].changeScore) {
-                //             toServerSeat = data.users[j].seat;
-                //             break;
-                //         }
-                //     }
-                //     this.showFlyIcon(toServerSeat, -data.users[i].changeScore);
-                // }
+                if (0 < data.users[i].roundScore) {
+                    let ani_huPai = this._playerNode.getChildByName("ani_huPai");
+                    ani_huPai.active = true;
+                    ani_huPai.scale = 0;
+                    ani_huPai.runAction(
+                        cc.sequence(
+                            cc.scaleTo(0.5,1.2,1.2),
+                            cc.scaleTo(0.1,1,1),
+                        )
+                    )
+                }
                 break;
             }
         }
@@ -300,6 +301,7 @@ cc.Class({
             this.setHuXi(user.roundHuXi?user.roundHuXi:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("ani_warn").active = (0 < user.isBaoJin);
+            this._playerNode.getChildByName("ani_huPai").active = (0 < user.isBaoJin);
         }
     },
 
