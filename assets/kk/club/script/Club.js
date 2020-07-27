@@ -244,6 +244,13 @@ cc.Class({
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("paohuzi");
                 }
+            } else if(msg.response.deskInfo.conf.gameid === 3 || msg.response.deskInfo.conf.gameid === 6){
+                if(cc.vv.gameData === null){
+                    let data = require("HongHeiHu_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("hongheihu");
+                }
             }
         }
     },

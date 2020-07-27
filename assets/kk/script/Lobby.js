@@ -66,8 +66,9 @@ cc.Class({
 
         let content = cc.find("right_list/scrollview/view/content",this.node)
         for (var i = 0; i < content.children.length; i++) {
-            content.children[i].index = i;
-            Global.btnClickEvent(content.children[i],this.onClickCreateRoom,this);
+            let item = content.getChildByName("item" + i);
+            item.index = i;
+            Global.btnClickEvent(item,this.onClickCreateRoom,this);
         }
 
         cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;

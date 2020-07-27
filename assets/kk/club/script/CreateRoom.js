@@ -81,7 +81,8 @@ cc.Class({
     initUI(){
         this.gameTypeIndex = {
             PengHu:0,
-            PaoHuZi:1
+            PaoHuZi:1,
+            HongHeiHu:2
         };
 
         let btn_back = this._createLayer.getChildByName("btn_back");
@@ -101,10 +102,15 @@ cc.Class({
         let btn_create_room_paohuzi = cc.find("right_bg/btn_create_room", panel_paohuzi);
         Global.btnClickEvent(btn_create_room_paohuzi,this.onCreatePaoHuZi,this);
 
-        this.gamePanels = [panel_penghu, panel_paohuzi];
+        let panel_hongheihu = cc.find("img_bg/panel_hongheihu",this._createLayer);
+        let btn_create_room_hongheihu = cc.find("right_bg/btn_create_room", panel_hongheihu);
+        Global.btnClickEvent(btn_create_room_hongheihu,this.onCreateHongHeiHu,this);
+
+        this.gamePanels = [panel_penghu, panel_paohuzi, panel_hongheihu];
 
         this.clearPengHu();
         this.clearPaoHuZi();
+        this.clearHongHeiHu();
     },
 
     showGameType(){
@@ -360,6 +366,141 @@ cc.Class({
         let wanfa = layer.getChildByName("wanfa");
         for (var i = 0; i < wanfa.children.length; i++) {
             let toggle = wanfa.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
+        }
+
+        let score = layer.getChildByName("score");
+        for (var i = 0; i < score.children.length; i++) {
+            let toggle = score.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
+        }
+
+        let speed = layer.getChildByName("speed");
+        for (var i = 0; i < speed.children.length; i++) {
+            let toggle = speed.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
+        }
+
+        let trusteeship = cc.find("trusteeship/toggle0",layer);
+        trusteeship.getComponent(cc.Toggle).isChecked = false;
+
+        let dismiss = cc.find("dismiss/toggle0",layer);
+        dismiss.getComponent(cc.Toggle).isChecked = true;
+
+        layer.getChildByName("input_roomName").getComponent(cc.EditBox).string = "";
+        layer.getChildByName("input_roomName").active = this._isClubRoom;
+
+        let sameIP = cc.find("sameIP/toggle0",layer);
+        sameIP.getComponent(cc.Toggle).isChecked = false;
+
+        let distance = cc.find("distance/toggle0",layer);
+        distance.getComponent(cc.Toggle).isChecked = false;
+    },
+
+    // 创建红黑胡
+    onCreateHongHeiHu(){
+        let layer = cc.find("right_bg/scrollview/content",this.gamePanels[this.gameTypeIndex.HongHeiHu]);
+
+        let req = {};
+        let roomNameStr = "";
+        if (this._isClubRoom) {
+            roomNameStr = layer.getChildByName("input_roomName").getComponent(cc.EditBox).string;
+            if(roomNameStr.length===0){
+                cc.vv.FloatTip.show("请输入桌子名称!");
+                return;
+            }
+        }
+        req.tname = roomNameStr;
+
+        if (this._isClubRoom) {
+            req.clubid = cc.vv.UserManager.currClubId;
+        }
+        req.gameid = this._isClubRoom ? 3 : 6;
+
+        let round = layer.getChildByName("round");
+        for (var i = 0; i < round.children.length; i++) {
+            let toggle = round.getChildByName("toggle" + i);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.gamenum = [8,16][i]
+                break;
+            }
+        }
+
+        let player_num = layer.getChildByName("player_num");
+        for (var i = 0; i < player_num.children.length; i++) {
+            let toggle = player_num.getChildByName("toggle" + i);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.seat = [3,2][i]
+                break;
+            }
+        }
+
+        let baseScore = layer.getChildByName("baseScore");
+        for (var i = 0; i < baseScore.children.length; i++) {
+            let toggle = baseScore.getChildByName("toggle" + i);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.param1 = [1,2,3,4,5][i]
+                break;
+            }
+        }
+
+        let score = layer.getChildByName("score");
+        for (var i = 0; i < score.children.length; i++) {
+            let toggle = score.getChildByName("toggle" + i);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.score = [1,2,4][i]
+                break;
+            }
+        }
+
+        let speed = cc.find("speed/toggle0",layer);
+        req.speed = speed.getComponent(cc.Toggle).isChecked ? 0 : 1;
+
+        let trusteeship = cc.find("trusteeship/toggle0",layer);
+        req.trustee = trusteeship.getComponent(cc.Toggle).isChecked ? 1 : 0;
+
+        let dismiss = cc.find("dismiss/toggle0",layer);
+        req.isdissolve = dismiss.getComponent(cc.Toggle).isChecked ? 1 : 0;
+
+        // 同IP
+        let sameIP = cc.find("sameIP/toggle0",layer);
+        req.ipcheck = sameIP.getComponent(cc.Toggle).isChecked ? 1 : 0;
+
+        // 距离
+        let distance = cc.find("distance/toggle0",layer);
+        req.distance = distance.getComponent(cc.Toggle).isChecked ? 1 : 0;
+
+        var data = {};
+        data.c = this._isClubRoom ? MsgId.ADDGAME : MsgId.GAME_CREATEROOM;
+        data.gameInfo = req;
+        cc.vv.NetManager.send(data);
+    },
+
+    clearHongHeiHu(){
+        let layer = cc.find("right_bg/scrollview/content",this.gamePanels[this.gameTypeIndex.HongHeiHu]);
+        
+        let defaulCheckIndex = 0;
+
+        let round = layer.getChildByName("round");
+        for (var i = 0; i < round.children.length; i++) {
+            let toggle = round.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
+        }
+
+        let player_num = layer.getChildByName("player_num");
+        for (var i = 0; i < player_num.children.length; i++) {
+            let toggle = player_num.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === 1);
+            break;
+        }
+
+        let baseScore = layer.getChildByName("baseScore");
+        for (var i = 0; i < baseScore.children.length; i++) {
+            let toggle = baseScore.getChildByName("toggle" + i);
             toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
             break;
         }
