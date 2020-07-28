@@ -267,7 +267,7 @@ cc.Class({
 
             if(i<3){
                 let player_num = cc.find("player_num/toggle"+i,layer);
-                player_num.getComponent(cc.Toggle).isChecked = i===1;
+                player_num.getComponent(cc.Toggle).isChecked = i===2;
 
                 let speed = cc.find("speed/toggle"+i,layer);
                 speed.getComponent(cc.Toggle).isChecked = true;
@@ -283,7 +283,7 @@ cc.Class({
 
         // 同IP
         let sameIP = cc.find("other/toggle1",layer);
-        sameIP.getComponent(cc.Toggle).isChecked = true;
+        sameIP.getComponent(cc.Toggle).isChecked = false;
 
         // 托管
         let distance = cc.find("other/toggle2",layer);
