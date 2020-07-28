@@ -72,7 +72,6 @@ cc.Class({
         data = data.detail;
         if(data.seat === this._seatIndex){
             this.showReady(true);
-            this._playerNode.getChildByName("ani_huPai").active = false;
         }
     },
 
@@ -148,6 +147,10 @@ cc.Class({
                         cc.sequence(
                             cc.scaleTo(0.5,1.2,1.2),
                             cc.scaleTo(0.1,1,1),
+                            cc.delayTime(1.4),
+                            cc.callFunc(()=>{
+                                self._playerNode.getChildByName("ani_huPai").active = false;
+                            })
                         )
                     )
                 }
@@ -301,7 +304,7 @@ cc.Class({
             this.setHuXi(user.roundHuXi?user.roundHuXi:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("ani_warn").active = (0 < user.isBaoJin);
-            this._playerNode.getChildByName("ani_huPai").active = (0 < user.isBaoJin);
+            this._playerNode.getChildByName("ani_huPai").active = false;
         }
     },
 

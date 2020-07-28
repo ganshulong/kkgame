@@ -442,7 +442,7 @@ cc.Class({
         for (var i = 0; i < baseScore.children.length; i++) {
             let toggle = baseScore.getChildByName("toggle" + i);
             if (toggle.getComponent(cc.Toggle).isChecked) {
-                req.param1 = [1,2,3,4,5][i]
+                req.param1 = [0,1,2,3,4,5][i]
                 break;
             }
         }

@@ -54,7 +54,7 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        cc.loader.loadRes("common/prefab/Paohuzi_game_over_view",(err,prefab)=>{
+        cc.loader.loadRes("common/prefab/Hongheihu_game_over_view",(err,prefab)=>{
             if(err === null){
                 this._layer = cc.instantiate(prefab);
                 this._layer.parent = this.node.getChildByName("scene");
@@ -137,11 +137,15 @@ cc.Class({
 
             img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
+                                                                                                             
+            img_bg.getChildByName("title_mingtang_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+                this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-win_mingtang_num"):this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-lose_mingtang_num");
 
             img_bg.getChildByName("title_yinxi_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
                 this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-win_all_huxi"):this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-lose_all_huxi");
 
             img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
+            img_bg.getChildByName("mingtang_num").getComponent(cc.Label).string = user.mingTangCount;
             img_bg.getChildByName("yinxi_num").getComponent(cc.Label).string = user.totalHuXi;
 
             let score = user.score + "";
@@ -158,7 +162,7 @@ cc.Class({
     },
 
     onDestroy(){
-        if(this._layer) cc.loader.releaseRes("common/prefab/Paohuzi_game_over_view",cc.Prefab);
+        if(this._layer) cc.loader.releaseRes("common/prefab/Hongheihu_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });

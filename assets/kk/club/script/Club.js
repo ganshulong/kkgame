@@ -313,7 +313,7 @@ cc.Class({
             bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4?this.tableBgs[0]:this.tableBgs[1];
         } else if (2 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[2];
-        } else if (3 == config.gameid) {
+        } else if (5 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[3];
         }
             
