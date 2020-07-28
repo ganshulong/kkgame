@@ -82,7 +82,8 @@ cc.Class({
         this.gameTypeIndex = {
             PengHu:0,
             PaoHuZi:1,
-            HongHeiHu:2
+            HongHeiHu:2,
+            LiuHuQiang:3
         };
 
         let btn_back = this._createLayer.getChildByName("btn_back");
@@ -94,6 +95,7 @@ cc.Class({
             Global.btnClickEvent(this.gameBtns.children[i],this.onClickGameType,this);
         }
 
+        //碰胡
         let panel_penghu = cc.find("img_bg/panel_penghu",this._createLayer);
         let btn_create_room_penghu = cc.find("right_bg/btn_create_room", panel_penghu);
         Global.btnClickEvent(btn_create_room_penghu,this.onCreatePengHu,this);
@@ -104,6 +106,7 @@ cc.Class({
         let btn_add_penghu = bg_score_penghu.getChildByName("btn_add");
         Global.btnClickEvent(btn_add_penghu,this.onClickScoreAdd,this);
 
+        //跑胡子
         let panel_paohuzi = cc.find("img_bg/panel_paohuzi",this._createLayer);
         let btn_create_room_paohuzi = cc.find("right_bg/btn_create_room", panel_paohuzi);
         Global.btnClickEvent(btn_create_room_paohuzi,this.onCreatePaoHuZi,this);
@@ -114,6 +117,7 @@ cc.Class({
         let btn_add_paohuzi = bg_score_paohuzi.getChildByName("btn_add");
         Global.btnClickEvent(btn_add_paohuzi,this.onClickScoreAdd,this);
 
+        //红黑胡
         let panel_hongheihu = cc.find("img_bg/panel_hongheihu",this._createLayer);
         let btn_create_room_hongheihu = cc.find("right_bg/btn_create_room", panel_hongheihu);
         Global.btnClickEvent(btn_create_room_hongheihu,this.onCreateHongHeiHu,this);
@@ -124,11 +128,23 @@ cc.Class({
         let btn_add_hongheihu = bg_score_hongheihu.getChildByName("btn_add");
         Global.btnClickEvent(btn_add_hongheihu,this.onClickScoreAdd,this);
 
-        this.gamePanels = [panel_penghu, panel_paohuzi, panel_hongheihu];
+        //六胡抢
+        let panel_liuhuqiang = cc.find("img_bg/panel_liuhuqiang",this._createLayer);
+        let btn_create_room_liuhuqiang = cc.find("right_bg/btn_create_room", panel_liuhuqiang);
+        Global.btnClickEvent(btn_create_room_liuhuqiang,this.onCreateLiuHuQiang,this);
+
+        let bg_score_liuhuqiang = cc.find("right_bg/scrollview/content/bg_score", panel_liuhuqiang);
+        let btn_deduction_liuhuqiang = bg_score_liuhuqiang.getChildByName("btn_deduction");
+        Global.btnClickEvent(btn_deduction_liuhuqiang,this.onClickScoreDedution,this);
+        let btn_add_liuhuqiang = bg_score_liuhuqiang.getChildByName("btn_add");
+        Global.btnClickEvent(btn_add_liuhuqiang,this.onClickScoreAdd,this);
+
+        this.gamePanels = [panel_penghu, panel_paohuzi, panel_hongheihu, panel_liuhuqiang];
 
         this.clearPengHu();
         this.clearPaoHuZi();
         this.clearHongHeiHu();
+        this.clearLiuHuQiang();
     },
 
     showGameType(){
@@ -513,6 +529,131 @@ cc.Class({
         let baseScore = layer.getChildByName("baseScore");
         for (var i = 0; i < baseScore.children.length; i++) {
             let toggle = baseScore.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
+        }
+
+        let text_score = cc.find("bg_score/text_score",layer);
+        text_score.getComponent(cc.Label).string = 1;
+
+        let speed = layer.getChildByName("speed");
+        for (var i = 0; i < speed.children.length; i++) {
+            let toggle = speed.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
+        }
+
+        let trusteeship = cc.find("trusteeship/toggle0",layer);
+        trusteeship.getComponent(cc.Toggle).isChecked = false;
+
+        let dismiss = cc.find("dismiss/toggle0",layer);
+        dismiss.getComponent(cc.Toggle).isChecked = true;
+
+        layer.getChildByName("input_roomName").getComponent(cc.EditBox).string = "";
+        layer.getChildByName("input_roomName").active = this._isClubRoom;
+
+        let sameIP = cc.find("sameIP/toggle0",layer);
+        sameIP.getComponent(cc.Toggle).isChecked = false;
+
+        let distance = cc.find("distance/toggle0",layer);
+        distance.getComponent(cc.Toggle).isChecked = false;
+    },
+
+    // 创建六胡抢
+    onCreateLiuHuQiang(){
+        let layer = cc.find("right_bg/scrollview/content",this.gamePanels[this.gameTypeIndex.LiuHuQiang]);
+
+        let req = {};
+        let roomNameStr = "";
+        if (this._isClubRoom) {
+            roomNameStr = layer.getChildByName("input_roomName").getComponent(cc.EditBox).string;
+            if(roomNameStr.length===0){
+                cc.vv.FloatTip.show("请输入桌子名称!");
+                return;
+            }
+        }
+        req.tname = roomNameStr;
+
+        if (this._isClubRoom) {
+            req.clubid = cc.vv.UserManager.currClubId;
+        }
+        req.gameid = this._isClubRoom ? 7 : 8;
+
+        let round = layer.getChildByName("round");
+        for (var i = 0; i < round.children.length; i++) {
+            let toggle = round.getChildByName("toggle" + i);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.gamenum = [8,16,24][i]
+                break;
+            }
+        }
+
+        let player_num = layer.getChildByName("player_num");
+        for (var i = 0; i < player_num.children.length; i++) {
+            let toggle = player_num.getChildByName("toggle" + i);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.seat = [4,3,2][i]
+                break;
+            }
+        }
+
+        let countScore = layer.getChildByName("countScore");
+        for (var i = 0; i < countScore.children.length; i++) {
+            let toggle = countScore.getChildByName("toggle" + i);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.param1 = [0,1][i]
+                break;
+            }
+        }
+
+        let text_score = cc.find("bg_score/text_score",layer);
+        req.score = parseInt(text_score.getComponent(cc.Label).string);
+
+        let speed = cc.find("speed/toggle0",layer);
+        req.speed = speed.getComponent(cc.Toggle).isChecked ? 0 : 1;
+
+        let trusteeship = cc.find("trusteeship/toggle0",layer);
+        req.trustee = trusteeship.getComponent(cc.Toggle).isChecked ? 1 : 0;
+
+        let dismiss = cc.find("dismiss/toggle0",layer);
+        req.isdissolve = dismiss.getComponent(cc.Toggle).isChecked ? 1 : 0;
+
+        // 同IP
+        let sameIP = cc.find("sameIP/toggle0",layer);
+        req.ipcheck = sameIP.getComponent(cc.Toggle).isChecked ? 1 : 0;
+
+        // 距离
+        let distance = cc.find("distance/toggle0",layer);
+        req.distance = distance.getComponent(cc.Toggle).isChecked ? 1 : 0;
+
+        var data = {};
+        data.c = this._isClubRoom ? MsgId.ADDGAME : MsgId.GAME_CREATEROOM;
+        data.gameInfo = req;
+        cc.vv.NetManager.send(data);
+    },
+
+    clearLiuHuQiang(){
+        let layer = cc.find("right_bg/scrollview/content",this.gamePanels[this.gameTypeIndex.LiuHuQiang]);
+        
+        let defaulCheckIndex = 0;
+
+        let round = layer.getChildByName("round");
+        for (var i = 0; i < round.children.length; i++) {
+            let toggle = round.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
+            break;
+        }
+
+        let player_num = layer.getChildByName("player_num");
+        for (var i = 0; i < player_num.children.length; i++) {
+            let toggle = player_num.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (i === 2);
+            break;
+        }
+
+        let countScore = layer.getChildByName("countScore");
+        for (var i = 0; i < countScore.children.length; i++) {
+            let toggle = countScore.getChildByName("toggle" + i);
             toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
             break;
         }

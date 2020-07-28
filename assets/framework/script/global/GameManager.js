@@ -439,6 +439,13 @@ cc.Class({
                         cc.vv.gameData.init(msgDic.deskInfo);
                         cc.vv.SceneMgr.enterScene("hongheihu");
                     }
+                } else if(msgDic.deskInfo.conf.gameid === 7 || msgDic.deskInfo.conf.gameid === 8){
+                    if(cc.vv.gameData === null){
+                        let data = require("LiuHuQiang_GameData");
+                        cc.vv.gameData = new data();
+                        cc.vv.gameData.init(msgDic.deskInfo);
+                        cc.vv.SceneMgr.enterScene("liuhuqiang");
+                    }
                 }
             }
 

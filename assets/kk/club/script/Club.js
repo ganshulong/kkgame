@@ -251,6 +251,13 @@ cc.Class({
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("hongheihu");
                 }
+            } else if(msg.response.deskInfo.conf.gameid === 7 || msg.response.deskInfo.conf.gameid === 8){
+                if(cc.vv.gameData === null){
+                    let data = require("LiuHuQiang_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("liuhuqiang");
+                }
             }
         }
     },
@@ -310,11 +317,13 @@ cc.Class({
 
         let bg = tableChar.getChildByName("bg");
         if (1 == config.gameid) {
-            bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4?this.tableBgs[0]:this.tableBgs[1];
+            bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4 ? this.tableBgs[0] : this.tableBgs[1];
         } else if (2 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[2];
         } else if (5 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[3];
+        } else if (7 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4 ? this.tableBgs[4] : this.tableBgs[5];
         }
             
         tableChar.active = true;
