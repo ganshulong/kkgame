@@ -98,13 +98,31 @@ cc.Class({
         let btn_create_room_penghu = cc.find("right_bg/btn_create_room", panel_penghu);
         Global.btnClickEvent(btn_create_room_penghu,this.onCreatePengHu,this);
 
+        let bg_score_penghu = cc.find("right_bg/scrollview/content/bg_score", panel_penghu);
+        let btn_deduction_penghu = bg_score_penghu.getChildByName("btn_deduction");
+        Global.btnClickEvent(btn_deduction_penghu,this.onClickScoreDedution,this);
+        let btn_add_penghu = bg_score_penghu.getChildByName("btn_add");
+        Global.btnClickEvent(btn_add_penghu,this.onClickScoreAdd,this);
+
         let panel_paohuzi = cc.find("img_bg/panel_paohuzi",this._createLayer);
         let btn_create_room_paohuzi = cc.find("right_bg/btn_create_room", panel_paohuzi);
         Global.btnClickEvent(btn_create_room_paohuzi,this.onCreatePaoHuZi,this);
 
+        let bg_score_paohuzi = cc.find("right_bg/scrollview/content/bg_score", panel_paohuzi);
+        let btn_deduction_paohuzi = bg_score_paohuzi.getChildByName("btn_deduction");
+        Global.btnClickEvent(btn_deduction_paohuzi,this.onClickScoreDedution,this);
+        let btn_add_paohuzi = bg_score_paohuzi.getChildByName("btn_add");
+        Global.btnClickEvent(btn_add_paohuzi,this.onClickScoreAdd,this);
+
         let panel_hongheihu = cc.find("img_bg/panel_hongheihu",this._createLayer);
         let btn_create_room_hongheihu = cc.find("right_bg/btn_create_room", panel_hongheihu);
         Global.btnClickEvent(btn_create_room_hongheihu,this.onCreateHongHeiHu,this);
+
+        let bg_score_hongheihu = cc.find("right_bg/scrollview/content/bg_score", panel_hongheihu);
+        let btn_deduction_hongheihu = bg_score_hongheihu.getChildByName("btn_deduction");
+        Global.btnClickEvent(btn_deduction_hongheihu,this.onClickScoreDedution,this);
+        let btn_add_hongheihu = bg_score_hongheihu.getChildByName("btn_add");
+        Global.btnClickEvent(btn_add_hongheihu,this.onClickScoreAdd,this);
 
         this.gamePanels = [panel_penghu, panel_paohuzi, panel_hongheihu];
 
@@ -124,6 +142,24 @@ cc.Class({
     onClickGameType(event){
         this.curGameIndex = event.target.index;
         this.showGameType();
+    },
+
+    onClickScoreDedution(){
+        let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
+        let score = parseInt(text_score.getComponent(cc.Label).string);
+        if (1 < score) {
+            --score;
+            text_score.getComponent(cc.Label).string = score;
+        }
+    },
+
+    onClickScoreAdd(){
+        let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
+        let score = parseInt(text_score.getComponent(cc.Label).string);
+        if (10 > score) {
+            ++score;
+            text_score.getComponent(cc.Label).string = score;
+        }
     },
 
     onClose(){
@@ -177,14 +213,6 @@ cc.Class({
                 else  req.param1 = 2;
             }
 
-            // 积分
-            let jifen = cc.find("score/toggle"+i,layer);
-            if(jifen.getComponent(cc.Toggle).isChecked){
-                if(i===1) req.score = 1;
-                else if(i === 2) req.score = 2;
-                else  req.score = 4;
-            }
-
             if(i<3){
                 let player_num = cc.find("player_num/toggle"+i,layer);
                 if(player_num.getComponent(cc.Toggle).isChecked){
@@ -199,7 +227,8 @@ cc.Class({
                 }
             }
         }
-
+        let text_score = cc.find("bg_score/text_score",layer);
+        req.score = parseInt(text_score.getComponent(cc.Label).string);
 
         // 托管
         let trusteeship = cc.find("force/toggle1",layer);
@@ -236,10 +265,6 @@ cc.Class({
             let zhongzhuang = cc.find("zhongzhuang/toggle"+i,layer);
             zhongzhuang.getComponent(cc.Toggle).isChecked = i===1;
 
-            // 积分
-            let jifen = cc.find("score/toggle"+i,layer);
-            jifen.getComponent(cc.Toggle).isChecked = i===1;
-
             if(i<3){
                 let player_num = cc.find("player_num/toggle"+i,layer);
                 player_num.getComponent(cc.Toggle).isChecked = i===1;
@@ -248,6 +273,9 @@ cc.Class({
                 speed.getComponent(cc.Toggle).isChecked = true;
             }
         }
+
+        let text_score = cc.find("bg_score/text_score",layer);
+        text_score.getComponent(cc.Label).string = 1;
 
         // 托管
         let trusteeship = cc.find("force/toggle1",layer);
@@ -312,14 +340,8 @@ cc.Class({
             }
         }
 
-        let score = layer.getChildByName("score");
-        for (var i = 0; i < score.children.length; i++) {
-            let toggle = score.getChildByName("toggle" + i);
-            if (toggle.getComponent(cc.Toggle).isChecked) {
-                req.score = [1,2,4][i]
-                break;
-            }
-        }
+        let text_score = cc.find("bg_score/text_score",layer);
+        req.score = parseInt(text_score.getComponent(cc.Label).string);
 
         let speed = cc.find("speed/toggle0",layer);
         req.speed = speed.getComponent(cc.Toggle).isChecked ? 0 : 1;
@@ -370,12 +392,8 @@ cc.Class({
             break;
         }
 
-        let score = layer.getChildByName("score");
-        for (var i = 0; i < score.children.length; i++) {
-            let toggle = score.getChildByName("toggle" + i);
-            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
-            break;
-        }
+        let text_score = cc.find("bg_score/text_score",layer);
+        text_score.getComponent(cc.Label).string = 1;
 
         let speed = layer.getChildByName("speed");
         for (var i = 0; i < speed.children.length; i++) {
@@ -447,14 +465,8 @@ cc.Class({
             }
         }
 
-        let score = layer.getChildByName("score");
-        for (var i = 0; i < score.children.length; i++) {
-            let toggle = score.getChildByName("toggle" + i);
-            if (toggle.getComponent(cc.Toggle).isChecked) {
-                req.score = [1,2,4][i]
-                break;
-            }
-        }
+        let text_score = cc.find("bg_score/text_score",layer);
+        req.score = parseInt(text_score.getComponent(cc.Label).string);
 
         let speed = cc.find("speed/toggle0",layer);
         req.speed = speed.getComponent(cc.Toggle).isChecked ? 0 : 1;
@@ -505,12 +517,8 @@ cc.Class({
             break;
         }
 
-        let score = layer.getChildByName("score");
-        for (var i = 0; i < score.children.length; i++) {
-            let toggle = score.getChildByName("toggle" + i);
-            toggle.getComponent(cc.Toggle).isChecked = (i === defaulCheckIndex);
-            break;
-        }
+        let text_score = cc.find("bg_score/text_score",layer);
+        text_score.getComponent(cc.Label).string = 1;
 
         let speed = layer.getChildByName("speed");
         for (var i = 0; i < speed.children.length; i++) {
