@@ -320,8 +320,9 @@ cc.Class({
 
     // 胡熄
     setHuXi(score){
-       if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"胡";
-
+        if (score) {
+            if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"胡";
+        }
     },
 
     // 总分
