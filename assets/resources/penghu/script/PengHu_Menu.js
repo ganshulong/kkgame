@@ -453,9 +453,9 @@ cc.Class({
         let description = "碰胡";
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "人场");
-        let bankerModeStr = ["连中玩法","中庄x2","四首相乘"];
+        let bankerModeStr = ["连中","中庄x2","四首相乘"];
         description += ("," + bankerModeStr[roomConf.param1]);
-        description += (",底分:" + roomConf.score);
+        description += ("," + roomConf.score+ "倍");
         description += (",房间号:" + roomConf.deskId);
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
     },

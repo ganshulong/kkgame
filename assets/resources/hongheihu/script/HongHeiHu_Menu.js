@@ -450,12 +450,11 @@ cc.Class({
         let roomConf = cc.vv.gameData.getRoomConf();
 
         let title = "闲去房间邀请";
-        let description = "碰胡";
+        let description = "红黑胡";
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "人场");
-        let bankerModeStr = ["连中玩法","中庄x2","四首相乘"];
-        description += ("," + bankerModeStr[roomConf.param1]);
-        description += (",底分:" + roomConf.score);
+        description += ("," + ["一胡一分","1分","2分","3分","4分","5分"][roomConf.param1]);
+        description += ("," + roomConf.score+ "倍");
         description += (",房间号:" + roomConf.deskId);
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
     },
