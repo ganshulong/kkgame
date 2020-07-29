@@ -48,8 +48,16 @@ cc.Class({
 
         this._startPos = showCardNode.parent.convertToWorldSpaceAR(showCardNode.position);
 
-        this._operateCardNode = outCardNode;
-        this._chairId = index;
+        if(playerNum === 4) {
+            this._operateCardNode = outCardNode;
+            this._chairId = index;
+        }
+        else {
+            if( index ==0 || index ==2){
+                this._operateCardNode = outCardNode;
+                this._chairId = index>0?1:0;
+            }
+        }
 
         if(this._operateCardNode){
             this._startPos = this._operateCardNode.convertToNodeSpaceAR(this._startPos);
@@ -80,7 +88,7 @@ cc.Class({
 
             let endPos = cc.v2(0,0);
             endPos.y = 36*i;
-            if(this._chairId == 1) {
+            if(cc.vv.gameData.getPlayerNum() === 4 && this._chairId == 1) {
                 endPos.x = -37*this._num;
             } else {
                 endPos.x = 37*this._num;

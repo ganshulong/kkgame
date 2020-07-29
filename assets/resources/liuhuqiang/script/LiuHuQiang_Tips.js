@@ -96,7 +96,7 @@ cc.Class({
     showDir(seat){
         let chairId = cc.vv.gameData.getLocalChair(seat);
         let playerNum = cc.vv.gameData.getPlayerNum();
-        for(let i=0;i<3;++i){
+        for(let i=0;i<4;++i){
            let arrow =  cc.find("panel_bg/arrow"+i,this._cardBox);
            arrow.active = chairId === i;
         }

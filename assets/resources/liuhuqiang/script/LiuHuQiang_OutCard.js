@@ -46,8 +46,16 @@ cc.Class({
         let showCardNode = cc.find("scene/out_cards/show_card"+index,this.node);
 
         this._playerNum = playerNum;
-        this._outCardNode = outCardNode;
-        this._chairId = index;
+        if(playerNum === 4) {
+            this._outCardNode = outCardNode;
+            this._chairId = index;
+        }
+        else {
+            if( index ==0 || index ==2){
+                this._outCardNode = outCardNode;
+                this._chairId = index>0?1:0;
+            }
+        }
 
         if(this._outCardNode){
             let pos = showCardNode.parent.convertToWorldSpaceAR(showCardNode.position);
@@ -67,14 +75,19 @@ cc.Class({
         if(this._chairId === 0){
             endPos.x = width*x;
             endPos.y = height*y;
-        
+        }
         //右
-        } else if(this._chairId === 1){
+        else if(this._playerNum === 4 && this._chairId === 1){
             endPos.y = height*x;
             endPos.x = -width*y;
-        
+        }
+        //上
+        else if((this._playerNum === 2 && this._chairId === 1) || this._chairId === 2){
+            endPos.x = width*x;
+            endPos.y = -height*y;
+        }
         //左
-        } else if(this._chairId === 2){
+        else if(this._chairId === 3){
             endPos.y = height*x;
             endPos.x = width*y;
         }

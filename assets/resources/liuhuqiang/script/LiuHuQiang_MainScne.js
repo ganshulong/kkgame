@@ -96,7 +96,7 @@ cc.Class({
 
         // this.node.addComponent("LiuHuQiang_Menu");
 
-        for(let i=0;i<3;++i){
+        for(let i=0;i<4;++i){
             this.node.addComponent("LiuHuQiang_ShowCard").init(i,conf.seat);
             this.node.addComponent("LiuHuQiang_Player").init(i,conf.seat,this.emjoAtlas);
             this.node.addComponent("LiuHuQiang_OutCard").init(i,conf.seat);

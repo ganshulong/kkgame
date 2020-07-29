@@ -59,7 +59,13 @@ cc.Class({
 
         this._playerNum = playerNum;
         this._handcardNode = cardNode;
-        this._chairId = index;
+        if(playerNum === 4) {
+            this._chairId = index;
+        } else {
+            if( index ==0 || index ==2){
+                this._chairId = index > 0 ? 1 : 0;
+            }
+        }
         this.initCardBox();
 
         if(this._handcardNode){
@@ -120,9 +126,12 @@ cc.Class({
             else node.y = node.height*i+node.height*0.5;
             if(this._chairId === 0){
                 node.x = this._handcardNode.parent.width*0.5-len*0.5*node.width+node.width*this._num;
+            } else if(this._chairId === 3){
+                node.x = -node.width*this._num;
             } else {
                 node.x = node.width*this._num;
             }
+            
             node.parent = this._handcardNode;
             node.zIndex = 4-i;
             node.cardBoxIndex = this._num*4+i;

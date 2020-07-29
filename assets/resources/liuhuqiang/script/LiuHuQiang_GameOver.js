@@ -44,7 +44,6 @@ cc.Class({
     start () {
         Global.registerEvent(EventId.GAMEOVER,this.recvGameOver,this);
         Global.registerEvent(EventId.SHOW_GAMEOVER,this.recvShowGameOver,this);
-
     },
 
     recvShowGameOver(){
@@ -138,11 +137,15 @@ cc.Class({
             img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
 
-            img_bg.getChildByName("title_yinxi_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+            img_bg.getChildByName("title_huxi_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
                 this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-win_all_huxi"):this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-lose_all_huxi");
 
+            img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_dianpao_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_dianpao_num");
+
             img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
-            img_bg.getChildByName("yinxi_num").getComponent(cc.Label).string = user.totalHuXi;
+            img_bg.getChildByName("huxi_num").getComponent(cc.Label).string = user.totalHuXi;
+            img_bg.getChildByName("dianpao_num").getComponent(cc.Label).string = user.dianPaoCount;
 
             let score = user.score + "";
             if(score < 0) {

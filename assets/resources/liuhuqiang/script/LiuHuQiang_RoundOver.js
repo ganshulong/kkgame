@@ -108,7 +108,7 @@ cc.Class({
         for(let i=0;i<data.users.length;++i){
             let chairId = cc.vv.gameData.getLocalChair(data.users[i].seat);
             let score = this._OverScoreNode.getChildByName("score"+chairId);
-            score.getComponent(cc.Label).string = data.users[i].roundHuXi + "硬息";
+            score.getComponent(cc.Label).string = data.users[i].roundHuXi + "胡息";
             score.color = data.users[i].roundScore>0?(new cc.Color(236,187,111)):(new cc.Color(209,114,96));
         }
         this._OverScoreNode.runAction(cc.sequence(cc.delayTime(1),cc.callFunc(()=>{
@@ -185,7 +185,30 @@ cc.Class({
                 }
             }
             cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore
-            panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("硬息： " + data.huxi);
+            panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("胡息： " + data.huxi);
+
+            let zimoHuTypeStr = "";
+            if (data.isZimo) {
+                zimoHuTypeStr += "自摸\n";
+            }
+            if (0 < data.dianPaoSeat) {
+                zimoHuTypeStr += "点跑胡\n";
+            }
+            if (0 < data.mingTangType) {
+                zimoHuTypeStr += ["","红胡","一点红","黑胡"][data.mingTangType];
+            }
+            if ("" == zimoHuTypeStr) {
+                zimoHuTypeStr += "平胡";
+            }
+            panel_CardInfo.getChildByName("text_zimo_huType").getComponent(cc.Label).string = zimoHuTypeStr;
+
+            let tunFanStr = "囤数:" + (parseInt((data.huxi-6) / 3) + 1);
+            if (data.isZimo || 0 < data.mingTangType) {
+                tunFanStr += " 番数:2"; 
+            } else {
+                tunFanStr += " 番数:1"; 
+            }
+            panel_CardInfo.getChildByName("text_tun_fan").getComponent(cc.Label).string = tunFanStr;
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
         for (let i = 0; i < data.diPai.length; i++) {

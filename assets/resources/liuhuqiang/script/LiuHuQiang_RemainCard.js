@@ -35,7 +35,7 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        for(let i=1;i<=2;++i){
+        for(let i=1;i<=3;++i){
             let node = cc.find("scene/playback_handle/player"+i,this.node);
             this._handCardNodeList.push(node);
         }
@@ -50,6 +50,9 @@ cc.Class({
         for(let i=0;i<users.length;++i){
             let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
             if(chairId!==0){
+                if(chairId === 1 && cc.vv.gameData.getPlayerNum()===2){
+                    chairId = 2;
+                }
                 let node = cc.find("scene/playback_handle/player"+chairId,this.node);
                 this.showHandCard(users[i].handInCards, node, chairId);
             }
@@ -60,8 +63,8 @@ cc.Class({
         for(let i=0;i<data.diPai.length;++i){
             let node = this.node.getComponent("LiuHuQiang_Card").createCard(data.diPai[i],2);
 
-            node.y = -(node.height+8)*parseInt(i/9);
-            node.x = (node.width+8)*parseInt(i%9);
+            node.y = -node.height*parseInt(i/6);
+            node.x = node.width*parseInt(i%6);
             node.parent = publicCard;
         }
     },

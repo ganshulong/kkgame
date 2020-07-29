@@ -44,8 +44,16 @@ cc.Class({
         this._atlas = atlas;
         let playerNode = cc.find("scene/player"+index,this.node);
         playerNode.active = false;
-        this._playerNode = playerNode;
-        this._chairId = index;
+        if(playerNum === 4) {
+            this._playerNode = playerNode;
+            this._chairId = index;
+        }
+        else {
+            if( index ==0 || index ==2){
+                this._playerNode = playerNode;
+                this._chairId = index>0?1:0;
+            }
+        }
 
         if(this._playerNode){
             this.registerMsg();
@@ -315,7 +323,7 @@ cc.Class({
     // 胡熄
     setHuXi(score){
         if (typeof score != 'undefined') {
-            if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"硬息";
+            if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"胡息";
         }
     },
 
