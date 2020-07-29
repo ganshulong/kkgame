@@ -142,21 +142,21 @@ cc.Class({
             )
         )
         data = data.detail;
-        for(let i=0;i<data.users.length;++i){
-            if(data.users[i].seat === this._seatIndex){
-                this._score = data.users[i].score;
+        for(let i=0;i<data.notyScoreChang.length;++i){
+            if(data.notyScoreChang[i].seat === this._seatIndex){
+                this._score = data.notyScoreChang[i].score;
                 this.setTotalScore(this._score);
-                this.setHuXi(data.users[i].roundScore);
-                if (0 > data.users[i].changeScore) {
+                this.setHuXi(data.notyScoreChang[i].roundScore);
+                if (0 > data.notyScoreChang[i].changeScore) {
                     //该玩家输了，金币飞向其他人
                     let toServerSeat = 0;
-                    for (let j = 0; j < data.users.length; j++) {
-                        if (0 < data.users[j].changeScore) {
-                            toServerSeat = data.users[j].seat;
+                    for (let j = 0; j < data.notyScoreChang.length; j++) {
+                        if (0 < data.notyScoreChang[j].changeScore) {
+                            toServerSeat = data.notyScoreChang[j].seat;
                             break;
                         }
                     }
-                    this.showFlyIcon(toServerSeat, -data.users[i].changeScore);
+                    this.showFlyIcon(toServerSeat, -data.notyScoreChang[i].changeScore);
                 }
                 break;
             }
