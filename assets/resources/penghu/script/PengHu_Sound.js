@@ -72,7 +72,10 @@ cc.Class({
         if(seat === cc.vv.gameData.getMySeatIndex()){
             for(let j=0;j<data.menzi.length;++j){
                 let typeData = data.menzi[j];
-                this.playOperateType(seat,typeData.type);
+                if (cc.vv.gameData.OPERATETYPE.KAN != typeData.type && 
+                    cc.vv.gameData.OPERATETYPE.LONG != typeData.type) {  //起手不播放扫 和 龙
+                    this.playOperateType(seat,typeData.type);
+                }
             }
         }
     },
@@ -112,7 +115,7 @@ cc.Class({
         else if(type === cc.vv.gameData.OPERATETYPE.KAN) soundName = "sao";
         else if(type === cc.vv.gameData.OPERATETYPE.CHI) soundName = "chi";
         else if(type === cc.vv.gameData.OPERATETYPE.CHI_LUO) soundName = "chiluo";
-        else if(type === cc.vv.gameData.OPERATETYPE.LONG) soundName = "tilong";
+        else if(type === cc.vv.gameData.OPERATETYPE.LONG) soundName = "hu_tilong";
         else if(type === cc.vv.gameData.OPERATETYPE.PAO) soundName = "pao";
         else if(type === cc.vv.gameData.OPERATETYPE.PENGSAN) soundName = "pengsanda";
         else if(type === cc.vv.gameData.OPERATETYPE.PENGSI) soundName = "pengsiqing";

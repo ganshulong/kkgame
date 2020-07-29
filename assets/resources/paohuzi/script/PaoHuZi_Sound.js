@@ -112,7 +112,7 @@ cc.Class({
         else if(type === cc.vv.gameData.OPERATETYPE.KAN) soundName = "sao";
         else if(type === cc.vv.gameData.OPERATETYPE.CHI) soundName = "chi";
         else if(type === cc.vv.gameData.OPERATETYPE.CHI_LUO) soundName = "chiluo";
-        else if(type === cc.vv.gameData.OPERATETYPE.LONG) soundName = "tilong";
+        else if(type === cc.vv.gameData.OPERATETYPE.LONG) soundName = "hu_tilong";
         else if(type === cc.vv.gameData.OPERATETYPE.PAO) soundName = "pao";
         else if(type === cc.vv.gameData.OPERATETYPE.PENGSAN) soundName = "pengsanda";
         else if(type === cc.vv.gameData.OPERATETYPE.PENGSI) soundName = "pengsiqing";
