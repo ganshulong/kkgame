@@ -54,7 +54,7 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        cc.loader.loadRes("common/prefab/Paohuzi_game_over_view",(err,prefab)=>{
+        cc.loader.loadRes("common/prefab/Liuhuqiang_game_over_view",(err,prefab)=>{
             if(err === null){
                 this._layer = cc.instantiate(prefab);
                 this._layer.parent = this.node.getChildByName("scene");
@@ -104,7 +104,7 @@ cc.Class({
                     player.x = posArr[data.users.length][i];
                     player.active = true;
                 }
-                for(let i = data.users.length; i < 3; ++i){
+                for(let i = data.users.length; i < 4; ++i){
                     cc.find("game_end_bg/player"+i,this._layer).active = false;
                 }
             }
@@ -158,7 +158,7 @@ cc.Class({
     },
 
     onDestroy(){
-        if(this._layer) cc.loader.releaseRes("common/prefab/Paohuzi_game_over_view",cc.Prefab);
+        if(this._layer) cc.loader.releaseRes("common/prefab/Liuhuqiang_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });

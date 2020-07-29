@@ -84,7 +84,7 @@ cc.Class({
     recvRoundOver(data){
         data = data.detail;
         if(this._layer === null){
-            cc.loader.loadRes("common/prefab/Paohuzi_round_over_view",(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/Liuhuqiang_round_over_view",(err,prefab)=>{
                 if(err === null){
                     this._layer = cc.instantiate(prefab);
                     this._layer.parent = this.node.getChildByName("scene");
@@ -225,7 +225,7 @@ cc.Class({
         if (0 < bigWinerScore) {
             bigWinerNode.getChildByName("spr_bigWiner").active = true;
         }
-        for (let i = data.users.length; i < 3; i++) {
+        for (let i = data.users.length; i < 4; i++) {
             this._layer.getChildByName("player" + i).active = false;
         }
     },
@@ -390,7 +390,7 @@ cc.Class({
 
     onDestroy(){
         if(this._layer){
-            cc.loader.releaseRes("common/prefab/Paohuzi_round_over_view",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/Liuhuqiang_round_over_view",cc.Prefab);
         }
     }
     // update (dt) {},
