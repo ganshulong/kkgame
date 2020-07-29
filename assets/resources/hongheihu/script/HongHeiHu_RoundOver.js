@@ -186,6 +186,26 @@ cc.Class({
             }
             cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore
             panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("硬息： " + data.huxi);
+
+            let zimoHuTypeStr = "";
+            if (data.isZimo) {
+                zimoHuTypeStr += "自摸  +3硬息\n";
+            }
+            if (!(data.isZimo && 0 == data.mingTangType)) {
+                let typeStr = [];
+                typeStr[0] = "平胡";
+                typeStr[1] = "10红翻2倍";
+                typeStr[2] = "13红翻4倍";
+                typeStr[3] = "全黑翻5倍";
+                typeStr[4] = "红黑一粒珠翻3倍";
+                // typeStr.push("平胡");
+                // typeStr.push("10红翻2倍");
+                // typeStr.push("13红翻4倍");
+                // typeStr.push("全黑翻5倍");
+                // typeStr.push("红黑一粒珠翻3倍");
+                zimoHuTypeStr += typeStr[data.mingTangType];
+            }
+            panel_CardInfo.getChildByName("text_zimo_huType").getComponent(cc.Label).string = zimoHuTypeStr;
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
         for (let i = 0; i < data.diPai.length; i++) {
