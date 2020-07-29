@@ -62,15 +62,24 @@ cc.Class({
     showCard(list,type,source=0,showAction = false){
         for(let i=0;i<list.length;++i){
             let showBg = false;
-            if(type === cc.vv.gameData.OPERATETYPE.KAN){
-                if(i == 2 && this._chairId === 0){ // 自己
-                    showBg = false;
-                } else {
-                    showBg = true;
-                }
-            }
-            else if(type === cc.vv.gameData.OPERATETYPE.LONG || type === cc.vv.gameData.OPERATETYPE.SHE){
-                if (i == 3 && this._chairId === 0) {
+            // if(type === cc.vv.gameData.OPERATETYPE.KAN){
+            //     if(i == 2 && this._chairId === 0){ // 自己
+            //         showBg = false;
+            //     } else {
+            //         showBg = true;
+            //     }
+            // }
+            // else if(type === cc.vv.gameData.OPERATETYPE.LONG || type === cc.vv.gameData.OPERATETYPE.SHE){
+            //     if (i == 3 && this._chairId === 0) {
+            //         showBg = false;
+            //     } else {
+            //         showBg = true;
+            //     }
+            // }
+            if (type === cc.vv.gameData.OPERATETYPE.KAN ||
+                type === cc.vv.gameData.OPERATETYPE.LONG ||
+                type === cc.vv.gameData.OPERATETYPE.SHE) {
+                if (i == list.length-1 && 0 < list[i]) {
                     showBg = false;
                 } else {
                     showBg = true;

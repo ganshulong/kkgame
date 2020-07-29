@@ -70,14 +70,23 @@ cc.Class({
     showCard(list,type,source=0,showAction = false){
         for(let i=0;i<list.length;++i){
             let showBg = false;
-            if(type === cc.vv.gameData.OPERATETYPE.KAN){
-                if(this._chairId === 0){ // 自己
-                    showBg = i!==2;
+            // if(type === cc.vv.gameData.OPERATETYPE.KAN){
+            //     if(this._chairId === 0){ // 自己
+            //         showBg = i!==2;
+            //     }
+            //     else showBg = true;
+            // }
+            // else if(type === cc.vv.gameData.OPERATETYPE.LONG || type === cc.vv.gameData.OPERATETYPE.SHE){
+            //     showBg = i!==3;
+            // }
+            if (type === cc.vv.gameData.OPERATETYPE.KAN ||
+                type === cc.vv.gameData.OPERATETYPE.LONG ||
+                type === cc.vv.gameData.OPERATETYPE.SHE) {
+                if (i == list.length-1 && 0 < list[i]) {
+                    showBg = false;
+                } else {
+                    showBg = true;
                 }
-                else showBg = true;
-            }
-            else if(type === cc.vv.gameData.OPERATETYPE.LONG || type === cc.vv.gameData.OPERATETYPE.SHE){
-                showBg = i!==3;
             }
             let node = this.node.getComponent("PengHu_Card").createCard(list[i],showAction?1:2,showBg);
 
