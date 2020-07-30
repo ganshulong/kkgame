@@ -191,7 +191,7 @@ cc.Class({
             if (data.isZimo) {
                 zimoHuTypeStr += "自摸\n";
             }
-            if (0 < data.dianPaoSeat) {
+            if (0 < data.source) {
                 zimoHuTypeStr += "点跑胡\n";
             }
             if (0 < data.mingTangType) {
