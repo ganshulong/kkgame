@@ -55,6 +55,7 @@ cc.Class({
         return ret;
     },
 
+    //下0 右1 左2
     getUISeatBylocalSeat(localSeat){
         let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,-1,-1],[0,1,2,-1],[-1,-1,-1,-1]];
         let maxSeat = cc.vv.gameData.getRoomConf().seat;

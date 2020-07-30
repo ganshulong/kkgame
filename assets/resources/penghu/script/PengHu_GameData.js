@@ -70,6 +70,7 @@ cc.Class({
         return ret;
     },
 
+    //下0 右1 上2 左3
     getUISeatBylocalSeat(localSeat){
         let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,2,-1,-1],[0,1,3,-1],[0,1,2,3]];
         let maxSeat = cc.vv.gameData.getRoomConf().seat;
