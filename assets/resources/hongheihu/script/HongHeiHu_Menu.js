@@ -215,7 +215,11 @@ cc.Class({
             this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "您正在申请解散游戏操作，是否确认？";
         } else {                //未开始游戏
             if (createUid == cc.vv.UserManager.uid) {   //房主
-                this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "解散游戏";
+                if (cc.vv.UserManager.currClubId) {
+                    this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "离开游戏";
+                } else {
+                    this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "解散游戏";
+                }
                 this.dismiss_small_bg.getChildByName("text_tip").getComponent(cc.Label).string = "解散游戏后返还豆，是否确定解散？";
             } else {
                 this.dismiss_small_bg.getChildByName("text_title").getComponent(cc.Label).string = "返回大厅";
