@@ -142,12 +142,11 @@ cc.Class({
             )
         )
         data = data.detail;
-        for(let i=0;i<data.notyScoreChang.length;++i){
-            if(data.notyScoreChang[i].seat === this._seatIndex){
-                this._score = data.notyScoreChang[i].score;
-                this.setTotalScore(this._score);
-                this.setHuXi(data.notyScoreChang[i].roundScore);
-                if (0 > data.notyScoreChang[i].changeScore) {
+        for(let i=0;i<data.users.length;++i){
+            if(data.users[i].seat === this._seatIndex){
+                this.setTotalScore(data.users[i].score);
+                this.setHuXi(data.users[i].roundScore);
+                if (i < data.notyScoreChang.length && 0 > data.notyScoreChang[i].changeScore) {
                     //该玩家输了，金币飞向其他人
                     let toServerSeat = 0;
                     for (let j = 0; j < data.notyScoreChang.length; j++) {
@@ -327,8 +326,9 @@ cc.Class({
 
     // 总分
     setTotalScore(score){
-        if(this._playerNode)  cc.find("img_bg/txt_total_score",this._playerNode).getComponent(cc.Label).string = "总胡:"+score;
-
+        if (typeof score != 'undefined') {
+            if(this._playerNode)  cc.find("img_bg/txt_total_score",this._playerNode).getComponent(cc.Label).string = "总胡:"+score;
+        }
     },
 
     // 显示庄

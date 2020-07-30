@@ -321,8 +321,9 @@ cc.Class({
 
     // 总分
     setTotalScore(score){
-        if(this._playerNode)  cc.find("img_bg/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
-
+        if (typeof score != 'undefined') {
+            if(this._playerNode)  cc.find("img_bg/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
+        }
     },
 
     // 显示庄
