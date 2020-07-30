@@ -74,10 +74,12 @@ cc.Class({
             SHE:9,  // 蛇
             PAO:7,
             HU:10,
-            PENGSAN:11, // 碰三
-            KANSAN:12,  // 坎三
-            PENGSI:13, // 碰四
-            KANSI:14,  // 坎四
+            HANDPAO:11, // 手牌的跑
+            HANDLONG:12,  // 手牌的踢龙
+            // PENGSAN:11, // 碰三
+            // KANSAN:12,  // 坎三
+            // PENGSI:13, // 碰四
+            // KANSI:14,  // 坎四
             CHI_LUO:15,  // 吃落
         },
 

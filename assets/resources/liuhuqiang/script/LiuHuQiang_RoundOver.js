@@ -192,7 +192,7 @@ cc.Class({
                 zimoHuTypeStr += "自摸\n";
             }
             if (0 < data.source) {
-                zimoHuTypeStr += "点跑胡\n";
+                zimoHuTypeStr += "点炮胡\n";
             }
             if (0 < data.mingTangType) {
                 zimoHuTypeStr += ["","红胡","一点红","黑胡"][data.mingTangType];

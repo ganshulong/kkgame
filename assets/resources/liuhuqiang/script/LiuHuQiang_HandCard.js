@@ -650,11 +650,11 @@ cc.Class({
     // 收到坎
     recvKanAndKanNotify(data){
         data = data.detail;
-        if (data.seat === this._seatIndex) {
-            if (cc.vv.gameData.OPERATETYPE.PENGSI == data.pengType || cc.vv.gameData.OPERATETYPE.KANSI == data.kanType) {
-                this.isCanWarn = true;
-            }
-        }
+        // if (data.seat === this._seatIndex) {
+        //     if (cc.vv.gameData.OPERATETYPE.PENGSI == data.pengType || cc.vv.gameData.OPERATETYPE.KANSI == data.kanType) {
+        //         this.isCanWarn = true;
+        //     }
+        // }
         if(this._chairId === 0){
             if(data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
                 this.delHandCard(data.actionInfo.curaction.card);
