@@ -59,13 +59,8 @@ cc.Class({
 
         this._playerNum = playerNum;
         this._handcardNode = cardNode;
-        if(playerNum === 4) {
-            this._chairId = index;
-        } else {
-            if( index ==0 || index ==2){
-                this._chairId = index > 0 ? 1 : 0;
-            }
-        }
+        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
+
         this.initCardBox();
 
         if(this._handcardNode){
@@ -89,7 +84,6 @@ cc.Class({
             this._outCardY = this._handcardNode.convertToNodeSpaceAR(outCardLine.parent.convertToWorldSpaceAR(outCardLine.position)).y;
             this.checkCanOutCard();
         }
-
     },
 
     // 检查是否可以出牌

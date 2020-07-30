@@ -49,11 +49,9 @@ cc.Class({
         let users = data.users;
         for(let i=0;i<users.length;++i){
             let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
-            if(chairId!==0){
-                if(chairId === 1 && cc.vv.gameData.getPlayerNum()===2){
-                    chairId = 2;
-                }
-                let node = cc.find("scene/playback_handle/player"+chairId,this.node);
+            let UISeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
+            if(0 < UISeat){
+                let node = cc.find("scene/playback_handle/player"+UISeat,this.node);
                 this.showHandCard(users[i].handInCards, node, chairId);
             }
         }

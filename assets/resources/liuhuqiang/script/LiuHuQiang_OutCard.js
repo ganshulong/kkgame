@@ -30,6 +30,7 @@ cc.Class({
         _outCardNode:null,
         _chairId:-1,
         _seatIndex:-1,
+        _UISeat:-1,
         _playerNum:0,
         _startPos:null,
         _angle:0,
@@ -46,23 +47,16 @@ cc.Class({
         let showCardNode = cc.find("scene/out_cards/show_card"+index,this.node);
 
         this._playerNum = playerNum;
-        if(playerNum === 4) {
-            this._outCardNode = outCardNode;
-            this._chairId = index;
-        }
-        else {
-            if( index ==0 || index ==2){
-                this._outCardNode = outCardNode;
-                this._chairId = index>0?1:0;
-            }
-        }
+
+        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
+        this._UISeat = index;
+        this._outCardNode = outCardNode;
 
         if(this._outCardNode){
             let pos = showCardNode.parent.convertToWorldSpaceAR(showCardNode.position);
             this._startPos = this._outCardNode.convertToNodeSpaceAR(pos);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
         }
-
     },
 
     getEndPos(cardsNum){
@@ -71,23 +65,24 @@ cc.Class({
         let x = cardsNum%5;
         let width = 37;
         let height = 36;
-        // 2排
-        if(this._chairId === 0){
+
+        // 下
+        if(this._UISeat === 0){
             endPos.x = width*x;
             endPos.y = height*y;
-        }
+
         //右
-        else if(this._playerNum === 4 && this._chairId === 1){
+        } else if(this._UISeat === 1){
             endPos.y = height*x;
             endPos.x = -width*y;
-        }
+        
         //上
-        else if((this._playerNum === 2 && this._chairId === 1) || this._chairId === 2){
+        } else if(this._UISeat === 2){
             endPos.x = width*x;
             endPos.y = -height*y;
-        }
+        
         //左
-        else if(this._chairId === 3){
+        } else if(this._UISeat === 3){
             endPos.y = height*x;
             endPos.x = width*y;
         }

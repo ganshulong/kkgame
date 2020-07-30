@@ -46,7 +46,7 @@ cc.Class({
 
         this._pos = cc.v2(showCardNode.x,showCardNode.y);
         this._showCardNode = showCardNode;
-        this._chairId = index;
+        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);;
 
         if(this._showCardNode){
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);

@@ -30,6 +30,7 @@ cc.Class({
         _playerNode:null,
         _chairId:-1,
         _seatIndex:-1,
+        _UISeat:-1,
         _score:0,
         _emjoNode:null,
         _chatNode:null,
@@ -44,16 +45,10 @@ cc.Class({
         this._atlas = atlas;
         let playerNode = cc.find("scene/player"+index,this.node);
         playerNode.active = false;
-        if(playerNum === 4) {
-            this._playerNode = playerNode;
-            this._chairId = index;
-        }
-        else {
-            if( index ==0 || index ==2){
-                this._playerNode = playerNode;
-                this._chairId = index>0?1:0;
-            }
-        }
+
+        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
+        this._UISeat = index;
+        this._playerNode = playerNode;
 
         if(this._playerNode){
             this.registerMsg();

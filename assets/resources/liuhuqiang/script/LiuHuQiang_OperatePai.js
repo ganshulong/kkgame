@@ -33,6 +33,7 @@ cc.Class({
         _operateCardNode:null,
         _chairId:-1,
         _seatIndex:-1,
+        _UISeat:-1,
         _num:0, // 吃碰提畏数量
         _playerNum:0,
         _startPos:null,
@@ -48,23 +49,14 @@ cc.Class({
 
         this._startPos = showCardNode.parent.convertToWorldSpaceAR(showCardNode.position);
 
-        if(playerNum === 4) {
-            this._operateCardNode = outCardNode;
-            this._chairId = index;
-        }
-        else {
-            if( index ==0 || index ==2){
-                this._operateCardNode = outCardNode;
-                this._chairId = index>0?1:0;
-            }
-        }
+        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
+        this._UISeat = index;
+        this._operateCardNode = outCardNode;
 
         if(this._operateCardNode){
             this._startPos = this._operateCardNode.convertToNodeSpaceAR(this._startPos);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
-
         }
-
     },
 
     showCard(list,type,source=0,showAction = false){
@@ -97,7 +89,7 @@ cc.Class({
 
             let endPos = cc.v2(0,0);
             endPos.y = 36*i;
-            if(cc.vv.gameData.getPlayerNum() === 4 && this._chairId == 1) {
+            if(1 == this._UISeat) {
                 endPos.x = -37*this._num;
             } else {
                 endPos.x = 37*this._num;
