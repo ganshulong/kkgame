@@ -128,7 +128,7 @@ cc.Class({
                     panel_CardInfo.getChildByName("spr_lose").active = (0 >= data.users[i].roundScore);
                     panel_CardInfo.getChildByName("spr_win").active = (0 < data.users[i].roundScore);
                 }
-                if (data.users[i].roundScore == data.roundScore) {
+                if (data.users[i].seat == data.seat) {
                     winerInfo = data.users[i];
                 }
             }
