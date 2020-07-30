@@ -226,33 +226,33 @@ cc.Class({
         }
     },
 
-    showFlyIcon(toServerSeat,iconNum){
-        if (0 < toServerSeat && 0 < iconNum) {
-            let toLocalSeat = cc.vv.gameData.getLocalChair(toServerSeat);
-            let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
-            let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
-            let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
-            for (var j = 0; j < iconNum; j++) {
-                let icon = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
-                icon.parent = this._playerNode.parent.getChildByName("ndoe_fly_icon");
-                icon.position = this._playerNode.position;
-                icon.active = true;
-                icon.runAction(
-                    cc.sequence(
-                        cc.delayTime(j * 0.1), 
-                        cc.moveBy(0.6, moveByPos),
-                        cc.callFunc(()=>{
-                            Global.playEff(Global.SOUNDS.fly_icon);
-                        }),
-                        cc.delayTime(0.2), 
-                        cc.callFunc(()=>{
-                            icon.removeFromParent();
-                        })
-                    )
-                )
-            }
-        }
-    },
+    // showFlyIcon(toServerSeat,iconNum){
+    //     if (0 < toServerSeat && 0 < iconNum) {
+    //         let toLocalSeat = cc.vv.gameData.getLocalChair(toServerSeat);
+    //         let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
+    //         let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
+    //         let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
+    //         for (var j = 0; j < iconNum; j++) {
+    //             let icon = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
+    //             icon.parent = this._playerNode.parent.getChildByName("ndoe_fly_icon");
+    //             icon.position = this._playerNode.position;
+    //             icon.active = true;
+    //             icon.runAction(
+    //                 cc.sequence(
+    //                     cc.delayTime(j * 0.1), 
+    //                     cc.moveBy(0.6, moveByPos),
+    //                     cc.callFunc(()=>{
+    //                         Global.playEff(Global.SOUNDS.fly_icon);
+    //                     }),
+    //                     cc.delayTime(0.2), 
+    //                     cc.callFunc(()=>{
+    //                         icon.removeFromParent();
+    //                     })
+    //                 )
+    //             )
+    //         }
+    //     }
+    // },
 
     recvDeskInfoMsg(){
         let deskInfo = cc.vv.gameData.getDeskInfo();
