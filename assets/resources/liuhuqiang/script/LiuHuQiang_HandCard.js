@@ -349,7 +349,7 @@ cc.Class({
                 if(this._cardBox[i][j] ){
 
                     let endPos = cc.v2(this._handcardNode.parent.width*0.5-len*0.5*this._cardBox[i][j].width+
-                        i*this._cardBox[i][j].width-20,(this._cardBox[i][j].height-22)*j+this._cardBox[i][j].height*0.5-25);
+                        i*this._cardBox[i][j].width,(this._cardBox[i][j].height-22)*j+this._cardBox[i][j].height*0.5-25);
                     if(showAction){
                         this._cardBox[i][j].runAction(cc.moveTo(0.1,endPos));
                     }
