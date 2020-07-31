@@ -188,6 +188,7 @@ cc.Class({
         data = data.detail;
         if(data.hcard>0){
             if(data.source>0){
+                this.clearDesk();
                 if(data.source === this._seatIndex){
                     this.showCard(data.hcard);
                     this.node.getComponent("HongHeiHu_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
