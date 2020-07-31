@@ -29,7 +29,7 @@ cc.Class({
         // },
         _deskInfo:null,
         _seatIndex:-1,
-        _playerNum:3,           // 每局玩的人数限制
+        _playerNum:4,           // 每局玩的人数限制
         _actionTime:0.3,         // 动画时间
     },
 
