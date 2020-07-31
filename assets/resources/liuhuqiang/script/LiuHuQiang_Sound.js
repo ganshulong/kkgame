@@ -60,11 +60,10 @@ cc.Class({
         }
     },
 
-    onRecvMenziSound(data){
-        let type = data.detail;
-        this.playOperateType(cc.vv.gameData.getMySeatIndex(),type);
-    },
-
+    // onRecvMenziSound(data){
+    //     let type = data.detail;
+    //     this.playOperateType(cc.vv.gameData.getMySeatIndex(),type);
+    // },
 
     onRecvHandCard(data){
         data = data.detail;
