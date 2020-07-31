@@ -492,6 +492,7 @@ cc.Class({
                     let callFunc1 = cc.callFunc(()=>{
                         bg.opacity = 200;
                         child.getComponent(cc.Sprite).enabled = false;
+                        Global.playEff(Global.SOUNDS.send_card);
                     });
                     let callFunc2 = cc.callFunc(()=>{
                         child.getComponent(cc.Sprite).enabled = true;

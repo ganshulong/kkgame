@@ -155,6 +155,8 @@ cc.Class({
             else{
                 cc.vv.AudioManager.playEff(this._soundPath, "loss",true);
             }
+        } else {
+            // cc.vv.AudioManager.playEff(this._soundPath, "臭庄",true);
         }
     },
 
