@@ -91,7 +91,7 @@ cc.Class({
         cc.vv.AudioManager.setBgmVolume(_musicIsOpen==1?_audioVolue:0);
 
 
-        let language = cc.sys.localStorage.getItem("language");
+        let language = parseInt(cc.sys.localStorage.getItem("language"));
         if(language === null) language = 0;
         Global.language = language;
 
