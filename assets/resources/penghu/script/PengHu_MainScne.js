@@ -66,12 +66,6 @@ cc.Class({
             )
         )
 
-        let selectData = new Date();
-        this.curData = {};
-        this.curData.year = selectData.getFullYear();
-        this.curData.month = selectData.getMonth();     //比实际小1
-        this.curData.day = selectData.getDate();
-
         let conf = cc.vv.gameData.getRoomConf();
         let roomId = cc.find("scene/room_info/txt_room_id",this.node);
         roomId.getComponent(cc.Label).string = "游戏号:"+conf.deskId;

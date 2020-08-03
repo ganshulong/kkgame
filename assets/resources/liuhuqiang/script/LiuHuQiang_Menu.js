@@ -454,7 +454,7 @@ cc.Class({
         let roomConf = cc.vv.gameData.getRoomConf();
 
         let title = "闲去房间邀请";
-        let description = "跑胡子";
+        let description = "六胡抢";
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "人场");
         description += ("," + ["三胡一分","一胡一分"][roomConf.param1]);
