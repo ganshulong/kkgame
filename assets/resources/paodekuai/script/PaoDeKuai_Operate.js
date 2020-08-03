@@ -19,25 +19,40 @@ cc.Class({
         this._operateNode = cc.find("scene/play_action_view",this.node);
         this._operateNode.active = false;
 
-        // 吃
-        this._btnChi = cc.find("scene/play_action_view/img_bg/btn_chi",this.node);
-        Global.btnClickEvent(this._btnChi,this.onChi,this);
+        // // 吃
+        // this._btnChi = cc.find("scene/play_action_view/img_bg/btn_chi",this.node);
+        // Global.btnClickEvent(this._btnChi,this.onChi,this);
 
-        // 碰
-        this._btnPeng = cc.find("scene/play_action_view/img_bg/btn_peng",this.node);
-        Global.btnClickEvent(this._btnPeng,this.onPeng,this);
+        // // 碰
+        // this._btnPeng = cc.find("scene/play_action_view/img_bg/btn_peng",this.node);
+        // Global.btnClickEvent(this._btnPeng,this.onPeng,this);
 
-        // 胡
-        this._btnHu = cc.find("scene/play_action_view/img_bg/btn_hu",this.node);
-        Global.btnClickEvent(this._btnHu,this.onHu,this);
+        // // 胡
+        // this._btnHu = cc.find("scene/play_action_view/img_bg/btn_hu",this.node);
+        // Global.btnClickEvent(this._btnHu,this.onHu,this);
 
-        // 过
-        this._btnGuo = cc.find("scene/play_action_view/img_bg/btn_guo",this.node);
-        Global.btnClickEvent(this._btnGuo,this.onGuo,this);
+        // // 过
+        // this._btnGuo = cc.find("scene/play_action_view/img_bg/btn_guo",this.node);
+        // Global.btnClickEvent(this._btnGuo,this.onGuo,this);
 
+        // 提示
+        this.btn_tipCard = cc.find("scene/play_action_view/btn_tipCard",this.node);
+        Global.btnClickEvent(this.btn_tipCard,this.onClickTipCard,this);
+
+        // 出
+        this.btn_outCard = cc.find("scene/play_action_view/btn_outCard",this.node);
+        Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
 
         this.recvDeskInfoMsg();
 
+    },
+
+    onClickTipCard(){
+        
+    },
+
+    onClickOutCard(){
+        
     },
 
     clearDesk(){

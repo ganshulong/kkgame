@@ -96,6 +96,8 @@ cc.Class({
                 this.setTotalScore(data.users[i].score);
                 this.setHuXi(data.users[i].roundHuXi);
                 this._playerNode.getChildByName("clock").active = false;
+                this._playerNode.getChildByName("mask_master").active = false;
+                this._playerNode.getChildByName("mask_onOut").active = false;
                 break;
             }
         }
@@ -246,6 +248,8 @@ cc.Class({
             this.setHuXi(user.roundHuXi?user.roundHuXi:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("clock").active = false;
+            this._playerNode.getChildByName("mask_master").active = false;
+            this._playerNode.getChildByName("mask_onOut").active = false;
         }
     },
 
