@@ -3,29 +3,16 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        
         _settingNode:null,
-        _btn_music:null,
-        _btn_effect:null,
-        _musicValue:1,
-        _effectValue:1,
-        _language:0, //0普通话 1攸县话
     },
 
     start () {
-        this._musicValue = cc.sys.localStorage.getItem("music");
-        if(this._musicValue === null) this._musicValue = 1;
-
-        this._effectValue = cc.sys.localStorage.getItem("effect");
-        if(this._effectValue === null) this._effectValue = 1;
-
         Global.registerEvent(EventId.SHOW_SETTING,this.showSetting,this);
-
     },
 
     showSetting(){
         if(this._settingNode === null){
-            cc.loader.loadRes("common/prefab/SettingLayer",cc.Prefab,(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/game_set",cc.Prefab,(err,prefab)=>{
                 if(err === null){
                     this._settingNode = cc.instantiate(prefab);
                     this._settingNode.parent = this.node;
@@ -37,19 +24,18 @@ cc.Class({
                     let btnClose = this._settingNode.getChildByName("btn_close");
                     Global.btnClickEvent(btnClose,this.onClose,this);
 
-                    let btn_real_music = this._settingNode.getChildByName("btn_real_music");
-                    let btn_effect = this._settingNode.getChildByName("btn_real_effect");
+                    this.btn_music = this._settingNode.getChildByName("btn_music");
+                    Global.btnClickEvent(this.btn_music,this.setMusic,this);
+                    this.btn_music_mask = this._settingNode.getChildByName("btn_music_mask");
+
+                    this.btn_effect = this._settingNode.getChildByName("btn_effect");
+                    Global.btnClickEvent(this.btn_effect,this.setEffct,this);
+                    this.btn_effect_mask = this._settingNode.getChildByName("btn_effect_mask");
 
                     cc.find("language/toggle1",this._settingNode).getComponent(cc.Toggle).isChecked = Global.language == 0;
                     cc.find("language/toggle2",this._settingNode).getComponent(cc.Toggle).isChecked = Global.language == 1;
 
-                    this._btn_music = this._settingNode.getChildByName("btn_music");
-                    this._btn_effect = this._settingNode.getChildByName("btn_effect");
-                    Global.btnClickEvent(btn_real_music,this.setMusic,this);
-                    Global.btnClickEvent(btn_effect,this.setEffct,this);
                     this.showSettingAction();
-                    this.setOperate(this._musicValue,this._btn_music);
-                    this.setOperate(this._effectValue,this._btn_effect);
                 }
             });
         }else{
@@ -59,37 +45,47 @@ cc.Class({
 
     // 设置音乐
     setMusic(){
-        this._musicValue = this._musicValue==0?1:0;
-        this.setOperate(this._musicValue,this._btn_music);
-        cc.sys.localStorage.setItem("music",this._musicValue);
-        cc.vv.AudioManager.setBgmVolume(this._musicValue);
-    },
-
-    setOperate(vol,btn){
-        btn.x = vol==0?47:163;
+        this._musicIsOpen = this._musicIsOpen == 0 ? 1 : 0;
+        this.setOperate(this._musicIsOpen,this.btn_music_mask);
+        cc.sys.localStorage.setItem("_musicIsOpen",this._musicIsOpen);
+        cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
     },
 
     // 设置音效
     setEffct(){
-        this._effectValue = this._effectValue==0?1:0;
-        this.setOperate(this._effectValue,this._btn_effect);
-        cc.sys.localStorage.setItem("effect",this._effectValue);
-        cc.vv.AudioManager.setEffVolume(this._effectValue);
+        this._effectIsOpen = this._effectIsOpen == 0 ? 1 : 0;
+        this.setOperate(this._effectIsOpen,this.btn_effect_mask);
+        cc.sys.localStorage.setItem("_effectIsOpen",this._effectIsOpen);
+        cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
+    },
+
+    setOperate(vol,btn){
+        btn.x = vol == 0 ? 63 : 178;
     },
 
     onClose(){
         this._settingNode.active = false;
-         if(cc.find("language/toggle1",this._settingNode).getComponent(cc.Toggle).isChecked){
-             this._language = 0;
-         }
-         else{
-             this._language = 1;
-         }
-        cc.sys.localStorage.setItem("language",this._language);
-        Global.language = this._language;
+        let isChecked = cc.find("language/toggle1",this._settingNode).getComponent(cc.Toggle).isChecked;
+        Global.language = isChecked ? 0 : 1;
+        cc.sys.localStorage.setItem("language",Global.language);
     },
 
     showSettingAction(){
+        this._audioVolue = Number(cc.sys.localStorage.getItem("_audioVolue"));
+        if(null === this._audioVolue) this._audioVolue = 1;
+        // this.slider_volum.getComponent(cc.Slider).progress = this._audioVolue;
+        // this.progressBar_volum.getComponent(cc.ProgressBar).progress = this._audioVolue;
+
+        this._effectIsOpen = parseInt(cc.sys.localStorage.getItem("_effectIsOpen"));
+        if(null === this._effectIsOpen) this._effectIsOpen = 1;
+        this.setOperate(this._effectIsOpen,this.btn_effect_mask);
+        cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
+
+        this._musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
+        if(null === this._musicIsOpen) this._musicIsOpen = 1;
+        this.setOperate(this._musicIsOpen,this.btn_music_mask);
+        cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
+
         this._settingNode.active = true;
         this._settingNode.scale = 0;
         this._settingNode.runAction(cc.scaleTo(0.2,1).easing(cc.easeBackOut()));
@@ -97,8 +93,7 @@ cc.Class({
 
     onDestroy(){
         if(this._settingNode){
-            cc.loader.releaseRes("common/prefab/SettingLayer",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/game_set",cc.Prefab);
         }
     }
-    // update (dt) {},
 });

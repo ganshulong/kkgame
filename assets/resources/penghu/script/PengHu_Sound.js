@@ -95,9 +95,9 @@ cc.Class({
     recvKanNotify(data){
         data = data.detail;
         let seat = data.actionInfo.curaction.seat;
-        if(seat === cc.vv.gameData.getMySeatIndex()){
+        // if(seat === cc.vv.gameData.getMySeatIndex()){
             this.playOperateType(seat,data.kanType);
-        }
+        // }
     },
 
     recvPengNotify(data){
