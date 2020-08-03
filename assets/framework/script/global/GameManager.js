@@ -447,6 +447,13 @@ cc.Class({
                         cc.vv.gameData.init(msgDic.deskInfo);
                         cc.vv.SceneMgr.enterScene("liuhuqiang");
                     }
+                } else if(msgDic.deskInfo.conf.gameid === 9 || msgDic.deskInfo.conf.gameid === 10){
+                    if(cc.vv.gameData === null){
+                        let data = require("PaoDeKuai_GameData");
+                        cc.vv.gameData = new data();
+                        cc.vv.gameData.init(msgDic.deskInfo);
+                        cc.vv.SceneMgr.enterScene("paodekuai");
+                    }
                 }
             }
 

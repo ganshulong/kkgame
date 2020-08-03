@@ -258,6 +258,13 @@ cc.Class({
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("liuhuqiang");
                 }
+            } else if(msg.response.deskInfo.conf.gameid === 9 || msg.response.deskInfo.conf.gameid === 10){
+                if(cc.vv.gameData === null){
+                    let data = require("PaoDeKuai_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("paodekuai");
+                }
             }
         }
     },
@@ -324,6 +331,8 @@ cc.Class({
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[3];
         } else if (7 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4 ? this.tableBgs[4] : this.tableBgs[5];
+        } else if (9 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4 ? this.tableBgs[6] : this.tableBgs[7];
         }
             
         tableChar.active = true;
