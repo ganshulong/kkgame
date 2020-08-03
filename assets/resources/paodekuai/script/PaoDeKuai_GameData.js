@@ -274,7 +274,8 @@ cc.Class({
                 value = tempList1[index];
             }
             else{
-                temp.push(tempList1[index]);
+                // temp.push(tempList1[index]);
+                temp.unshift(tempList1[index]);
             }
         }
         if (2 < temp.length) {
@@ -314,7 +315,8 @@ cc.Class({
                     temp = [tempList2[i]];
                     list.push(temp);
                 } else {
-                    temp.push(tempList2[i]);
+                    // temp.push(tempList2[i]);
+                    temp.unshift(tempList2[i]);
                 }
             }
         }

@@ -54,7 +54,7 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        cc.loader.loadRes("common/prefab/gameOverView",(err,prefab)=>{
+        cc.loader.loadRes("common/prefab/Penghui_game_over_view",(err,prefab)=>{
             if(err === null){
                 this._gameOverNode = cc.instantiate(prefab);
                 this._gameOverNode.active = this._show;
@@ -129,12 +129,12 @@ cc.Class({
             let img_bg = player.getChildByName("img_bg");
             img_bg.getComponent(cc.Sprite).spriteFrame = user.score >= 0 ? this._winBgSpr : this._loseBgSpr;
 
-            img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+            img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
 
-            img_bg.getChildByName("title_zhongzhuang_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+            img_bg.getChildByName("title_zhongzhuang_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_zhongzhuang_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_zhongzhuang_num");
-            img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+            img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_dianpao_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_dianpao_num");
 
             img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
@@ -160,7 +160,7 @@ cc.Class({
     },
 
     onDestroy(){
-        if(this._gameOverNode) cc.loader.releaseRes("common/prefab/gameOverView",cc.Prefab);
+        if(this._gameOverNode) cc.loader.releaseRes("common/prefab/Penghui_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });

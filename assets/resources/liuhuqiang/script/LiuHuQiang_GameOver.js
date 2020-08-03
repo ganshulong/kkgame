@@ -57,8 +57,8 @@ cc.Class({
             if(err === null){
                 this._layer = cc.instantiate(prefab);
                 this._layer.parent = this.node.getChildByName("scene");
-                this._layer.scaleX = this.node.width / this._layer.width;
-                this._layer.scaleY = this.node.height / this._layer.height;
+                // this._layer.scaleX = this.node.width / this._layer.width;
+                // this._layer.scaleY = this.node.height / this._layer.height;
                 this._layer.active = this._show;
                 this._layer.zIndex = 1;
                 this._layer.x = this.node.width/2;
@@ -134,13 +134,13 @@ cc.Class({
             player.getChildByName("txt_name").getComponent(cc.Label).string = user.playername;
             player.getChildByName("txt_id").getComponent(cc.Label).string = "ID:"+user.uid;
 
-            img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+            img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
 
-            img_bg.getChildByName("title_huxi_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+            img_bg.getChildByName("title_huxi_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
                 this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-win_all_huxi"):this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-lose_all_huxi");
 
-            img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>0?
+            img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_dianpao_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_dianpao_num");
 
             img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;

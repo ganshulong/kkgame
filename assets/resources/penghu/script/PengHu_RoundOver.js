@@ -84,7 +84,7 @@ cc.Class({
     recvRoundOver(data){
         data = data.detail;
         if(this._overRoundNode === null){
-            cc.loader.loadRes("common/prefab/round_over_view",(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/Penghu_round_over_view",(err,prefab)=>{
                 if(err === null){
                     this._overRoundNode = cc.instantiate(prefab);
                     this._overRoundNode.parent = this.node.getChildByName("scene");
@@ -339,7 +339,7 @@ cc.Class({
 
     onDestroy(){
         if(this._overRoundNode){
-            cc.loader.releaseRes("common/prefab/round_over_view",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/Penghu_round_over_view",cc.Prefab);
         }
     }
     // update (dt) {},
