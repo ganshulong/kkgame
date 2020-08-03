@@ -437,7 +437,8 @@ cc.Class({
 
     // 出牌结果
     onRcvOutCardReslut(msg){
-        if(msg.code === 200){
+        if(msg.code === 200 && msg.tingPaiInfo){
+            Global.dispatchEvent(EventId.OUTCARD_RESULT,msg.tingPaiInfo);
         }
     },
 

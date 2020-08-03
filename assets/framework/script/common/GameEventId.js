@@ -47,6 +47,7 @@ EventId.GAME_CREATEROOM = "game_createroom" ;             // 创建房间
 EventId.CLEARDESK = "clear_desk";                         // 清理桌面
 EventId.HANDCARD = "handcard";                            // 手牌
 EventId.OUTCARD = "outcard";                              // 自己出牌
+EventId.OUTCARD_RESULT = "outcard_result";             	  // 出牌结果
 EventId.OUTCARD_NOTIFY = "outcard_notify";                // 出牌通知
 EventId.PAO_NOTIFY = "pao_notify";                        // 跑通知
 EventId.KAN_NOTIFY = "kan_notify";                        // 坎通知

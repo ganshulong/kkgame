@@ -2447,13 +2447,13 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
+      "x": 0.5,
+      "y": 0.5
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 160,
-      "height": 30
+      "width": 37,
+      "height": 37
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -2461,8 +2461,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 45.0892,
-      "y": 0
+      "x": 70,
+      "y": 15
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -11675,7 +11675,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -47
+      "y": 0
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -37123,6 +37123,9 @@
     },
     "tableAtlas": {
       "__uuid__": "95fb68c8-cfde-4192-82d8-958e4341ef0a"
+    },
+    "tingAtlas": {
+      "__uuid__": "f1701090-24c2-4286-b995-f53825f922c7"
     },
     "_gameCount": 0
   },
