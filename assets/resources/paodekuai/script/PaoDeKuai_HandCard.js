@@ -1,32 +1,9 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _handcardNode:null,
         _num:0,
         _cardBox:[],
@@ -38,12 +15,7 @@ cc.Class({
         _handCards:[],         // 手牌
         _handCardData:null,
         _canTouch:true,
-        _outCardLineNode:null,
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
 
     init(index,playerNum){
         let cardNode = null;
@@ -78,10 +50,8 @@ cc.Class({
         }
 
         if(this._chairId === 0){
-            let outCardLine = cc.find("scene/sp_out_tips_line",this.node);
-            this._outCardLineNode = outCardLine;
-            this._outCardLineNode.active = false;
-            this._outCardY = this._handcardNode.convertToNodeSpaceAR(outCardLine.parent.convertToWorldSpaceAR(outCardLine.position)).y;
+            //gsltodo
+            this._outCardY = 300;
             this.checkCanOutCard();
         }
     },
@@ -91,15 +61,15 @@ cc.Class({
         if(this._chairId === 0){
             if(cc.vv.gameData.getMySeatIndex() === seat){
                 this._canOutCard = true;
+            } else {
+                this._canOutCard = false;
             }
-            else this._canOutCard = false;
-            this._outCardLineNode.active = this._canOutCard;
         }
     },
 
     showCard(list,len,showBg=false){
         for(let i=0;i<list.length;++i){
-            let node = this.node.getComponent("LiuHuQiang_Card").createCard(list[i],this._chairId==0?1:2);
+            let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i],this._chairId==0?1:2);
             node.name = "card";
             if(this._chairId === 0) {
                 node.y = (node.height-22)*i+node.height*0.5-25;
@@ -112,7 +82,7 @@ cc.Class({
                 if(showBg){
                     let child = new cc.Node();
                     child.addComponent(cc.Sprite);
-                    this.node.getComponent("LiuHuQiang_Card").createCard(0,1,true,child);
+                    this.node.getComponent("PaoDeKuai_Card").createCard(0,1,true,child);
                     child.parent = node;
                     child.name = "bg";
                 }
@@ -556,7 +526,6 @@ cc.Class({
         }
         this._selectCard = null;
         this._canOutCard = false;
-        if(this._outCardLineNode) this._outCardLineNode.active = false;
         this._num = 0;
     },
 
@@ -596,27 +565,26 @@ cc.Class({
             if(this._seatIndex === deskInfo.users[i].seat){
                 let cards = deskInfo.users[i].handInCards;
 
-                if(cards && cards.length !== this._handcardNode.childrenCount){
-                    this.clearDesk();
-                    let list = cc.vv.gameData.sortCard(cards);
-                    this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);
-                    for(let i=0;i<list.length;++i){
-                        this.showCard(list[i],list.length);
-                    }
-                }
+                // if(cards && cards.length !== this._handcardNode.childrenCount){
+                //     this.clearDesk();
+                //     let list = cc.vv.gameData.sortCard(cards);
+                //     this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);
+                //     for(let i=0;i<list.length;++i){
+                //         this.showCard(list[i],list.length);
+                //     }
+                // }
 
-                let menziList = deskInfo.users[i].menzi;
-                let pengKanCount = 0;
-                for(let j = 0; j < menziList.length; ++j){
-                    if(cc.vv.gameData.OPERATETYPE.KAN === menziList[j].type || cc.vv.gameData.OPERATETYPE.PENG === menziList[j].type) // 坎
-                    {
-                        ++pengKanCount;
-                    }
-                }
-                if (4 == pengKanCount) {
-                    this.isCanWarn = true;
-                }
-
+                // let menziList = deskInfo.users[i].menzi;
+                // let pengKanCount = 0;
+                // for(let j = 0; j < menziList.length; ++j){
+                //     if(cc.vv.gameData.OPERATETYPE.KAN === menziList[j].type || cc.vv.gameData.OPERATETYPE.PENG === menziList[j].type) // 坎
+                //     {
+                //         ++pengKanCount;
+                //     }
+                // }
+                // if (4 == pengKanCount) {
+                //     this.isCanWarn = true;
+                // }
             }
         }
         if(deskInfo.isReconnect){
@@ -668,8 +636,9 @@ cc.Class({
 
     },
 
+    //gsltodo
     showOutLine(bShow){
-        this._outCardLineNode.active = bShow;
+        // this._outCardLineNode.active = bShow;
     },
 
     recvPlayerEnter(data){

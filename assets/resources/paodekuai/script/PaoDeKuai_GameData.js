@@ -1,39 +1,13 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
         _deskInfo:null,
         _seatIndex:-1,
         _playerNum:4,           // 每局玩的人数限制
         _actionTime:0.3,         // 动画时间
     },
-
-    // onLoad () {},
 
     clear(){
         this.unregisterMsg();
@@ -69,6 +43,7 @@ cc.Class({
     },
 
     init(data){
+        this.RoomSeat = 3;
         this.OPERATETYPE={
             GU0:1,  // 过
             PUT:2,  // 打牌
@@ -235,7 +210,7 @@ cc.Class({
         let conf = this._deskInfo.conf;
         list.push(conf.gamenum+"局 ");
         list.push(conf.seat+ "人 ");
-        list.push(["三胡一分 ","一胡一分 "][conf.param1]);
+        list.push(["不扎鸟 ","红桃10扎鸟翻倍 ","红桃10扎鸟+5分 ","红桃10扎鸟+10分 "][conf.param1]);
         list.push(conf.score+ "倍 ");
         if(conf.speed === 1){
             list.push("快速 ");

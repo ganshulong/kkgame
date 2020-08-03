@@ -1,41 +1,15 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _layer:null,
         _loseBgSpr:null,
         _winBgSpr:null,
         _show:false,
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
+    
     init(atlas,yinxiAtlas){
         this._atlas = atlas;
         this._yinxiAtlas = yinxiAtlas;
@@ -53,7 +27,7 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        cc.loader.loadRes("common/prefab/Liuhuqiang_game_over_view",(err,prefab)=>{
+        cc.loader.loadRes("common/prefab/Paodekuai_game_over_view",(err,prefab)=>{
             if(err === null){
                 this._layer = cc.instantiate(prefab);
                 this._layer.parent = this.node.getChildByName("scene");
@@ -103,7 +77,7 @@ cc.Class({
                     player.x = posArr[data.users.length][i];
                     player.active = true;
                 }
-                for(let i = data.users.length; i < 4; ++i){
+                for(let i = data.users.length; i < cc.vv.gameData.RoomSeat; ++i){
                     cc.find("game_end_bg/player"+i,this._layer).active = false;
                 }
             }
@@ -161,7 +135,7 @@ cc.Class({
     },
 
     onDestroy(){
-        if(this._layer) cc.loader.releaseRes("common/prefab/Liuhuqiang_game_over_view",cc.Prefab);
+        if(this._layer) cc.loader.releaseRes("common/prefab/Paodekuai_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });

@@ -1,42 +1,15 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _layer:null,
         _show:false,
         _isOver:false,
         _OverScoreNode:null,
         _zhuang:-1,
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
 
     start () {
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
@@ -84,7 +57,7 @@ cc.Class({
     recvRoundOver(data){
         data = data.detail;
         if(this._layer === null){
-            cc.loader.loadRes("common/prefab/Liuhuqiang_round_over_view",(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/Paodekuai_round_over_view",(err,prefab)=>{
                 if(err === null){
                     this._layer = cc.instantiate(prefab);
                     this._layer.parent = this.node.getChildByName("scene");
@@ -136,7 +109,7 @@ cc.Class({
             if (data.hcard) {
                 let bgNode = new cc.Node();
                 bgNode.addComponent(cc.Sprite);
-                let cardNode = this.node.getComponent("LiuHuQiang_Card").createCard(data.hcard,0);
+                let cardNode = this.node.getComponent("PaoDeKuai_Card").createCard(data.hcard,0);
                 cardNode.parent = bgNode;
                 bgNode.parent = panel_CardInfo.getChildByName("card_last");
             }
@@ -162,7 +135,7 @@ cc.Class({
                     }
 
                     for(let j = 0; j < cardArr.length; ++j){
-                        let node = this.node.getComponent("LiuHuQiang_Card").createCard(cardArr[j],2);
+                        let node = this.node.getComponent("PaoDeKuai_Card").createCard(cardArr[j],2);
                         node.y = node.height * j;
                         node.parent = cardArrItem;
                     }
@@ -178,7 +151,7 @@ cc.Class({
                     cardArrItem.x = (winerInfo.menzi.length + i) * 70;
 
                     for(let j = 0; j < data.huCards[i].length; ++j) {
-                        let node = this.node.getComponent("LiuHuQiang_Card").createCard(data.huCards[i][j],2);
+                        let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.huCards[i][j],2);
                         node.y = node.height * j;
                         node.parent = cardArrItem;
                     }
@@ -212,7 +185,7 @@ cc.Class({
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
         for (let i = 0; i < data.diPai.length; i++) {
-            let node = this.node.getComponent("LiuHuQiang_Card").createCard(data.diPai[i],2);
+            let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.diPai[i],2);
             node.x = (node.width + 5) * i;
             node.parent = surplusCard;
         }
@@ -248,7 +221,7 @@ cc.Class({
         if (0 < bigWinerScore) {
             bigWinerNode.getChildByName("spr_bigWiner").active = true;
         }
-        for (let i = data.users.length; i < 4; i++) {
+        for (let i = data.users.length; i < cc.vv.gameData.RoomSeat; i++) {
             this._layer.getChildByName("player" + i).active = false;
         }
     },
@@ -327,7 +300,7 @@ cc.Class({
         let width=0;
         for(let i=0;i<tempList.length;++i){
             for(let j=0;j<tempList[i].length;++j) {
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(tempList[i][j],1);
+                let node = this.node.getComponent("PaoDeKuai_Card").createCard(tempList[i][j],1);
                 node.scale = 0.5;
                 node.y = (node.height-28)*j*node.scale+20;
                 node.x = node.width*i*node.scale+20;
@@ -362,7 +335,7 @@ cc.Class({
             let posX = 0;
             let PosY = 0;
             for(let j=0;j<menzilist.length;++j){
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(menzilist[j],0);
+                let node = this.node.getComponent("PaoDeKuai_Card").createCard(menzilist[j],0);
                 node.scale = 0.45;
                 node.x = width+node.width*node.scale;
                 node.y = 44;
@@ -390,8 +363,8 @@ cc.Class({
         if(card){
             let bgNode = new cc.Node();
             bgNode.addComponent(cc.Sprite);
-            this.node.getComponent("LiuHuQiang_Card").changCardBg(bgNode,source===0);
-            let cardNode = this.node.getComponent("LiuHuQiang_Card").createCard(card,0);
+            this.node.getComponent("PaoDeKuai_Card").changCardBg(bgNode,source===0);
+            let cardNode = this.node.getComponent("PaoDeKuai_Card").createCard(card,0);
             bgNode.y = 43;
             bgNode.x = width+60;
             bgNode.scale = 0.6;
@@ -413,7 +386,7 @@ cc.Class({
 
     onDestroy(){
         if(this._layer){
-            cc.loader.releaseRes("common/prefab/Liuhuqiang_round_over_view",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/Paodekuai_round_over_view",cc.Prefab);
         }
     }
     // update (dt) {},

@@ -1,32 +1,9 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _playerNode:null,
         _chairId:-1,
         _seatIndex:-1,
@@ -36,10 +13,6 @@ cc.Class({
         _chatNode:null,
         _atlas:null,
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
 
     init(index,playerNum,atlas){
         this._atlas = atlas;
@@ -105,17 +78,6 @@ cc.Class({
     onRcvOutCardNotify(data){
         data = data.detail;
         if(data.seat === this._seatIndex){
-            if (0 < data.isBaoJin) {
-                let self = this;
-                this._playerNode.runAction(
-                    cc.sequence(
-                        cc.delayTime(1),
-                        cc.callFunc(()=>{
-                            self._playerNode.getChildByName("ani_warn").active = true;
-                        })
-                    )
-                )
-            }
         }
     },
 
@@ -128,35 +90,12 @@ cc.Class({
 
 
     recvRoundOver(data){
-        let self = this;
-        this._playerNode.runAction(
-            cc.sequence(
-                cc.delayTime(1.5),
-                cc.callFunc(()=>{
-                    self._playerNode.getChildByName("ani_warn").active = false;
-                })
-            )
-        )
         data = data.detail;
         for(let i=0;i<data.users.length;++i){
-            if(data.users[i].seat === this._seatIndex){
+            if(data.users[i].seat === this._seatIndex){          
                 this.setTotalScore(data.users[i].score);
                 this.setHuXi(data.users[i].roundHuXi);
-                if (0 < data.users[i].roundScore) {
-                    let ani_huPai = this._playerNode.getChildByName("ani_huPai");
-                    ani_huPai.active = true;
-                    ani_huPai.scale = 0;
-                    ani_huPai.runAction(
-                        cc.sequence(
-                            cc.scaleTo(0.5,1.2,1.2),
-                            cc.scaleTo(0.1,1,1),
-                            cc.delayTime(1.4),
-                            cc.callFunc(()=>{
-                                self._playerNode.getChildByName("ani_huPai").active = false;
-                            })
-                        )
-                    )
-                }
+                this._playerNode.getChildByName("clock").active = false;
                 break;
             }
         }
@@ -299,15 +238,14 @@ cc.Class({
         if(user){
             let spr_head = cc.find("head/radio_mask/spr_head",this._playerNode);
             Global.setHead(spr_head,user.usericon);
-            cc.find("img_bg/txt_name",this._playerNode).getComponent(cc.Label).string = user.playername;
+            cc.find("txt_name",this._playerNode).getComponent(cc.Label).string = user.playername;
             this.setTotalScore(user.score);
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
             this.showZhuang(false);
             this.setHuXi(user.roundHuXi?user.roundHuXi:0);
             this.showReady(user.state === 1);
-            this._playerNode.getChildByName("ani_warn").active = (0 < user.isBaoJin);
-            this._playerNode.getChildByName("ani_huPai").active = false;
+            this._playerNode.getChildByName("clock").active = false;
         }
     },
 
@@ -316,26 +254,28 @@ cc.Class({
     },
 
     // 胡熄
+    //gsltodo
     setHuXi(score){
         if (typeof score != 'undefined') {
-            if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"胡息";
+            // if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"胡息";
         }
     },
 
     // 总分
     setTotalScore(score){
         if (typeof score != 'undefined') {
-            if(this._playerNode)  cc.find("img_bg/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
+            if(this._playerNode)  cc.find("bg_score/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
         }
     },
 
     // 显示庄
+    //gsltodo
     showZhuang(bShow, count = 1){
         if(this._playerNode) {
-            this._playerNode.getChildByName("sp_flag").active = bShow;
-            if (bShow && count) {
-                cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
-            }
+            // this._playerNode.getChildByName("sp_flag").active = bShow;
+            // if (bShow && count) {
+            //     cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
+            // }
         }
     },
 

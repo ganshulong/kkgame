@@ -1,12 +1,3 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 /*
     碰，提，畏，吃
@@ -15,21 +6,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _operateCardNode:null,
         _chairId:-1,
         _seatIndex:-1,
@@ -39,9 +16,6 @@ cc.Class({
         _startPos:null,
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
     init(index,playerNum){
         this._playerNum = playerNum;
         let outCardNode = cc.find("scene/out_cards/operate_card"+index,this.node);
@@ -85,7 +59,7 @@ cc.Class({
                     showBg = true;
                 }
             }
-            let node = this.node.getComponent("LiuHuQiang_Card").createCard(list[i],showAction?1:2,showBg);
+            let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i],showAction?1:2,showBg);
 
             let endPos = cc.v2(0,0);
             endPos.y = 36*i;
@@ -125,7 +99,7 @@ cc.Class({
         node.opacity = 255;
         let time = cc.vv.gameData.getActionTime();
         node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos).easing(cc.easeOut(3)),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            this.node.getComponent("LiuHuQiang_Card").createCard(node.cardValue,2,node.showBg,node);
+            this.node.getComponent("PaoDeKuai_Card").createCard(node.cardValue,2,node.showBg,node);
             node.scale = 1;
             node.opacity = 255;
         })))
@@ -192,7 +166,7 @@ cc.Class({
             for(let i=0;i<this._operateCardNode.childrenCount;++i){
                 let child = this._operateCardNode.children[i];
                 if(child.showBg && child.index==2){
-                    // this.node.getComponent("LiuHuQiang_Card").createCard(child.cardValue,2,false,child);
+                    // this.node.getComponent("PaoDeKuai_Card").createCard(child.cardValue,2,false,child);
                 }
             }
         }
@@ -209,39 +183,41 @@ cc.Class({
         if(deskInfo.isReconnect){
             for(let i=0;i<deskInfo.users.length;++i){
                 if(this._seatIndex === deskInfo.users[i].seat){
-                    let menziList = deskInfo.users[i].menzi;
-                    if(this._operateCardNode.childrenCount !== menziList.length){
-                        this._num = 0;
-                        this._operateCardNode.removeAllChildren();
-                        for(let j=0;j<menziList.length;++j){
-                            let typeData = menziList[j];
-                            let list = [];
-                            let source = 0;
-                            if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN) // 坎
-                            {
-                                list=[typeData.card,typeData.card,typeData.card];
-                            }
-                            else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || typeData.type === cc.vv.gameData.OPERATETYPE.SHE||
-                                typeData.type === cc.vv.gameData.OPERATETYPE.PAO){
-                                list=[typeData.card,typeData.card,typeData.card,typeData.card];
-                            }
-                            else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
-                                if(typeData.source === 0){
-                                    list=[typeData.card,typeData.card,typeData.card];
-                                }
-                                else{
-                                    list=[typeData.card,typeData.card];
-                                }
-                                source = typeData.source;
-                            }
 
-                            else {
-                                list = typeData.data;
-                            }
-                            this.showCard(list,typeData.type,source);
-                        }
-                        break;
-                    }
+
+                    // let menziList = deskInfo.users[i].menzi;
+                    // if(this._operateCardNode.childrenCount !== menziList.length){
+                    //     this._num = 0;
+                    //     this._operateCardNode.removeAllChildren();
+                    //     for(let j=0;j<menziList.length;++j){
+                    //         let typeData = menziList[j];
+                    //         let list = [];
+                    //         let source = 0;
+                    //         if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN) // 坎
+                    //         {
+                    //             list=[typeData.card,typeData.card,typeData.card];
+                    //         }
+                    //         else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || typeData.type === cc.vv.gameData.OPERATETYPE.SHE||
+                    //             typeData.type === cc.vv.gameData.OPERATETYPE.PAO){
+                    //             list=[typeData.card,typeData.card,typeData.card,typeData.card];
+                    //         }
+                    //         else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
+                    //             if(typeData.source === 0){
+                    //                 list=[typeData.card,typeData.card,typeData.card];
+                    //             }
+                    //             else{
+                    //                 list=[typeData.card,typeData.card];
+                    //             }
+                    //             source = typeData.source;
+                    //         }
+
+                    //         else {
+                    //             list = typeData.data;
+                    //         }
+                    //         this.showCard(list,typeData.type,source);
+                    //     }
+                    //     break;
+                    // }
                 }
             }
         }
@@ -281,14 +257,14 @@ cc.Class({
                 startX = this._operateCardNode.children[i].x;
                 ++num;
                 if(this._operateCardNode.children[i].index !==3){
-                    this.node.getComponent("LiuHuQiang_Card").createCard(card,2,showBg,this._operateCardNode.children[i]);
+                    this.node.getComponent("PaoDeKuai_Card").createCard(card,2,showBg,this._operateCardNode.children[i]);
 
                 }
             }
         }
         if(num === 0){
             for(let i=0;i<4;++i){
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(card,2,(i<3)?showBg:false);
+                let node = this.node.getComponent("PaoDeKuai_Card").createCard(card,2,(i<3)?showBg:false);
                 node.y = node.height*(num+i);
                 node.x = startX;
                 node.cardValue = card;
@@ -298,7 +274,7 @@ cc.Class({
         }
         else {
             for(let i=0;i<4-num;++i){
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(card,2,(num<3&&i==0)?showBg:false);
+                let node = this.node.getComponent("PaoDeKuai_Card").createCard(card,2,(num<3&&i==0)?showBg:false);
                 node.y = node.height*(num+i);
                 node.x = startX;
                 node.cardValue = card;

@@ -1,32 +1,9 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _outCardNode:null,
         _chairId:-1,
         _seatIndex:-1,
@@ -38,9 +15,6 @@ cc.Class({
         _outCardValue:null,
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
     init(index,playerNum){
         let outCardNode = cc.find("scene/out_cards/out_card"+index,this.node);
 
@@ -90,7 +64,7 @@ cc.Class({
     },
 
     showCard(value,showAction = false){
-        let node = this.node.getComponent("LiuHuQiang_Card").createCard(value,showAction?0:2);
+        let node = this.node.getComponent("PaoDeKuai_Card").createCard(value,showAction?0:2);
 
         let endPos = this.getEndPos(this._cardsNum);
 
@@ -266,7 +240,7 @@ cc.Class({
         node.opacity = 255;
 
         node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            this.node.getComponent("LiuHuQiang_Card").createCard(node.cardValue,2,node.showBg,node);
+            this.node.getComponent("PaoDeKuai_Card").createCard(node.cardValue,2,node.showBg,node);
             node.scale = 1;
             node.rotation = 0;
             node.opacity = 255;

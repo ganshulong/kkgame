@@ -1,43 +1,26 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _value:0,
         _atlas:null,
     },
-
-    // LIFE-CYCLE CALLBACKS:
 
     init(atlas){
         this._atlas = atlas;
     },
 
-    // onLoad () {},
+    // --扑克数据 45张(除掉大小王，红桃2,梅花2,方块2, 红桃A,梅花A,方块A, 方块K,每人15张)
+    // local CardData45=
+    // {
+    //     0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x1E,0x0F, --黑 3 - 2(15)
+    //     0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D, --红
+    //     0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2A,0x2B,0x2C,0x2D, --梅
+    //     0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3A,0x3B,0x3C,      --方
+    // }
+
     // 创建牌
     createCard(cardValue,type,showBg=false,node=null){
         let spr = null;

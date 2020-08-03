@@ -1,32 +1,9 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _operateNode:null,
         _selectChiNode:null,    // 选择吃
         _selectLuoNode:null,    // 落牌选择
@@ -36,10 +13,6 @@ cc.Class({
         _chiData:null,
         _chi:null,
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
 
     start () {
         this.registerMsg();
@@ -143,7 +116,7 @@ cc.Class({
 
             for(let j=0;j<3;++j){
                 let card = cc.find("img_bg/card"+j,item);
-                this.node.getComponent("LiuHuQiang_Card").createCard(temp[j],1,false,card);
+                this.node.getComponent("PaoDeKuai_Card").createCard(temp[j],1,false,card);
             }
         }
         for(let i=0;i<list.length;++i){
@@ -189,9 +162,9 @@ cc.Class({
 
     initLuoData(list){
         let selectedChiItem_bg = cc.find("selectedChi_bg/item/selectedChiItem_bg",this._selectLuoNode);
-        this.node.getComponent("LiuHuQiang_Card").createCard(this._currActionCard,1,false,selectedChiItem_bg.getChildByName("card"+0));
-        this.node.getComponent("LiuHuQiang_Card").createCard(this._chi.chiData[0],1,false,selectedChiItem_bg.getChildByName("card"+1));
-        this.node.getComponent("LiuHuQiang_Card").createCard(this._chi.chiData[1],1,false,selectedChiItem_bg.getChildByName("card"+2));
+        this.node.getComponent("PaoDeKuai_Card").createCard(this._currActionCard,1,false,selectedChiItem_bg.getChildByName("card"+0));
+        this.node.getComponent("PaoDeKuai_Card").createCard(this._chi.chiData[0],1,false,selectedChiItem_bg.getChildByName("card"+1));
+        this.node.getComponent("PaoDeKuai_Card").createCard(this._chi.chiData[1],1,false,selectedChiItem_bg.getChildByName("card"+2));
 
         this.handCard = JSON.parse(JSON.stringify(this._chi.handInCards));
         this.selectedItemCount = 0;
@@ -227,7 +200,7 @@ cc.Class({
 
             for(let j=0;j<3;++j){
                 let card = cc.find("img_bg/card"+(2-j),item);
-                this.node.getComponent("LiuHuQiang_Card").createCard(temp[j],1,false,card);
+                this.node.getComponent("PaoDeKuai_Card").createCard(temp[j],1,false,card);
             }
         }
         for(let i=0;i<list.length;++i){

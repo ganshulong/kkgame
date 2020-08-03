@@ -1,32 +1,9 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         cardsAtlas:cc.SpriteAtlas,
         emjoAtlas:cc.SpriteAtlas,
         tableAtlas:cc.SpriteAtlas,
@@ -35,31 +12,20 @@ cc.Class({
 
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
-
     start () {
         Global.autoAdaptDevices(false);
 
         Global.starBatteryReceiver();
         // this.onRcvBatteryChangeNotify();
 
-        this.txt_date = cc.find("scene/room_info/txt_date",this.node);
+        this.txt_date = cc.find("scene/bg_top/txt_date",this.node);
         let that = this;
         that.txt_date.runAction(
             cc.repeatForever(
                 cc.sequence(
                     cc.callFunc(()=>{
                         let date = new Date();
-                        let dateStr = "";
-                        let month = date.getMonth() + 1;
-                        dateStr += (10 > month) ? "0" : "";
-                        dateStr += month + "月";
-                        let day = date.getDate();
-                        dateStr += (10 > day) ? "0" : "";
-                        dateStr += day + "日";
-                        dateStr += date.toTimeString().split(' ')[0];
+                        let dateStr = date.getHours() + ":" + date.getMinutes();
                         that.txt_date.getComponent(cc.Label).string = dateStr;
                     }), 
                     cc.delayTime(1)
@@ -67,15 +33,9 @@ cc.Class({
             )
         )
 
-        let selectData = new Date();
-        this.curData = {};
-        this.curData.year = selectData.getFullYear();
-        this.curData.month = selectData.getMonth();     //比实际小1
-        this.curData.day = selectData.getDate();
-
         let conf = cc.vv.gameData.getRoomConf();
-        let roomId = cc.find("scene/room_info/txt_room_id",this.node);
-        roomId.getComponent(cc.Label).string = "游戏号:"+conf.deskId;
+        let roomId = cc.find("scene/bg_top/txt_room_id",this.node);
+        roomId.getComponent(cc.Label).string = "房号:"+conf.deskId;
 
         this._gameCount = conf.gamenum;
         this.updateCount(cc.vv.gameData.getDeskInfo().round);
@@ -86,33 +46,36 @@ cc.Class({
             str += list[i];
             if(i===2) str += "\n";
         }
-        let desc = cc.find("scene/room_info/txt_game_desc",this.node);
+        let desc = cc.find("scene/bg_top/txt_game_desc",this.node);
         desc.getComponent(cc.Label).string = str;
 
-        this.node.addComponent("LiuHuQiang_Card").init(this.cardsAtlas);
+        cc.find("scene/bg_top/node_play/play_2player",this.node).active = (2 == conf.seat);
+        cc.find("scene/bg_top/node_play/play_3player",this.node).active = (3 == conf.seat);
+
+        this.node.addComponent("PaoDeKuai_Card").init(this.cardsAtlas);
 
         let btnMsg = cc.find("scene/operate_btn_view/btn_msg",this.node);
         Global.btnClickEvent(btnMsg,this.onShowMsg,this);
 
-        // this.node.addComponent("LiuHuQiang_Menu");
+        // this.node.addComponent("PaoDeKuai_Menu");
 
-        for(let i = 0; i < 4; ++i){
-            this.node.addComponent("LiuHuQiang_ShowCard").init(i,conf.seat);
-            this.node.addComponent("LiuHuQiang_Player").init(i,conf.seat,this.emjoAtlas);
-            this.node.addComponent("LiuHuQiang_OutCard").init(i,conf.seat);
-            this.node.addComponent("LiuHuQiang_OperatePai").init(i,conf.seat);
-            this.node.addComponent("LiuHuQiang_HandCard").init(i,conf.seat);
+        for(let i = 0; i < cc.vv.gameData.RoomSeat; ++i){
+            this.node.addComponent("PaoDeKuai_ShowCard").init(i,conf.seat);
+            this.node.addComponent("PaoDeKuai_Player").init(i,conf.seat,this.emjoAtlas);
+            this.node.addComponent("PaoDeKuai_OutCard").init(i,conf.seat);
+            this.node.addComponent("PaoDeKuai_OperatePai").init(i,conf.seat);
+            this.node.addComponent("PaoDeKuai_HandCard").init(i,conf.seat);
         }
-        this.node.addComponent("LiuHuQiang_HandCard").init();
-        this.node.addComponent("LiuHuQiang_Operate");
-        this.node.addComponent("LiuHuQiang_Tips");
-        this.node.addComponent("LiuHuQiang_Action");
-        this.node.addComponent("LiuHuQiang_RemainCard");
-        this.node.addComponent("LiuHuQiang_RoundOver").init(this.tableAtlas);
-        this.node.addComponent("LiuHuQiang_GameOver").init(this.tableAtlas,this.yinxiAtlas);
-        this.node.addComponent("LiuHuQiang_Sound");
-        this.node.addComponent("LiuHuQiang_Chat");
-        this.node.addComponent("LiuHuQiang_Setting");
+        this.node.addComponent("PaoDeKuai_HandCard").init();
+        this.node.addComponent("PaoDeKuai_Operate");
+        this.node.addComponent("PaoDeKuai_Tips");
+        this.node.addComponent("PaoDeKuai_Action");
+        this.node.addComponent("PaoDeKuai_RemainCard");
+        this.node.addComponent("PaoDeKuai_RoundOver").init(this.tableAtlas);
+        this.node.addComponent("PaoDeKuai_GameOver").init(this.tableAtlas,this.yinxiAtlas);
+        this.node.addComponent("PaoDeKuai_Sound");
+        this.node.addComponent("PaoDeKuai_Chat");
+        this.node.addComponent("PaoDeKuai_Setting");
 
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
@@ -149,7 +112,7 @@ cc.Class({
     },
 
     onRcvBatteryChangeNotify(data){
-        let spr_battery = cc.find("scene/room_info/bg_battery/spr_battery",this.node);
+        let spr_battery = cc.find("scene/bg_top/bg_battery/spr_battery",this.node);
         spr_battery.scaleX = parseInt(data.detail) / 100;
     },
 
@@ -159,7 +122,7 @@ cc.Class({
     },
 
     updateCount(count){
-        let round = cc.find("scene/room_info/txt_round_num",this.node);
+        let round = cc.find("scene/bg_top/txt_round_num",this.node);
         round.getComponent(cc.Label).string = "("+count+"/"+this._gameCount+"局)";
     },
 

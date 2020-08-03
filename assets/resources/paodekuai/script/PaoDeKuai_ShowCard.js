@@ -1,32 +1,9 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
         _showCardNode:null,
         _chairId:-1,
         _seatIndex:-1,
@@ -56,7 +33,7 @@ cc.Class({
     showCard(cardValue){
         this._showCardNode.scale = 1;
         this._showCardNode.opacity = 255;
-        let node = this.node.getComponent("LiuHuQiang_Card").createCard(cardValue,0,cardValue==0?true:false,this._showCardNode);
+        let node = this.node.getComponent("PaoDeKuai_Card").createCard(cardValue,0,cardValue==0?true:false,this._showCardNode);
         this._showCardNode.active = true;
         this._cardValue = cardValue;
         return node;
@@ -77,7 +54,7 @@ cc.Class({
 
                 if(data.actionInfo.curaction.type === cc.vv.gameData.OPERATETYPE.PUT){
                     this.showCard(data.actionInfo.curaction.card);
-                    this.node.getComponent("LiuHuQiang_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
+                    this.node.getComponent("PaoDeKuai_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
                     let chairId = cc.vv.gameData.getLocalChair(data.actionInfo.curaction.seat);
                     let playerNode = cc.find("scene/player"+chairId,this.node);
                     let startPos = playerNode.position;
@@ -121,7 +98,7 @@ cc.Class({
         if(data.seat === this._seatIndex){
            this.showCard(data.card);
 
-            this.node.getComponent("LiuHuQiang_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
+            this.node.getComponent("PaoDeKuai_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
             this.showCardAction(this._cardBoXPos);
         }
         else this.clearDesk();
@@ -173,7 +150,7 @@ cc.Class({
                     if (deskInfo.actionInfo.curaction.seat === this._seatIndex) {
                         this._showCardNode.stopAllActions();
                         this.showCard(deskInfo.actionInfo.curaction.card);
-                        this.node.getComponent("LiuHuQiang_Card").changCardBg(this._showCardNode.getChildByName("card_light"),
+                        this.node.getComponent("PaoDeKuai_Card").changCardBg(this._showCardNode.getChildByName("card_light"),
                             deskInfo.actionInfo.curaction.source === 0);
                     }
                 }
@@ -191,13 +168,13 @@ cc.Class({
                 this.clearDesk();
                 if(data.source === this._seatIndex){
                     this.showCard(data.hcard);
-                    this.node.getComponent("LiuHuQiang_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
+                    this.node.getComponent("PaoDeKuai_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
                 }
             }
             else{
                 if(data.seat === this._seatIndex){
                     // this.showCard(data.hcard);
-                    // this.node.getComponent("LiuHuQiang_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
+                    // this.node.getComponent("PaoDeKuai_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
                 }
             }
         }
