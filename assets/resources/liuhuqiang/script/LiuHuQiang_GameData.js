@@ -69,6 +69,7 @@ cc.Class({
     },
 
     init(data){
+        this.RoomSeat = 4;
         this.OPERATETYPE={
             GU0:1,  // 过
             PUT:2,  // 打牌

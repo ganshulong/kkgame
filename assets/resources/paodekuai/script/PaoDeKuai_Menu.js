@@ -72,13 +72,23 @@ cc.Class({
         Global.btnClickEvent(btn_copy_roomId,this.onClickCopyRoomIdToWx,this);
 
         this.btn_gps = cc.find("scene/operate_btn_view/btn_gps",this.node);
+        this.btn_gps.btnID = -1;
+        Global.btnClickEvent(this.btn_gps,this.onClickGPS,this);
         this.setGpsBtnColour(1);
+
+        for (let i = 0; i < cc.vv.gameData.RoomSeat; i++) {
+            let head = cc.find("scene/player" + i + "/head",this.node);
+            head.btnID = i;
+            Global.btnClickEvent(head,this.onClickGPS,this);
+        }
 
         this.panel_gps = cc.find("scene/panel_gps",this.node);
         this.onSetShowGps(false);
 
         this.panel_player = cc.find("scene/panel_player",this.node);
-        this.onClickClosePlayerInfo();
+        this.panel_player.active = false;
+        let mask = this.panel_player.getChildByName("mask");
+        Global.btnClickEvent(mask,this.onClickClosePlayerInfo,this);
 
         let btn_exit = cc.find("spr_bg/btn_exit", this.panel_gps);
         Global.btnClickEvent(btn_exit,this.onClickExitGame,this);
@@ -264,8 +274,9 @@ cc.Class({
         cc.find("btn_ani/GPS_Yellow",this.btn_gps).active = (2 == colour);
     },
 
-    onClickGPS(event, customEventData){
-        this._clickBtnSeat = parseInt(customEventData);
+    onClickGPS(event){
+        let btnID = event.target.btnID
+        this._clickBtnSeat = parseInt(btnID);
         let req = {c: MsgId.PLAYER_DISTANCE_DATA};
         cc.vv.NetManager.send(req);
     },
@@ -370,15 +381,9 @@ cc.Class({
         if (-1 == this._clickBtnSeat) {
             this.onSetShowGps(true, data.detail);
         } else {
-            let localSeat = this.uiSeatToLocalSeat(this._clickBtnSeat);
+            let localSeat = cc.vv.gameData.getLocalSeatByUISeat(this._clickBtnSeat);
             this.onShowPlayerInfo(localSeat, data.detail);
         }
-    },
-
-    uiSeatToLocalSeat(uiSeat){
-        let uiSeatToLocalSeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,-1,1,-1],[0,1,-1,2],[0,1,2,3]];
-        let maxSeat = cc.vv.gameData.getRoomConf().seat;
-        return uiSeatToLocalSeatArr[maxSeat][uiSeat];
     },
 
     onClickClosePlayerInfo(){

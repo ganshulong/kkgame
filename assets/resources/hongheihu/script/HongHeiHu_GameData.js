@@ -62,7 +62,14 @@ cc.Class({
         return localSeatToUISeatArr[maxSeat][localSeat];
     },
 
+    getLocalSeatByUISeat(UISeat){
+        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,-1,-1],[0,1,2,-1],[-1,-1,-1,-1]];
+        let maxSeat = cc.vv.gameData.getRoomConf().seat;
+        return localSeatToUISeatArr[maxSeat][UISeat];
+    },
+
     init(data){
+        this.RoomSeat = 3;
         this.OPERATETYPE={
             GU0:1,  // 过
             PUT:2,  // 打牌

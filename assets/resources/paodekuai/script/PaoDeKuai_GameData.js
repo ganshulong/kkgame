@@ -29,15 +29,15 @@ cc.Class({
         return ret;
     },
 
-    //下0 右1 上2 左3
+    //下0 右1 左2
     getUISeatBylocalSeat(localSeat){
-        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,2,-1,-1],[0,1,3,-1],[0,1,2,3]];
+        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,-1,-1],[0,1,2,-1],[-1,-1,-1,-1]];
         let maxSeat = cc.vv.gameData.getRoomConf().seat;
         return localSeatToUISeatArr[maxSeat][localSeat];
     },
 
     getLocalSeatByUISeat(UISeat){
-        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,-1,1,-1],[0,1,-1,2],[0,1,2,3]];
+        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,-1,-1],[0,1,2,-1],[-1,-1,-1,-1]];
         let maxSeat = cc.vv.gameData.getRoomConf().seat;
         return localSeatToUISeatArr[maxSeat][UISeat];
     },
