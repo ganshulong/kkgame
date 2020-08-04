@@ -224,7 +224,7 @@ cc.Class({
             } else {
                 list = typeData.data;
             }
-            this.showCard(list, typeData.type, 0, true);
+            this.showCard(list, typeData.type, 0, false);
         }
     },
 
