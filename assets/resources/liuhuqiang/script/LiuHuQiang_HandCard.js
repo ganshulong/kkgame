@@ -78,9 +78,13 @@ cc.Class({
         }
 
         if(this._chairId === 0){
+            this.spr_outCardTipsLine = cc.find("scene/spr_outCardTipsLine",this.node);
+            this.outCardDirTips = this.spr_outCardTipsLine.getChildByName("outCardDirTips");
+
             let outCardLine = cc.find("scene/sp_out_tips_line",this.node);
             this._outCardLineNode = outCardLine;
             this._outCardLineNode.active = false;
+            this.showOutCardTipsAni();
             this._outCardY = this._handcardNode.convertToNodeSpaceAR(outCardLine.parent.convertToWorldSpaceAR(outCardLine.position)).y;
             this.checkCanOutCard();
         }
@@ -94,6 +98,7 @@ cc.Class({
             }
             else this._canOutCard = false;
             this._outCardLineNode.active = this._canOutCard;
+            this.showOutCardTipsAni();
         }
     },
 
@@ -556,7 +561,10 @@ cc.Class({
         }
         this._selectCard = null;
         this._canOutCard = false;
-        if(this._outCardLineNode) this._outCardLineNode.active = false;
+        if(this._outCardLineNode) {
+            this._outCardLineNode.active = false;
+            this.showOutCardTipsAni();
+        }
         this._num = 0;
     },
 
@@ -670,6 +678,25 @@ cc.Class({
 
     showOutLine(bShow){
         this._outCardLineNode.active = bShow;
+        this.showOutCardTipsAni();
+    },
+
+    showOutCardTipsAni(){
+        this.spr_outCardTipsLine.active = this._outCardLineNode.active;
+        this.outCardDirTips.stopAllActions();
+        if (this.spr_outCardTipsLine.active) {
+            this.outCardDirTips.position = cc.v2(0, -115);
+            this.outCardDirTips.runAction(
+                    cc.repeatForever(
+                        cc.sequence(
+                            cc.moveTo(0.25,cc.v2(7.5, -63)),
+                            cc.moveTo(0.25,cc.v2(40, -30)),
+                            cc.moveTo(0.25,cc.v2(88, -15)),
+                            cc.moveTo(0.5,cc.v2(0, -115)),
+                        )
+                    )
+                )
+        }
     },
 
     recvPlayerEnter(data){
