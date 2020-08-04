@@ -79,6 +79,7 @@ cc.Class({
                     this.showCard(data.actionInfo.curaction.card);
                     this.node.getComponent("LiuHuQiang_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
                     let chairId = cc.vv.gameData.getLocalChair(data.actionInfo.curaction.seat);
+                    chairId = cc.vv.gameData.getUISeatBylocalSeat(chairId);
                     let playerNode = cc.find("scene/player"+chairId,this.node);
                     let startPos = playerNode.position;
                     if(this._chairId === 0){
