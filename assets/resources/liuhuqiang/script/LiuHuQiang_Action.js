@@ -60,7 +60,7 @@ cc.Class({
         Global.registerEvent(EventId.PAO_NOTIFY,this.recvAction,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.recvAction,this);
         Global.registerEvent(EventId.KAN_NOTIFY,this.recvAction,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvHuAction,this);
+        // Global.registerEvent(EventId.HU_NOTIFY,this.recvHuAction,this);
 
     },
 
