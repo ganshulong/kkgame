@@ -105,19 +105,14 @@ cc.Class({
         cc.find("phone_bg/btn_bind",this._lobbySetLayer).active = (!cc.vv.UserManager.mobile);
 
         this._audioVolue = Number(cc.sys.localStorage.getItem("_audioVolue"));
-        if(null === this._audioVolue) this._audioVolue = 1;
         this.slider_volum.getComponent(cc.Slider).progress = this._audioVolue;
         this.progressBar_volum.getComponent(cc.ProgressBar).progress = this._audioVolue;
 
         this._effectIsOpen = parseInt(cc.sys.localStorage.getItem("_effectIsOpen"));
-        if(null === this._effectIsOpen) this._effectIsOpen = 1;
         this.setOperate(this._effectIsOpen,this.btn_effect_mask);
-        cc.vv.AudioManager.setEffVolume(this._effectIsOpen ? this._audioVolue : 0);
 
         this._musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
-        if(null === this._musicIsOpen) this._musicIsOpen = 1;
         this.setOperate(this._musicIsOpen,this.btn_music_mask);
-        cc.vv.AudioManager.setBgmVolume(this._musicIsOpen ? this._audioVolue : 0);
 
         this.panel_bind_phone.active = false;
     },

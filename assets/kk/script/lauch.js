@@ -79,18 +79,6 @@ cc.Class({
         cc.vv.SubGameUpdateNode = node;
         cc.game.addPersistRootNode(node);
 
-        let _audioVolue = Number(cc.sys.localStorage.getItem("_audioVolue"));
-        if(_audioVolue === null) _audioVolue = 1;
-
-        let _effectIsOpen = parseInt(cc.sys.localStorage.getItem("_effectIsOpen"));
-        if(_effectIsOpen === null) _effectIsOpen = 1;
-        cc.vv.AudioManager.setEffVolume(_effectIsOpen==1?_audioVolue:0);
-
-        let _musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
-        if(_musicIsOpen === null) _musicIsOpen = 1;
-        cc.vv.AudioManager.setBgmVolume(_musicIsOpen==1?_audioVolue:0);
-
-
         let language = parseInt(cc.sys.localStorage.getItem("language"));
         if(language === null) language = 0;
         Global.language = language;

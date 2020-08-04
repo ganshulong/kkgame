@@ -85,8 +85,32 @@ cc.Class({
             }
         }
 
-        //testgsl
-        // this.onWeChatLogin();
+        this.initAudio();
+    },
+
+    initAudio(){
+        let _audioVolue = cc.sys.localStorage.getItem("_audioVolue");
+        if(_audioVolue === null) {
+            _audioVolue = 1;
+            cc.sys.localStorage.setItem("_audioVolue", _audioVolue);
+        }
+        _audioVolue = Number(_audioVolue);
+
+        let _effectIsOpen = cc.sys.localStorage.getItem("_effectIsOpen");
+        if(_effectIsOpen === null) {
+            _effectIsOpen = 1;
+            cc.sys.localStorage.setItem("_effectIsOpen", _effectIsOpen);
+        }
+        _effectIsOpen = parseInt(_effectIsOpen);
+        cc.vv.AudioManager.setEffVolume(_effectIsOpen==1?_audioVolue:0);
+
+        let _musicIsOpen = cc.sys.localStorage.getItem("_musicIsOpen");
+        if(_musicIsOpen === null) {
+            _musicIsOpen = 1;
+            cc.sys.localStorage.setItem("_musicIsOpen", _musicIsOpen);
+        }
+        _musicIsOpen = parseInt(_musicIsOpen);
+        cc.vv.AudioManager.setBgmVolume(_musicIsOpen==1?_audioVolue:0);
     },
 
     initBindPhoneUI() {
