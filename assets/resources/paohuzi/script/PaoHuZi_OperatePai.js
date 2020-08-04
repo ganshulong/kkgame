@@ -283,6 +283,9 @@ cc.Class({
             } else {
                 let card = data.actionInfo.curaction.card;
                 this.addCard(card,false);
+                // let card = data.actionInfo.curaction.card;
+                // this.addCard(card,false);
+                this.showMenZiList(data.menzi);
             }
         }
     },
@@ -294,8 +297,9 @@ cc.Class({
                 let card = data.actionInfo.curaction.card;
                 this.showCard([card,card,card,card],cc.vv.gameData.OPERATETYPE.LONG,0,true);
             } else {
-                let card = data.actionInfo.curaction.card;
-                this.addCard(card,true); 
+                // let card = data.actionInfo.curaction.card;
+                // this.addCard(card,true);
+                this.showMenZiList(data.menzi);
             }
         }
     },

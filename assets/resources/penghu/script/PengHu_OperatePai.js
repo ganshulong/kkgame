@@ -275,8 +275,9 @@ cc.Class({
     recvPaoNotify(data){
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
-            let card = data.actionInfo.curaction.card;
-            this.addCard(card,false);
+            // let card = data.actionInfo.curaction.card;
+            // this.addCard(card,false);
+            this.showMenZiList(data.menzi);
         }
 
     },
@@ -284,8 +285,9 @@ cc.Class({
     recvLongNotify(data){
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
-            let card = data.actionInfo.curaction.card;
-            this.addCard(card,true);
+            // let card = data.actionInfo.curaction.card;
+            // this.addCard(card,true);
+            this.showMenZiList(data.menzi);
         }
 
     },

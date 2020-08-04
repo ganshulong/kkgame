@@ -182,48 +182,20 @@ cc.Class({
         Global.registerEvent(EventId.LONG_NOTIFY,this.recvLongNotify,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HANDCARD,this.recvHandCardMsg,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        // Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
         this.recvDeskInfoMsg();
     },
 
     // 小局结束
     recvOverRound(data){
-        if (this._operateCardNode ) {
-            let users = data.detail.users;
-            for(let i=0; i < users.length; ++i){
-                if(this._seatIndex === users[i].seat){
-                    this.showMenZiList(users[i].menzi);
-                }
-            }
-        }
-    },
-
-    showMenZiList(menzi){
-        this._num = 0;
-        this._operateCardNode.removeAllChildren();
-        for(let j = 0; j < menzi.length; ++j){
-            let typeData = menzi[j];
-            let list = [];
-            if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN ||typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
-                list = [typeData.card, typeData.card, typeData.card];
-
-            } else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || 
-                      typeData.type === cc.vv.gameData.OPERATETYPE.SHE || 
-                      typeData.type === cc.vv.gameData.OPERATETYPE.PAO){
-                list = [typeData.card, typeData.card, typeData.card, typeData.card];
-
-            } else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
-                if(typeData.source === 0){
-                    list=[typeData.card, typeData.card, typeData.card];
-                }
-                else{
-                    list=[typeData.card, typeData.card];
-                }
-            } else {
-                list = typeData.data;
-            }
-            this.showCard(list, typeData.type, 0, true);
-        }
+        // if (this._operateCardNode ) {
+        //     let users = data.detail.users;
+        //     for(let i=0; i < users.length; ++i){
+        //         if(this._seatIndex === users[i].seat){
+        //             this.showMenZiList(users[i].menzi);
+        //         }
+        //     }
+        // }
     },
 
     recvHandCardMsg(data){
