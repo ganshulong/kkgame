@@ -62,9 +62,7 @@ cc.Class({
         if(this._operateCardNode){
             this._startPos = this._operateCardNode.convertToNodeSpaceAR(this._startPos);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
-
         }
-
     },
 
     showCard(list,type,source=0,showAction = false){
@@ -119,10 +117,8 @@ cc.Class({
 
             node.parent = this._operateCardNode;
             node.source = source;
-
         }
         ++this._num;
-
     },
 
     showCardAction(node,startPos,endPos){
@@ -158,7 +154,6 @@ cc.Class({
                 Global.dispatchEvent(EventId.SHOW_MENZI_SOUND,typeData.type);
             }
         }
-
     },
 
     // 收到吃消息
@@ -194,14 +189,42 @@ cc.Class({
     },
 
     // 小局结束
-    recvOverRound(){
-        if(this._operateCardNode){
-            for(let i=0;i<this._operateCardNode.childrenCount;++i){
-                let child = this._operateCardNode.children[i];
-                if(child.showBg && child.index==2){
-                    // this.node.getComponent("PengHu_Card").createCard(child.cardValue,2,false,child);
+    recvOverRound(data){
+        if (this._operateCardNode ) {
+            let users = data.detail.users;
+            for(let i=0; i < users.length; ++i){
+                if(this._seatIndex === users[i].seat){
+                    this.showMenZiList(users[i].menzi);
                 }
             }
+        }
+    },
+
+    showMenZiList(menzi){
+        this._num = 0;
+        this._operateCardNode.removeAllChildren();
+        for(let j = 0; j < menzi.length; ++j){
+            let typeData = menzi[j];
+            let list = [];
+            if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN ||typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
+                list = [typeData.card, typeData.card, typeData.card];
+
+            } else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || 
+                      typeData.type === cc.vv.gameData.OPERATETYPE.SHE || 
+                      typeData.type === cc.vv.gameData.OPERATETYPE.PAO){
+                list = [typeData.card, typeData.card, typeData.card, typeData.card];
+
+            } else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
+                if(typeData.source === 0){
+                    list=[typeData.card, typeData.card, typeData.card];
+                }
+                else{
+                    list=[typeData.card, typeData.card];
+                }
+            } else {
+                list = typeData.data;
+            }
+            this.showCard(list, typeData.type, 0, true);
         }
     },
 
@@ -224,15 +247,12 @@ cc.Class({
                             let typeData = menziList[j];
                             let list = [];
                             let source = 0;
-                            if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN) // 坎
-                            {
+                            if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN){
                                 list=[typeData.card,typeData.card,typeData.card];
-                            }
-                            else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || typeData.type === cc.vv.gameData.OPERATETYPE.SHE||
+                            } else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || typeData.type === cc.vv.gameData.OPERATETYPE.SHE||
                                 typeData.type === cc.vv.gameData.OPERATETYPE.PAO){
                                 list=[typeData.card,typeData.card,typeData.card,typeData.card];
-                            }
-                            else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
+                            } else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
                                 if(typeData.source === 0){
                                     list=[typeData.card,typeData.card,typeData.card];
                                 }
@@ -240,9 +260,7 @@ cc.Class({
                                     list=[typeData.card,typeData.card];
                                 }
                                 source = typeData.source;
-                            }
-
-                            else {
+                            } else {
                                 list = typeData.data;
                             }
                             this.showCard(list,typeData.type,source);
