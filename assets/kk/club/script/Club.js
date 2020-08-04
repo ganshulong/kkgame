@@ -212,19 +212,27 @@ cc.Class({
     onRecvTableinfo(msg){
         if(msg.code === 200){
             let deskInfo = msg.response.hallDeskInfo;
-            for(let i=0;i<this._content.childrenCount;++i){
-                let item = this._content.children[i];
-                if(item._deskId === deskInfo.deskid){
-                    this.initTable(item,deskInfo.config,deskInfo);
-                    for(let i=0;i<this._tableList.length;++i){
-                        if(this._tableList[i].deskid === deskInfo.deskid){
-                            this._tableList[i] = deskInfo;
-                            break;
-                        }
-                    }
+            for(let i=0;i<this._tableList.length;++i){
+                if(this._tableList[i].deskid === deskInfo.deskid){
+                    this._tableList[i] = deskInfo;
+                    this.initTables(this._tableList);
                     break;
                 }
             }
+
+            // for(let i=0;i<this._content.childrenCount;++i){
+            //     let item = this._content.children[i];
+            //     if(item._deskId === deskInfo.deskid){
+            //         this.initTable(item,deskInfo.config,deskInfo);
+            //         for(let i=0;i<this._tableList.length;++i){
+            //             if(this._tableList[i].deskid === deskInfo.deskid){
+            //                 this._tableList[i] = deskInfo;
+            //                 break;
+            //             }
+            //         }
+            //         break;
+            //     }
+            // }
         }
     },
 
@@ -299,7 +307,7 @@ cc.Class({
         tableName.getComponent(cc.Label).string = config.tname;
 
         let round = cc.find("node/img_round/txt_round",item);
-        round.getComponent(cc.Label).string = config.gamenum+"局 " +config.seat+"人" ;
+        round.getComponent(cc.Label).string = data.round + "/" + config.gamenum + "局";
 
         let tableChar24 = cc.find("node/tableChar24",item);
         let tableChar3 = cc.find("node/tableChar3",item);
@@ -350,7 +358,7 @@ cc.Class({
                     Global.setHead(spr_head,users[j].usericon);
                     let name = cc.find("img_nameBg/txt_name",headNode);
                     name.getComponent(cc.Label).string = users[j].playername;
-                    headNode.getChildByName("img_ready").active = users[j].state===1;
+                    headNode.getChildByName("img_ready").active = users[j].state === 1;
                 }
             }
         }
@@ -364,8 +372,9 @@ cc.Class({
         for(let i=0;i<list.length;++i){
             let config = list[i].config;
             let item = null;
-            if(i<this._content.childrenCount) item = this._content.children[i];
-            else {
+            if(i < this._content.childrenCount) {
+                item = this._content.children[i];
+            } else {
                 item = cc.instantiate(this._content.children[0]);
                 item.parent = this._content;
             }
