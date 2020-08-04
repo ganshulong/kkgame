@@ -640,7 +640,8 @@ cc.Class({
     recvPaoAndLongNotify(data){
         data = data.detail;
         if(this._chairId === 0){
-            if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex()){
+            if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() &&
+                data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
                 this._canOutCard = true;
                 this.showOutLine(this._canOutCard);
             }
@@ -662,8 +663,11 @@ cc.Class({
                 this.delHandCard(data.actionInfo.curaction.card);
                 this.resetCardPos();
             }
-            this._canOutCard = data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex();
-            this.showOutLine(this._canOutCard);
+            if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() &&
+                data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
+                this._canOutCard = true;
+                this.showOutLine(this._canOutCard);
+            }
         }
 
     },
