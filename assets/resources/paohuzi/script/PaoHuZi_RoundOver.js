@@ -97,8 +97,9 @@ cc.Class({
                     this.showRoundInfo(data);
                     this.initPlayerInfo(data, data.users,data.seat,data.hcard,data.source,data.hupaiType);
                     this.initRoomInfo();
+                    let self = this;
                     this.scheduleOnce(()=>{
-                        this._layer.active = true;
+                        self._layer.active = true;
                     },2);
                 }
             })
