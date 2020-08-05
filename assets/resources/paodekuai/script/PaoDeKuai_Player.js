@@ -60,26 +60,20 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, this);
 
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
         Global.registerEvent(EventId.OFFLINE_NOTIFY,this.onRcvOfflineNotice,this);
-        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.onRcvOutCardNotify,this);
 
         Global.registerEvent(EventId.CHI_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.KAN_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.PENG_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.PAO_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.updateScore,this);
-        Global.registerEvent(EventId.HANDCARD,this.updateScore,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
-    },
 
-    onRcvOutCardNotify(data){
-        data = data.detail;
-        if(data.seat === this._seatIndex){
-        }
+        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
+        Global.registerEvent(EventId.HANDCARD,this.recvSendCard,this);
     },
 
     onRcvOfflineNotice(data){
@@ -97,7 +91,6 @@ cc.Class({
                 this.setTotalScore(data.users[i].score);
                 this.setHuXi(data.users[i].roundHuXi);
                 this._playerNode.getChildByName("clock").active = false;
-                this._playerNode.getChildByName("mask_onOut").active = false;
                 break;
             }
         }
@@ -209,10 +202,6 @@ cc.Class({
         }
     },
 
-    onRecvHandCard(data){
-
-    },
-
     onRcvPlayerExitNotice(msg){
         if(msg.code === 200){
             let chairId = cc.vv.gameData.getLocalChair(msg.seat);
@@ -245,7 +234,6 @@ cc.Class({
             this.setHuXi(user.roundHuXi?user.roundHuXi:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("clock").active = false;
-            this._playerNode.getChildByName("mask_onOut").active = false;
             if (0 < this._UISeat) {
                 this._playerNode.getChildByName("ani_warn").active = false;
                 this._playerNode.getChildByName("bg_cardNum").active = false;
@@ -282,8 +270,6 @@ cc.Class({
     },
 
     start () {
-        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.HANDCARD,this.recvSendCard,this);
 
     },
 

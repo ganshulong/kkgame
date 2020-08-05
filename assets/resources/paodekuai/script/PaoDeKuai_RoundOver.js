@@ -15,25 +15,23 @@ cc.Class({
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.GAMEOVER,this.recvGameOver,this);
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        // Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
 
         this._OverScoreNode = cc.find("scene/over_score",this.node);
         this._OverScoreNode.active = false;
     },
 
-    onRecvHandCard(data){
-      data = data.detail;
-      this._zhuang = data.bankerInfo.seat;
+    // onRecvHandCard(data){
+    //   data = data.detail;
+    // },
 
-    },
-
-    recvDeskInfoMsg(){
-        //gsdltodo
-        return;
+    // recvDeskInfoMsg(){
+    //     //gsdltodo
+    //     return;
         
-        this._zhuang = cc.vv.gameData.getDeskInfo().bankerInfo.seat;
-    },
+    //     this._zhuang = cc.vv.gameData.getDeskInfo().bankerInfo.seat;
+    // },
 
     init(atlas){
         this._atlas = atlas;
@@ -295,8 +293,11 @@ cc.Class({
         this._layer.removeFromParent(true);
         this._layer = null;
         this._show = false;
-        if(this._isOver) Global.dispatchEvent(EventId.SHOW_GAMEOVER);
-        else Global.dispatchEvent(EventId.CLOSE_ROUNDVIEW);
+        if(this._isOver) {
+            Global.dispatchEvent(EventId.SHOW_GAMEOVER);
+        } else { 
+            Global.dispatchEvent(EventId.CLOSE_ROUNDVIEW);
+        }
     },
 
     initHandCard(list,parent,menzi,card=null,source=null){

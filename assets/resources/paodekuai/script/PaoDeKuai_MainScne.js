@@ -23,13 +23,13 @@ cc.Class({
 
         let conf = cc.vv.gameData.getRoomConf();
         for(let i = 0; i < cc.vv.gameData.RoomSeat; ++i){
-            this.node.addComponent("PaoDeKuai_ShowCard").init(i,conf.seat);
+            // this.node.addComponent("PaoDeKuai_ShowCard").init(i,conf.seat);
             this.node.addComponent("PaoDeKuai_Player").init(i,conf.seat,this.emjoAtlas);
             this.node.addComponent("PaoDeKuai_OutCard").init(i,conf.seat);
-            this.node.addComponent("PaoDeKuai_OperatePai").init(i,conf.seat);
-            this.node.addComponent("PaoDeKuai_HandCard").init(i,conf.seat);
+            // this.node.addComponent("PaoDeKuai_OperatePai").init(i,conf.seat);
+            // this.node.addComponent("PaoDeKuai_HandCard").init(i,conf.seat);
         }
-        this.node.addComponent("PaoDeKuai_HandCard").init();
+        this.node.addComponent("PaoDeKuai_HandCard_Operate").init();
         this.node.addComponent("PaoDeKuai_Operate");
         this.node.addComponent("PaoDeKuai_Tips");
         this.node.addComponent("PaoDeKuai_Action");

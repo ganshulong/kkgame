@@ -11,7 +11,6 @@ cc.Class({
         //cc.vv.AudioManager.playBgm(this._soundPath, "music_bg_hhh", true);
 
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
-        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.CHI_NOTIFY,this.playOperate,this);
         Global.registerEvent(EventId.PAO_NOTIFY,this.playOperate,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.playOperate,this);
@@ -21,7 +20,29 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         // Global.registerEvent(EventId.SHOW_MENZI_SOUND,this.onRecvMenziSound,this);
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
+        Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
+    },
 
+    onRcvOutCardNotify(data){
+        data = data.detail;
+        //gsltodo
+
+        // if(data.actionInfo.curaction.source > 0 && data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
+        // if(data.actionInfo.curaction.source > 0){
+        //     this.playCardSound(data.actionInfo.curaction.card,data.actionInfo.curaction.seat);
+        // }
+        // if (0 < data.isBaoJin) {
+        //     let self = this;
+        //     this.node.runAction(
+        //         cc.sequence(
+        //             cc.delayTime(1),
+        //             cc.callFunc(()=>{
+        //                 let path = "effect/"+self.getLanguage()+self.getSex(data.seat)+"baojing";
+        //                 cc.vv.AudioManager.playEff(self._soundPath, path, true);
+        //             })
+        //         )
+        //     )
+        // }
     },
 
     onRcvChatNotify(data){
@@ -39,14 +60,14 @@ cc.Class({
     // },
 
     onRecvHandCard(data){
-        data = data.detail;
-        let seat = data.seat;
-        if(seat === cc.vv.gameData.getMySeatIndex()){
-            for(let j=0;j<data.menzi.length;++j){
-                let typeData = data.menzi[j];
-                this.playOperateType(seat,typeData.type);
-            }
-        }
+        // data = data.detail;
+        // let seat = data.seat;
+        // if(seat === cc.vv.gameData.getMySeatIndex()){
+        //     for(let j=0;j<data.menzi.length;++j){
+        //         let typeData = data.menzi[j];
+        //         this.playOperateType(seat,typeData.type);
+        //     }
+        // }
     },
 
     // 操作
@@ -126,27 +147,6 @@ cc.Class({
             else{
                 cc.vv.AudioManager.playEff(this._soundPath, "loss",true);
             }
-        }
-    },
-
-    // 出牌
-    recvOutCardNotify(data){
-        data = data.detail;
-        // if(data.actionInfo.curaction.source > 0 && data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
-        if(data.actionInfo.curaction.source > 0){
-            this.playCardSound(data.actionInfo.curaction.card,data.actionInfo.curaction.seat);
-        }
-        if (0 < data.isBaoJin) {
-            let self = this;
-            this.node.runAction(
-                cc.sequence(
-                    cc.delayTime(1),
-                    cc.callFunc(()=>{
-                        let path = "effect/"+self.getLanguage()+self.getSex(data.seat)+"baojing";
-                        cc.vv.AudioManager.playEff(self._soundPath, path, true);
-                    })
-                )
-            )
         }
     },
 

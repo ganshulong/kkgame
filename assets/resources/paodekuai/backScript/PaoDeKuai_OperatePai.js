@@ -106,26 +106,25 @@ cc.Class({
     },
 
     recvHandCard(data){
-        data = data.detail;
-        if(data.seat === this._seatIndex){
-            for(let j=0;j<data.menzi.length;++j){
-                let typeData = data.menzi[j];
-                let list = [];
-                if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN ||typeData.type === cc.vv.gameData.OPERATETYPE.PENG) // 坎
-                {
-                    list=[typeData.card,typeData.card,typeData.card];
-                }
-                else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG){
-                    list=[typeData.card,typeData.card,typeData.card,typeData.card];
-                }
-                else if(typeData.type === cc.vv.gameData.OPERATETYPE.SHE){
-                    list=[typeData.card,typeData.card,typeData.card,typeData.card];
-                }
-                this.showCard(list,typeData.type,0,true);
-                Global.dispatchEvent(EventId.SHOW_MENZI_SOUND,typeData.type);
-            }
-        }
-
+        // data = data.detail;
+        // if(data.seat === this._seatIndex){
+        //     for(let j=0;j<data.menzi.length;++j){
+        //         let typeData = data.menzi[j];
+        //         let list = [];
+        //         if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN ||typeData.type === cc.vv.gameData.OPERATETYPE.PENG) // 坎
+        //         {
+        //             list=[typeData.card,typeData.card,typeData.card];
+        //         }
+        //         else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG){
+        //             list=[typeData.card,typeData.card,typeData.card,typeData.card];
+        //         }
+        //         else if(typeData.type === cc.vv.gameData.OPERATETYPE.SHE){
+        //             list=[typeData.card,typeData.card,typeData.card,typeData.card];
+        //         }
+        //         this.showCard(list,typeData.type,0,true);
+        //         Global.dispatchEvent(EventId.SHOW_MENZI_SOUND,typeData.type);
+        //     }
+        // }
     },
 
     // 收到吃消息

@@ -80,6 +80,9 @@ EventId.FREEZE_CLUB_NOTIFY = "freeze_club_notify";		  // 冻结通知
 EventId.DISMISS_CLUB_NOTIFY = "dismiss_club_notify";	  // 解散通知
 EventId.BATTERY_CHANGE_NOTIFY = "battery_change_notify";  // 电量改变通知
 EventId.CLUB_EXIT_APPLY_NOTIFY = "club_exit_apply_notify";// 电量改变通知
+EventId.OUT_CARD_NOTIFY = "OUT_CARD_NOTIFY";	  		  // 出牌提示通知
+
+
 
 
 

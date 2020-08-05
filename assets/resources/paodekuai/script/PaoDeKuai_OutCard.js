@@ -16,7 +16,7 @@ cc.Class({
     },
 
     init(index,playerNum){
-        let outCardNode = cc.find("scene/out_cards/out_card"+index,this.node);
+        let outCardNode
 
         let showCardNode = cc.find("scene/out_cards/show_card"+index,this.node);
 
@@ -24,7 +24,9 @@ cc.Class({
 
         this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
         this._UISeat = index;
-        this._outCardNode = outCardNode;
+        this._outCardNode = cc.find("scene/out_cards/out_card"+index,this.node);
+        this.mask_onOut = cc.find("scene/out_cards/mask_onOut"+index,this.node);
+        this.mask_onOut.active = false;
 
         if(this._outCardNode){
             let pos = showCardNode.parent.convertToWorldSpaceAR(showCardNode.position);
@@ -84,23 +86,26 @@ cc.Class({
     clearDesk(){
         this._outCardValue = null;
         this._cardsNum = 0;
-        if(this._outCardNode) this._outCardNode.removeAllChildren();
+        if(this._outCardNode) {
+            this._outCardNode.removeAllChildren();
+        }
+        this.showNoOutCard(false);
     },
 
     start () {
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
         Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
-        Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
-        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
+        // Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
-        Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
-        Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
-        Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
+        // Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
+        // Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
+        // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
+        // Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
+        // Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
 
         this.recvDeskInfoMsg();
     },
@@ -127,105 +132,114 @@ cc.Class({
         }
     },
 
-
-    // 过
-    recvGuoNotify(data){
+    onRcvOutCardNotify(data){
         data = data.detail;
-        this.showOutCard();
-        if(data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.MOPAI){
-            if(data.actionInfo.curaction.seat === this._seatIndex){
-                let card = data.actionInfo.curaction.card;
-                this.putOutCard(card);
+        if (data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()) {
+            if (0 == data.actionInfo.curaction.type) {
+                this.showNoOutCard(true);
+            } if (0 < data.actionInfo.curaction.type) {
+                this.showOutCard(); 
             }
         }
+    },
+
+    showOutCard(list){
+        this._outCardNode.removeAllChildren();
+        if (list.length) {
+
+        }
+
+        // if(this._outCardValue){
+        //     for(let i=0;i<this._outCardValue.length;++i){
+        //         this.showCard(this._outCardValue[i],true);
+        //     }
+        //     this._outCardValue = null;
+        // }
+    },
+
+    // 要不起
+    recvGuoNotify(data){
+        data = data.detail;
+        if (true) {
+            this.showNoOutCard(true);
+        }
+
+        // data = data.detail;
+        // this.showOutCard();
+        // if(data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.MOPAI){
+        //     if(data.actionInfo.curaction.seat === this._seatIndex){
+        //         let card = data.actionInfo.curaction.card;
+        //         this.putOutCard(card);
+        //     }
+        // }
+    },
+
+    showNoOutCard(bShow){
+        this.mask_onOut.active = bShow;
     },
 
     // 吃
-    recvChiCard(data){
-        data = data.detail;
-        this.showOutCard();
-        if(data.actionInfo.curaction.seat === this._seatIndex && data.luoData){
-            for(let i=0;i<data.luoData.length;++i){
-                this.showCard(data.luoData[i],true);
-            }
-        }
-    },
+    // recvChiCard(data){
+    //     data = data.detail;
+    //     this.showOutCard();
+    //     if(data.actionInfo.curaction.seat === this._seatIndex && data.luoData){
+    //         for(let i=0;i<data.luoData.length;++i){
+    //             this.showCard(data.luoData[i],true);
+    //         }
+    //     }
+    // },
 
-    recvMoPaiNotify(data){
-        data = data.detail;
-        this.showOutCard();
-    },
+    // recvMoPaiNotify(data){
+    //     data = data.detail;
+    //     this.showOutCard();
+    // },
 
-    // 出牌
-    recvOutCardNotify(data){
-        data = data.detail;
-        this.showOutCard();
-        // 摸得牌
-        if(data.actionInfo.curaction.seat === this._seatIndex && data.actionInfo.iswait===0){
-            if(data.actionInfo.curaction.source === 0){
-                this.putOutCard(data.actionInfo.curaction.card);
-                this.showOutCard();
-            }
-            else{
-                this.putOutCard(data.actionInfo.curaction.card);
-            }
-        }
-    },
 
     putOutCard(card){
         this._outCardValue = [];
         this._outCardValue.push(card);
     },
 
-    recvPaoNotify(data){
-        data = data.detail;
-        if (this._outCardValue) {
-            for (let j = 0; j < this._outCardValue.length; j++) {
-                if (data.actionInfo.curaction.card == this._outCardValue[j]) {
-                    this._outCardValue.splice(j,1)
-                }
-            }
-        }
-        if(data.delQiPaiSeat === this._seatIndex){
-            let card = data.delQiPaiCard;
-            let node = null;
-            let num = 0;
-            for(let i=0;i<this._outCardNode.childrenCount;++i){
-                let child = this._outCardNode.children[i];
-                if(child.cardValue === card){
-                    node = child;
-                }
-                else {
-                    if(node){
-                        let pos = this.getEndPos(num);
-                        this._outCardNode.children[i].position = pos;
-                    }
-                    ++num;
-                }
-            }
-            if(node) {
-                this._cardsNum = num;
-                node.removeFromParent();
-            }
-        }
-    },
+    // recvPaoNotify(data){
+    //     data = data.detail;
+    //     if (this._outCardValue) {
+    //         for (let j = 0; j < this._outCardValue.length; j++) {
+    //             if (data.actionInfo.curaction.card == this._outCardValue[j]) {
+    //                 this._outCardValue.splice(j,1)
+    //             }
+    //         }
+    //     }
+    //     if(data.delQiPaiSeat === this._seatIndex){
+    //         let card = data.delQiPaiCard;
+    //         let node = null;
+    //         let num = 0;
+    //         for(let i=0;i<this._outCardNode.childrenCount;++i){
+    //             let child = this._outCardNode.children[i];
+    //             if(child.cardValue === card){
+    //                 node = child;
+    //             }
+    //             else {
+    //                 if(node){
+    //                     let pos = this.getEndPos(num);
+    //                     this._outCardNode.children[i].position = pos;
+    //                 }
+    //                 ++num;
+    //             }
+    //         }
+    //         if(node) {
+    //             this._cardsNum = num;
+    //             node.removeFromParent();
+    //         }
+    //     }
+    // },
 
-    recvPengNotify(data){
-        data = data.detail;
-        if(data.actionInfo.curaction.source === this._seatIndex){
-            // this.putOutCard(data.actionInfo.curaction.card);
-            // this.showOutCard();
-        }
-    },
-
-    showOutCard(){
-        if(this._outCardValue){
-            for(let i=0;i<this._outCardValue.length;++i){
-                this.showCard(this._outCardValue[i],true);
-            }
-            this._outCardValue = null;
-        }
-    },
+    // recvPengNotify(data){
+    //     data = data.detail;
+    //     if(data.actionInfo.curaction.source === this._seatIndex){
+    //         // this.putOutCard(data.actionInfo.curaction.card);
+    //         // this.showOutCard();
+    //     }
+    // },
 
     recvPlayerEnter(data){
         data = data.detail;

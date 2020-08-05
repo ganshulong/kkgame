@@ -90,7 +90,6 @@ cc.Class({
         //财富改变（金币改变）
         cc.vv.NetManager.registerMsg(MsgId.MONEY_CHANGED, this.onRcvNetMoneyChanged, this);
         cc.vv.NetManager.registerMsg(MsgId.SENDCARD, this.onRcvHandCard, this);
-        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_OUTCARD, this.onRcvOutCardNotify, this);
 
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, this);
@@ -120,6 +119,8 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.AGREE_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.REFUSE_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
+
+        cc.vv.NetManager.registerMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, this);
     },
 
     unregisterMsg() {
@@ -128,7 +129,6 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_KICK, this.onRcvNetKickNotice, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MONEY_CHANGED,this.onRcvNetMoneyChanged, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.SENDCARD,this.onRcvHandCard, false, this);
-        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_OUTCARD,this.onRcvOutCardNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.OUTCARD, this.onRcvOutCardReslut , false,this);
@@ -156,6 +156,14 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.AGREE_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.REFUSE_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
+
+        cc.vv.NetManager.unregisterMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, false,this);
+    },
+
+    onRcvOutCardNotify(msg){
+        if(msg.code == 200){
+            Global.dispatchEvent(EventId.OUT_CARD_NOTIFY,msg)
+        }
     },
 
     onRcvDismissNotify(msg){
@@ -254,84 +262,94 @@ cc.Class({
     sortCard(cards){
         let tempList1 = cards.slice(0);
         tempList1.sort((a,b)=>{
-            return a-b;
-        });
-
-        let list = [];
-        let value = -1;
-        let temp = [];
-        // 先查找相同的
-        let index = 0;
-        for(index = 0; index<tempList1.length; ++index){
-            if(value !== tempList1[index]){
-                if(temp.length>2){
-                    list.push(temp);
-                    for(let j=1;j<=temp.length;++j){
-                        tempList1[index-j] = -1;
-                    }
-                }
-                temp = [tempList1[index]];
-                value = tempList1[index];
-            }
-            else{
-                // temp.push(tempList1[index]);
-                temp.unshift(tempList1[index]);
-            }
-        }
-        if (2 < temp.length) {
-            list.push(temp);
-            for(let j=1;j<=temp.length;++j){
-                tempList1[index-j] = -1;
-            }
-        }
-
-        let tempList2 = [];
-        for(let i=0;i<tempList1.length;++i){
-            if(tempList1[i]>-1) tempList2.push(tempList1[i]);
-        }
-
-        tempList2.sort((a,b)=>{
-            return ((a%100)-b%100);
-        });
-
-        value = -1;
-        // 先查找数字相同的
-        let otherCard = []
-        for(let i=0;i<tempList2.length;++i){
-            if(value !== tempList2[i]%100){     //新值
-                if (10 <= list.length) {
-                    otherCard.push(tempList2[i]);
-                    continue;
-                }
-                temp = [tempList2[i]];
-                list.push(temp);
-                value = tempList2[i]%100;
+            if ((a%16) == (b%16)) {
+                return a - b;
             } else {
-                if(3 <= temp.length){
-                    if (10 <= list.length) {
-                        otherCard.push(tempList2[i]);
-                        continue;
-                    }
-                    temp = [tempList2[i]];
-                    list.push(temp);
-                } else {
-                    // temp.push(tempList2[i]);
-                    temp.unshift(tempList2[i]);
-                }
+                return (a%16) - (b%16);
             }
-        }
-        for (let i = 0; i < otherCard.length; ++i) {
-            for (let j = list.length - 1; j >= 0; --j) {
-                for (let k = list[j].length; k < 3; k++) {
-                    list[j].push(otherCard[i++]);
-                    if (i == otherCard.length) {
-                        return list;
-                    }
-                }
-            }
-        }
+        });
+        return tempList1;
 
-        return list;
+        // let tempList1 = cards.slice(0);
+        // tempList1.sort((a,b)=>{
+        //     return a-b;
+        // });
+
+        // let list = [];
+        // let value = -1;
+        // let temp = [];
+        // // 先查找相同的
+        // let index = 0;
+        // for(index = 0; index<tempList1.length; ++index){
+        //     if(value !== tempList1[index]){
+        //         if(temp.length>2){
+        //             list.push(temp);
+        //             for(let j=1;j<=temp.length;++j){
+        //                 tempList1[index-j] = -1;
+        //             }
+        //         }
+        //         temp = [tempList1[index]];
+        //         value = tempList1[index];
+        //     }
+        //     else{
+        //         // temp.push(tempList1[index]);
+        //         temp.unshift(tempList1[index]);
+        //     }
+        // }
+        // if (2 < temp.length) {
+        //     list.push(temp);
+        //     for(let j=1;j<=temp.length;++j){
+        //         tempList1[index-j] = -1;
+        //     }
+        // }
+
+        // let tempList2 = [];
+        // for(let i=0;i<tempList1.length;++i){
+        //     if(tempList1[i]>-1) tempList2.push(tempList1[i]);
+        // }
+
+        // tempList2.sort((a,b)=>{
+        //     return ((a%100)-b%100);
+        // });
+
+        // value = -1;
+        // // 先查找数字相同的
+        // let otherCard = []
+        // for(let i=0;i<tempList2.length;++i){
+        //     if(value !== tempList2[i]%100){     //新值
+        //         if (10 <= list.length) {
+        //             otherCard.push(tempList2[i]);
+        //             continue;
+        //         }
+        //         temp = [tempList2[i]];
+        //         list.push(temp);
+        //         value = tempList2[i]%100;
+        //     } else {
+        //         if(3 <= temp.length){
+        //             if (10 <= list.length) {
+        //                 otherCard.push(tempList2[i]);
+        //                 continue;
+        //             }
+        //             temp = [tempList2[i]];
+        //             list.push(temp);
+        //         } else {
+        //             // temp.push(tempList2[i]);
+        //             temp.unshift(tempList2[i]);
+        //         }
+        //     }
+        // }
+        // for (let i = 0; i < otherCard.length; ++i) {
+        //     for (let j = list.length - 1; j >= 0; --j) {
+        //         for (let k = list[j].length; k < 3; k++) {
+        //             list[j].push(otherCard[i++]);
+        //             if (i == otherCard.length) {
+        //                 return list;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // return list;
     },
 
 
@@ -384,13 +402,12 @@ cc.Class({
         }
     },
 
-    // 通知过
+    // 通知要不起
     onRcvGuoNotfiy(msg){
         if(msg.code === 200){
             Global.dispatchEvent(EventId.GUO_NOTIFY,msg);
         }
     },
-
 
     // 吃结果
     onRcvChiResult(msg){
@@ -413,13 +430,6 @@ cc.Class({
     // 出牌结果
     onRcvOutCardReslut(msg){
         if(msg.code === 200){
-        }
-    },
-
-    // 出牌通知
-    onRcvOutCardNotify(msg){
-        if(msg.code === 200){
-            Global.dispatchEvent(EventId.OUTCARD_NOTIFY,msg);
         }
     },
 

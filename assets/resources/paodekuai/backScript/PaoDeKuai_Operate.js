@@ -44,7 +44,16 @@ cc.Class({
         Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
 
         this.recvDeskInfoMsg();
+    },
 
+    registerMsg () {
+        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
+        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvActionNotify,this);
+        Global.registerEvent(EventId.CHI_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.PENG_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.PAO_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.KAN_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
     },
 
     onClickTipCard(){
@@ -52,7 +61,9 @@ cc.Class({
     },
 
     onClickOutCard(){
-        
+        let req = {c: MsgId.OUT_CARD};
+        req.deskid = this._gameId;
+        cc.vv.NetManager.send(req);
     },
 
     clearDesk(){
@@ -389,26 +400,17 @@ cc.Class({
         }
     },
 
-    registerMsg () {
-        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvActionNotify,this);
-        Global.registerEvent(EventId.CHI_NOTIFY,this.onCloseSelectChi,this);
-        Global.registerEvent(EventId.PENG_NOTIFY,this.onCloseSelectChi,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.onCloseSelectChi,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.onCloseSelectChi,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-    },
-
     recvDeskInfoMsg(){
-        //gsdltodo
-        return;
-        
         let deskInfo = cc.vv.gameData.getDeskInfo();
-        if(deskInfo.isReconnect){
-            if(deskInfo.actionInfo.iswait){
-                this.showOperate(deskInfo);
+        if(deskInfo.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex()){
+            if (0 < deskInfo.actionInfo.nextaction.type) {
+                this.showOperateBtn(true)
             }
         }
+    },
+
+    showOperateBtn(bShow){
+        this._operateNode.active = bShow;
     },
 
     onDestroy(){

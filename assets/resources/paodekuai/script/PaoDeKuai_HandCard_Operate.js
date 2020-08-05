@@ -18,50 +18,74 @@ cc.Class({
     },
 
     init(index,playerNum){
-        if(index === 0) {
-            this._handcardNode = cc.find("scene/handleCardView",this.node);
-            this._handcardNode.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
-            this._handcardNode.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
-            this._handcardNode.on(cc.Node.EventType.TOUCH_END,this.onTouchEnd,this);
-            this._handcardNode.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
-        }
+        this._handcardNode = cc.find("scene/handleCardView",this.node);
+        this._handcardNode.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
+        this._handcardNode.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
+        this._handcardNode.on(cc.Node.EventType.TOUCH_END,this.onTouchEnd,this);
+        this._handcardNode.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
+
+        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(0);
+        this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
 
         let box = cc.find("scene/cardBox",this.node);
         this._cardBoXPos = box.parent.convertToWorldSpaceAR(box.position);
         this._cardBoXPos.x -= 8;
         this._cardBoXPos.y += 24;
 
-        this._playerNum = playerNum;
-        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
+        // 提示
+        this.btn_tipCard = cc.find("scene/play_action_view/btn_tipCard",this.node);
+        Global.btnClickEvent(this.btn_tipCard,this.onClickTipCard,this);
 
-        this.initCardBox();
+        // 出
+        this.btn_outCard = cc.find("scene/play_action_view/btn_outCard",this.node);
+        Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
 
-        if(this._handcardNode){
-            this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
-            if(this._seatIndex>-1){
-                let user = cc.vv.gameData.getUserInfo(this._seatIndex);
-                if(user.handInCards && user.handInCards.length>0){
-                    user.handInCards.sort((a,b)=>{
-                        if ((a%16) == (b%16)) {
-                            return a - b;
-                        } else {
-                            return (a%16) - (b%16);
-                        }
-                    });
-                    this.showHandCard(user.handInCards);
-                    // let list = cc.vv.gameData.sortCard(user.handInCards);
-                    // this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(user.handInCards);
-                    // for(let i=0;i<list.length;++i){
-                    //     this.showCard(list[i],list.length);
-                    // }
-                }
-            }
+        // if(this._chairId === 0){
+        //     //gsltodo
+        //     this._outCardY = 300;
+        //     this.checkCanOutCard();
+        // }
+
+        // this.initCardBox();
+    },
+
+    start () {
+        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
+        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
+        Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
+        Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
+        Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanAndKanNotify,this);
+        Global.registerEvent(EventId.PENG_NOTIFY,this.recvKanAndKanNotify,this);
+        Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoAndLongNotify,this);
+        Global.registerEvent(EventId.LONG_NOTIFY,this.recvPaoAndLongNotify,this);
+        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
+
+        this.recvDeskInfoMsg();
+    },
+
+    onClickTipCard(){
+        
+    },
+
+    onClickOutCard(){
+        let req = {c: MsgId.OUT_CARD};
+        let cards = this.getSelectedCards();
+        if (this.checkCardIsCanOut(cards)) {
+            req.cards = this.getSelectedCards();
+            cc.vv.NetManager.send(req);
+        } else {
+            cc.vv.FloatTip.show("无效出牌");
         }
+    },
 
-        if(this._chairId === 0){
-            //gsltodo
-            this._outCardY = 300;
-            this.checkCanOutCard();
+    onRcvOutCardNotify(data){
+        data = data.detail;
+        if (data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() && 0 < data.actionInfo.nextaction.type) {
+            this.showOperateBtn(true);
         }
     },
 
@@ -76,12 +100,34 @@ cc.Class({
         }
     },
 
-    showHandCard(list){
+    showHandCard(list,bShowMoveAni = false){
         for(let i = 0; i < list.length; ++i){
             let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i]);
             node.parent = this._handcardNode;
-            node.x = node.width/2 * i - (node.width/2*(list.length-1))/2;
+            let endPosX = node.width/2 * i - (node.width/2*(list.length-1))/2;
+            if (bShowMoveAni) {
+                node.scale = 0;
+                node.position = cc.v2(0, this.node.height);
+                node.runAction(
+                    cc.sequence(
+                        cc.delayTime(i * 0.1), 
+                        cc.spawn(
+                            cc.scaleTo(0.2, 1), 
+                            cc.moveTo(0.2, cc.v2(endPosX, 0))
+                        ),
+                        cc.scaleTo(0.02, 1.1), 
+                        cc.scaleTo(0.02, 1), 
+                    )
+                )
+            } else {
+                node.x = endPosX;
+            }
         }
+        this._canTouch = false;
+        let self = this;
+        this.scheduleOnce(()=>{
+            self._canTouch = true;
+        }, list.length * 0.1 + 0.4 + 0.1)
     },
 
     showCard(list,len,showBg=false){
@@ -184,45 +230,54 @@ cc.Class({
             }
         }
 
-        this.touchStartPosX = null;
-        this.touchCurPosX = null;
+        // this.touchStartPosX = null;
+        // this.touchCurPosX = null;
 
-        if(!this._canTouch) return;
-        if(this._selectCard){
-            if(this._selectCard.y>this._outCardY){
-                if(this._canOutCard){
-                    if(this.isShowWarn(this._selectCard.cardValue)){
-                        let self = this
-                        let sureCall = function () {
-                            var req = { c: MsgId.WARN_5_FU};
-                            req.pcard = self._selectCard.cardValue;
-                            cc.vv.NetManager.send(req);
+        // if(this._canTouch && this._selectCard){
+        //     if(this._selectCard.y>this._outCardY){
+        //         if(this._canOutCard){
+        //             if(this.isShowWarn(this._selectCard.cardValue)){
+        //                 let self = this
+        //                 let sureCall = function () {
+        //                     var req = { c: MsgId.WARN_5_FU};
+        //                     req.pcard = self._selectCard.cardValue;
+        //                     cc.vv.NetManager.send(req);
 
-                            self.outCard();
-                        }
-                        let cancelCall = function () {
-                            self.outCard();
-                        }
-                        let closeCall = function () {
-                            self._selectCard.color = new cc.Color(255,255,255);
-                            self.resetCardPos(true);
-                        }
-                        cc.vv.AlertView.show("是否发出警报", sureCall, cancelCall, true, closeCall)
-                    } else {
-                        this.outCard();
-                    }
+        //                     self.outCard();
+        //                 }
+        //                 let cancelCall = function () {
+        //                     self.outCard();
+        //                 }
+        //                 let closeCall = function () {
+        //                     self._selectCard.color = new cc.Color(255,255,255);
+        //                     self.resetCardPos(true);
+        //                 }
+        //                 cc.vv.AlertView.show("是否发出警报", sureCall, cancelCall, true, closeCall)
+        //             } else {
+        //                 this.outCard();
+        //             }
 
-                }
-                else{
-                    this._selectCard.color = new cc.Color(255,255,255);
-                    this.resetCardPos(true);
-                }
-                // 出牌
-            }
-            else{
-                this.checkMoveCard();
+        //         }
+        //         else{
+        //             this._selectCard.color = new cc.Color(255,255,255);
+        //             this.resetCardPos(true);
+        //         }
+        //         // 出牌
+        //     }
+        //     else{
+        //         this.checkMoveCard();
+        //     }
+        // }
+    },
+
+    getSelectedCards(){
+        let list = [];
+        for (let i = 0; i < this._handcardNode.children.length; i++) {
+            if (this._handcardNode.children[i].isSelect) {
+                list.push(this._handcardNode.children[i].cardValue);
             }
         }
+        return list;
     },
 
     isShowWarn(selectCardValue){
@@ -471,69 +526,74 @@ cc.Class({
 
     onRecvHandCard(data){
         data = data.detail;
-        if(this._seatIndex === data.seat){
-            if(data.handInCards){
-                this.clearDesk();
-                this._handCardData = data;
-                this._handCards = data.handInCards.slice(0);
-                let list = data.handInCards.slice(0);
-                for(let j=0;j<data.menzi.length;++j){
-                    let typeData = data.menzi[j];
-                    let num =0;
-                    if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN ) // 坎
-                    {
-                        num = 3;
-                    }
-                    else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || typeData.type === cc.vv.gameData.OPERATETYPE.SHE){
-                        num = 4;
-                    }
-                    for(let i=0;i<num;++i){
-                        list.push(typeData.card);
-                    }
-                }
-                // 随机洗下牌
-                for(let i=0;i<10;++i){
-                    let index = parseInt(cc.random0To1()*1000)%10;
-                    let temp = list[i];
-                    list[i] = list[index];
-                    list[index] = temp;
-                }
-                this.showCard(list,list.length,true);
-                let maxCol = 10 < list.length ? 10 : list.length;
-                let startX = this._handcardNode.parent.width*0.5-maxCol*0.5*this._handcardNode.children[0].width;
-                let startY =  this._handcardNode.children[0].height*0.5-20;
+        if(this._seatIndex === data.seat && data.handInCards){
+            this.clearDesk();
 
-                for(let i=0;i<this._handcardNode.childrenCount;++i){
-                    let child = this._handcardNode.children[i];
-                    child.position = child.parent.convertToNodeSpaceAR(this._cardBoXPos);
+            let handInCards = cc.vv.gameData.sortCard(data.handInCards);
+            this.showHandCard(handInCards, true)
 
-                    let bg = child.getChildByName("bg");
-                    child.opacity = 0;
-                    let endPos = cc.v2(startX+(i%10)*child.width,startY+parseInt(i/10)*(child.height-22));
-                    let delaytimeAction = cc.delayTime(i*0.05);
-                    let callFunc1 = cc.callFunc(()=>{
-                        bg.opacity = 200;
-                        child.getComponent(cc.Sprite).enabled = false;
-                        Global.playEff(Global.SOUNDS.send_card);
-                    });
-                    let callFunc2 = cc.callFunc(()=>{
-                        child.getComponent(cc.Sprite).enabled = true;
-                        bg.active = false;
-                    });
-                    let scaleAction1 = cc.scaleTo(0.2, 0, 1);
-                    let scaleAction2 = cc.scaleTo(0.2, 1, 1);
-
-                    let spaw = cc.spawn(cc.moveTo(0.1,endPos),cc.fadeTo(0.1,255));
-                    let seq = cc.sequence(delaytimeAction,callFunc1,spaw,scaleAction1,callFunc2,scaleAction2);
-                    if(i === this._handcardNode.childrenCount-1){
-                        seq = cc.sequence(delaytimeAction,callFunc1,spaw,scaleAction1,callFunc2,scaleAction2,cc.callFunc(()=>{
-                            this.sortCard();
-                        }));
-                    }
-                    child.runAction(seq);
-                }
-
+            if (data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() && 0 < data.actionInfo.nextaction.type) {
+                this.showOperateBtn(true);
             }
+
+        //     this._handCardData = data;
+        //     this._handCards = data.handInCards.slice(0);
+        //     let list = data.handInCards.slice(0);
+        //     for(let j=0;j<data.menzi.length;++j){
+        //         let typeData = data.menzi[j];
+        //         let num =0;
+        //         if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN ) // 坎
+        //         {
+        //             num = 3;
+        //         }
+        //         else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || typeData.type === cc.vv.gameData.OPERATETYPE.SHE){
+        //             num = 4;
+        //         }
+        //         for(let i=0;i<num;++i){
+        //             list.push(typeData.card);
+        //         }
+        //     }
+        //     // 随机洗下牌
+        //     for(let i=0;i<10;++i){
+        //         let index = parseInt(cc.random0To1()*1000)%10;
+        //         let temp = list[i];
+        //         list[i] = list[index];
+        //         list[index] = temp;
+        //     }
+        //     this.showCard(list,list.length,true);
+        //     let maxCol = 10 < list.length ? 10 : list.length;
+        //     let startX = this._handcardNode.parent.width*0.5-maxCol*0.5*this._handcardNode.children[0].width;
+        //     let startY =  this._handcardNode.children[0].height*0.5-20;
+
+        //     for(let i=0;i<this._handcardNode.childrenCount;++i){
+        //         let child = this._handcardNode.children[i];
+        //         child.position = child.parent.convertToNodeSpaceAR(this._cardBoXPos);
+
+        //         let bg = child.getChildByName("bg");
+        //         child.opacity = 0;
+        //         let endPos = cc.v2(startX+(i%10)*child.width,startY+parseInt(i/10)*(child.height-22));
+        //         let delaytimeAction = cc.delayTime(i*0.05);
+        //         let callFunc1 = cc.callFunc(()=>{
+        //             bg.opacity = 200;
+        //             child.getComponent(cc.Sprite).enabled = false;
+        //             Global.playEff(Global.SOUNDS.send_card);
+        //         });
+        //         let callFunc2 = cc.callFunc(()=>{
+        //             child.getComponent(cc.Sprite).enabled = true;
+        //             bg.active = false;
+        //         });
+        //         let scaleAction1 = cc.scaleTo(0.2, 0, 1);
+        //         let scaleAction2 = cc.scaleTo(0.2, 1, 1);
+
+        //         let spaw = cc.spawn(cc.moveTo(0.1,endPos),cc.fadeTo(0.1,255));
+        //         let seq = cc.sequence(delaytimeAction,callFunc1,spaw,scaleAction1,callFunc2,scaleAction2);
+        //         if(i === this._handcardNode.childrenCount-1){
+        //             seq = cc.sequence(delaytimeAction,callFunc1,spaw,scaleAction1,callFunc2,scaleAction2,cc.callFunc(()=>{
+        //                 this.sortCard();
+        //             }));
+        //         }
+        //         child.runAction(seq);
+        //     }
         }
     },
 
@@ -562,37 +622,21 @@ cc.Class({
     },
 
     clearDesk(){
-        this._handCardData = null;
         if(this._handcardNode) {
             this._handcardNode.removeAllChildren(true);
         }
-        if(this._chairId === 0){
-            for(let i=0;i<10;++i){
-                for(let j=0;j<4;++j){
-                    this._cardBox[i][j] = null;
-                }
-            }
-        }
-        this._selectCard = null;
-        this._canOutCard = false;
-        this._num = 0;
-    },
 
-    start () {
-        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
-        Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
-        Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
-        Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanAndKanNotify,this);
-        Global.registerEvent(EventId.PENG_NOTIFY,this.recvKanAndKanNotify,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoAndLongNotify,this);
-        Global.registerEvent(EventId.LONG_NOTIFY,this.recvPaoAndLongNotify,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-        Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
-
-        this.recvDeskInfoMsg();
+        // this._handCardData = null;
+        // if(this._chairId === 0){
+        //     for(let i=0;i<10;++i){
+        //         for(let j=0;j<4;++j){
+        //             this._cardBox[i][j] = null;
+        //         }
+        //     }
+        // }
+        // this._selectCard = null;
+        // this._canOutCard = false;
+        // this._num = 0;
     },
 
     recvOverRound(data){
@@ -608,16 +652,19 @@ cc.Class({
     },
 
     recvDeskInfoMsg(){
-        //gsdltodo
-        return;
-
-        if(this._handcardNode === null) return;
+        if(this._handcardNode === null) {
+            return;
+        }
         let deskInfo = cc.vv.gameData.getDeskInfo();
         for(let i=0;i<deskInfo.users.length;++i){
             if(this._seatIndex === deskInfo.users[i].seat){
-                let cards = deskInfo.users[i].handInCards;
-                this.showHandCard();
+                let handInCards = cc.vv.gameData.sortCard(deskInfo.users[i].handInCards);
+                this.showHandCard(handInCards);
 
+                if (deskInfo.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() && 0 < deskInfo.actionInfo.nextaction.type) {
+                    this.showOperateBtn(true);
+                }
+            
                 // if(cards && cards.length !== this._handcardNode.childrenCount){
                 //     this.clearDesk();
                 //     let list = cc.vv.gameData.sortCard(cards);
