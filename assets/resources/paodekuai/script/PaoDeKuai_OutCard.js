@@ -106,6 +106,9 @@ cc.Class({
     },
 
     recvDeskInfoMsg(){
+        //gsdltodo
+        return;
+        
         let deskInfo = cc.vv.gameData.getDeskInfo();
         if(deskInfo.isReconnect){
             for(let i=0;i<deskInfo.users.length;++i){

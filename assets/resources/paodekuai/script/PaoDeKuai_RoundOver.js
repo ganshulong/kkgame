@@ -29,6 +29,9 @@ cc.Class({
     },
 
     recvDeskInfoMsg(){
+        //gsdltodo
+        return;
+        
         this._zhuang = cc.vv.gameData.getDeskInfo().bankerInfo.seat;
     },
 

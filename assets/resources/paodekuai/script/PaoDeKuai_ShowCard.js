@@ -141,24 +141,27 @@ cc.Class({
     },
 
     recvDeskInfoMsg(){
-        let deskInfo = cc.vv.gameData.getDeskInfo();
-        if(deskInfo.isReconnect){
-            if(deskInfo.smallState === 1){
-                if(deskInfo.actionInfo.curaction.type === cc.vv.gameData.OPERATETYPE.PUT ||
-                    deskInfo.actionInfo.curaction.type === cc.vv.gameData.OPERATETYPE.MOPAI) {
-                    this.clearDesk();
-                    if (deskInfo.actionInfo.curaction.seat === this._seatIndex) {
-                        this._showCardNode.stopAllActions();
-                        this.showCard(deskInfo.actionInfo.curaction.card);
-                        this.node.getComponent("PaoDeKuai_Card").changCardBg(this._showCardNode.getChildByName("card_light"),
-                            deskInfo.actionInfo.curaction.source === 0);
-                    }
-                }
-            }
-            else{
-                this.clearDesk();
-            }
-        }
+        //gsdltodo
+        return;
+        
+        // let deskInfo = cc.vv.gameData.getDeskInfo();
+        // if(deskInfo.isReconnect){
+            // if(deskInfo.smallState === 1){
+            //     if(deskInfo.actionInfo.curaction.type === cc.vv.gameData.OPERATETYPE.PUT ||
+            //         deskInfo.actionInfo.curaction.type === cc.vv.gameData.OPERATETYPE.MOPAI) {
+            //         this.clearDesk();
+            //         if (deskInfo.actionInfo.curaction.seat === this._seatIndex) {
+            //             this._showCardNode.stopAllActions();
+            //             this.showCard(deskInfo.actionInfo.curaction.card);
+            //             this.node.getComponent("PaoDeKuai_Card").changCardBg(this._showCardNode.getChildByName("card_light"),
+            //                 deskInfo.actionInfo.curaction.source === 0);
+            //         }
+            //     }
+            // }
+            // else{
+            //     this.clearDesk();
+            // }
+        // }
     },
 
     recvRoundOver(data){

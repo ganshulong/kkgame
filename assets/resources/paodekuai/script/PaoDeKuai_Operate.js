@@ -400,6 +400,9 @@ cc.Class({
     },
 
     recvDeskInfoMsg(){
+        //gsdltodo
+        return;
+        
         let deskInfo = cc.vv.gameData.getDeskInfo();
         if(deskInfo.isReconnect){
             if(deskInfo.actionInfo.iswait){

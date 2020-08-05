@@ -22,6 +22,7 @@ cc.Class({
         this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
         this._UISeat = index;
         this._playerNode = playerNode;
+        this.playerNum = playerNum;
 
         if(this._playerNode){
             this.registerMsg();
@@ -96,7 +97,6 @@ cc.Class({
                 this.setTotalScore(data.users[i].score);
                 this.setHuXi(data.users[i].roundHuXi);
                 this._playerNode.getChildByName("clock").active = false;
-                this._playerNode.getChildByName("mask_master").active = false;
                 this._playerNode.getChildByName("mask_onOut").active = false;
                 break;
             }
@@ -204,16 +204,13 @@ cc.Class({
             for(let i=0;i<deskInfo.users.length;++i){
                 if(this._seatIndex === deskInfo.users[i].seat){
                     this.initPlayerInfo(deskInfo.users[i]);
-                    this.showZhuang(deskInfo.bankerInfo.seat === this._seatIndex, deskInfo.bankerInfo.count);
                 }
             }
         }
     },
+
     onRecvHandCard(data){
-        let bankInfo = data.detail.bankerInfo;
-        if(bankInfo.seat === this._seatIndex) {
-            this.showZhuang(true);
-        }
+
     },
 
     onRcvPlayerExitNotice(msg){
@@ -244,12 +241,15 @@ cc.Class({
             this.setTotalScore(user.score);
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
-            this.showZhuang(false);
+            this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
             this.setHuXi(user.roundHuXi?user.roundHuXi:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("clock").active = false;
-            this._playerNode.getChildByName("mask_master").active = false;
             this._playerNode.getChildByName("mask_onOut").active = false;
+            if (0 < this._UISeat) {
+                this._playerNode.getChildByName("ani_warn").active = false;
+                this._playerNode.getChildByName("bg_cardNum").active = false;
+            }
         }
     },
 
@@ -268,19 +268,13 @@ cc.Class({
     // 总分
     setTotalScore(score){
         if (typeof score != 'undefined') {
-            if(this._playerNode)  cc.find("bg_score/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
+            if(this._playerNode)  cc.find("bg_score/txt_total_score",this._playerNode).getComponent(cc.Label).string = score;
         }
     },
 
-    // 显示庄
-    //gsltodo
-    showZhuang(bShow, count = 1){
-        if(this._playerNode) {
-            // this._playerNode.getChildByName("sp_flag").active = bShow;
-            // if (bShow && count) {
-            //     cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
-            // }
-        }
+    // 显示房主
+    showMaster(bShow){
+        this._playerNode.getChildByName("mask_master").active = bShow;
     },
 
     recvSendCard(){
@@ -295,7 +289,6 @@ cc.Class({
 
     clearDesk(){
         this.setHuXi(0);
-        this.showZhuang(false);
     },
 
     onDestroy(){

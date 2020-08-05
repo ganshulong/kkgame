@@ -18,11 +18,13 @@ cc.Class({
     },
 
     init(index,playerNum){
-        let cardNode = null;
-        if(index === 0) cardNode = cc.find("scene/handleCardView",this.node);
-        else if(index === 1) cardNode = cc.find("scene/playback_handle/left_user",this.node);
-        else if(index === 2) cardNode = cc.find("scene/playback_handle/top_user",this.node);
-        else if(index === 3) cardNode = cc.find("scene/playback_handle/right_user",this.node);
+        if(index === 0) {
+            this._handcardNode = cc.find("scene/handleCardView",this.node);
+            this._handcardNode.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
+            this._handcardNode.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
+            this._handcardNode.on(cc.Node.EventType.TOUCH_END,this.onTouchEnd,this);
+            this._handcardNode.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
+        }
 
         let box = cc.find("scene/cardBox",this.node);
         this._cardBoXPos = box.parent.convertToWorldSpaceAR(box.position);
@@ -30,7 +32,6 @@ cc.Class({
         this._cardBoXPos.y += 24;
 
         this._playerNum = playerNum;
-        this._handcardNode = cardNode;
         this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
 
         this.initCardBox();
@@ -40,11 +41,19 @@ cc.Class({
             if(this._seatIndex>-1){
                 let user = cc.vv.gameData.getUserInfo(this._seatIndex);
                 if(user.handInCards && user.handInCards.length>0){
-                    let list = cc.vv.gameData.sortCard(user.handInCards);
-                    this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(user.handInCards);
-                    for(let i=0;i<list.length;++i){
-                        this.showCard(list[i],list.length);
-                    }
+                    user.handInCards.sort((a,b)=>{
+                        if ((a%16) == (b%16)) {
+                            return a - b;
+                        } else {
+                            return (a%16) - (b%16);
+                        }
+                    });
+                    this.showHandCard(user.handInCards);
+                    // let list = cc.vv.gameData.sortCard(user.handInCards);
+                    // this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(user.handInCards);
+                    // for(let i=0;i<list.length;++i){
+                    //     this.showCard(list[i],list.length);
+                    // }
                 }
             }
         }
@@ -64,6 +73,14 @@ cc.Class({
             } else {
                 this._canOutCard = false;
             }
+        }
+    },
+
+    showHandCard(list){
+        for(let i = 0; i < list.length; ++i){
+            let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i]);
+            node.parent = this._handcardNode;
+            node.x = node.width/2 * i - (node.width/2*(list.length-1))/2;
         }
     },
 
@@ -113,6 +130,41 @@ cc.Class({
 
     },
 
+    onTouchStart(event){
+        if(this._canTouch){
+            this.touchStartPosX = event.touch._startPoint.x;
+            this.touchCurPosX = event.touch._point.x;
+            this.changeCardSelectState();
+        }
+    },
+
+    onTouchMove(event){
+        if(this._canTouch){
+            this.touchCurPosX = event.touch._point.x;
+            this.changeCardSelectState();
+        }
+    },
+
+    changeCardSelectState(){
+        let touchLeftPosX = this.touchStartPosX < this.touchCurPosX ? this.touchStartPosX : this.touchCurPosX;
+        touchLeftPosX -= this._handcardNode.x;
+        let touchRightPosX = this.touchStartPosX < this.touchCurPosX ? this.touchCurPosX : this.touchStartPosX;
+        touchRightPosX -= this._handcardNode.x;
+        for (let i = 0; i < this._handcardNode.children.length; i++) {
+            let card = this._handcardNode.children[i];
+            let cardLeftPosX = card.x - card.width/2;
+            let cardRightPosX = (i < this._handcardNode.children.length - 1) ? card.x : (card.x + card.width/2);
+            if((touchLeftPosX < cardLeftPosX && touchRightPosX > cardLeftPosX) ||
+               (touchLeftPosX < cardRightPosX && touchRightPosX > cardRightPosX) ||
+               (cardLeftPosX < touchLeftPosX && cardRightPosX > touchLeftPosX)){
+                card.isTouchSelect = true;
+                card.color = new cc.Color(100,100,100);
+            } else {
+                card.isTouchSelect = false;
+                card.color = new cc.Color(255,255,255); 
+            }
+        }
+    },
 
     onTouchCancel(event){
         if(this._canTouch){
@@ -120,24 +172,21 @@ cc.Class({
         }
     },
 
-    onTouchStart(event){
-        if(this._canTouch && event.target.isCanMove){
-            this._selectCard = event.target;
-            this._selectCard.color = new cc.Color(200,200,200);
-        }
-    },
+    onTouchEnd(event){
+        for (let i = 0; i < this._handcardNode.children.length; i++) {
+            let card = this._handcardNode.children[i];
+            if (card.isTouchSelect) {
+                card.isTouchSelect = false;
+                card.color = new cc.Color(255,255,255); 
 
-    onTouchMove(event){
-        if(this._canTouch){
-            let pos = event.getDelta();
-            if(this._selectCard){
-                this._selectCard.x += pos.x;
-                this._selectCard.y += pos.y;
+                card.isSelect = !card.isSelect;
+                card.y = card.isSelect ? 50 : 0;
             }
         }
-    },
 
-    onTouchEnd(event){
+        this.touchStartPosX = null;
+        this.touchCurPosX = null;
+
         if(!this._canTouch) return;
         if(this._selectCard){
             if(this._selectCard.y>this._outCardY){
@@ -559,11 +608,15 @@ cc.Class({
     },
 
     recvDeskInfoMsg(){
+        //gsdltodo
+        return;
+
         if(this._handcardNode === null) return;
         let deskInfo = cc.vv.gameData.getDeskInfo();
         for(let i=0;i<deskInfo.users.length;++i){
             if(this._seatIndex === deskInfo.users[i].seat){
                 let cards = deskInfo.users[i].handInCards;
+                this.showHandCard();
 
                 // if(cards && cards.length !== this._handcardNode.childrenCount){
                 //     this.clearDesk();
@@ -587,13 +640,13 @@ cc.Class({
                 // }
             }
         }
-        if(deskInfo.isReconnect){
-            if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
-                deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
-                this._canOutCard = true;
-                this.showOutLine(this._canOutCard);
-            }
-        }
+        // if(deskInfo.isReconnect){
+        //     if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
+        //         deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
+        //         this._canOutCard = true;
+        //         this.showOutLine(this._canOutCard);
+        //     }
+        // }
     },
 
     // 收到跑或者龙
