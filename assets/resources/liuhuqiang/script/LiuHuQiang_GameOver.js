@@ -67,6 +67,9 @@ cc.Class({
                 this._winBgSpr = cc.find("game_end_bg/player0/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
                 this._loseBgSpr = cc.find("game_end_bg/player1/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
 
+                this.huxiNum_winSpr = cc.find("game_end_bg/player0/img_bg/title_huxi_num",this._layer).getComponent(cc.Sprite).spriteFrame;
+                this.huxiNum_loseSpr = cc.find("game_end_bg/player1/img_bg/title_huxi_num",this._layer).getComponent(cc.Sprite).spriteFrame;
+
                 let btnBtn = this._layer.getChildByName("btn_back");
                 Global.btnClickEvent(btnBtn,this.onBack,this);
 
@@ -137,8 +140,7 @@ cc.Class({
             img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
 
-            img_bg.getChildByName("title_huxi_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
-                this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-win_all_huxi"):this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-lose_all_huxi");
+            img_bg.getChildByName("title_huxi_num").getComponent(cc.Sprite).spriteFrame = user.score >= 0 ? this.huxiNum_winSpr : this.huxiNum_loseSpr;
 
             img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
                 this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_dianpao_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_dianpao_num");
