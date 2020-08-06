@@ -64,10 +64,10 @@ cc.Class({
         if (typeCards.length) {
             return typeCards;
         }
-        // typeCards = this.getBombOne(cards, card2DList, handCardNum, lastCardValue);
-        // if (typeCards.length) {
-        //     return typeCards;
-        // }
+        typeCards = this.getBombOne(cards, card2DList, handCardNum, lastCardValue);
+        if (typeCards.length) {
+            return typeCards;
+        }
         // typeCards = this.getBombTwo(cards, card2DList, handCardNum, lastCardValue);
         // if (typeCards.length) {
         //     return typeCards;
@@ -136,7 +136,7 @@ cc.Class({
             for (let i = 0; i < card2DList.length; i++) {
                 if (3 === card2DList[i].length && card2DList[i][0] % 0x10 > lastCardValue) {
                     let typeCards = card2DList[i];
-                    typeCards += this.getTakeCards(typeCards, cards);
+                    typeCards.concat(this.getTakeCards(typeCards, cards));
                     return typeCards;
                 }
             }
@@ -150,10 +150,24 @@ cc.Class({
                 if (3 === card2DList[i].length && card2DList[i][0] % 0x10 > lastCardValue) {
                     for (let j = 0; j < card2DList.length; j++) {
                         if (2 === card2DList[j].length){
-                            let typeCards = card2DList[i] + card2DList[j];
+                            let typeCards = card2DList[i];
+                            typeCards.concat(card2DList[j]);
                             return typeCards;
                         }
                     }
+                }
+            }
+        }
+        return [];
+    },
+
+    getBombOne(cards, card2DList, handCardNum, lastCardValue){
+        if (5 === cards.length && 5 === handCardNum) {
+            for (let i = 0; i < card2DList.length; i++) {
+                if (4 === card2DList[i].length && card2DList[i][0] % 0x10 > lastCardValue) {
+                    let typeCards = card2DList[i];
+                    typeCards.concat(this.getTakeCards(typeCards, cards));
+                    return typeCards;
                 }
             }
         }
