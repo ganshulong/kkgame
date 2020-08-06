@@ -25,24 +25,6 @@ cc.Class({
     },
 
     checkCardIsCanOut(cards, handCardNum, curaction){
-        switch(curaction.cardType) {
-            case this.CARDTYPE.ERROR_CARDS:
-                return this.getCardType(cards, handCardNum, 0);
-                break;
-        } 
-        return [];
-    },
-
-    getCardType(cards, handCardNum, lastCardValue){
-        let typeCards = this.getSingle(cards, lastCardValue);
-        if (typeCards.length) {
-            return typeCards;
-        }
-        typeCards = this.getDouble(cards, lastCardValue);
-        if (typeCards.length) {
-            return typeCards;
-        }
-
         cards.sort((a,b)=>{
             if ((a%0x10) == (b%0x10)) {
                 return a - b;
@@ -52,6 +34,67 @@ cc.Class({
         });
         let card2DList = this.arrangeCard(cards);
 
+        let lastCardValue = 0;
+        if (0 < curaction.outCards.length){
+            lastCardValue = curaction.outCards[0] % 0x10;
+        }
+
+        switch(curaction.cardType) {
+            case this.CARDTYPE.ERROR_CARDS:
+                return this.getCardType(cards, card2DList, handCardNum, lastCardValue);
+                break;
+            case this.CARDTYPE.SINGLE_CARD:
+                return this.getSingle(cards, lastCardValue);
+                break;
+            case this.CARDTYPE.DOUBLE_CARD:
+                return this.getDouble(cards, lastCardValue);
+                break;
+            case this.CARDTYPE.THREE_CARD:
+                return this.getThree(cards, card2DList, handCardNum, lastCardValue);
+                break;
+            case this.CARDTYPE.THREE_ONE_CARD:
+                return this.getThreeOne(cards, card2DList, handCardNum, lastCardValue);
+                break;
+            case this.CARDTYPE.THREE_TWO_CARD:
+                return this.getThreeTwo(cards, card2DList, lastCardValue);
+                break;
+            case this.CARDTYPE.BOMB_ONE_CARD:
+                return this.getBombOne(cards, card2DList, handCardNum, lastCardValue);
+                break;
+            case this.CARDTYPE.BOMB_TWO_CARD:
+                return this.getBombTwo(cards, card2DList, handCardNum, lastCardValue);
+                break;
+            case this.CARDTYPE.BOMB_THREE_CARD:
+                return this.getBombThree(cards, card2DList, lastCardValue);
+                break;
+            // case this.CARDTYPE.CONNECT_CARD:
+            //     return this.getConnect(cards, card2DList, handCardNum, lastCardValue);
+            //     break;
+            // case this.CARDTYPE.COMPANY_CARD:
+            //     return this.getCompany(cards, card2DList, handCardNum, lastCardValue);
+            //     break;
+            // case this.CARDTYPE.AIRCRAFT:
+            //     return this.getAircrafy(cards, card2DList, handCardNum, lastCardValue);
+            //     break;
+            // case this.CARDTYPE.BOMB_CARD:
+            //     return this.getBomb(cards, card2DList, handCardNum, lastCardValue);
+            //     break;
+            // case this.CARDTYPE.KINGBOMB_CARD:
+            //     return this.getKingBomb(cards, card2DList, handCardNum, lastCardValue);
+            //     break;
+        } 
+        return [];
+    },
+
+    getCardType(cards, card2DList, handCardNum, lastCardValue){
+        let typeCards = this.getSingle(cards, lastCardValue);
+        if (typeCards.length) {
+            return typeCards;
+        }
+        typeCards = this.getDouble(cards, lastCardValue);
+        if (typeCards.length) {
+            return typeCards;
+        }
         typeCards = this.getThree(cards, card2DList, handCardNum, lastCardValue);
         if (typeCards.length) {
             return typeCards;
@@ -68,14 +111,14 @@ cc.Class({
         if (typeCards.length) {
             return typeCards;
         }
-        // typeCards = this.getBombTwo(cards, card2DList, handCardNum, lastCardValue);
-        // if (typeCards.length) {
-        //     return typeCards;
-        // }
-        // typeCards = this.getBombThree(cards, card2DList, lastCardValue);
-        // if (typeCards.length) {
-        //     return typeCards;
-        // }
+        typeCards = this.getBombTwo(cards, card2DList, handCardNum, lastCardValue);
+        if (typeCards.length) {
+            return typeCards;
+        }
+        typeCards = this.getBombThree(cards, card2DList, lastCardValue);
+        if (typeCards.length) {
+            return typeCards;
+        }
         // typeCards = this.getConnect(cards, card2DList, lastCardValue);
         // if (typeCards.length) {
         //     return typeCards;
@@ -136,7 +179,10 @@ cc.Class({
             for (let i = 0; i < card2DList.length; i++) {
                 if (3 === card2DList[i].length && card2DList[i][0] % 0x10 > lastCardValue) {
                     let typeCards = card2DList[i];
-                    typeCards.concat(this.getTakeCards(typeCards, cards));
+                    let takeCards =  this.getTakeCards(typeCards, cards);
+                    for (var t = 0; t < takeCards.length; t++) {
+                        typeCards.push(takeCards[t]);
+                    }
                     return typeCards;
                 }
             }
@@ -148,13 +194,12 @@ cc.Class({
         if (5 === cards.length) {
             for (let i = 0; i < card2DList.length; i++) {
                 if (3 === card2DList[i].length && card2DList[i][0] % 0x10 > lastCardValue) {
-                    for (let j = 0; j < card2DList.length; j++) {
-                        if (2 === card2DList[j].length){
-                            let typeCards = card2DList[i];
-                            typeCards.concat(card2DList[j]);
-                            return typeCards;
-                        }
+                    let typeCards = card2DList[i];
+                    let takeCards =  this.getTakeCards(typeCards, cards);
+                    for (var t = 0; t < takeCards.length; t++) {
+                        typeCards.push(takeCards[t]);
                     }
+                    return typeCards;
                 }
             }
         }
@@ -166,7 +211,42 @@ cc.Class({
             for (let i = 0; i < card2DList.length; i++) {
                 if (4 === card2DList[i].length && card2DList[i][0] % 0x10 > lastCardValue) {
                     let typeCards = card2DList[i];
-                    typeCards.concat(this.getTakeCards(typeCards, cards));
+                    let takeCards =  this.getTakeCards(typeCards, cards);
+                    for (var t = 0; t < takeCards.length; t++) {
+                        typeCards.push(takeCards[t]);
+                    }
+                    return typeCards;
+                }
+            }
+        }
+        return [];
+    },
+
+    getBombTwo(cards, card2DList, handCardNum, lastCardValue){
+        if (6 === cards.length && 6 === handCardNum) {
+            for (let i = 0; i < card2DList.length; i++) {
+                if (4 === card2DList[i].length && card2DList[i][0] % 0x10 > lastCardValue) {
+                    let typeCards = card2DList[i];
+                    let takeCards =  this.getTakeCards(typeCards, cards);
+                    for (var t = 0; t < takeCards.length; t++) {
+                        typeCards.push(takeCards[t]);
+                    }
+                    return typeCards;
+                }
+            }
+        }
+        return [];
+    },
+
+    getBombThree(cards, card2DList, lastCardValue){
+        if (7 === cards.length) {
+            for (let i = 0; i < card2DList.length; i++) {
+                if (4 === card2DList[i].length && card2DList[i][0] % 0x10 > lastCardValue) {
+                    let typeCards = card2DList[i];
+                    let takeCards =  this.getTakeCards(typeCards, cards);
+                    for (var t = 0; t < takeCards.length; t++) {
+                        typeCards.push(takeCards[t]);
+                    }
                     return typeCards;
                 }
             }

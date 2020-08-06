@@ -515,7 +515,6 @@ cc.Class({
         data = data.detail;
         if(this._seatIndex === data.seat && data.handInCards){
             this.clearDesk();
-
             this.showHandCard(data.handInCards, true)
 
             if (this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
@@ -646,7 +645,7 @@ cc.Class({
         }
         let data = cc.vv.gameData.getDeskInfo();
         for(let i=0;i<data.users.length;++i){
-            if(this._seatIndex === data.users[i].seat){
+            if(this._seatIndex === data.users[i].seat && data.users[i].handInCards){
                 this.showHandCard(data.users[i].handInCards);
 
                 if (data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() && 0 < data.actionInfo.nextaction.type) {
