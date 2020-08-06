@@ -5,6 +5,7 @@ cc.Class({
     properties: {
         
         _handcardNode:null,
+        _handCards:[],         // 手牌
         _num:0,
         _cardBox:[],
         _selectCard:null,
@@ -12,7 +13,6 @@ cc.Class({
         _startPosX:null,
         _canOutCard:false,      // 可以出牌
         _cardBoXPos:null,
-        _handCards:[],         // 手牌
         _handCardData:null,
         _canTouch:true,
     },
@@ -70,8 +70,62 @@ cc.Class({
         Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
+        Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    recvDeskInfoMsg(){
+        let data = cc.vv.gameData.getDeskInfo();
+        if(data.isReconnect && this._handcardNode) {
+            for(let i=0;i<data.users.length;++i){
+                if(this._seatIndex === data.users[i].seat && data.users[i].handInCards){
+                    this.showHandCard(data.users[i].handInCards);
+
+                    if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+                        this.curaction = data.actionInfo.curaction;
+                        this.showOperateBtn(true);
+                    } else {
+                        this.showOperateBtn(false);
+                    }
+                }
+            }
+        }
+    },
+
+    onRcvOutCardNotify(data){
+        data = data.detail;
+        if (data.actionInfo.curaction.seat === this._seatIndex) {
+            let outCards = data.actionInfo.curaction.outCards;
+            if (0 < outCards.length) {
+                let handCards = this._handCards.slice(0);
+                for (let o = 0; o < outCards.length; o++) {
+                    for (let h = 0; h < handCards.length; h++) {
+                        if (outCards[o] == handCards[h]) {
+                            handCards.splice(h,1);
+                            break;
+                        }
+                    }
+                }
+                this.showHandCard(handCards);
+            }
+        }
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+            this.curaction = data.actionInfo.curaction;
+            this.showOperateBtn(true);
+        } else {
+            this.showOperateBtn(false);
+        }
+    },
+
+    onRcvGuoCardNotify(data){
+        data = data.detail;
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+            this.curaction = data.actionInfo.curaction;
+            this.showOperateBtn(true);
+        } else {
+            this.showOperateBtn(false);
+        }
     },
 
     onClickTipCard(){
@@ -92,16 +146,6 @@ cc.Class({
         cc.vv.FloatTip.show("无效出牌");
     },
 
-    onRcvOutCardNotify(data){
-        data = data.detail;
-        if (data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() && 0 < data.actionInfo.nextaction.type) {
-            this.curaction = data.actionInfo.curaction;
-            this.showOperateBtn(true);
-        } else {
-            this.showOperateBtn(false);
-        }
-    },
-
     showOperateBtn(bShow){
         this._operateNode.active = bShow;
     },
@@ -109,7 +153,7 @@ cc.Class({
     // 检查是否可以出牌
     checkCanOutCard(seat){
         if(this._chairId === 0){
-            if(cc.vv.gameData.getMySeatIndex() === seat){
+            if(this._seatIndex === seat){
                 this._canOutCard = true;
             } else {
                 this._canOutCard = false;
@@ -118,6 +162,7 @@ cc.Class({
     },
 
     showHandCard(list, bShowMoveAni = false){
+        this._handCards = list;
         this._handcardNode.removeAllChildren();
         let self = this;
         for(let i = 0; i < list.length; ++i){
@@ -434,14 +479,14 @@ cc.Class({
         data = data.detail;
         if(this._chairId === 0){
             // 轮到我自己出牌
-            if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() &&
+            if(data.actionInfo.nextaction.seat === this._seatIndex &&
                 data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
                 this._canOutCard = true;
                 this.showOutLine(this._canOutCard);
             }
 
             // 我当前吃牌
-            if(data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
+            if(data.actionInfo.curaction.seat === this._seatIndex){
                 // 删除手里面的牌
                 let list = data.chiInfo.chiData.slice(0);
                 let card = data.actionInfo.curaction.card;
@@ -639,58 +684,11 @@ cc.Class({
         }
     },
 
-    recvDeskInfoMsg(){
-        if(this._handcardNode === null) {
-            return;
-        }
-        let data = cc.vv.gameData.getDeskInfo();
-        for(let i=0;i<data.users.length;++i){
-            if(this._seatIndex === data.users[i].seat && data.users[i].handInCards){
-                this.showHandCard(data.users[i].handInCards);
-
-                if (data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() && 0 < data.actionInfo.nextaction.type) {
-                    this.curaction = data.actionInfo.curaction;
-                    this.showOperateBtn(true);
-                } else {
-                    this.showOperateBtn(false);
-                }
-            
-                // if(cards && cards.length !== this._handcardNode.childrenCount){
-                //     this.clearDesk();
-                //     let list = cc.vv.gameData.sortCard(cards);
-                //     this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);
-                //     for(let i=0;i<list.length;++i){
-                //         this.showCard(list[i],list.length);
-                //     }
-                // }
-
-                // let menziList = deskInfo.users[i].menzi;
-                // let pengKanCount = 0;
-                // for(let j = 0; j < menziList.length; ++j){
-                //     if(cc.vv.gameData.OPERATETYPE.KAN === menziList[j].type || cc.vv.gameData.OPERATETYPE.PENG === menziList[j].type) // 坎
-                //     {
-                //         ++pengKanCount;
-                //     }
-                // }
-                // if (4 == pengKanCount) {
-                //     this.isCanWarn = true;
-                // }
-            }
-        }
-        // if(deskInfo.isReconnect){
-        //     if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
-        //         deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
-        //         this._canOutCard = true;
-        //         this.showOutLine(this._canOutCard);
-        //     }
-        // }
-    },
-
     // 收到跑或者龙
     recvPaoAndLongNotify(data){
         data = data.detail;
         if(this._chairId === 0){
-            if(data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
+            if(data.actionInfo.curaction.seat === this._seatIndex){
                 if (data.ishand) {
                     for (var i = 0; i < 3; i++) {
                         this.delHandCard(data.actionInfo.curaction.card);
@@ -698,7 +696,7 @@ cc.Class({
                     this.resetCardPos();
                 }
             }
-            if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex()){
+            if(data.actionInfo.nextaction.seat === this._seatIndex){
                 this._canOutCard = true;
                 this.showOutLine(this._canOutCard);
             }
@@ -715,12 +713,12 @@ cc.Class({
         //     }
         // }
         if(this._chairId === 0){
-            if(data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
+            if(data.actionInfo.curaction.seat === this._seatIndex){
                 this.delHandCard(data.actionInfo.curaction.card);
                 this.delHandCard(data.actionInfo.curaction.card);
                 this.resetCardPos();
             }
-            this._canOutCard = data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex();
+            this._canOutCard = data.actionInfo.nextaction.seat === this._seatIndex;
             this.showOutLine(this._canOutCard);
         }
 

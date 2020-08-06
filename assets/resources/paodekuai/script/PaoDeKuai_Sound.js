@@ -21,6 +21,7 @@ cc.Class({
         // Global.registerEvent(EventId.SHOW_MENZI_SOUND,this.onRecvMenziSound,this);
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
+        Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvOutCardNotify,this);
     },
 
     onRcvOutCardNotify(data){

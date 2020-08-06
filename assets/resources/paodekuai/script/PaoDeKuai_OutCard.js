@@ -96,8 +96,7 @@ cc.Class({
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
         Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
-        // Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
-        Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
+        // Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);x
         // Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         // Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
         // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
@@ -106,27 +105,19 @@ cc.Class({
         Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
+        Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
 
         this.recvDeskInfoMsg();
     },
 
     recvDeskInfoMsg(){
-        //gsdltodo
-        return;
-        
-        let deskInfo = cc.vv.gameData.getDeskInfo();
-        if(deskInfo.isReconnect){
-            for(let i=0;i<deskInfo.users.length;++i){
-                if(this._seatIndex === deskInfo.users[i].seat && deskInfo.users[i].qipai){
-                    let qipaiList = deskInfo.users[i].qipai;
-                    if(this._outCardNode.childrenCount !== qipaiList.length){
-                        this._cardsNum = 0;
-                        this._outCardNode.removeAllChildren();
-                        for(let i=0;i<qipaiList.length;++i){
-                            this.showCard(qipaiList[i]);
-                        }
-                        break;
-                    }
+        let data = cc.vv.gameData.getDeskInfo();
+        if(data.isReconnect && this._outCardNode){
+            let putCardsList = data.actionInfo.curaction.putCardsList;
+            for (let i = 0; i < putCardsList.length; i++) {
+                if (putCardsList[i].seat === this._seatIndex) {
+                    this.showNoOutCard(putCardsList[i].isPass);
+                    this.showOutCard(putCardsList[i].outCards);
                 }
             }
         }
@@ -134,28 +125,53 @@ cc.Class({
 
     onRcvOutCardNotify(data){
         data = data.detail;
-        if (data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()) {
-            if (0 == data.actionInfo.curaction.type) {
-                this.showNoOutCard(true);
-            } if (0 < data.actionInfo.curaction.type) {
-                //gsltodo
-                this.showOutCard(); 
-            }
+        if (data.actionInfo.curaction.seat === this._seatIndex) {
+            let outCards = data.actionInfo.curaction.outCards;
+            this.showNoOutCard(0 == outCards.length);
+            this.showOutCard(outCards);
+        }
+        if (data.actionInfo.nextaction.seat === this._seatIndex) {
+            this.showNoOutCard(false);
+            this.showOutCard();
+        }
+    },
+
+    onRcvGuoCardNotify(data){
+        data = data.detail;
+        if (data.seat === this._seatIndex) {
+            this.showNoOutCard(true);
+            this.showOutCard();
+        }
+        if (data.actionInfo.nextaction.seat === this._seatIndex) {
+            this.showNoOutCard(false);
+            this.showOutCard();
         }
     },
 
     showOutCard(list){
         this._outCardNode.removeAllChildren();
-        if (list.length) {
-
+        if (list && 0 < list.length) {
+            let cardScale = 0.5;
+            let cardWidth = cc.vv.gameData.CardWidth * cardScale;
+            let startPosX = 0;
+            if(this._UISeat === 0){         // 下 居中
+                startPosX = cardWidth/2 * i - (cardWidth/2*(list.length-1))/2;
+            } else if(this._UISeat === 1){  //右 右对齐
+                startPosX = - cardWidth/2*(list.length-1);
+            } else if(this._UISeat === 2){  //左 左对齐
+                startPosX = 0;
+            }
+            for (let i = 0; i < list.length; i++) {
+                let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i]);
+                node.scale = cardScale;
+                node.parent = this._outCardNode;
+                node.x = startPosX + cardWidth/2 * i;
+            }
         }
+    },
 
-        // if(this._outCardValue){
-        //     for(let i=0;i<this._outCardValue.length;++i){
-        //         this.showCard(this._outCardValue[i],true);
-        //     }
-        //     this._outCardValue = null;
-        // }
+    showNoOutCard(bShow){
+        this.mask_onOut.active = bShow;
     },
 
     // 要不起
@@ -173,10 +189,6 @@ cc.Class({
         //         this.putOutCard(card);
         //     }
         // }
-    },
-
-    showNoOutCard(bShow){
-        this.mask_onOut.active = bShow;
     },
 
     // 吃
