@@ -85,7 +85,7 @@ cc.Class({
             if (0 < typeCards.length) {
                 let req = {c: MsgId.OUT_CARD};
                 req.cards = typeCards;
-                // cc.vv.NetManager.send(req);
+                cc.vv.NetManager.send(req);
                 return;
             }
         }

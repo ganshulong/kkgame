@@ -93,7 +93,6 @@ cc.Class({
 
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, this);
-        cc.vv.NetManager.registerMsg(MsgId.OUTCARD, this.onRcvOutCardReslut, this);
 
         cc.vv.NetManager.registerMsg(MsgId.CHI, this.onRcvChiResult, this);
         cc.vv.NetManager.registerMsg(MsgId.PENG, this.onRcvPengResult, this);
@@ -121,6 +120,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
 
         cc.vv.NetManager.registerMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.OUT_CARD, this.onRcvOutCard, this);
     },
 
     unregisterMsg() {
@@ -131,7 +131,6 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.SENDCARD,this.onRcvHandCard, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, false,this);
-        cc.vv.NetManager.unregisterMsg(MsgId.OUTCARD, this.onRcvOutCardReslut , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.CHI, this.onRcvChiResult , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.PENG, this.onRcvPengResult , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.GUO, this.onRcvPengResult , false,this);
@@ -158,11 +157,18 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
 
         cc.vv.NetManager.unregisterMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.OUT_CARD, this.onRcvOutCard, false,this);
     },
 
     onRcvOutCardNotify(msg){
         if(msg.code == 200){
             Global.dispatchEvent(EventId.OUT_CARD_NOTIFY,msg)
+        }
+    },
+
+    onRcvOutCard(msg){
+        if(msg.code == 200){
+            Global.dispatchEvent(EventId.OUT_CARD,msg)
         }
     },
 
@@ -423,12 +429,6 @@ cc.Class({
 
     // 过结果
     onRcvGuoResult(msg){
-        if(msg.code === 200){
-        }
-    },
-
-    // 出牌结果
-    onRcvOutCardReslut(msg){
         if(msg.code === 200){
         }
     },

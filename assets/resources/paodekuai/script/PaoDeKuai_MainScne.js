@@ -30,8 +30,8 @@ cc.Class({
             // this.node.addComponent("PaoDeKuai_HandCard").init(i,conf.seat);
         }
         this.node.addComponent("PaoDeKuai_HandCard_Operate").init(0);
-        this.node.addComponent("PaoDeKuai_Operate");
-        this.node.addComponent("PaoDeKuai_Tips");
+        // this.node.addComponent("PaoDeKuai_Operate");
+        // this.node.addComponent("PaoDeKuai_Tips");
         this.node.addComponent("PaoDeKuai_Action");
         this.node.addComponent("PaoDeKuai_RemainCard");
         this.node.addComponent("PaoDeKuai_RoundOver").init(this.tableAtlas);
