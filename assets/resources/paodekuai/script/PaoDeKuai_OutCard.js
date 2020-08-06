@@ -138,6 +138,7 @@ cc.Class({
             if (0 == data.actionInfo.curaction.type) {
                 this.showNoOutCard(true);
             } if (0 < data.actionInfo.curaction.type) {
+                //gsltodo
                 this.showOutCard(); 
             }
         }

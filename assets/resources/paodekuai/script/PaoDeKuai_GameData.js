@@ -262,10 +262,10 @@ cc.Class({
     sortCard(cards){
         let tempList1 = cards.slice(0);
         tempList1.sort((a,b)=>{
-            if ((a%16) == (b%16)) {
+            if ((a%0x10) == (b%0x10)) {
                 return a - b;
             } else {
-                return (a%16) - (b%16);
+                return (a%0x10) - (b%0x10);
             }
         });
         return tempList1;

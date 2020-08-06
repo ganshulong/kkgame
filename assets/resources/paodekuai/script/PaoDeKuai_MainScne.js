@@ -29,7 +29,7 @@ cc.Class({
             // this.node.addComponent("PaoDeKuai_OperatePai").init(i,conf.seat);
             // this.node.addComponent("PaoDeKuai_HandCard").init(i,conf.seat);
         }
-        this.node.addComponent("PaoDeKuai_HandCard_Operate").init();
+        this.node.addComponent("PaoDeKuai_HandCard_Operate").init(0);
         this.node.addComponent("PaoDeKuai_Operate");
         this.node.addComponent("PaoDeKuai_Tips");
         this.node.addComponent("PaoDeKuai_Action");
@@ -39,6 +39,7 @@ cc.Class({
         this.node.addComponent("PaoDeKuai_Sound");
         this.node.addComponent("PaoDeKuai_Chat");
         this.node.addComponent("PaoDeKuai_Setting");
+        // this.node.addComponent("PaoDeKuai_CardLogic").init();
 
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
