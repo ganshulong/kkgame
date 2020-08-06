@@ -119,6 +119,7 @@ cc.Class({
 
     showHandCard(list, bShowMoveAni = false){
         this._handcardNode.removeAllChildren();
+        let self = this;
         for(let i = 0; i < list.length; ++i){
             let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i]);
             node.parent = this._handcardNode;
@@ -128,24 +129,29 @@ cc.Class({
                 node.position = cc.v2(0, this.node.height);
                 node.runAction(
                     cc.sequence(
-                        cc.delayTime(i * 0.1), 
+                        cc.callFunc(()=>{
+                            if (0 == i) {
+                               self._canTouch = false;
+                            }
+                        }), 
+                        cc.delayTime(i * 0.05), 
                         cc.spawn(
                             cc.scaleTo(0.2, 1), 
                             cc.moveTo(0.2, cc.v2(endPosX, 0))
                         ),
                         cc.scaleTo(0.02, 1.1), 
                         cc.scaleTo(0.02, 1), 
+                        cc.callFunc(()=>{
+                            if ((list.length-1) == i) {
+                               self._canTouch = true;
+                            }
+                        }), 
                     )
                 )
             } else {
                 node.x = endPosX;
             }
         }
-        this._canTouch = false;
-        let self = this;
-        this.scheduleOnce(()=>{
-            self._canTouch = true;
-        }, list.length * 0.1 + 0.4 + 0.1)
     },
 
     showCard(list,len,showBg=false){
@@ -196,15 +202,15 @@ cc.Class({
 
     onTouchStart(event){
         if(this._canTouch){
-            this.touchStartPosX = event.touch._startPoint.x;
-            this.touchCurPosX = event.touch._point.x;
+            this.touchStartPosX = event.getLocationX();
+            this.touchCurPosX = event.getLocationX();
             this.changeCardSelectState();
         }
     },
 
     onTouchMove(event){
         if(this._canTouch){
-            this.touchCurPosX = event.touch._point.x;
+            this.touchCurPosX = event.getLocationX();
             this.changeCardSelectState();
         }
     },
@@ -237,6 +243,8 @@ cc.Class({
     },
 
     onTouchEnd(event){
+        this.touchStartPosX = null;
+        this.touchCurPosX = null;
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             let card = this._handcardNode.children[i];
             if (card.isTouchSelect) {
@@ -414,12 +422,12 @@ cc.Class({
                 }
             }
         }
-        if(showAction){
-            this._canTouch = false;
-            this.scheduleOnce(()=>{
-                this._canTouch = true;
-            },0.1)
-        }
+        // if(showAction){
+        //     this._canTouch = false;
+        //     this.scheduleOnce(()=>{
+        //         this._canTouch = true;
+        //     },0.1)
+        // }
     },
 
     recvChiCard(data){
@@ -508,8 +516,7 @@ cc.Class({
         if(this._seatIndex === data.seat && data.handInCards){
             this.clearDesk();
 
-            let handInCards = cc.vv.gameData.sortCard(data.handInCards);
-            this.showHandCard(handInCards, true)
+            this.showHandCard(data.handInCards, true)
 
             if (this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
                 this.curaction = data.actionInfo.curaction;
@@ -640,8 +647,7 @@ cc.Class({
         let data = cc.vv.gameData.getDeskInfo();
         for(let i=0;i<data.users.length;++i){
             if(this._seatIndex === data.users[i].seat){
-                let handInCards = cc.vv.gameData.sortCard(data.users[i].handInCards);data
-                this.showHandCard(handInCards);
+                this.showHandCard(data.users[i].handInCards);
 
                 if (data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() && 0 < data.actionInfo.nextaction.type) {
                     this.curaction = data.actionInfo.curaction;
