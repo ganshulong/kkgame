@@ -365,7 +365,7 @@
     ],
     "_prefab": null,
     "_id": "9c4jqYOzhFGoMYes7mCQYk",
-    "_opacity": 100,
+    "_opacity": 50,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -970,7 +970,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 50,
+      "width": 44,
       "height": 22
     },
     "_rotationX": 0,
@@ -1002,8 +1002,10 @@
     "_fontSize": 20,
     "_lineHeight": 22,
     "_enableWrapText": true,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_N$string": "14:44",
     "_N$horizontalAlign": 0,
@@ -1044,7 +1046,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 57,
+      "width": 55,
       "height": 26
     },
     "_rotationX": 0,
@@ -1076,8 +1078,10 @@
     "_fontSize": 24,
     "_lineHeight": 26,
     "_enableWrapText": true,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_N$string": "1/5局",
     "_N$horizontalAlign": 0,
@@ -1118,7 +1122,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 157,
+      "width": 148,
       "height": 30
     },
     "_rotationX": 0,
@@ -1150,8 +1154,10 @@
     "_fontSize": 28,
     "_lineHeight": 30,
     "_enableWrapText": true,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_N$string": "房号:548301",
     "_N$horizontalAlign": 0,
@@ -1325,8 +1331,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 104,
-      "height": 28
+      "width": 800,
+      "height": 30
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -1335,7 +1341,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -55
+      "y": -60
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1353,18 +1359,20 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_actualFontSize": 26,
-    "_fontSize": 26,
-    "_lineHeight": 28,
+    "_actualFontSize": 28,
+    "_fontSize": 28,
+    "_lineHeight": 30,
     "_enableWrapText": true,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_N$string": "游戏玩法",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
-    "_N$overflow": 0
+    "_N$overflow": 2
   },
   {
     "__type__": "cc.Node",

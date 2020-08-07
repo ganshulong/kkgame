@@ -73,7 +73,6 @@ cc.Class({
         let list = cc.vv.gameData.getWanFa();
         for(let i=0;i<list.length;++i){
             str += list[i];
-            if(i===2) str += "\n";
         }
         let desc = cc.find("scene/bg_top/txt_game_desc",this.node);
         desc.getComponent(cc.Label).string = str;

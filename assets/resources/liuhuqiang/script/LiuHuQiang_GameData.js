@@ -236,7 +236,7 @@ cc.Class({
         let conf = this._deskInfo.conf;
         list.push(conf.gamenum+"局 ");
         list.push(conf.seat+ "人 ");
-        list.push(["三胡一分 ","一胡一分 "][conf.param1]);
+        list.push(["一胡一分 ","三胡一分 "][conf.param1]);
         list.push(conf.score+ "倍 ");
         if(conf.speed === 1){
             list.push("快速 ");
