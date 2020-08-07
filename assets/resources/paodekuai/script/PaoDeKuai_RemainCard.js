@@ -14,10 +14,10 @@ cc.Class({
         }
         this._handCardNodeList.push(cc.find("scene/playback_handle/public",this.node));
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvGameOver,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
     },
 
-    recvGameOver(data){
+    recvRoundOver(data){
         data = data.detail;
         let users = data.users;
         for(let i=0;i<users.length;++i){
@@ -25,35 +25,34 @@ cc.Class({
             let UISeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
             if(0 < UISeat){
                 let node = cc.find("scene/playback_handle/player"+UISeat,this.node);
-                this.showHandCard(users[i].handInCards, node, chairId);
+                this.showHandCard(users[i].handInCards, node, UISeat);
             }
-        }
-
-        // 公牌
-        let publicCard = cc.find("scene/playback_handle/public",this.node);
-        for(let i=0;i<data.diPai.length;++i){
-            let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.diPai[i],2);
-
-            node.y = -node.height*parseInt(i/6);
-            node.x = node.width*parseInt(i%6);
-            node.parent = publicCard;
         }
     },
 
-    showHandCard(list,parent,chairId){
-        let tempList = cc.vv.gameData.sortCard(list);
-        for(let i=0;i<tempList.length;++i){
-            for(let j=0;j<tempList[i].length;++j) {
-                let node = this.node.getComponent("PaoDeKuai_Card").createCard(tempList[i][j],2);
-
-                node.y = node.height*j;
-                if (1 == chairId) {
-                    node.x = -node.width*i;
-                } else {
-                    node.x = node.width*i;
-                }
-                node.parent = parent;
+    showHandCard(list,parent,UISeat){
+        let cardScale = 0.5;
+        let cardWidth = cc.vv.gameData.CardWidth * cardScale;
+        let startPosX = 0;
+        if(UISeat === 1){  //右 右对齐
+            startPosX = - cardWidth/2*(list.length-1);
+            if (9 < list.length) {
+                startPosX = - cardWidth/2*(9-1);
             }
+        } else if(UISeat === 2){  //左 左对齐
+            startPosX = 0;
+        }
+        for (let i = 0; i < list.length; i++) {
+            let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i]);
+            node.scale = cardScale;
+            node.parent = parent;
+            if (i < 9) {
+                node.x = startPosX + cardWidth/2 * i;
+            } else {
+                node.x = startPosX + cardWidth/2 * (i - 9);
+                node.y = -node.height * cardScale * 0.6;
+            }
+            
         }
     },
 

@@ -68,7 +68,7 @@ cc.Class({
         Global.registerEvent(EventId.LONG_NOTIFY,this.recvPaoAndLongNotify,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
 
@@ -672,7 +672,7 @@ cc.Class({
         // this._num = 0;
     },
 
-    recvOverRound(data){
+    recvRoundOver(data){
         this.isCanWarn = false;
     },
 

@@ -89,7 +89,7 @@ cc.Class({
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){          
                 this.setTotalScore(data.users[i].score);
-                this.setHuXi(data.users[i].roundHuXi);
+                this.setHuXi(data.users[i].roundScore);
                 this._playerNode.getChildByName("clock").active = false;
                 break;
             }
@@ -231,7 +231,7 @@ cc.Class({
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
             this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
-            this.setHuXi(user.roundHuXi?user.roundHuXi:0);
+            this.setHuXi(user.roundScore?user.roundScore:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("clock").active = false;
             if (0 < this._UISeat) {

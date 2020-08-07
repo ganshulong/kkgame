@@ -3,52 +3,18 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        
         _layer:null,
-        _show:false,
         _isOver:false,
         _OverScoreNode:null,
-        _zhuang:-1,
     },
 
     start () {
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.GAMEOVER,this.recvGameOver,this);
-        // Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
-        // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
 
         this._OverScoreNode = cc.find("scene/over_score",this.node);
         this._OverScoreNode.active = false;
-    },
-
-    // onRecvHandCard(data){
-    //   data = data.detail;
-    // },
-
-    // recvDeskInfoMsg(){
-    //     //gsdltodo
-    //     return;
-        
-    //     this._zhuang = cc.vv.gameData.getDeskInfo().bankerInfo.seat;
-    // },
-
-    init(atlas){
-        this._atlas = atlas;
-    },
-
-    createType(type){
-        let node = new cc.Node();
-        let spr = node.addComponent(cc.Sprite);
-        let sprName = "";
-        if(type === cc.vv.gameData.OPERATETYPE.CHI) sprName = "penghu_onwer-table-imgs-wz_chi";
-        else if(type === cc.vv.gameData.OPERATETYPE.KAN) sprName = "penghu_onwer-table-imgs-wz_kan";
-        else if(type === cc.vv.gameData.OPERATETYPE.PAO) sprName = "penghu_onwer-table-imgs-wz_pao";
-        else if(type === cc.vv.gameData.OPERATETYPE.LONG) sprName = "penghu_onwer-table-imgs-wz_tilong";
-        else if(type === cc.vv.gameData.OPERATETYPE.SAO) sprName = "penghu_onwer-table-imgs-wz_sao";
-        else if(type === cc.vv.gameData.OPERATETYPE.PENG) sprName = "penghu_onwer-table-imgs-wz_peng";
-        spr.spriteFrame = this._atlas.getSpriteFrame(sprName);
-        return node;
     },
 
     recvGameOver(){
@@ -68,9 +34,11 @@ cc.Class({
                     this._layer.active = false;
                     this._layer.x = this.node.width/2;
                     this._layer.y = this.node.height/2;
-                    this.showRoundInfo(data);
-                    this.initPlayerInfo(data, data.users,data.seat,data.hcard,data.source,data.hupaiType);
+
                     this.initRoomInfo();
+                    this.initPlayerInfo(data);
+                    this.showNoSendCard(data.diPaiCards);
+
                     let self = this;
                     this.scheduleOnce(()=>{
                         self._layer.active = true;
@@ -83,131 +51,42 @@ cc.Class({
         for(let i=0;i<data.users.length;++i){
             let chairId = cc.vv.gameData.getLocalChair(data.users[i].seat);
             let score = this._OverScoreNode.getChildByName("score"+chairId);
-            score.getComponent(cc.Label).string = data.users[i].roundHuXi + "胡息";
+            score.getComponent(cc.Label).string = data.users[i].roundScore + "分";
             score.color = data.users[i].roundScore>0?(new cc.Color(236,187,111)):(new cc.Color(209,114,96));
         }
         this._OverScoreNode.runAction(cc.sequence(cc.delayTime(1),cc.callFunc(()=>{
             this._OverScoreNode.active = false;
         })))
-
-    },
-
-    showRoundInfo(data){
-        this._layer.getChildByName("spr_draw").active = (0 >= data.huxi);
-        let panel_CardInfo = this._layer.getChildByName("panel_CardInfo");
-        panel_CardInfo.active = (0 < data.huxi);
-        if (panel_CardInfo.active) {
-            let winerInfo = null;
-            for(let i = 0; i < data.users.length; ++i){
-                if (data.users[i].uid == cc.vv.UserManager.uid) {
-                    panel_CardInfo.getChildByName("spr_lose").active = (0 >= data.users[i].roundScore);
-                    panel_CardInfo.getChildByName("spr_win").active = (0 < data.users[i].roundScore);
-                }
-                if (data.users[i].seat == data.seat) {
-                    winerInfo = data.users[i];
-                }
-            }
-
-            if (data.hcard) {
-                let bgNode = new cc.Node();
-                bgNode.addComponent(cc.Sprite);
-                let cardNode = this.node.getComponent("PaoDeKuai_Card").createCard(data.hcard,0);
-                cardNode.parent = bgNode;
-                bgNode.parent = panel_CardInfo.getChildByName("card_last");
-            }
-
-            if (winerInfo) {
-                let panel_cardArrs = panel_CardInfo.getChildByName("panel_cardArrs");
-                let cardArrItemTemp = panel_cardArrs.getChildByName("cardArrItemTemp");
-
-                for (let i = 0; i < winerInfo.menzi.length; i++) {
-                    let cardArrItem = cc.instantiate(cardArrItemTemp);
-                    cardArrItem.parent = panel_cardArrs;
-                    cardArrItem.x = i * 70;
-
-                    let cardArr = winerInfo.menzi[i].data;
-                    if(winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.KAN ||
-                       winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.PENG) {
-                        cardArr=[winerInfo.menzi[i].card,winerInfo.menzi[i].card,winerInfo.menzi[i].card];
-
-                    } else if(winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.LONG ||
-                             winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.SHE ||
-                             winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.PAO) {
-                        cardArr=[winerInfo.menzi[i].card,winerInfo.menzi[i].card,winerInfo.menzi[i].card,winerInfo.menzi[i].card];
-                    }
-
-                    for(let j = 0; j < cardArr.length; ++j){
-                        let node = this.node.getComponent("PaoDeKuai_Card").createCard(cardArr[j],2);
-                        node.y = node.height * j;
-                        node.parent = cardArrItem;
-                    }
-
-                    let typeNode = this.createType(winerInfo.menzi[i].type);
-                    typeNode.y = 200;
-                    typeNode.parent = cardArrItem;
-                }
-
-                for(let i=0; i < data.huCards.length; ++i){
-                    let cardArrItem = cc.instantiate(cardArrItemTemp);
-                    cardArrItem.parent = panel_cardArrs;
-                    cardArrItem.x = (winerInfo.menzi.length + i) * 70;
-
-                    for(let j = 0; j < data.huCards[i].length; ++j) {
-                        let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.huCards[i][j],2);
-                        node.y = node.height * j;
-                        node.parent = cardArrItem;
-                    }
-                }
-            }
-            cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore
-            panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("胡息： " + data.huxi);
-
-            let zimoHuTypeStr = "";
-            if (data.isZimo) {
-                zimoHuTypeStr += "自摸\n";
-            }
-            if (0 < data.source) {
-                zimoHuTypeStr += "点炮胡\n";
-            }
-            if (0 < data.mingTangType) {
-                zimoHuTypeStr += ["","红胡","一点红","黑胡"][data.mingTangType];
-            }
-            if ("" == zimoHuTypeStr) {
-                zimoHuTypeStr += "平胡";
-            }
-            panel_CardInfo.getChildByName("text_zimo_huType").getComponent(cc.Label).string = zimoHuTypeStr;
-
-            let tunFanStr = "囤数:" + (parseInt((data.huxi-6) / 3) + 1);
-            if (data.isZimo || 0 < data.mingTangType) {
-                tunFanStr += " 番数:2"; 
-            } else {
-                tunFanStr += " 番数:1"; 
-            }
-            panel_CardInfo.getChildByName("text_tun_fan").getComponent(cc.Label).string = tunFanStr;
-        }
-        let surplusCard = this._layer.getChildByName("surplusCard");
-        for (let i = 0; i < data.diPai.length; i++) {
-            let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.diPai[i],2);
-            node.x = (node.width + 5) * i;
-            node.parent = surplusCard;
-        }
     },
 
     initPlayerInfo(data){
-        let bigWinerScore = 0;
-        let bigWinerNode = null;
         for(let i = 0; i < data.users.length; ++i){
-            let chairId = cc.vv.gameData.getLocalChair(data.users[i].seat);
-            let player = this._layer.getChildByName("player" + chairId);
+            let player = this._layer.getChildByName("player" + i);
 
             let spr_head = cc.find("head/radio_mask/spr_head",player);
             Global.setHead(spr_head, data.users[i].usericon);
 
-            player.getChildByName("spr_bigWiner").active = false;
-            player.getChildByName("spr_banker").active = (data.buck == data.users[i].uid);
-
             player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
             player.getChildByName("text_id").getComponent(cc.Label).string = "ID:"+data.users[i].uid;
+
+            player.getChildByName("text_surplusCardNum").getComponent(cc.Label).string = "剩牌:"+data.users[i].handInCards.length;
+            player.getChildByName("text_bombNum").getComponent(cc.Label).string = "炸弹:"+data.users[i].roundzhadan;
+
+            let node_card = player.getChildByName("node_card");
+            for (let c = 0; c < data.users[i].putCards.length; c++) {
+                let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.users[i].putCards[c]);
+                node.scale = 0.33;
+                node.x = node.width * node.scale * 0.8 * c;
+                node.parent = node_card;
+            }
+            for (let c = 0; c < data.users[i].handInCards.length; c++) {
+                let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.users[i].handInCards[c]);
+                node.scale = 0.33;
+                node.color = new cc.Color(100,100,100);
+                node.x = node.width * node.scale * 0.8 * (c + data.users[i].putCards.length);
+                node.parent = node_card;
+            }
+
             if (0 <= data.users[i].roundScore) {
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
@@ -215,54 +94,23 @@ cc.Class({
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
             }
-            if (bigWinerScore < data.users[i].roundScore) {
-                bigWinerScore = data.users[i].roundScore;
-                bigWinerNode = player;
-            }
-        }
-        if (0 < bigWinerScore) {
-            bigWinerNode.getChildByName("spr_bigWiner").active = true;
         }
         for (let i = data.users.length; i < cc.vv.gameData.RoomSeat; i++) {
             this._layer.getChildByName("player" + i).active = false;
         }
+
     },
 
-    // normal = 1, --平胡
-    // tianHu = 2, --天胡
-    // diHu = 3, --地胡
-    // tilongHu = 4, --踢龙胡
-    // paoHu = 5, --跑胡
-    // saoHu = 6, --扫胡
-    // pengHu = 7,--碰胡
-    // pengSanHu = 8, --碰三胡
-    // saoSanHu = 9, --扫胡
-    // pengSiHu = 10, --碰四胡
-    // saoSiHu = 11, --扫四胡
-    // shuangLongHu = 12, --双龙
-    // xiaoQiDuiHu = 13, --小七对
-    // paoDiHu = 14, --跑地胡
-    // pengDiHu = 15, --碰地胡
-    // pengDiHu = 16, --五福
-    showHuType(type,huFlag){
-        let sprName = "";
-        if(type===1) sprName = "penghu_onwer-table-imgs-huflag_12";
-        else if(type===2) sprName = "penghu_onwer-table-imgs-huflag_0";
-        else if(type===3 || type === 14 || type === 15) sprName = "penghu_onwer-table-imgs-huflag_1";
-        else if(type===4) sprName = "penghu_onwer-table-imgs-huflag_5";
-        else if(type===5) sprName = "penghu_onwer-table-imgs-huflag_6";
-        else if(type===6) sprName = "penghu_onwer-table-imgs-huflag_13";
-        else if(type===7) sprName = "penghu_onwer-table-imgs-huflag_9";
-        else if(type===8) sprName = "penghu_onwer-table-imgs-huflag_8";
-        else if(type===9) sprName = "penghu_onwer-table-imgs-huflag_13";
-        else if(type===10) sprName = "penghu_onwer-table-imgs-huflag_7";
-        else if(type===11) sprName = "penghu_onwer-table-imgs-huflag_11";
-        else if(type===12) sprName = "penghu_onwer-table-imgs-huflag_3";
-        else if(type===13) sprName = "penghu_onwer-table-imgs-huflag_2";
-        else if(type===16) sprName = "penghu_onwer-table-imgs-huflag_4";
-        huFlag.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(sprName);
+    showNoSendCard(card){
+        this._layer.getChildByName("text_noSendCard").active = (0 < card.length);
+        let node_noSendCard = cc.find("text_noSendCard/node_noSendCard", this._layer);
+        for (let c = 0; c < card.length; c++) {
+            let node = this.node.getComponent("PaoDeKuai_Card").createCard(card[c]);
+            node.scale = 0.33;
+            node.x = node.width * node.scale * 0.8 * i;
+            node.parent = node_noSendCard;
+        }
     },
-
 
     initRoomInfo(){
         let conf = cc.vv.gameData.getRoomConf();
@@ -292,7 +140,6 @@ cc.Class({
         }
         this._layer.removeFromParent(true);
         this._layer = null;
-        this._show = false;
         if(this._isOver) {
             Global.dispatchEvent(EventId.SHOW_GAMEOVER);
         } else { 
@@ -385,7 +232,6 @@ cc.Class({
             this._layer.removeFromParent(true);
             this._layer = null;
         }
-        this._show = false;
         this._OverScoreNode.active = false;
     },
 

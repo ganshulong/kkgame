@@ -15,7 +15,7 @@ cc.Class({
         Global.registerEvent(EventId.PAO_NOTIFY,this.playOperate,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.playOperate,this);
         Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanNotify,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvHuNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         // Global.registerEvent(EventId.SHOW_MENZI_SOUND,this.onRecvMenziSound,this);
@@ -121,7 +121,7 @@ cc.Class({
         }
     },
 
-    recvHuNotify(data){
+    recvRoundOver(data){
         data = data.detail;
         if(data.hupaiType>0){
             let path = "effect/"+this.getLanguage()+this.getSex(data.seat)+"hu";

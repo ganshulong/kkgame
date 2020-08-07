@@ -106,7 +106,7 @@ cc.Class({
         // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
         // Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
         // Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
+        // Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);

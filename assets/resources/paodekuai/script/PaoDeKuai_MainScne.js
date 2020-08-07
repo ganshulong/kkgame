@@ -32,9 +32,9 @@ cc.Class({
         this.node.addComponent("PaoDeKuai_HandCard_Operate").init(0);
         // this.node.addComponent("PaoDeKuai_Operate");
         // this.node.addComponent("PaoDeKuai_Tips");
-        this.node.addComponent("PaoDeKuai_Action");
+        // this.node.addComponent("PaoDeKuai_Action");
         this.node.addComponent("PaoDeKuai_RemainCard");
-        this.node.addComponent("PaoDeKuai_RoundOver").init(this.tableAtlas);
+        this.node.addComponent("PaoDeKuai_RoundOver");
         this.node.addComponent("PaoDeKuai_GameOver").init(this.tableAtlas,this.yinxiAtlas);
         this.node.addComponent("PaoDeKuai_Sound");
         this.node.addComponent("PaoDeKuai_Chat");
@@ -43,7 +43,7 @@ cc.Class({
 
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
     },
 
     initUI(){
@@ -105,7 +105,7 @@ cc.Class({
         }
     },
 
-    recvOverRound(){
+    recvRoundOver(){
         if (3 == cc.vv.gameData.getRoomConf().seat) {
             cc.find("scene/spr_cards" ,this.node).active = false;
         }
