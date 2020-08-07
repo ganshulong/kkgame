@@ -135,7 +135,7 @@ cc.Class({
     onClickOutCard(){
         let cards = this.getSelectedCards();
         if (0 < cards.length) {
-            let typeCards = this.PaoDeKuai_CardLogicJS.checkCardIsCanOut(cards, this._handcardNode.length, this.curaction);
+            let typeCards = this.PaoDeKuai_CardLogicJS.checkCardIsCanOut(cards, this._handCards.length, this.curaction);
             if (0 < typeCards.length) {
                 let req = {c: MsgId.OUT_CARD};
                 req.cards = typeCards;

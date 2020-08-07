@@ -6,22 +6,6 @@ cc.Class({
     },
 
     init(){
-        this.CARDTYPE = {
-            ERROR_CARDS     : 0,    //错误牌型
-            SINGLE_CARD     : 1,    //单牌
-            DOUBLE_CARD     : 2,    //对子
-            THREE_CARD      : 3,    //3带0
-            THREE_ONE_CARD  : 4,    //3带1
-            THREE_TWO_CARD  : 5,    //3带2
-            BOMB_ONE_CARD   : 6,    //四个带1张单牌
-            BOMB_TWO_CARD   : 7,    //四个带2张单牌
-            BOMB_THREE_CARD : 8,    //四个带3张单牌
-            CONNECT_CARD    : 9,    //连牌
-            COMPANY_CARD    : 10,   //连队
-            AIRCRAFT        : 11,   //飞机
-            BOMB_CARD       : 12,   //炸弹
-            KINGBOMB_CARD   : 13,   //王炸
-        };
     },
 
     checkCardIsCanOut(cards, handCardNum, curaction){
@@ -43,86 +27,86 @@ cc.Class({
 
         let typeCards = [];
         switch(curaction.cardType) {
-            case this.CARDTYPE.ERROR_CARDS:
+            case cc.vv.gameData.CARDTYPE.ERROR_CARDS:
                 return this.getCardType(cards, card2DList, handCardNum, lastCardValue, lastCardLength);
                 break;
-            case this.CARDTYPE.SINGLE_CARD:
+            case cc.vv.gameData.CARDTYPE.SINGLE_CARD:
                 typeCards = this.getSingle(cards, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.DOUBLE_CARD:
+            case cc.vv.gameData.CARDTYPE.DOUBLE_CARD:
                 typeCards = this.getDouble(cards, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.THREE_CARD:
+            case cc.vv.gameData.CARDTYPE.THREE_CARD:
                 typeCards = this.getThree(cards, card2DList, handCardNum, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.THREE_ONE_CARD:
+            case cc.vv.gameData.CARDTYPE.THREE_ONE_CARD:
                 typeCards = this.getThreeOne(cards, card2DList, handCardNum, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.THREE_TWO_CARD:
+            case cc.vv.gameData.CARDTYPE.THREE_TWO_CARD:
                 typeCards = this.getThreeTwo(cards, card2DList, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.BOMB_ONE_CARD:
+            case cc.vv.gameData.CARDTYPE.BOMB_ONE_CARD:
                 typeCards = this.getBombOne(cards, card2DList, handCardNum, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.BOMB_TWO_CARD:
+            case cc.vv.gameData.CARDTYPE.BOMB_TWO_CARD:
                 typeCards = this.getBombTwo(cards, card2DList, handCardNum, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.BOMB_THREE_CARD:
+            case cc.vv.gameData.CARDTYPE.BOMB_THREE_CARD:
                 typeCards = this.getBombThree(cards, card2DList, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.CONNECT_CARD:
+            case cc.vv.gameData.CARDTYPE.CONNECT_CARD:
                 typeCards = this.getConnect(cards, lastCardValue, lastCardLength);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.COMPANY_CARD:
+            case cc.vv.gameData.CARDTYPE.COMPANY_CARD:
                 typeCards = this.getCompany(cards, card2DList, lastCardValue, lastCardLength);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.AIRCRAFT:
+            case cc.vv.gameData.CARDTYPE.AIRCRAFT:
                 typeCards = this.getAircrafy(cards, card2DList, handCardNum, lastCardValue, lastCardLength);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            case this.CARDTYPE.BOMB_CARD:
+            case cc.vv.gameData.CARDTYPE.BOMB_CARD:
                 typeCards = this.getBomb(cards, lastCardValue);
                 if (typeCards.length) {
                     return typeCards;
                 }
                 break;
-            // case this.CARDTYPE.KINGBOMB_CARD:
+            // case cc.vv.gameData.CARDTYPE.KINGBOMB_CARD:
             //     return this.getKingBomb(cards);
             //     break;
         } 
-        if (curaction.cardType < this.CARDTYPE.BOMB_CARD) {
+        if (curaction.cardType < cc.vv.gameData.CARDTYPE.BOMB_CARD) {
             typeCards = this.getBomb(cards, 0);
             if (typeCards.length) {
                 return typeCards;
@@ -347,7 +331,7 @@ cc.Class({
 
         } else {  //上家为空
             if (0 == lastCardLength && (0 == cards.length % 5 || cards.length == handCardNum)) {
-                let cardTypeLength = Math.ceil(lastCardLength / 5);
+                let cardTypeLength = Math.ceil(cards.length / 5);
                 let lastMaxCardValue = 0;
                 let typeCards = this.getAircrafyPart(cards, card2DList, cardTypeLength, lastMaxCardValue);
                 if (typeCards.length) {

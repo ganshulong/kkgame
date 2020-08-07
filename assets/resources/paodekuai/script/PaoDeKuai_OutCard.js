@@ -33,6 +33,10 @@ cc.Class({
             this._startPos = this._outCardNode.convertToNodeSpaceAR(pos);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
         }
+
+        this.card_ani = cc.find("scene/out_cards/card_ani" + index, this.node);
+        this.aircraft_ani = cc.find("scene/out_cards/aircraft_ani", this.node);
+        this.aircraft_ani_Pos = this.aircraft_ani.position;
     },
 
     getEndPos(cardsNum){
@@ -129,10 +133,60 @@ cc.Class({
             let outCards = data.actionInfo.curaction.outCards;
             this.showNoOutCard(0 == outCards.length);
             this.showOutCard(outCards);
+            if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
+                this.playCardAni(data.actionInfo.curaction.cardType);
+            }
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
             this.showNoOutCard(false);
             this.showOutCard();
+        }
+    },
+
+    playCardAni(cardType){
+        if (cardType) {
+            let cardAniNode = null;
+            if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD || cardType == cc.vv.gameData.CARDTYPE.COMPANY_CARD) {
+                if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD) {
+                    cardAniNode = this.card_ani.getChildByName("connect_ani");
+                } else {
+                    cardAniNode = this.card_ani.getChildByName("company_ani");
+                }
+                cardAniNode.stopAllActions();
+                cardAniNode.active = true;
+                cardAniNode.scale = 0;
+                cardAniNode.runAction(
+                    cc.sequence(
+                        cc.scaleTo(0.3, 1.2, 1.2),
+                        cc.scaleTo(0.1, 0.8, 0.8),
+                        cc.scaleTo(0.1, 1.1, 1.1),
+                        cc.scaleTo(0.1, 1, 1),
+                        cc.delayTime(0.2),
+                        cc.callFunc(()=>{
+                            cardAniNode.active = false;
+                        })
+                    )
+                )
+
+            } else if (cardType == cc.vv.gameData.CARDTYPE.AIRCRAFT) {
+                this.aircraft_ani.stopAllActions();
+                this.aircraft_ani.position = this.aircraft_ani_Pos;
+                this.aircraft_ani.runAction(cc.moveTo(1, cc.v2(-this.aircraft_ani.position.x, -this.aircraft_ani.position.y)));
+
+            } else if (cardType == cc.vv.gameData.CARDTYPE.BOMB_CARD) {
+                cardAniNode = this.card_ani.getChildByName("bomb_ani");
+                cardAniNode.stopAllActions();
+                cardAniNode.active = true;
+                cardAniNode.getComponent(cc.Animation).play("show");
+                cardAniNode.runAction(
+                    cc.sequence(
+                        cc.delayTime(0.85),
+                        cc.callFunc(()=>{
+                            cardAniNode.active = false;
+                        })
+                    )
+                )
+            }
         }
     },
 
