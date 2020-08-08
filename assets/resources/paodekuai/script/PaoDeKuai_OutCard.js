@@ -38,13 +38,10 @@ cc.Class({
         this.aircraft_ani = cc.find("scene/out_cards/aircraft_ani", this.node);
         this.aircraft_ani_Pos = this.aircraft_ani.position;
 
-        if (0 < this._UISeat) {
-            this.bg_cardNum = cc.find("scene/out_cards/bg_cardNum" + index, this.node);
-            this.bg_cardNum.active = false;
-            this.ani_warn = cc.find("scene/out_cards/ani_warn" + index, this.node);
-            this.ani_warn.active = false;
-        }
-        
+        this.bg_cardNum = cc.find("scene/out_cards/bg_cardNum" + index, this.node);
+        this.bg_cardNum.active = false;
+        this.ani_warn = cc.find("scene/out_cards/ani_warn" + index, this.node);
+        this.ani_warn.active = false;
         this.ani_clock = cc.find("scene/out_cards/ani_clock" + index, this.node);
         this.setShowTimeCount(false);
     },
@@ -104,19 +101,13 @@ cc.Class({
             this._outCardNode.removeAllChildren();
         }
         this.showNoOutCard(false);
+        this.showOutCard();
     },
 
     start () {
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
         Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
-        // Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);x
-        // Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
-        // Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
-        // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
-        // Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
-        // Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
-        // Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
@@ -137,7 +128,7 @@ cc.Class({
                 }
             }
             for(let i=0;i<data.users.length;++i){
-                if(this._seatIndex === data.users[i].seat && 0 < this._UISeat){
+                if(this._seatIndex === data.users[i].seat){
                     this.showCardNum(data.users[i].cardsCnt);
                 }
             }
@@ -159,13 +150,13 @@ cc.Class({
             if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
                 this.playCardAni(data.actionInfo.curaction.cardType);
             }
-            if (0 < this._UISeat) {
-                this.showCardNum(data.cardsCnt);
-            }
+            this.showCardNum(data.cardsCnt);
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
-            this.showNoOutCard(false);
-            this.showOutCard();
+            if (0 == this._UISeat) {
+                this.showNoOutCard(false);
+                this.showOutCard();
+            }
             if (0 < data.actionInfo.nextaction.type) {
                 this.setShowTimeCount(true, data.actionInfo.nextaction.time);
             }
@@ -174,7 +165,7 @@ cc.Class({
 
     onRecvHandCard(data){
         data = data.detail;
-        if(this._seatIndex === data.seat && 0 < this._UISeat){
+        if(this._seatIndex === data.seat){
             this.showCardNum(data.cardsCnt);
         }
         if (this._seatIndex == data.actionInfo.nextaction.seat) {
@@ -185,12 +176,12 @@ cc.Class({
     },
 
     setShowTimeCount(bShow, time){
-        this.ani_clock.stopAllActions();
         this.ani_clock.active = bShow;
         if (bShow) {
             let text_clockNum = this.ani_clock.getChildByName("text_clockNum");
             text_clockNum.getComponent(cc.Label).string = time;
             if(0 < time){
+                text_clockNum.stopAllActions();
                 text_clockNum.runAction(
                     cc.repeatForever(
                         cc.sequence(
@@ -275,8 +266,10 @@ cc.Class({
             this.setShowTimeCount(false);
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
-            this.showNoOutCard(false);
-            this.showOutCard();
+            if (0 == this._UISeat) {
+                this.showNoOutCard(false);
+                this.showOutCard();
+            }
             if (0 < data.actionInfo.nextaction.type) {
                 this.setShowTimeCount(true, data.actionInfo.nextaction.time);
             }
@@ -314,9 +307,7 @@ cc.Class({
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){    
                 this.setShowTimeCount(false);
-                if (0 < this._UISeat) {
-                    this.ani_warn.active = false;
-                }      
+                this.ani_warn.active = false;     
                 if (data.users[i].isChunTian) {
                     this.playCardAni(cc.vv.gameData.CARDTYPE.CHUN_TIAN);
                     break;
@@ -324,68 +315,6 @@ cc.Class({
             }
         }
     },
-
-    // 吃
-    // recvChiCard(data){
-    //     data = data.detail;
-    //     this.showOutCard();
-    //     if(data.actionInfo.curaction.seat === this._seatIndex && data.luoData){
-    //         for(let i=0;i<data.luoData.length;++i){
-    //             this.showCard(data.luoData[i],true);
-    //         }
-    //     }
-    // },
-
-    // recvMoPaiNotify(data){
-    //     data = data.detail;
-    //     this.showOutCard();
-    // },
-
-    // putOutCard(card){
-    //     this._outCardValue = [];
-    //     this._outCardValue.push(card);
-    // },
-
-    // recvPaoNotify(data){
-    //     data = data.detail;
-    //     if (this._outCardValue) {
-    //         for (let j = 0; j < this._outCardValue.length; j++) {
-    //             if (data.actionInfo.curaction.card == this._outCardValue[j]) {
-    //                 this._outCardValue.splice(j,1)
-    //             }
-    //         }
-    //     }
-    //     if(data.delQiPaiSeat === this._seatIndex){
-    //         let card = data.delQiPaiCard;
-    //         let node = null;
-    //         let num = 0;
-    //         for(let i=0;i<this._outCardNode.childrenCount;++i){
-    //             let child = this._outCardNode.children[i];
-    //             if(child.cardValue === card){
-    //                 node = child;
-    //             }
-    //             else {
-    //                 if(node){
-    //                     let pos = this.getEndPos(num);
-    //                     this._outCardNode.children[i].position = pos;
-    //                 }
-    //                 ++num;
-    //             }
-    //         }
-    //         if(node) {
-    //             this._cardsNum = num;
-    //             node.removeFromParent();
-    //         }
-    //     }
-    // },
-
-    // recvPengNotify(data){
-    //     data = data.detail;
-    //     if(data.actionInfo.curaction.source === this._seatIndex){
-    //         // this.putOutCard(data.actionInfo.curaction.card);
-    //         // this.showOutCard();
-    //     }
-    // },
 
     recvPlayerEnter(data){
         data = data.detail;

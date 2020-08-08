@@ -183,6 +183,8 @@ codeCfg.code = {
     '811':'bank_coin_not_enough',
     '812':'bank_passwd_error',
     '440':"club_freeze",
+    '441':"put_max_card",
+    '442':"put_min_card",
 
 
 }
