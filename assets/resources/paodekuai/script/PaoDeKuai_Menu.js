@@ -102,8 +102,13 @@ cc.Class({
         Global.registerEvent(EventId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData,this);
         Global.registerEvent(EventId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify,this);
         Global.registerEvent(EventId.DISMISS_NOTIFY, this.onRcvDismissNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    recvRoundOver(){
+        this.panel_dismiss.active = false;
     },
 
     onRcvDismissNotify(data){

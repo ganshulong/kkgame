@@ -38,17 +38,11 @@ cc.Class({
                 this._layer.x = this.node.width/2;
                 this._layer.y = this.node.height/2;
 
-                this._winBgSpr = cc.find("game_end_bg/player0/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
-                this._loseBgSpr = cc.find("game_end_bg/player1/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
+                this.bg_bar_win = cc.find("game_end_bg/bg_bar_win",this._layer).getComponent(cc.Sprite).spriteFrame;
+                this.bg_bar_lose = cc.find("game_end_bg/bg_bar_lose",this._layer).getComponent(cc.Sprite).spriteFrame;
 
                 let btnBtn = this._layer.getChildByName("btn_back");
                 Global.btnClickEvent(btnBtn,this.onBack,this);
-
-                let btn_share = this._layer.getChildByName("btn_share");
-                Global.btnClickEvent(btn_share,this.onShare,this);
-
-                this._layer.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
-                this._layer.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
 
                 // 创建者
                 let creator = cc.find("game_end_bg/creator",this._layer);
@@ -58,22 +52,22 @@ cc.Class({
                 creator.getChildByName("name").getComponent(cc.Label).string = data.createUser.playername;
                 creator.getChildByName("id").getComponent(cc.Label).string = "ID:"+data.createUser.uid;
 
-                let paoList = data.users.slice(0);
-                paoList.sort((a,b)=>{
-                    return b.dianPaoCount - a.dianPaoCount;
-                });
+                this._layer.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
+                this._layer.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
+
+                let btn_share = this._layer.getChildByName("btn_share");
+                Global.btnClickEvent(btn_share,this.onShare,this);
 
                 let scoreList = data.users.slice(0);
                 scoreList.sort((a,b)=>{
                     return b.score - a.score;
                 });
 
-                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-375,0,375]];
-                let dianPaoWangId = paoList[0].dianPaoCount > 0 ? paoList[0].uid : 0;
+                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-385,0,385]];
                 let bigWinerId = scoreList[0].uid;
                 for(let i = 0; i < data.users.length; ++i){
                     let player = cc.find("game_end_bg/player"+i,this._layer);
-                    this.initPlayer(player,data.users[i], dianPaoWangId, bigWinerId);
+                    this.initPlayer(player, data.users[i], bigWinerId, data.createUser.uid);
                     player.x = posArr[data.users.length][i];
                     player.active = true;
                 }
@@ -93,43 +87,33 @@ cc.Class({
         if(cc.vv.gameData) cc.vv.gameData.exitGame();
     },
 
-    initPlayer(player,user,dianPaoWangId,dayingjiaID){
+    initPlayer(player,user,dayingjiaID,createID){
         if(player){
-            let img_bg = player.getChildByName("img_bg");
-            img_bg.getComponent(cc.Sprite).spriteFrame = user.score >= 0 ? this._winBgSpr : this._loseBgSpr;
-
             let head = player.getChildByName("head");
             let icon = cc.find("radio_mask/spr_head",head);
             Global.setHead(icon,user.usericon);
 
-            player.getChildByName("flag_dianpao").active = user.uid === dianPaoWangId;
-            player.getChildByName("flag_dayingjia").active = user.uid === dayingjiaID;
+            player.getChildByName("mask_master").active = (user.uid == createID);
 
             player.getChildByName("txt_name").getComponent(cc.Label).string = user.playername;
             player.getChildByName("txt_id").getComponent(cc.Label).string = "ID:"+user.uid;
 
-            img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
-                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
+            player.getChildByName("flag_dayingjia").active = user.uid === dayingjiaID;
 
-            img_bg.getChildByName("title_huxi_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
-                this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-win_all_huxi"):this._yinxiAtlas.getSpriteFrame("hongheihu-imgs-gamover-lose_all_huxi");
+            player.getChildByName("text_maxRoundScore").getComponent(cc.Label).string = "当局最高分数："+ user.highscore;
+            player.getChildByName("text_bombNum").getComponent(cc.Label).string = "打出炸弹数："+ user.zhadancount;
+            player.getChildByName("text_winLoseNum").getComponent(cc.Label).string = "胜负局数：" + user.winCount + "赢" + user.loseCount + "输";
+            player.getChildByName("text_scoreMul").getComponent(cc.Label).string = "积分倍数：" + user.score + "x" + user.beishu + "=" + user.scoreCount;
 
-            img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
-                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_dianpao_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_dianpao_num");
-
-            img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
-            img_bg.getChildByName("huxi_num").getComponent(cc.Label).string = user.totalHuXi;
-            img_bg.getChildByName("dianpao_num").getComponent(cc.Label).string = user.dianPaoCount;
-
-            let score = user.score + "";
-            if(score < 0) {
-                score = "/"+ (-score);
-            }
-            img_bg.getChildByName("score").getComponent(cc.Label).string = score;
-
-            if(cc.vv.UserManager.uid === user.uid){
-                cc.find("game_end_bg/win_title",this._layer).active = user.score >= 0;
-                cc.find("game_end_bg/lose_title",this._layer).active = user.score < 0;
+            let bg_bar = player.getChildByName("bg_bar");
+            if (0 <= user.scoreCount) {
+                bg_bar.getComponent(cc.Sprite).spriteFrame = this.bg_bar_win;
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs((user.scoreCount)));
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
+            } else {
+                bg_bar.getComponent(cc.Sprite).spriteFrame = this.bg_bar_lose;
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs((user.scoreCount)));
             }
         }
     },
