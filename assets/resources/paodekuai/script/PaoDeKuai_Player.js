@@ -236,7 +236,6 @@ cc.Class({
             this._playerNode.getChildByName("clock").active = false;
             if (0 < this._UISeat) {
                 this._playerNode.getChildByName("ani_warn").active = false;
-                this._playerNode.getChildByName("bg_cardNum").active = false;
             }
         }
     },

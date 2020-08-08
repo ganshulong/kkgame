@@ -37,6 +37,11 @@ cc.Class({
         this.card_ani = cc.find("scene/out_cards/card_ani" + index, this.node);
         this.aircraft_ani = cc.find("scene/out_cards/aircraft_ani", this.node);
         this.aircraft_ani_Pos = this.aircraft_ani.position;
+
+        if (0 < this._UISeat) {
+            this.bg_cardNum = cc.find("scene/out_cards/bg_cardNum" + index, this.node);
+            this.bg_cardNum.active = false;
+        }
     },
 
     getEndPos(cardsNum){
@@ -108,6 +113,7 @@ cc.Class({
         // Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
         // Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
@@ -125,6 +131,11 @@ cc.Class({
                     this.showOutCard(putCardsList[i].outCards);
                 }
             }
+            for(let i=0;i<data.users.length;++i){
+                if(this._seatIndex === data.users[i].seat && 0 < this._UISeat){
+                    this.showCardNum(data.users[i].cardsCnt);
+                }
+            }
         }
     },
 
@@ -137,11 +148,26 @@ cc.Class({
             if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
                 this.playCardAni(data.actionInfo.curaction.cardType);
             }
+            if (0 < this._UISeat) {
+                this.showCardNum(data.cardsCnt);
+            }
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
             this.showNoOutCard(false);
             this.showOutCard();
         }
+    },
+
+    onRecvHandCard(data){
+        data = data.detail;
+        if(this._seatIndex === data.seat && 0 < this._UISeat){
+            this.showCardNum(data.cardsCnt);
+        }
+    },
+
+    showCardNum(cardNum){
+        this.bg_cardNum.active = (0 < cardNum);
+        this.bg_cardNum.getChildByName("text_cardNum").getComponent(cc.Label).string = cardNum;
     },
 
     playCardAni(cardType){
