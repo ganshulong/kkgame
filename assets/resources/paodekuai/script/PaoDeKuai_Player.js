@@ -207,7 +207,9 @@ cc.Class({
             let chairId = cc.vv.gameData.getLocalChair(msg.seat);
             if(chairId === this._chairId){
                 this._seatIndex = -1;
-                if(this._playerNode) this._playerNode.active = false;
+                if(this._playerNode) {
+                    this._playerNode.active = false;
+                }
             }
         }
     },
@@ -234,9 +236,6 @@ cc.Class({
             this.setHuXi(user.roundScore?user.roundScore:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("clock").active = false;
-            if (0 < this._UISeat) {
-                this._playerNode.getChildByName("ani_warn").active = false;
-            }
         }
     },
 

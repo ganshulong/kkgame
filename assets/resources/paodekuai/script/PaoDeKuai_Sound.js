@@ -4,7 +4,7 @@ cc.Class({
 
     properties: {
         
-        _soundPath:"penghu/"
+        _soundPath:"paodekuai/"
     },
 
     start () {
@@ -20,11 +20,15 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         // Global.registerEvent(EventId.SHOW_MENZI_SOUND,this.onRecvMenziSound,this);
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
+
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvOutCardNotify,this);
     },
 
     onRcvOutCardNotify(data){
+
+        // cc.vv.AudioManager.playEff(this._soundPath, path,true);
+
         data = data.detail;
         //gsltodo
 

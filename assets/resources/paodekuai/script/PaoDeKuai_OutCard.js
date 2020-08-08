@@ -41,6 +41,8 @@ cc.Class({
         if (0 < this._UISeat) {
             this.bg_cardNum = cc.find("scene/out_cards/bg_cardNum" + index, this.node);
             this.bg_cardNum.active = false;
+            this.ani_warn = cc.find("scene/out_cards/ani_warn" + index, this.node);
+            this.ani_warn.active = false;
         }
     },
 
@@ -168,6 +170,9 @@ cc.Class({
     showCardNum(cardNum){
         this.bg_cardNum.active = (0 < cardNum);
         this.bg_cardNum.getChildByName("text_cardNum").getComponent(cc.Label).string = cardNum;
+        if (1 == cardNum) {
+            this.ani_warn.active = true;
+        }
     },
 
     playCardAni(cardType){
@@ -262,9 +267,14 @@ cc.Class({
     recvRoundOver(data){
         data = data.detail;
         for(let i=0;i<data.users.length;++i){
-            if(data.users[i].seat === this._seatIndex && data.users[i].isChunTian){          
-                this.playCardAni(cc.vv.gameData.CARDTYPE.CHUN_TIAN);
-                break;
+            if(data.users[i].seat === this._seatIndex){    
+                if (0 < this._UISeat) {
+                    this.ani_warn.active = false;
+                }      
+                if (data.users[i].isChunTian) {
+                    this.playCardAni(cc.vv.gameData.CARDTYPE.CHUN_TIAN);
+                    break;
+                }
             }
         }
     },
