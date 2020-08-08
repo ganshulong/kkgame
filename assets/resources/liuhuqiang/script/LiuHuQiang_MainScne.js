@@ -200,6 +200,7 @@ cc.Class({
     updateCount(count){
         let round = cc.find("scene/room_info/txt_round_num",this.node);
         round.getComponent(cc.Label).string = "("+count+"/"+this._gameCount+"局)";
+        cc.vv.gameData.setCurRound(count);
     },
 
     onShowMsg(){

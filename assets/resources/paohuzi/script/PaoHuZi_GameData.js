@@ -521,6 +521,10 @@ cc.Class({
         return this._deskInfo;
     },
 
+    setCurRound(curRound){
+        this._deskInfo.round = curRound;
+    },
+
     getUserInfo(seatIndex){
         for(let i=0;i<this._deskInfo.users.length;++i){
             if(this._deskInfo.users[i].seat === seatIndex){

@@ -99,6 +99,7 @@ cc.Class({
     updateCount(count){
         let round = cc.find("scene/bg_top/txt_round_num",this.node);
         round.getComponent(cc.Label).string = "("+count+"/"+this._gameCount+"局)";
+        cc.vv.gameData.setCurRound(count);
 
         if (3 == cc.vv.gameData.getRoomConf().seat) {
             cc.find("scene/spr_cards" ,this.node).active = true;
