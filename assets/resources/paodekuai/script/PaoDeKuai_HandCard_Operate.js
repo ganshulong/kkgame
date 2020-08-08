@@ -84,7 +84,7 @@ cc.Class({
 
                     if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
                         this.curaction = data.actionInfo.curaction;
-                        this.showOperateBtn(true);
+                        this.showOperateBtn(true, data.actionInfo.nextaction.hint);
                     } else {
                         this.showOperateBtn(false);
                     }
@@ -97,6 +97,7 @@ cc.Class({
         data = data.detail;
         if (data.actionInfo.curaction.seat === this._seatIndex) {
             let outCards = data.actionInfo.curaction.outCards;
+            this.initCardHintState();
             if (0 < outCards.length) {
                 let handCards = this._handCards.slice(0);
                 for (let o = 0; o < outCards.length; o++) {
@@ -112,7 +113,7 @@ cc.Class({
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
             this.curaction = data.actionInfo.curaction;
-            this.showOperateBtn(true);
+            this.showOperateBtn(true, data.actionInfo.nextaction.hint);
         } else {
             this.showOperateBtn(false);
         }
@@ -122,13 +123,34 @@ cc.Class({
         data = data.detail;
         if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
             this.curaction = data.actionInfo.curaction;
-            this.showOperateBtn(true);
+            this.showOperateBtn(true, data.actionInfo.nextaction.hint);
         } else {
             this.showOperateBtn(false);
         }
     },
 
     onClickTipCard(){
+        if (0 < this.hintList.length) {
+            this.initCardSelectState();
+            ++this.hintIndex;
+            this.hintIndex = this.hintIndex % this.hintList.length;
+            this.popHintCards(this.hintList[this.hintIndex]);
+        } else {
+            cc.vv.FloatTip.show("本轮首出，无法提示");
+        }
+    },
+
+    popHintCards(hintCards){
+        for (let i = 0; i < hintCards.length; i++) {
+            let finIndex = 0;
+            for (let finIndex = 0; finIndex < this._handCards.length; finIndex++) {
+                if (hintCards[i] == this._handCards[finIndex]) {
+                    this._handcardNode.children[finIndex].isSelect = true;
+                    this._handcardNode.children[finIndex].y = 50;
+                    break;
+                }
+            }
+        }
         
     },
 
@@ -146,8 +168,54 @@ cc.Class({
         cc.vv.FloatTip.show("无效出牌");
     },
 
-    showOperateBtn(bShow){
+    showOperateBtn(bShow, hint){
         this._operateNode.active = bShow;
+        if (bShow) {
+            this.initCardSelectState();
+            this.setCardHintState(hint);
+            this.hintList = hint;
+            this.hintIndex = -1;
+        }
+    },
+
+    initCardSelectState(){
+        for (let i = 0; i < this._handcardNode.children.length; i++) {
+            if (this._handcardNode.children[i].isSelect) {
+                this._handcardNode.children[i].isSelect = false;
+                this._handcardNode.children[i].y =  0;
+            }
+        }
+    },
+
+    initCardHintState(){
+        for (let i = 0; i < this._handcardNode.children.length; i++) {
+            if (this._handcardNode.children[i].isNoCanOut) {
+                this._handcardNode.children[i].isNoCanOut = false;
+                this._handcardNode.children[i].color = new cc.Color(255,255,255);
+            }
+        }
+    },
+
+    setCardHintState(hint){
+        if (0 == hint.length) {
+            return;
+        }
+        let cardIsCanOutList = [];
+        for (let i = 0; i < hint.length; i++) {
+            if (3 == hint[i].length) {
+                return;
+                break;
+            }
+            for (let j = 0; j < hint[i].length; j++) {
+                cardIsCanOutList[hint[i][j] % 0x10] = true;
+            }
+        }
+        for (let i = 0; i < this._handCards.length; i++) {
+            if (!cardIsCanOutList[this._handCards[i] % 0x10]) {
+                this._handcardNode.children[i].isNoCanOut = true;
+                this._handcardNode.children[i].color = new cc.Color(100,100,100);
+            }
+        }
     },
 
     // 检查是否可以出牌
@@ -267,16 +335,18 @@ cc.Class({
         touchRightPosX -= this._handcardNode.x;
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             let card = this._handcardNode.children[i];
-            let cardLeftPosX = card.x - card.width/2;
-            let cardRightPosX = (i < this._handcardNode.children.length - 1) ? card.x : (card.x + card.width/2);
-            if((touchLeftPosX < cardLeftPosX && touchRightPosX > cardLeftPosX) ||
-               (touchLeftPosX < cardRightPosX && touchRightPosX > cardRightPosX) ||
-               (cardLeftPosX < touchLeftPosX && cardRightPosX > touchLeftPosX)){
-                card.isTouchSelect = true;
-                card.color = new cc.Color(100,100,100);
-            } else {
-                card.isTouchSelect = false;
-                card.color = new cc.Color(255,255,255); 
+            if (!card.isNoCanOut) {
+                let cardLeftPosX = card.x - card.width/2;
+                let cardRightPosX = (i < this._handcardNode.children.length - 1) ? card.x : (card.x + card.width/2);
+                if((touchLeftPosX < cardLeftPosX && touchRightPosX > cardLeftPosX) ||
+                   (touchLeftPosX < cardRightPosX && touchRightPosX > cardRightPosX) ||
+                   (cardLeftPosX < touchLeftPosX && cardRightPosX > touchLeftPosX)){
+                    card.isTouchSelect = true;
+                    card.color = new cc.Color(100,100,100);
+                } else {
+                    card.isTouchSelect = false;
+                    card.color = new cc.Color(255,255,255); 
+                }
             }
         }
     },
@@ -564,7 +634,7 @@ cc.Class({
 
             if (this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
                 this.curaction = data.actionInfo.curaction;
-                this.showOperateBtn(true);
+                this.showOperateBtn(true, data.actionInfo.nextaction.hint);
             } else {
                 this.showOperateBtn(false);
             }

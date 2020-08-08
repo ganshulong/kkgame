@@ -79,6 +79,7 @@ cc.Class({
             AIRCRAFT        : 11,   //飞机
             BOMB_CARD       : 12,   //炸弹
             KINGBOMB_CARD   : 13,   //王炸
+            CHUN_TIAN       : 14,   //春天
         };
 
         this.registerMsg();

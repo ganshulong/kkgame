@@ -110,6 +110,7 @@ cc.Class({
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
 
         this.recvDeskInfoMsg();
     },
@@ -146,11 +147,15 @@ cc.Class({
     playCardAni(cardType){
         if (cardType) {
             let cardAniNode = null;
-            if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD || cardType == cc.vv.gameData.CARDTYPE.COMPANY_CARD) {
+            if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD || 
+                cardType == cc.vv.gameData.CARDTYPE.COMPANY_CARD ||
+                cardType == cc.vv.gameData.CARDTYPE.CHUN_TIAN) {
                 if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD) {
                     cardAniNode = this.card_ani.getChildByName("connect_ani");
-                } else {
+                } else if (cardType == cc.vv.gameData.CARDTYPE.COMPANY_CARD) {
                     cardAniNode = this.card_ani.getChildByName("company_ani");
+                } else {
+                    cardAniNode = this.card_ani.getChildByName("chuntian_ani");
                 }
                 cardAniNode.stopAllActions();
                 cardAniNode.active = true;
@@ -228,21 +233,14 @@ cc.Class({
         this.mask_onOut.active = bShow;
     },
 
-    // 要不起
-    recvGuoNotify(data){
+    recvRoundOver(data){
         data = data.detail;
-        if (true) {
-            this.showNoOutCard(true);
+        for(let i=0;i<data.users.length;++i){
+            if(data.users[i].seat === this._seatIndex && data.users[i].isChunTian){          
+                this.playCardAni(cc.vv.gameData.CARDTYPE.CHUN_TIAN);
+                break;
+            }
         }
-
-        // data = data.detail;
-        // this.showOutCard();
-        // if(data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.MOPAI){
-        //     if(data.actionInfo.curaction.seat === this._seatIndex){
-        //         let card = data.actionInfo.curaction.card;
-        //         this.putOutCard(card);
-        //     }
-        // }
     },
 
     // 吃
@@ -261,11 +259,10 @@ cc.Class({
     //     this.showOutCard();
     // },
 
-
-    putOutCard(card){
-        this._outCardValue = [];
-        this._outCardValue.push(card);
-    },
+    // putOutCard(card){
+    //     this._outCardValue = [];
+    //     this._outCardValue.push(card);
+    // },
 
     // recvPaoNotify(data){
     //     data = data.detail;
