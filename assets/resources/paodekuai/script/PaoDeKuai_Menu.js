@@ -41,6 +41,9 @@ cc.Class({
         let btn_dismiss = bg_top.getChildByName("btn_dismiss");
         Global.btnClickEvent(btn_dismiss,this.onClickDismiss,this);
 
+        let btn_quit = bg_top.getChildByName("btn_quit");
+        Global.btnClickEvent(btn_quit,this.onClickDismiss,this);
+
         this.panel_dismiss = cc.find("scene/panel_dismiss",this.node);
         this.panel_dismiss.zIndex = 4;
         this.panel_dismiss.active = false;
