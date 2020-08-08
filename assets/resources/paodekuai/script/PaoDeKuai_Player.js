@@ -90,7 +90,6 @@ cc.Class({
             if(data.users[i].seat === this._seatIndex){          
                 this.setTotalScore(data.users[i].score);
                 this.setHuXi(data.users[i].roundScore);
-                this._playerNode.getChildByName("clock").active = false;
                 break;
             }
         }
@@ -235,7 +234,6 @@ cc.Class({
             this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
             this.setHuXi(user.roundScore?user.roundScore:0);
             this.showReady(user.state === 1);
-            this._playerNode.getChildByName("clock").active = false;
         }
     },
 

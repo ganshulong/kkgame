@@ -44,6 +44,9 @@ cc.Class({
             this.ani_warn = cc.find("scene/out_cards/ani_warn" + index, this.node);
             this.ani_warn.active = false;
         }
+        
+        this.ani_clock = cc.find("scene/out_cards/ani_clock" + index, this.node);
+        this.setShowTimeCount(false);
     },
 
     getEndPos(cardsNum){
@@ -138,6 +141,11 @@ cc.Class({
                     this.showCardNum(data.users[i].cardsCnt);
                 }
             }
+            if (data.actionInfo.nextaction.seat === this._seatIndex) {
+                if (0 < data.actionInfo.nextaction.type) {
+                    this.setShowTimeCount(true, data.actionInfo.nextaction.time);
+                }
+            }
         }
     },
 
@@ -147,6 +155,7 @@ cc.Class({
             let outCards = data.actionInfo.curaction.outCards;
             this.showNoOutCard(0 == outCards.length);
             this.showOutCard(outCards);
+            this.setShowTimeCount(false);
             if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
                 this.playCardAni(data.actionInfo.curaction.cardType);
             }
@@ -157,6 +166,9 @@ cc.Class({
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
             this.showNoOutCard(false);
             this.showOutCard();
+            if (0 < data.actionInfo.nextaction.type) {
+                this.setShowTimeCount(true, data.actionInfo.nextaction.time);
+            }
         }
     },
 
@@ -164,6 +176,35 @@ cc.Class({
         data = data.detail;
         if(this._seatIndex === data.seat && 0 < this._UISeat){
             this.showCardNum(data.cardsCnt);
+        }
+        if (this._seatIndex == data.actionInfo.nextaction.seat) {
+            if (0 < data.actionInfo.nextaction.type) {
+                this.setShowTimeCount(true, data.actionInfo.nextaction.time);
+            }
+        } 
+    },
+
+    setShowTimeCount(bShow, time){
+        this.ani_clock.stopAllActions();
+        this.ani_clock.active = bShow;
+        if (bShow) {
+            let text_clockNum = this.ani_clock.getChildByName("text_clockNum");
+            text_clockNum.getComponent(cc.Label).string = time;
+            if(0 < time){
+                text_clockNum.runAction(
+                    cc.repeatForever(
+                        cc.sequence(
+                            cc.delayTime(1), 
+                            cc.callFunc(()=>{
+                                text_clockNum.getComponent(cc.Label).string = --time;
+                                if (0 == time) {
+                                    text_clockNum.stopAllActions();
+                                }
+                            })
+                        )
+                    )
+                )
+            }
         }
     },
 
@@ -231,10 +272,14 @@ cc.Class({
         if (data.seat === this._seatIndex) {
             this.showNoOutCard(true);
             this.showOutCard();
+            this.setShowTimeCount(false);
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
             this.showNoOutCard(false);
             this.showOutCard();
+            if (0 < data.actionInfo.nextaction.type) {
+                this.setShowTimeCount(true, data.actionInfo.nextaction.time);
+            }
         }
     },
 
@@ -268,6 +313,7 @@ cc.Class({
         data = data.detail;
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){    
+                this.setShowTimeCount(false);
                 if (0 < this._UISeat) {
                     this.ani_warn.active = false;
                 }      
