@@ -100,7 +100,6 @@ cc.Class({
     },
 
     getLanguage(){
-        if(Global.language === 1) return "anxiang/"
-        else return "normal/";
+        return "normal/";
     },
 });

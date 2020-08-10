@@ -202,7 +202,7 @@ cc.Class({
         }
         let cardIsCanOutList = [];
         for (let i = 0; i < hint.length; i++) {
-            if (3 == hint[i].length) {
+            if (3 == hint[i].length || 4 == hint[i].length) {
                 return;
                 break;
             }
