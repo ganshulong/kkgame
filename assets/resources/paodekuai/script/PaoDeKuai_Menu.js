@@ -74,7 +74,7 @@ cc.Class({
         let btn_copy_roomId = cc.find("scene/operate_btn_view/btn_copy_roomId",this.node)
         Global.btnClickEvent(btn_copy_roomId,this.onClickCopyRoomIdToWx,this);
 
-        this.btn_gps = cc.find("scene/operate_btn_view/btn_gps",this.node);
+        this.btn_gps = bg_top.getChildByName("btn_gps");
         this.btn_gps.btnID = -1;
         Global.btnClickEvent(this.btn_gps,this.onClickGPS,this);
         this.setGpsBtnColour(1);
@@ -551,7 +551,7 @@ cc.Class({
 
     showInviteWxCopyRoomId(bShow){
         cc.find("scene/operate_btn_view/btn_invite_wx",this.node).active = bShow;
-        cc.find("scene/operate_btn_view/btn_copy_roomId",this.node).active = bShow;
+        // cc.find("scene/operate_btn_view/btn_copy_roomId",this.node).active = bShow;
         this._isPlaying = !bShow;
     },
 

@@ -107,7 +107,7 @@ cc.Class({
         for (let c = 0; c < card.length; c++) {
             let node = this.node.getComponent("PaoDeKuai_Card").createCard(card[c]);
             node.scale = 0.33;
-            node.x = node.width * node.scale * 0.8 * i;
+            node.x = node.width * node.scale * 0.8 * c;
             node.parent = node_noSendCard;
         }
     },

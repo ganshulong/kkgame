@@ -359,7 +359,7 @@ cc.Class({
         let layer = cc.find("right_bg/scrollview/content",this.gamePanels[this.gameTypeIndex.PaoDeKuai]);
 
         let optionList = [];
-        optionList.push({option:"round",          valueList:[5,10]});
+        optionList.push({option:"round",          valueList:[5,10,15]});
         optionList.push({option:"player_num",     valueList:[2,3]});
         optionList.push({option:"zhaniao",        valueList:[0,1,2,3]});
 

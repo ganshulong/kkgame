@@ -35,8 +35,10 @@ cc.Class({
         }
 
         this.card_ani = cc.find("scene/out_cards/card_ani" + index, this.node);
+
         this.aircraft_ani = cc.find("scene/out_cards/aircraft_ani", this.node);
-        this.aircraft_ani_Pos = this.aircraft_ani.position;
+        this.aircraft_ani_Pos = cc.v2(this.node.width/2+this.aircraft_ani.width/2, 150);
+        this.aircraft_ani.position = this.aircraft_ani_Pos;
 
         this.bg_cardNum = cc.find("scene/out_cards/bg_cardNum" + index, this.node);
         this.bg_cardNum.active = false;
@@ -240,7 +242,7 @@ cc.Class({
             } else if (cardType == cc.vv.gameData.CARDTYPE.AIRCRAFT) {
                 this.aircraft_ani.stopAllActions();
                 this.aircraft_ani.position = this.aircraft_ani_Pos;
-                this.aircraft_ani.runAction(cc.moveTo(1, cc.v2(-this.aircraft_ani.position.x, -this.aircraft_ani.position.y)));
+                this.aircraft_ani.runAction(cc.moveTo(1, cc.v2(-this.aircraft_ani_Pos.x, -this.aircraft_ani_Pos.y)));
 
             } else if (cardType == cc.vv.gameData.CARDTYPE.BOMB_CARD) {
                 cardAniNode = this.card_ani.getChildByName("bomb_ani");
