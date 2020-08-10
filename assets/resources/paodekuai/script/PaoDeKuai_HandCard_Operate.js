@@ -171,11 +171,45 @@ cc.Class({
     showOperateBtn(bShow, hint){
         this._operateNode.active = bShow;
         if (bShow) {
-            this.initCardSelectState();
-            this.setCardHintState(hint);
+            let cardIsCanOutList = this.getCardIsCanOutList(hint);
+            if (this.getIsInitCardSelectState(cardIsCanOutList)) {
+                this.initCardSelectState();
+            }
+            this.setCardHintState(cardIsCanOutList);
             this.hintList = hint;
             this.hintIndex = -1;
         }
+    },
+
+    getCardIsCanOutList(hint){
+        let cardIsCanOutList = [];
+        if (0 == hint.length) {
+            for (let i = 0; i < 0x10; i++) {
+                cardIsCanOutList[i] = true;
+            }
+            return cardIsCanOutList;
+        }
+        for (let i = 0; i < hint.length; i++) {
+            if (3 == hint[i].length || 4 == hint[i].length) {
+                for (let i = 0; i < 0x10; i++) {
+                    cardIsCanOutList[i] = true;
+                }
+                return cardIsCanOutList;
+            }
+            for (let j = 0; j < hint[i].length; j++) {
+                cardIsCanOutList[hint[i][j] % 0x10] = true;
+            }
+        }
+        return cardIsCanOutList;
+    },
+
+    getIsInitCardSelectState(cardIsCanOutList){
+        for (let i = 0; i < this._handCards.length; i++) {
+            if (this._handcardNode.children[i].isSelect && !cardIsCanOutList[this._handCards[i] % 0x10]) {
+                return true;
+            }
+        }
+        return false;
     },
 
     initCardSelectState(){
@@ -196,20 +230,7 @@ cc.Class({
         }
     },
 
-    setCardHintState(hint){
-        if (0 == hint.length) {
-            return;
-        }
-        let cardIsCanOutList = [];
-        for (let i = 0; i < hint.length; i++) {
-            if (3 == hint[i].length || 4 == hint[i].length) {
-                return;
-                break;
-            }
-            for (let j = 0; j < hint[i].length; j++) {
-                cardIsCanOutList[hint[i][j] % 0x10] = true;
-            }
-        }
+    setCardHintState(cardIsCanOutList){
         for (let i = 0; i < this._handCards.length; i++) {
             if (!cardIsCanOutList[this._handCards[i] % 0x10]) {
                 this._handcardNode.children[i].isNoCanOut = true;
