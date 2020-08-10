@@ -12,7 +12,7 @@ cc.Class({
         // Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
-        Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvOutCardNotify,this);
+        Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
     },
 
     onRcvOutCardNotify(data){
@@ -22,10 +22,13 @@ cc.Class({
         if (0 < curaction.outCards.length) {
             cc.vv.AudioManager.playEff("paodekuai/", "cardout",true);
             this.playCardSound(curaction.cardType, curaction.outCards, curaction.seat);
-        } else {
-            let path = "card/"+this.getLanguage()+this.getSex(data.seat)+ "pass" + Global.random(0,3);
-            cc.vv.AudioManager.playEff("paodekuai/", path,true);
         }
+    },
+
+    onRcvGuoCardNotify(data){
+        data = data.detail;
+        let path = "card/"+this.getLanguage()+this.getSex(data.seat)+ "pass" + Global.random(0,3);
+        cc.vv.AudioManager.playEff("paodekuai/", path,true);
     },
 
     playCardSound(cardType, outCards, seat){
