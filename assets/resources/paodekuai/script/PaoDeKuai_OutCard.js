@@ -125,8 +125,10 @@ cc.Class({
             let putCardsList = data.actionInfo.curaction.putCardsList;
             for (let i = 0; i < putCardsList.length; i++) {
                 if (putCardsList[i].seat === this._seatIndex) {
-                    this.showNoOutCard(putCardsList[i].isPass);
-                    this.showOutCard(putCardsList[i].outCards);
+                    if (!(data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type)) {    //非当前出牌玩家才显示出牌情况
+                        this.showNoOutCard(putCardsList[i].isPass);
+                        this.showOutCard(putCardsList[i].outCards);
+                    }
                 }
             }
             for(let i=0;i<data.users.length;++i){
@@ -142,6 +144,7 @@ cc.Class({
         }
     },
 
+    // 轮到谁出牌谁上一轮出的牌或者要不起就隐藏，但是在压死之后大家都要不起又轮到他出牌的时候，这时候好像上一轮的牌要等他出完牌才隐藏‘’
     onRcvOutCardNotify(data){
         data = data.detail;
         if (data.actionInfo.curaction.seat === this._seatIndex) {
@@ -164,7 +167,7 @@ cc.Class({
             }
         }
     },
-    
+
     onRcvGuoCardNotify(data){
         data = data.detail;
         if (data.seat === this._seatIndex) {
