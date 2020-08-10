@@ -169,7 +169,7 @@ cc.Class({
     onSelectChi(event){
         let list = event.target.data;
         if(list){
-            if(list.luoData.length == list.luoCount){
+            if(this.getIsAutoAllLuo(list.luoData, list.luoCount)){
                 cc.vv.gameData.chi(list);
                 event.target.data = null;
                 this.onCloseSelectChi();
@@ -185,6 +185,18 @@ cc.Class({
                 this.initLuoData(list.luoData);
             }
         }
+    },
+
+    getIsAutoAllLuo(luoData,luoCount){
+        let luoCardCount = 0;
+        for (let i = 0; i < luoData.length; i++) {
+            for (var j = 0; j < luoData[i].length; j++) {
+                if (this._currActionCard == luoData[i][j]) {
+                    ++luoCardCount;
+                }
+            }
+        }
+        return (luoCount == luoCardCount);
     },
 
     initLuoData(list){
