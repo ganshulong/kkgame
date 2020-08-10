@@ -248,6 +248,9 @@ cc.Class({
                             }
                         }), 
                         cc.delayTime(i * 0.05), 
+                        cc.callFunc(()=>{
+                            cc.vv.AudioManager.playEff("paodekuai/", "fapai",true);
+                        }), 
                         cc.spawn(
                             cc.scaleTo(0.2, 1), 
                             cc.moveTo(0.2, cc.v2(endPosX, 0))

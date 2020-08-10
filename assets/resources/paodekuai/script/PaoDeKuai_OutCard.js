@@ -204,6 +204,7 @@ cc.Class({
         this.bg_cardNum.getChildByName("text_cardNum").getComponent(cc.Label).string = cardNum;
         if (1 == cardNum) {
             this.ani_warn.active = true;
+            cc.vv.AudioManager.playEff("paodekuai/", "alarm",true);
         }
     },
 
