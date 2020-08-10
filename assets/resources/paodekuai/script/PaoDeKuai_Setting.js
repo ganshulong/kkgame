@@ -32,6 +32,7 @@ cc.Class({
                     Global.btnClickEvent(this.btn_effect,this.setEffct,this);
                     this.btn_effect_mask = this._settingNode.getChildByName("btn_effect_mask");
 
+                    this._settingNode.getChildByName("language").active = false;
                     cc.find("language/toggle1",this._settingNode).getComponent(cc.Toggle).isChecked = Global.language == 0;
                     cc.find("language/toggle2",this._settingNode).getComponent(cc.Toggle).isChecked = Global.language == 1;
 
