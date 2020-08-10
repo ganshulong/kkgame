@@ -65,15 +65,21 @@ cc.Class({
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
         Global.registerEvent(EventId.OFFLINE_NOTIFY,this.onRcvOfflineNotice,this);
 
-        Global.registerEvent(EventId.CHI_NOTIFY,this.updateScore,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.updateScore,this);
-        Global.registerEvent(EventId.PENG_NOTIFY,this.updateScore,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.updateScore,this);
-        Global.registerEvent(EventId.LONG_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
 
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.HANDCARD,this.recvSendCard,this);
+        Global.registerEvent(EventId.SCORE_UPDATE_NOTIFY,this.onRcvScoreUpdateNotify,this);
+    },
+
+    onRcvScoreUpdateNotify(data){
+        data = data.detail;
+        for(let i=0;i<data.usersCoin.length;++i){
+            if(data.usersCoin[i].seat === this._seatIndex){          
+                this.setTotalScore(data.usersCoin[i].score);
+                break;
+            }
+        }
     },
 
     onRcvOfflineNotice(data){
@@ -89,7 +95,6 @@ cc.Class({
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){          
                 this.setTotalScore(data.users[i].score);
-                this.setHuXi(data.users[i].roundScore);
                 break;
             }
         }
@@ -134,62 +139,6 @@ cc.Class({
         }
     },
 
-    updateScore(data){
-        if(this._playerNode){
-            data = data.detail;
-            if (data.seat === this._seatIndex) {
-                if (MsgId.SENDCARD != data.c) {
-                    this.setHuXi(data.huxi);
-                }
-            }
-            // let list = data.notyScoreChang;
-            // for(let i=0;i<list.length;++i){
-                // if(list[i].seat === this._seatIndex){
-                    // this.setHuXi(list[i].roundScore);
-                    // if (0 > list[i].changeScore) {   
-                    //     //该玩家输了，金币飞向其他人
-                    //     let toServerSeat = 0;
-                    //     for (let j = 0; j < list.length; j++) {
-                    //         if (0 < list[j].changeScore) {
-                    //             toServerSeat = list[j].seat;
-                    //             break;
-                    //         }
-                    //     }
-                    //     this.showFlyIcon(toServerSeat, -list[i].changeScore);
-                    // }
-                // }
-            // }
-        }
-    },
-
-    // showFlyIcon(toServerSeat,iconNum){
-    //     if (0 < toServerSeat && 0 < iconNum) {
-    //         let toLocalSeat = cc.vv.gameData.getLocalChair(toServerSeat);
-    //         let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
-    //         let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
-    //         let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
-    //         for (var j = 0; j < iconNum; j++) {
-    //             let icon = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
-    //             icon.parent = this._playerNode.parent.getChildByName("ndoe_fly_icon");
-    //             icon.position = this._playerNode.position;
-    //             icon.active = true;
-    //             icon.runAction(
-    //                 cc.sequence(
-    //                     cc.delayTime(j * 0.1), 
-    //                     cc.moveBy(0.6, moveByPos),
-    //                     cc.callFunc(()=>{
-    //                         Global.playEff(Global.SOUNDS.fly_icon);
-    //                     }),
-    //                     cc.delayTime(0.2), 
-    //                     cc.callFunc(()=>{
-    //                         icon.removeFromParent();
-    //                     })
-    //                 )
-    //             )
-    //         }
-    //     }
-    // },
-
     recvDeskInfoMsg(){
         let deskInfo = cc.vv.gameData.getDeskInfo();
         if(deskInfo.isReconnect){
@@ -233,21 +182,12 @@ cc.Class({
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
             this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
-            this.setHuXi(user.roundScore?user.roundScore:0);
             this.showReady(user.state === 1);
         }
     },
 
     showOffline(bShow){
         if(this._playerNode) this._playerNode.getChildByName("img_off_line").active = bShow;
-    },
-
-    // 胡熄
-    //gsltodo
-    setHuXi(score){
-        if (typeof score != 'undefined') {
-            // if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"胡息";
-        }
     },
 
     // 总分
@@ -271,7 +211,6 @@ cc.Class({
     },
 
     clearDesk(){
-        this.setHuXi(0);
     },
 
     onDestroy(){

@@ -268,3 +268,5 @@ GlobalMsgId.WARN_5_FU = 167; 				//5福警报
 //跑得快
 GlobalMsgId.OUT_CARD = 1410; 				//出牌
 GlobalMsgId.OUT_CARD_NOTIFY = 101417; 		//出牌提示通知
+
+GlobalMsgId.SCORE_UPDATE_NOTIFY = 18814; 	//得分更新

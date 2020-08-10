@@ -139,6 +139,7 @@ cc.Class({
 
         cc.vv.NetManager.registerMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.OUT_CARD, this.onRcvOutCard, this);
+        cc.vv.NetManager.registerMsg(MsgId.SCORE_UPDATE_NOTIFY, this.onRcvScoreUpdateNotify,this);
     },
 
     unregisterMsg() {
@@ -176,6 +177,14 @@ cc.Class({
 
         cc.vv.NetManager.unregisterMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.OUT_CARD, this.onRcvOutCard, false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.SCORE_UPDATE_NOTIFY, this.onRcvScoreUpdateNotify, false,this);
+
+    },
+
+    onRcvScoreUpdateNotify(msg){
+        if(msg.code == 200){
+            Global.dispatchEvent(EventId.SCORE_UPDATE_NOTIFY,msg)
+        }
     },
 
     onRcvOutCardNotify(msg){
