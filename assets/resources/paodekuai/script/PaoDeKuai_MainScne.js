@@ -74,7 +74,7 @@ cc.Class({
         let desc = cc.find("scene/bg_top/txt_game_desc",this.node);
         desc.getComponent(cc.Label).string = str;
 
-        cc.find("scene/spr_cards" ,this.node).active = (2 == cc.vv.gameData.getDeskInfo().seat);
+        cc.find("scene/spr_cards" ,this.node).active = (2 == cc.vv.gameData.getDeskInfo().conf.seat);
 
         cc.find("scene/bg_top/node_play/play_2player",this.node).active = (2 == conf.seat);
         cc.find("scene/bg_top/node_play/play_3player",this.node).active = (3 == conf.seat);

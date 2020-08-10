@@ -155,7 +155,25 @@ cc.Class({
             this.showCardNum(data.cardsCnt);
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
-            if (0 == this._UISeat) {
+            if (0 == this._UISeat || 2 != data.actionInfo.nextaction.type) {
+                this.showNoOutCard(false);
+                this.showOutCard();
+            }
+            if (0 < data.actionInfo.nextaction.type) {
+                this.setShowTimeCount(true, data.actionInfo.nextaction.time);
+            }
+        }
+    },
+    
+    onRcvGuoCardNotify(data){
+        data = data.detail;
+        if (data.seat === this._seatIndex) {
+            this.showNoOutCard(true);
+            this.showOutCard();
+            this.setShowTimeCount(false);
+        }
+        if (data.actionInfo.nextaction.seat === this._seatIndex) {
+            if (0 == this._UISeat || 2 != data.actionInfo.nextaction.type) {
                 this.showNoOutCard(false);
                 this.showOutCard();
             }
@@ -257,24 +275,6 @@ cc.Class({
                         })
                     )
                 )
-            }
-        }
-    },
-
-    onRcvGuoCardNotify(data){
-        data = data.detail;
-        if (data.seat === this._seatIndex) {
-            this.showNoOutCard(true);
-            this.showOutCard();
-            this.setShowTimeCount(false);
-        }
-        if (data.actionInfo.nextaction.seat === this._seatIndex) {
-            if (0 == this._UISeat) {
-                this.showNoOutCard(false);
-                this.showOutCard();
-            }
-            if (0 < data.actionInfo.nextaction.type) {
-                this.setShowTimeCount(true, data.actionInfo.nextaction.time);
             }
         }
     },
