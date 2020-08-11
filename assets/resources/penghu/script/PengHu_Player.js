@@ -230,6 +230,10 @@ cc.Class({
             let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
             let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
             let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
+            let intervalTime = 0.08;
+            if (60 < iconNum) {
+                intervalTime = intervalTime * 60 / iconNum;
+            }
             for (var j = 0; j < iconNum; j++) {
                 let icon = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
                 icon.parent = this._playerNode.parent.getChildByName("ndoe_fly_icon");
@@ -237,8 +241,8 @@ cc.Class({
                 icon.active = true;
                 icon.runAction(
                     cc.sequence(
-                        cc.delayTime(j * 0.1), 
-                        cc.moveBy(0.6, moveByPos),
+                        cc.delayTime(j * intervalTime), 
+                        cc.moveBy(0.4, moveByPos),
                         cc.callFunc(()=>{
                             Global.playEff(Global.SOUNDS.fly_icon);
                         }),
