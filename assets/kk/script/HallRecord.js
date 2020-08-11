@@ -241,13 +241,14 @@ cc.Class({
 
                 let text_roomInfo = roomInfo.getChildByName("text_roomInfo");
                 text_roomInfo.getChildByName("text_roomID").getComponent(cc.Label).string = "房间号：" + msg.data[i].deskid;
-                text_roomInfo.getChildByName("text_game_name").getComponent(cc.Label).string = "碰胡";
+                let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快"];
+                text_roomInfo.getChildByName("text_game_name").getComponent(cc.Label).string = gameNameStr[msg.data[i].gameid];
                 text_roomInfo.getChildByName("text_game_jushu").getComponent(cc.Label).string = msg.data[i].gameNum + "局";
                 text_roomInfo.getChildByName("text_people_num").getComponent(cc.Label).string = msg.data[i].presonNum;
 
                 let bg_clubInfo = roomInfo.getChildByName("bg_clubInfo");
                 let roomTypeStr = ["代开房房间","亲友圈房间","代开房房间","个人房间"]
-                bg_clubInfo.getChildByName("text_roomType").getComponent(cc.Label).string = roomTypeStr[msg.data[i].gameid];
+                bg_clubInfo.getChildByName("text_roomType").getComponent(cc.Label).string = (0 == this.curShowRecordType) ? "个人房间" : "亲友圈房间";
                 bg_clubInfo.getChildByName("text_houseOwner").getComponent(cc.Label).string = msg.data[i].houseOwner;
                 
                 cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score;
