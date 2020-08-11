@@ -180,7 +180,7 @@ GlobalMsgId.JOINCULB = 8802;                   // 加入俱乐部
 GlobalMsgId.AGREECULB = 8803;                  // 同意加入俱乐部
 GlobalMsgId.GETCLUBEONLINEUSERS = 8804;        // 创建俱乐部
 GlobalMsgId.ADDGAME = 8805;                    // 俱乐部创建游戏
-GlobalMsgId.MODIFGAME = 8806;                  // 俱乐部修改游戏
+// GlobalMsgId.MODIFGAME = 8806;                  // 俱乐部修改游戏
 GlobalMsgId.ENTERCLUB = 8807;                  // 进入俱乐部
 GlobalMsgId.GETCLUBLIST = 8808;                // 获取俱乐部列表
 GlobalMsgId.CLUBNOTICE = 8809;                 // 获取俱乐部列表
@@ -268,5 +268,6 @@ GlobalMsgId.WARN_5_FU = 167; 				//5福警报
 //跑得快
 GlobalMsgId.OUT_CARD = 1410; 				//出牌
 GlobalMsgId.OUT_CARD_NOTIFY = 101417; 		//出牌提示通知
-
 GlobalMsgId.SCORE_UPDATE_NOTIFY = 18814; 	//得分更新
+
+GlobalMsgId.CLUB_DELETE_TABLE = 8806;   	// 俱乐部删除桌子

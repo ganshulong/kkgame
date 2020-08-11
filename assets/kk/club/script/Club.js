@@ -362,6 +362,24 @@ cc.Class({
                 }
             }
         }
+
+        let btn_delete = cc.find("node/btn_delete",item);
+        btn_delete.active = (this._clubInfo.createUid == cc.vv.UserManager.uid);
+        btn_delete.deskid = data.deskid;
+        Global.btnClickEvent(btn_delete,this.onClickDeleteTable,this);
+    },
+
+    onClickDeleteTable(event){
+        let deskid = event.target.deskid;
+        let sureCall = function () {
+            var req = { c: MsgId.CLUB_DELETE_TABLE};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.deskid = deskid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("是否确实删除桌子："+deskid, sureCall, cancelCall);
     },
 
     initTables(list){
