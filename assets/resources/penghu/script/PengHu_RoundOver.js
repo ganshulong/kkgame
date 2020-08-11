@@ -119,6 +119,7 @@ cc.Class({
     },
 
     initPlayerInfo(users,seat,card,source,hupaiType){
+        let bShowDawn = true;
         for(let i=0;i<4;++i){
             if(i<users.length){
                 let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
@@ -145,6 +146,9 @@ cc.Class({
                 else{
                     this.initHandCard(users[i].handInCards,handCardNode,users[i].menzi,cardValue,source);
                 }
+                if (0 < users[i].handInCards.length || 0 < users[i].menzi.length) {
+                    bShowDawn = false;
+                }
 
                 // 胡息
                 let score = player.getChildByName("lbl_num");
@@ -152,7 +156,6 @@ cc.Class({
                 let img_signal = player.getChildByName("img_signal");
                 img_signal.active = users[i].roundScore<0;
                 img_signal.x = score.x-score.width-img_signal.width;
-
 
                 // 放炮
                 let fangpao = player.getChildByName("wz_fangpao");
@@ -166,16 +169,15 @@ cc.Class({
                 let huflag_bg = player.getChildByName("huflag_bg");
                 huflag_bg.active = hupaiType>0 && users[i].seat === seat;
 
-                //
-                //liuju = -1, --流局
-
                 // 胡牌类型
                 let huflag = huflag_bg.getChildByName("huflag");
                 if(hupaiType>0) this.showHuType(hupaiType,huflag);
 
+            } else {
+                cc.find("sp_bg/player"+i,this._overRoundNode).active = false;
             }
-            else cc.find("sp_bg/player"+i,this._overRoundNode).active = false;
         }
+        this._overRoundNode.getChildByName("spr_draw").active = bShowDawn;
     },
 
     // normal = 1, --平胡
