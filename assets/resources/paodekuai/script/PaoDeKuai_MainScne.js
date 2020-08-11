@@ -6,8 +6,6 @@ cc.Class({
         
         cardsAtlas:cc.SpriteAtlas,
         emjoAtlas:cc.SpriteAtlas,
-        tableAtlas:cc.SpriteAtlas,
-        yinxiAtlas:cc.SpriteAtlas,
         _gameCount:0,
 
     },
@@ -35,7 +33,7 @@ cc.Class({
         // this.node.addComponent("PaoDeKuai_Action");
         this.node.addComponent("PaoDeKuai_RemainCard");
         this.node.addComponent("PaoDeKuai_RoundOver");
-        this.node.addComponent("PaoDeKuai_GameOver").init(this.tableAtlas,this.yinxiAtlas);
+        this.node.addComponent("PaoDeKuai_GameOver");
         this.node.addComponent("PaoDeKuai_Sound");
         this.node.addComponent("PaoDeKuai_Chat");
         this.node.addComponent("PaoDeKuai_Setting");

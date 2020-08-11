@@ -190,24 +190,27 @@ cc.Class({
 
             let zimoHuTypeStr = "";
             if (data.isZimo) {
-                zimoHuTypeStr += "自摸\n";
+                zimoHuTypeStr += "自摸x2\n";
             }
             if (0 < data.source) {
                 zimoHuTypeStr += "点炮胡\n";
             }
             if (0 < data.mingTangType) {
-                zimoHuTypeStr += ["","红胡","一点红","黑胡"][data.mingTangType];
+                zimoHuTypeStr += ["","红胡x2","一点红x2","黑胡x2"][data.mingTangType];
             }
             if ("" == zimoHuTypeStr) {
                 zimoHuTypeStr += "平胡";
             }
             panel_CardInfo.getChildByName("text_zimo_huType").getComponent(cc.Label).string = zimoHuTypeStr;
 
-            let tunFanStr = "囤数:" + (parseInt((data.huxi-6) / 3) + 1);
+            let tunFanStr = "";
+            if (1 == cc.vv.gameData.getRoomConf().param1) {
+                tunFanStr += "囤数:" + (parseInt((data.huxi-6) / 3) + 1) + " ";
+            }
             if (data.isZimo || 0 < data.mingTangType) {
-                tunFanStr += " 番数:2"; 
+                tunFanStr += "番数:2"; 
             } else {
-                tunFanStr += " 番数:1"; 
+                tunFanStr += "番数:1"; 
             }
             panel_CardInfo.getChildByName("text_tun_fan").getComponent(cc.Label).string = tunFanStr;
         }

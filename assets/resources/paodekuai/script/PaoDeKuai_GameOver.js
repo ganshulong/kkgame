@@ -9,11 +9,6 @@ cc.Class({
         _winBgSpr:null,
         _show:false,
     },
-    
-    init(atlas,yinxiAtlas){
-        this._atlas = atlas;
-        this._yinxiAtlas = yinxiAtlas;
-    },
 
     start () {
         Global.registerEvent(EventId.GAMEOVER,this.recvGameOver,this);
