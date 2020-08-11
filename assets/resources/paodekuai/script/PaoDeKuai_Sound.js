@@ -92,6 +92,16 @@ cc.Class({
 
     recvRoundOver(data){
         data = data.detail;
+        for(let i=0;i<data.users.length;++i){
+            if(data.users[i].uid === cc.vv.UserManager.uid) {  
+                if (0 <= data.users[i].score) {
+                    cc.vv.AudioManager.playEff("paodekuai/", "complete",true);
+                } else {
+                    cc.vv.AudioManager.playEff("paodekuai/", "failed",true);
+                };
+                break;
+            }
+        }
     },
 
     getSex(seat){
