@@ -181,9 +181,9 @@ cc.Class({
     recvMoPaiNotify(data){
         data = data.detail;
         let seat = data.seat;
-        // if(seat === cc.vv.gameData.getMySeatIndex()){
+        if(0 < data.card){
             this.playCardSound(data.card,data.seat);
-        // }
+        }
     },
 
     getSex(seat){
