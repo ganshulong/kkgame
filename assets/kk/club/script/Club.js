@@ -396,12 +396,12 @@ cc.Class({
             } else {
                 item = cc.instantiate(this._content.children[0]);
                 item.parent = this._content;
+                Global.btnClickEvent(cc.find("node/img_click",item),this.onEnterDesk,this);
             }
             item.active = true;
             let clickBtn = cc.find("node/img_click",item);
             clickBtn._deskId = list[i].deskid;
             item._deskId = list[i].deskid;
-            // Global.btnClickEvent(clickBtn,this.onEnterDesk,this);
 
             item.x  = this._startPos.x + (clickBtn.width+30)*parseInt(i/2);
             item.y  = this._startPos.y - (clickBtn.height+30)*(i%2);
