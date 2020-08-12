@@ -525,7 +525,7 @@ cc.Class({
 
     sortCard(){
         let canOutCard = this._canOutCard;
-        // Global.dispatchEvent(EventId.SHOW_MENZI,this._handCardData);
+        Global.dispatchEvent(EventId.SHOW_MENZI,this._handCardData);
         this.clearDesk();
         let list = cc.vv.gameData.sortCard(this._handCards);
         this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(this._handCards);
