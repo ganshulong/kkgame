@@ -194,7 +194,6 @@ cc.Class({
             for(let i=0;i<this._content.childrenCount;++i){
                 let item = this._content.children[i];
                 if(item._deskId === deskId){
-                    item.removeFromParent();
                     for(let i=0;i<this._tableList.length;++i){
                         if(this._tableList[i].deskid === deskId){
                             this._tableList.splice(i,1);
