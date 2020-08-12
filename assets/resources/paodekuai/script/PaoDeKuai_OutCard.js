@@ -156,6 +156,9 @@ cc.Class({
                 this.playCardAni(data.actionInfo.curaction.cardType);
             }
             this.showCardNum(data.cardsCnt);
+            if (1 == data.cardsCnt) {
+                cc.vv.AudioManager.playEff("paodekuai/", "alarm",true);
+            }
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
             if (0 == this._UISeat || 2 != data.actionInfo.nextaction.type) {
@@ -225,10 +228,7 @@ cc.Class({
     showCardNum(cardNum){
         this.bg_cardNum.active = (0 < cardNum);
         this.bg_cardNum.getChildByName("text_cardNum").getComponent(cc.Label).string = cardNum;
-        if (1 == cardNum) {
-            this.ani_warn.active = true;
-            cc.vv.AudioManager.playEff("paodekuai/", "alarm",true);
-        }
+        this.ani_warn.active = (1 == cardNum);
     },
 
     playCardAni(cardType){
