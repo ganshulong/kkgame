@@ -58,7 +58,7 @@ cc.Class({
                     return b.score - a.score;
                 });
 
-                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-385,0,385]];
+                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-385,0,385],[-420,-130,160,450]];
                 let bigWinerId = scoreList[0].uid;
                 for(let i = 0; i < data.users.length; ++i){
                     let player = cc.find("game_end_bg/player"+i,this._layer);

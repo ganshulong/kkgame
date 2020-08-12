@@ -95,7 +95,7 @@ cc.Class({
                     return b.score - a.score;
                 });
 
-                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-375,0,375]];
+                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-375,0,375],[-420,-130,160,450]];
                 let dianPaoWangId = paoList[0].dianPaoCount > 0 ? paoList[0].uid : 0;
                 let bigWinerId = scoreList[0].uid;
                 for(let i = 0; i < data.users.length; ++i){
