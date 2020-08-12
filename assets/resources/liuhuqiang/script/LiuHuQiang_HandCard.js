@@ -557,11 +557,11 @@ cc.Class({
             }
         }
         this._selectCard = null;
-        this._canOutCard = false;
-        if(this._outCardLineNode) {
-            this._outCardLineNode.active = false;
-            this.showOutCardTipsAni();
-        }
+        // this._canOutCard = false;
+        // if(this._outCardLineNode) {
+        //     this._outCardLineNode.active = false;
+        //     this.showOutCardTipsAni();
+        // }
         this._num = 0;
     },
 
