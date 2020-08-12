@@ -278,88 +278,160 @@ cc.Class({
 
     // 手牌排序
     sortCard(cards){
-        let tempList1 = cards.slice(0);
-        tempList1.sort((a,b)=>{
-            return a-b;
-        });
+        let menziList = [];
+        let card2DList = this.getCard2DList(cards);
 
-        let list = [];
-        let value = -1;
-        let temp = [];
-        // 先查找相同的
-        let index = 0;
-        for(index = 0; index<tempList1.length; ++index){
-            if(value !== tempList1[index]){
-                if(temp.length>2){
-                    list.push(temp);
-                    for(let j=1;j<=temp.length;++j){
-                        tempList1[index-j] = -1;
-                    }
+        //二二二二
+        for (let i = 1; i <= 20; i++) {
+            if (4 == card2DList[i].length){
+                menziList.push(card2DList[i]);
+                card2DList[i] = [];
+            }
+        }
+        //二二二
+        for (let i = 1; i <= 20; i++) {
+            if (3 == card2DList[i].length){
+                menziList.push(card2DList[i]);
+                card2DList[i] = [];
+            }
+        }
+        //二二贰
+        for (let i = 1; i <= 10; i++) {
+            if (3 == (card2DList[i].length + card2DList[i+10].length)){
+                menziList.push(card2DList[i+10]);
+                for (var j = 0; j < card2DList[i].length; j++) {
+                    menziList[menziList.length-1].push(card2DList[i][j]);
                 }
-                temp = [tempList1[index]];
-                value = tempList1[index];
-            }
-            else{
-                // // temp.push(tempList1[index]);
-                temp.unshift(tempList1[index]);
+                card2DList[i] = [];
+                card2DList[i+10] = [];
             }
         }
-        if (2 < temp.length) {
-            list.push(temp);
-            for(let j=1;j<=temp.length;++j){
-                tempList1[index-j] = -1;
+        //一二三
+        for (let i = 1; i <= 10-2; i++) {
+            if (card2DList[i].length && card2DList[i+1].length && card2DList[i+2].length) {
+                let menzi = [];
+                menzi.push(card2DList[i].shift());
+                menzi.push(card2DList[i+1].shift());
+                menzi.push(card2DList[i+2].shift());
+                menziList.push(menzi);
             }
         }
-
-        let tempList2 = [];
-        for(let i=0;i<tempList1.length;++i){
-            if(tempList1[i]>-1) tempList2.push(tempList1[i]);
-        }
-
-        tempList2.sort((a,b)=>{
-            return ((a%100)-b%100);
-        });
-
-        value = -1;
-        // 先查找数字相同的
-        let otherCard = []
-        for(let i=0;i<tempList2.length;++i){
-            if(value !== tempList2[i]%100){     //新值
-                if (10 <= list.length) {
-                    otherCard.push(tempList2[i]);
-                    continue;
-                }
-                temp = [tempList2[i]];
-                list.push(temp);
-                value = tempList2[i]%100;
-            } else {
-                if(3 <= temp.length){
-                    if (10 <= list.length) {
-                        otherCard.push(tempList2[i]);
-                        continue;
-                    }
-                    temp = [tempList2[i]];
-                    list.push(temp);
-                } else {
-                    // // temp.push(tempList2[i]);
-                    temp.unshift(tempList2[i]);
-                }
+        //壹贰叁
+        for (let i = 11; i <= 20-2; i++) {
+            if (card2DList[i].length && card2DList[i+1].length && card2DList[i+2].length) {
+                let menzi = [];
+                menzi.push(card2DList[i].shift());
+                menzi.push(card2DList[i+1].shift());
+                menzi.push(card2DList[i+2].shift());
+                menziList.push(menzi);
             }
         }
-        for (let i = 0; i < otherCard.length; ++i) {
-            for (let j = list.length - 1; j >= 0; --j) {
-                for (let k = list[j].length; k < 3; k++) {
-                    list[j].push(otherCard[i++]);
-                    if (i == otherCard.length) {
-                        return list;
-                    }
-                }
+        //二七十 贰柒拾
+        let indesPair = [[2,7,10],[12,17,20]];
+        for (var i = 0; i < indesPair.length; i++) {
+            if (card2DList[indesPair[i][0]].length && card2DList[indesPair[i][1]].length && card2DList[indesPair[i][2]].length) {
+                let menzi = [];
+                menzi.push(card2DList[indesPair[i][0]].shift());
+                menzi.push(card2DList[indesPair[i][1]].shift());
+                menzi.push(card2DList[indesPair[i][2]].shift());
+                menziList.push(menzi);
             }
         }
-
-        return list;
+        //二二+贰贰
+        for (let i = 1; i <= 10; i++) {
+            if (2 == card2DList[i].length && 2 == card2DList[i+10].length){
+                menziList.push(card2DList[i]);
+                card2DList[i] = [];
+                menziList.push(card2DList[i+10]);
+                card2DList[i+10] = [];
+            }
+        }
+        //二二 贰贰
+        for (let i = 1; i <= 10; i++) {
+            if (2 == card2DList[i].length){
+                menziList.push(card2DList[i]);
+                card2DList[i] = [];
+            }
+            if (2 == card2DList[i+10].length) {
+                menziList.push(card2DList[i+10]);
+                card2DList[i+10] = [];
+            }
+        }
+        //一二
+        for (let i = 1; i <= 10-1; i++) {
+            if (card2DList[i].length && card2DList[i+1].length) {
+                let menzi = [];
+                menzi.push(card2DList[i].shift());
+                menzi.push(card2DList[i+1].shift());
+                menziList.push(menzi);
+            }
+        }
+        //壹贰
+        for (let i = 11; i <= 20-1; i++) {
+            if (card2DList[i].length && card2DList[i+1].length) {
+                let menzi = [];
+                menzi.push(card2DList[i].shift());
+                menzi.push(card2DList[i+1].shift());
+                menziList.push(menzi);
+            }
+        }
+        //二贰
+        for (let i = 1; i <= 10; i++) {
+            if (1 == card2DList[i].length && 1 == card2DList[i+10].length){
+                menziList.push([card2DList[i][0], card2DList[i+10][0]]);
+                card2DList[i] = [];
+                card2DList[i+10] = [];
+            }
+        }
+        //一三
+        for (let i = 1; i <= 10-2; i++) {
+            if (card2DList[i].length && card2DList[i+2].length) {
+                let menzi = [];
+                menzi.push(card2DList[i].shift());
+                menzi.push(card2DList[i+2].shift());
+                menziList.push(menzi);
+            }
+        }
+        //壹叁
+        for (let i = 11; i <= 20-2; i++) {
+            if (card2DList[i].length && card2DList[i+2].length) {
+                let menzi = [];
+                menzi.push(card2DList[i].shift());
+                menzi.push(card2DList[i+2].shift());
+                menziList.push(menzi);
+            }
+        }
+        //2+7 7+10 2+10 
+        indesPair = [[2,7],[2,10],[7,10],[12,17],[12,20],[17,20]];
+        for (var i = 0; i < indesPair.length; i++) {
+            if (card2DList[indesPair[i][0]].length && card2DList[indesPair[i][1]].length) {
+                let menzi = [];
+                menzi.push(card2DList[indesPair[i][0]].shift());
+                menzi.push(card2DList[indesPair[i][1]].shift());
+                menziList.push(menzi);
+            }
+        }
+        //散牌
+        for (let i = 1; i <= 20; i++) {
+            if (card2DList[i].length) {
+                menziList.push(card2DList[i]);
+                card2DList[i] = [];
+            }
+        }
+        return menziList;
     },
 
+    getCard2DList(cards){
+        let card2DList = [];
+        for (let i = 0; i <= 20; i++) {
+            card2DList.push([]);
+        }
+        for (let i = 0; i < cards.length; i++) {
+            let cardIndex = (200 > cards[i]) ? cards[i] % 100 : cards[i] % 100 + 10;
+            card2DList[cardIndex].push(cards[i]);
+        }
+        return card2DList;
+    }, 
 
     // 胡牌通知
     onRcvHuNotfiy(msg){
