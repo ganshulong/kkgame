@@ -112,6 +112,8 @@ cc.Class({
 
         this._content = cc.find("Layer/list/view/content",this.node);
         this._content.active = false;
+        let img_click = cc.find("node/img_click", this._content.children[0]);
+        Global.btnClickEvent(img_click,this.onEnterDesk,this);
 
         let tips = cc.find("Layer/bg_dialogue/mask/txt_dialogue",this.node);
         tips.x = 200;
@@ -399,7 +401,7 @@ cc.Class({
             let clickBtn = cc.find("node/img_click",item);
             clickBtn._deskId = list[i].deskid;
             item._deskId = list[i].deskid;
-            Global.btnClickEvent(clickBtn,this.onEnterDesk,this);
+            // Global.btnClickEvent(clickBtn,this.onEnterDesk,this);
 
             item.x  = this._startPos.x + (clickBtn.width+30)*parseInt(i/2);
             item.y  = this._startPos.y - (clickBtn.height+30)*(i%2);
