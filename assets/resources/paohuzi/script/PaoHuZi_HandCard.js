@@ -515,13 +515,12 @@ cc.Class({
                     }
                     child.runAction(seq);
                 }
-
+                this.checkCanOutCard(this._handCardData.bankerInfo.seat);
             }
         }
     },
 
     sortCard(){
-        this.checkCanOutCard(this._handCardData.bankerInfo.seat);
         let canOutCard = this._canOutCard;
         // Global.dispatchEvent(EventId.SHOW_MENZI,this._handCardData);
         this.clearDesk();
@@ -530,8 +529,6 @@ cc.Class({
         for(let i=0;i<list.length;++i){
             this.showCard(list[i],list.length);
         }
-        this._canOutCard = canOutCard;
-        this.showOutLine(this._canOutCard);
     },
 
     initCardBox(){
@@ -584,6 +581,9 @@ cc.Class({
 
     recvOverRound(data){
         this.isCanWarn = false;
+        if(this._chairId === 0){
+           this.showOutLine(false);
+        }
     },
 
     recvDelHandcardNotify(data){
