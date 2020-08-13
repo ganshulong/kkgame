@@ -39,6 +39,7 @@ cc.Class({
         _handCardData:null,
         _canTouch:true,
         _outCardLineNode:null,
+        _bPlaying:true,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -459,6 +460,7 @@ cc.Class({
         data = data.detail;
         if(this._seatIndex === data.seat){
             if(data.handInCards){
+                this._bPlaying = true;
                 this.clearDesk();
                 this._handCardData = data;
                 this._handCards = data.handInCards.slice(0);
@@ -518,12 +520,14 @@ cc.Class({
                     }
                     child.runAction(seq);
                 }
-                this.checkCanOutCard(this._handCardData.bankerInfo.seat);
             }
         }
     },
 
     sortCard(){
+        if (this._bPlaying) {
+            this.checkCanOutCard(this._handCardData.bankerInfo.seat);
+        }
         let canOutCard = this._canOutCard;
         Global.dispatchEvent(EventId.SHOW_MENZI,this._handCardData);
         this.clearDesk();
@@ -583,6 +587,7 @@ cc.Class({
     },
 
     recvOverRound(data){
+        this._bPlaying = false;
         this.isCanWarn = false;
         if(this._chairId === 0){
            this.showOutLine(false);
