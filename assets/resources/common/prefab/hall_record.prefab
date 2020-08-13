@@ -43,11 +43,11 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 542
+        "__id__": 543
       }
     ],
     "_prefab": {
-      "__id__": 543
+      "__id__": 544
     },
     "_id": "",
     "_opacity": 255,
@@ -17328,9 +17328,13 @@
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 541
+      }
+    ],
     "_prefab": {
-      "__id__": 541
+      "__id__": 542
     },
     "_id": "",
     "_opacity": 255,
@@ -17359,7 +17363,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": -375
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -17413,7 +17417,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": -533,
-      "y": -625
+      "y": -200
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -17504,7 +17508,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": -257,
-      "y": -615
+      "y": -200
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -17595,7 +17599,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 24,
-      "y": -620
+      "y": -200
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -17640,6 +17644,32 @@
     },
     "fileId": "celQKyR4JBdbrndsYVP5AK",
     "sync": false
+  },
+  {
+    "__type__": "cc.Widget",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 531
+    },
+    "_enabled": true,
+    "isAlignOnce": true,
+    "_target": null,
+    "_alignFlags": 4,
+    "_left": 0,
+    "_right": 0,
+    "_top": 0,
+    "_bottom": 0,
+    "_verticalCenter": 0,
+    "_horizontalCenter": 0,
+    "_isAbsLeft": true,
+    "_isAbsRight": true,
+    "_isAbsTop": true,
+    "_isAbsBottom": true,
+    "_isAbsHorizontalCenter": true,
+    "_isAbsVerticalCenter": true,
+    "_originalWidth": 0,
+    "_originalHeight": 0
   },
   {
     "__type__": "cc.PrefabInfo",
