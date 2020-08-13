@@ -236,6 +236,11 @@ cc.Class({
 
                 let roomInfo = this._gameRecordItemList[i].getChildByName("roomInfo");
 
+                let gameIcon = roomInfo.getChildByName("gameIcon");
+                let gameIconStr = ["","penghu","penghu","penghu","penghu","penghu","penghu","liuhuqiang","liuhuqiang","paodekuai","paodekuai"];
+                let gameIconPrefabRes= cc.find("prefabRes/" + gameIconStr[msg.data[i].gameid], this._gameRecordLayer);
+                gameIcon.getComponent(cc.Sprite).spriteFrame  = gameIconPrefabRes.getComponent(cc.Sprite).spriteFrame;
+
                 roomInfo.getChildByName("text_begin_time").getComponent(cc.Label).string = msg.data[i].beginTime;
                 roomInfo.getChildByName("text_end_time").getComponent(cc.Label).string = msg.data[i].endTime;
 
