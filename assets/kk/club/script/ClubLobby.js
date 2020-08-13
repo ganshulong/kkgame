@@ -147,6 +147,7 @@ cc.Class({
         let id = event.target._id;
         cc.vv.UserManager.currClubId = id;
 
+        Global.curRoomID = "";
         cc.vv.SceneMgr.enterScene("club");
     },
 

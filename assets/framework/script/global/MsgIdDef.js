@@ -271,3 +271,9 @@ GlobalMsgId.OUT_CARD_NOTIFY = 101417; 		//出牌提示通知
 GlobalMsgId.SCORE_UPDATE_NOTIFY = 18814; 	//得分更新
 
 GlobalMsgId.CLUB_DELETE_TABLE = 8806;   	// 俱乐部删除桌子
+
+GlobalMsgId.GAME_SWITCH_CLUB = 168;   	// 从游戏切换至俱乐部
+
+GlobalMsgId.CLUB_SWITCH_GAME = 18815;   	// 从俱乐部切换至游戏
+
+

@@ -146,6 +146,8 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.AGREE_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.REFUSE_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
+
+        cc.vv.NetManager.registerMsg(MsgId.GAME_SWITCH_CLUB, this.onRcvNetExitRoom, this);
     },
 
     unregisterMsg() {
@@ -182,6 +184,8 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.AGREE_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.REFUSE_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
+
+        cc.vv.NetManager.unregisterMsg(MsgId.GAME_SWITCH_CLUB, this.onRcvNetExitRoom, false, this);
     },
 
     onRcvDismissNotify(msg){
@@ -577,6 +581,7 @@ cc.Class({
 
             if (cc.vv.SceneMgr){
                 if (cc.vv.UserManager.currClubId) {
+                    Global.curRoomID = (msg.c == MsgId.GAME_SWITCH_CLUB) ? this._deskInfo.conf.deskId : "";
                     cc.vv.SceneMgr.enterScene('club');
                 } else {
                     cc.vv.SceneMgr.enterScene('lobby');

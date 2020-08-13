@@ -110,6 +110,9 @@ cc.Class({
         let btn_record = cc.find("Layer/img_bottomBg/btn_record",this.node);
         Global.btnClickEvent(btn_record,this.onClickRecord,this);
 
+        let btn_backRoom = cc.find("Layer/img_bottomBg/btn_backRoom",this.node);
+        Global.btnClickEvent(btn_backRoom,this.onClickBackRoom,this);
+
         this._content = cc.find("Layer/list/view/content",this.node);
         this._content.active = false;
         let img_click = cc.find("node/img_click", this._content.children[0]);
@@ -122,6 +125,7 @@ cc.Class({
         }))))
 
         this._startPos = cc.v2(this._content.children[0].x,this._content.children[0].y);
+
         // 请求俱乐部信息
         var req = { 'c': MsgId.ENTERCLUB};
         req.clubid = cc.vv.UserManager.currClubId;
@@ -142,6 +146,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.SEATDOWN, this.onEnterDeskResult, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_TABLEINFO, this.onRecvTableinfo, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
@@ -155,6 +160,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.SEATDOWN, this.onEnterDeskResult,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_TABLEINFO, this.onRecvTableinfo,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable,false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, false, this);
     },
 
     onRcvClubExitApplyNotify(data){
@@ -285,16 +291,48 @@ cc.Class({
         }
     },
 
+    onClickBackRoom(){
+        if (Global.curRoomID) {
+            this.sendEnterRoomMsg(Global.curRoomID);
+        }
+    },
+
     // 加入桌子
     onEnterDesk(event){
+        let deskId = event.target._deskId;
+        if (Global.curRoomID && Global.curRoomID != deskId) {
+            let self = this;
+            let sureCall = function () {
+                self.sendExitRoomMsg();
+                self.sendEnterRoomMsg(deskId);
+            }
+            let cancelCall = function () {
+            }
+            cc.vv.AlertView.show("是否退出另一桌子,进入当前桌", sureCall, cancelCall)
+        } else {
+            this.sendEnterRoomMsg(deskId);
+        }
+    },
+
+    sendExitRoomMsg(){
+        var req = { c: MsgId.GAME_LEVELROOM };
+        req.deskid = Global.curRoomID;
+        cc.vv.NetManager.send(req);
+
+        Global.curRoomID = "";
+    },
+
+    sendEnterRoomMsg(deskId){
         if(!this._sendSit){
             var req = { 'c': MsgId.SEATDOWN};
             req.clubid = cc.vv.UserManager.currClubId;
-            req.deskId = event.target._deskId;
+            req.deskId = deskId;
             cc.vv.NetManager.send(req);
             this.scheduleOnce(()=>{
                 this._sendSit = true;
             },0.2)
+
+            Global.curRoomID = "";
         }
     },
 
@@ -346,6 +384,7 @@ cc.Class({
             
         tableChar.active = true;
         
+        cc.find("node/bInRoomMask",item).active = false;
         if(data.users){
             let users = data.users;
             for(let j=0;j<users.length;++j){
@@ -360,6 +399,11 @@ cc.Class({
                     let name = cc.find("img_nameBg/txt_name",headNode);
                     name.getComponent(cc.Label).string = users[j].playername;
                     headNode.getChildByName("img_ready").active = users[j].state === 1;
+                }
+                if (Global.curRoomID && Global.curRoomID == data.deskid) {
+                    if (users[j].uid == cc.vv.UserManager.uid) {
+                        cc.find("node/bInRoomMask",item).active = true;
+                    }
                 }
             }
         }
@@ -444,7 +488,18 @@ cc.Class({
     },
 
     onBack(){
-        cc.vv.SceneMgr.enterScene("club_lobby");
+        if (Global.curRoomID) {
+            let self = this;
+            let sureCall = function () {
+                self.sendExitRoomMsg();
+                cc.vv.SceneMgr.enterScene("club_lobby");
+            }
+            let cancelCall = function () {
+            }
+            cc.vv.AlertView.show("返回大厅将会退出当前桌子", sureCall, cancelCall)
+        } else {
+            cc.vv.SceneMgr.enterScene("club_lobby");
+        }
     },
 
     onDestroy(){

@@ -115,6 +115,11 @@ cc.Class({
         let btn_continue = cc.find("spr_bg/btn_continue", this.panel_gps);
         Global.btnClickEvent(btn_continue,this.onClickContinueGame,this);
 
+        let btn_helper = cc.find("scene/btn_helper",this.node);
+        btn_helper.active = cc.vv.UserManager.currClubId;
+        btn_helper.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
+        btn_helper.on(cc.Node.EventType.TOUCH_END,this.onClickSwitchToClub,this);
+
         Global.registerEvent(EventId.CLOSE_ROUNDVIEW,this.recvCloseRoundView,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
@@ -124,6 +129,19 @@ cc.Class({
         Global.registerEvent(EventId.DISMISS_NOTIFY, this.onRcvDismissNotify,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onClickSwitchToClub(event){
+        if (!this.bMoving) {
+            let req = {c: MsgId.GAME_SWITCH_CLUB};
+            cc.vv.NetManager.send(req);
+        }
+        this.bMoving = false;
+    },
+
+    onTouchMove(event){
+        this.bMoving = true;
+        event.target.y += event.getDelta().y;
     },
 
     onRcvDismissNotify(data){
@@ -564,6 +582,7 @@ cc.Class({
     showInviteWxCopyRoomId(bShow){
         cc.find("scene/operate_btn_view/btn_invite_wx",this.node).active = bShow;
         cc.find("scene/operate_btn_view/btn_copy_roomId",this.node).active = bShow;
+        cc.find("scene/btn_helper",this.node).active = bShow;
         this._isPlaying = !bShow;
     },
 

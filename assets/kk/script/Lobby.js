@@ -248,7 +248,10 @@ cc.Class({
     },
 
     onClub(){
-        if(cc.vv.UserManager.clubs.length>0) cc.vv.UserManager.currClubId = cc.vv.UserManager.clubs[0].clubid;
+        if(cc.vv.UserManager.clubs.length>0) {
+            cc.vv.UserManager.currClubId = cc.vv.UserManager.clubs[0].clubid;
+        }
+        Global.curRoomID = "";
         cc.vv.SceneMgr.enterScene(cc.vv.UserManager.clubs.length>0?"club":"club_lobby");
     },
 
