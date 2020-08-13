@@ -208,7 +208,11 @@ cc.Class({
                 tunFanStr += "囤数:" + (parseInt((data.huxi-6) / 3) + 1) + " ";
             }
             if (data.isZimo || 0 < data.mingTangType) {
-                tunFanStr += "番数:2"; 
+                if (data.isZimo && 0 < data.mingTangType) {
+                    tunFanStr += "番数:4"; 
+                } else {
+                    tunFanStr += "番数:2"; 
+                }
             } else {
                 tunFanStr += "番数:1"; 
             }

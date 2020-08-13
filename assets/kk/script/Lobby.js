@@ -52,6 +52,9 @@ cc.Class({
         cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
 
         let text_dialogue = cc.find("bg_dialogue/mask/text_dialogue",this.node);
+        if (0 < cc.vv.UserManager.noityList.length) {
+            text_dialogue.getComponent(cc.Label).string = cc.vv.UserManager.noityList[0].noity;
+        }
         text_dialogue.x = 120;
         text_dialogue.runAction(
             cc.repeatForever(
@@ -64,12 +67,22 @@ cc.Class({
             )
         )
 
+        let prefabRes = this.node.getChildByName("prefabRes");
         let content = cc.find("right_list/scrollview/view/content",this.node)
-        for (var i = 0; i < content.children.length; i++) {
-            let item = content.getChildByName("item" + i);
-            item.index = i;
+        content.removeAllChildren(true);
+        let tempItem = cc.find("right_list/scrollview/view/item",this.node);
+        tempItem.active = false;
+        for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
+            let item = cc.instantiate(tempItem);
+            let prefabIcon = prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
+            item.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+            item.x = item.width * i;
+            item.parent = content;
+            item.active = true;
+            item.id = cc.vv.UserManager.gameList[i].id;
             Global.btnClickEvent(item,this.onClickCreateRoom,this);
         }
+        content.width = tempItem.width * cc.vv.UserManager.gameList.length;
 
         cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;
         cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
@@ -135,7 +148,7 @@ cc.Class({
     },
 
     onClickCreateRoom(event){
-        this.CreateRoomJS.showCreateRoom(false, event.target.index);
+        this.CreateRoomJS.showCreateRoom(false, event.target.id);
     },
 
     onClickSet(){

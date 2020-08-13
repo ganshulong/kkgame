@@ -36,7 +36,6 @@ cc.Class({
         var userMgr = require('UserManager');
         userMgr.init();
         cc.vv.UserManager = userMgr;
-        cc.vv.UserManager.clearNotice();
 
         //喇叭管理
         var speakerMgr = require('SpeakerMgr')

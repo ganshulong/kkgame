@@ -53,7 +53,7 @@ cc.Class({
         bank_token:null, //银行token
         bank_info: {}, //银行信息
         rememberPsw:false,
-        gameList:null,  // 有些列表
+        gameList:[],  // 游戏列表
         isAutoLogin:true,  // 自动登录
         notice:"",      // 公告
         luckRedvelopesNum:0,    //幸运红包的个数
@@ -64,7 +64,8 @@ cc.Class({
         headSprite:null,    // 获取我的头像
         sigin:"",           // 兑换key
         mobile:"",          // 绑定手机号
-        GpsCity:"",          // 玩家定位区域
+        GpsCity:"",          // 玩家定位区域定位区域
+        noityList:[],
         clubs:[],
 
         //初始化
@@ -164,13 +165,10 @@ cc.Class({
             this.roomcard =  playerData.roomcard;
             this.clubs = serverData.clubs;
             this.GpsCity = playerData.city || "";
-            this.gameList.sort((a,b)=>{
-                return b.ord-a.ord;
-            });
+            this.noityList = serverData.noityList || [];
 
-            if(this.notice === "" && serverData.notice !== undefined)
-            {
-                this.notice = serverData.notice;        // 公告
+            for (var i = 0; i < this.gameList.length; i++) {
+                this.gameList[i].id -= 1;
             }
 
             Global.saveLocal(Global.SAVE_KEY_LOGIN_TYPE, this.logintype);
@@ -184,17 +182,6 @@ cc.Class({
 
         getBindMobile(){
             return this.mobile;
-        },
-
-        // 获取公告
-        getNotice()
-        {
-            return this.notice;
-        },
-
-        // 清理公告
-        clearNotice(){
-          this.notice = "";
         },
 
         getIsAutoLogin()
@@ -272,9 +259,6 @@ cc.Class({
         },
         getLoginType(){
             return this._apiLogin
-        },
-        getGpsCity(){
-            return this.GpsCity
         },
 
         getCurClubInfo(){
