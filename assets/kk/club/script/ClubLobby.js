@@ -114,6 +114,9 @@ cc.Class({
             for(let i=0;i<gameList.length;++i){
                 if(gameList[i].gameid === 1) str += "碰胡 ";
                 else if(gameList[i].gameid === 2) str += "跑胡子 ";
+                else if(gameList[i].gameid === 5) str += "红黑胡 ";
+                else if(gameList[i].gameid === 7) str += "六胡抢 ";
+                else if(gameList[i].gameid === 9) str += "跑得快 ";
             }
             // 游戏列表
             let gameListNode = cc.find("bg/img_game/text_game",item);
