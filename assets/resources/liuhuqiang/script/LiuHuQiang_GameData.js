@@ -382,7 +382,7 @@ cc.Class({
         //二贰
         for (let i = 1; i <= 10; i++) {
             if (1 == card2DList[i].length && 1 == card2DList[i+10].length){
-                menziList.push([card2DList[i][0], card2DList[i+10][0]]);
+                menziList.push([card2DList[i+10][0], card2DList[i][0]]);
                 card2DList[i] = [];
                 card2DList[i+10] = [];
             }
