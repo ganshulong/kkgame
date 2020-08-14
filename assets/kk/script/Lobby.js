@@ -51,17 +51,18 @@ cc.Class({
 
         cc.find("gps/label_city",this.node).getComponent(cc.Label).string = cc.vv.UserManager.GpsCity;
 
-        let text_dialogue = cc.find("bg_dialogue/mask/text_dialogue",this.node);
+        let bg_dialogue = this.node.getChildByName("bg_dialogue");
+        let text_dialogue = cc.find("mask/text_dialogue", bg_dialogue);
         if (0 < cc.vv.UserManager.noityList.length) {
             text_dialogue.getComponent(cc.Label).string = cc.vv.UserManager.noityList[0].noity;
         }
-        text_dialogue.x = 120;
+        text_dialogue.x = bg_dialogue.width/2;
         text_dialogue.runAction(
             cc.repeatForever(
                 cc.sequence(
-                    cc.moveTo(6, cc.v2(-300, text_dialogue.y)),
+                    cc.moveTo(6, cc.v2(-(bg_dialogue.width/2+text_dialogue.width), text_dialogue.y)),
                     cc.callFunc(()=>{
-                        text_dialogue.x = 120;
+                        text_dialogue.x = bg_dialogue.width/2;
                     })
                 )
             )
