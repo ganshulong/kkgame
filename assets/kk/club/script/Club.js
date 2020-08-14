@@ -384,7 +384,8 @@ cc.Class({
             
         tableChar.active = true;
         
-        cc.find("node/bInRoomMask",item).active = false;
+        let bInRoomMask = cc.find("node/bInRoomMask",item);
+        bInRoomMask.active = false;
         if(data.users){
             let users = data.users;
             for(let j=0;j<users.length;++j){
@@ -402,7 +403,17 @@ cc.Class({
                 }
                 if (Global.curRoomID && Global.curRoomID == data.deskid) {
                     if (users[j].uid == cc.vv.UserManager.uid) {
-                        cc.find("node/bInRoomMask",item).active = true;
+                        bInRoomMask.position = cc.v2(-5, 80);
+                        bInRoomMask.active = true;
+                        bInRoomMask.stopAllActions();
+                        bInRoomMask.runAction(
+                            cc.repeatForever(
+                                cc.sequence(
+                                    cc.moveTo(0.3, cc.v2(-5, 90)),
+                                    cc.moveTo(0.3, cc.v2(-5, 80))
+                                )
+                            )
+                        )
                     }
                 }
             }
