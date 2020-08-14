@@ -340,42 +340,6 @@ cc.Class({
             }
         }
         return [];
-
-
-        // if (0 < lastCardLength) {   //上家飞机
-        //     if (0 == lastCardLength % 5) {
-        //         let cardTypeLength = lastCardLength / 5;
-        //         let lastMaxCardValue = lastCardValue + cardTypeLength - 1;
-        //         for (let i = card2DList.length - 1; i >= 3 ; i--) {
-        //             if (3 <= card2DList[i].length && card2DList[i][0] % 0x10 > lastMaxCardValue) {
-        //                 let startValue = card2DList[i][0] % 0x10;
-        //                 for (var j = i - 1; j >= 3; j--) {
-        //                     if (3 <= card2DList[j].length && (startValue - i + j) === card2DList[j][0] % 0x10) {
-        //                         if ((i - j + 1) === cardTypeLength) {
-        //                             let typeCards = [];
-        //                             for (let k = j + 0; k < j + cardTypeLength; k++) {
-        //                                 for (var l = 0; l < 3; l++) {
-        //                                     typeCards.push(card2DList[k][l]);
-        //                                 }
-        //                             }
-        //                             let takeCards =  this.getTakeCards(typeCards, cards);
-        //                             for (var t = 0; t < takeCards.length; t++) {
-        //                                 typeCards.push(takeCards[t]);
-        //                             }
-        //                             return typeCards;
-        //                         }
-        //                     } else {
-        //                         i = j;
-        //                         break;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        // } else {  //上家为空
-
-        // }
     },
 
     getAircrafyPart(cards, card2DList, cardTypeLength, lastMaxCardValue){
@@ -423,6 +387,28 @@ cc.Class({
     //     }
     //     return [];
     // },
+
+    filterConnect(cards){
+        let filterCards = [];
+        let card2DList = this.arrangeCard(cards);
+        for (let i = 3; i < card2DList.length; i++) {
+            if (card2DList[i].length) {
+                let startValue = card2DList[i][0] % 0x10;
+                let tempList = [card2DList[i][0]];
+                for (var j = i + 1; j < card2DList.length; j++) {
+                    if (card2DList[j].length && (startValue - i + j) === card2DList[j][0] % 0x10) {
+                        tempList.push(card2DList[j][0]);
+                    } else {
+                        break;
+                    }
+                }
+                if (5 <= tempList.length && filterCards.length <= tempList.length) {
+                    filterCards = tempList;
+                }
+            }
+        }
+        return filterCards;
+    },
 
     arrangeCard(cards){
         let card2DList = [];

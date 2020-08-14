@@ -178,6 +178,8 @@ cc.Class({
             this.setCardHintState(cardIsCanOutList);
             this.hintList = hint;
             this.hintIndex = -1;
+        } else {
+            this.curaction = null;
         }
     },
 
@@ -384,6 +386,15 @@ cc.Class({
     onTouchEnd(event){
         this.touchStartPosX = null;
         this.touchCurPosX = null;
+        let bFilter = (!this.curaction || cc.vv.gameData.CARDTYPE.ERROR_CARDS == this.curaction.cardType);
+        if (bFilter) {
+            for (let i = 0; i < this._handcardNode.children.length; i++) {
+                if (this._handcardNode.children[i].isSelect) {
+                    bFilter = false;
+                    break;
+                }
+            }
+        }
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             let card = this._handcardNode.children[i];
             if (card.isTouchSelect) {
@@ -393,6 +404,34 @@ cc.Class({
                 card.isSelect = !card.isSelect;
                 card.y = card.isSelect ? 50 : 0;
             }
+        }
+        if (bFilter) {
+            let cards = this.getSelectedCards();
+            if (5 < cards.length) {
+                this.curaction = {};
+                this.curaction.cardType = cc.vv.gameData.CARDTYPE.ERROR_CARDS;
+                this.curaction.outCards = [];
+                let typeCards = this.PaoDeKuai_CardLogicJS.checkCardIsCanOut(cards, this._handCards.length, this.curaction);
+                if (0 == typeCards.length) {
+                    let filterCards = this.PaoDeKuai_CardLogicJS.filterConnect(cards);
+                    if (0 < filterCards.length) {
+                        this.setFilterCardState(filterCards);
+                    }
+                }
+            }
+        }
+    },
+
+    setFilterCardState(cards){
+        for (let i = 0; i < this._handcardNode.children.length; i++) {
+            let j = 0;
+            for (j = 0; j < cards.length; j++) {
+                if (this._handcardNode.children[i].cardValue == cards[j]) {
+                    break;
+                }
+            }
+            this._handcardNode.children[i].isSelect = (j < cards.length);
+            this._handcardNode.children[i].y = (j < cards.length) ? 50 : 0;
         }
     },
 
