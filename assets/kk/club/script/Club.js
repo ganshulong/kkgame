@@ -427,6 +427,14 @@ cc.Class({
 
     onClickDeleteTable(event){
         let deskid = event.target.deskid;
+        for (let i = 0; i < this._tableList.length; i++) {
+            if (this._tableList[i].deskid == deskid) {
+                if (0 < this._tableList[i].users.length) {
+                    cc.vv.FloatTip.show("不能删除，有人坐下的桌子");
+                    return;
+                }
+            }
+        }
         let sureCall = function () {
             var req = { c: MsgId.CLUB_DELETE_TABLE};
             req.clubid = cc.vv.UserManager.currClubId;
