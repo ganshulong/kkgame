@@ -245,6 +245,9 @@ cc.Class({
 
     onEnterDeskResult(msg){
         if(msg.code === 200){
+            if (MsgId.CLUB_SWITCH_GAME === msg.c) {
+                msg.response.deskInfo.isReconnect = true;
+            }
             if(msg.response.deskInfo.conf.gameid === 1 || msg.response.deskInfo.conf.gameid === 3){
                 if(cc.vv.gameData === null){
                     let data = require("PengHu_GameData");

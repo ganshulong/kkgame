@@ -468,7 +468,7 @@ cc.Class({
         let description = "十五张跑得快";
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "人场");
-        description += ("," + ["","","首轮最小手牌先出+5分","首轮黑桃三先出"][roomConf.seat]);
+        description += ("," + ["","","首轮最小手牌先出","首轮黑桃三先出"][roomConf.seat]);
         description += ("," + ["不扎鸟","红桃10扎鸟翻倍","红桃10扎鸟+5分","红桃10扎鸟+10分"][roomConf.param1]);
         description += ("," + roomConf.score+ "倍");
         description += (",房间号:" + roomConf.deskId);

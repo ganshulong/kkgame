@@ -112,7 +112,7 @@ cc.Class({
             score.getComponent(cc.Label).string = data.users[i].roundScore + "胡";
             score.color = data.users[i].roundScore>0?(new cc.Color(236,187,111)):(new cc.Color(209,114,96));
         }
-        this._OverScoreNode.runAction(cc.sequence(cc.delayTime(1),cc.callFunc(()=>{
+        this._OverScoreNode.runAction(cc.sequence(cc.delayTime(2),cc.callFunc(()=>{
             this._OverScoreNode.active = false;
         })))
 
