@@ -212,7 +212,7 @@ cc.Class({
                 daoju.parent = ndoe_fly_icon;
                 daoju.position = this._playerNode.position;
                 daoju.active = true;
-                let aniShowTime = [0, 0,0,1,0,0, 0,0,0,0,0.5, 0,0,0];
+                let aniShowTime = [0, 1.25,1.31,1,1.15,1.27, 2.17,2.21,1.5,0.3,0.5, 1.24,0.09,1.07];
                 daoju.runAction(
                     cc.sequence(
                         cc.moveBy(0.5, moveByPos),
