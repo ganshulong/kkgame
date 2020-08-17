@@ -187,8 +187,7 @@ cc.Class({
                         this._emjoNode.active = false;
                     }))
                     this._emjoNode.runAction(cc.sequence(acts));
-                }
-                else{
+                } else if(data.chatInfo.type === 2){
                     this._chatNode.active = true;
                     this._chatNode.stopAllActions();
                     let ShortList = Global.getShortList();
@@ -197,6 +196,30 @@ cc.Class({
                         this._chatNode.active = false;
                     })))
                 }
+            } else if (data.chatInfo.fromSeat === this._seatIndex) {
+                let toLocalSeat = cc.vv.gameData.getLocalChair(data.chatInfo.toSeat);
+                let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
+                let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
+                let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
+
+                let daoju = cc.instantiate(this._playerNode.getChildByName("daoju"));
+
+                let prefabRes = this.node.getChildByName("prefabRes");
+                let prefabIcon = prefabRes.getChildByName("dj_icon_"+(data.chatInfo.index));
+                daoju.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+                
+                daoju.parent = this._playerNode.parent.getChildByName("ndoe_fly_icon");
+                daoju.position = this._playerNode.position;
+                daoju.active = true;
+                daoju.runAction(
+                    cc.sequence(
+                        cc.moveBy(0.5, moveByPos),
+                        cc.delayTime(0.2), 
+                        cc.callFunc(()=>{
+                            daoju.removeFromParent();
+                        })
+                    )
+                )
             }
         }
     },

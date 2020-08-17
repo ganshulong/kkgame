@@ -67,6 +67,7 @@ cc.Class({
         GpsCity:"",          // 玩家定位区域定位区域
         noityList:[],
         clubs:[],
+        daojuList:[],
 
         //初始化
         init: function () {
@@ -166,6 +167,7 @@ cc.Class({
             this.clubs = serverData.clubs;
             this.GpsCity = playerData.city || "";
             this.noityList = serverData.noityList || [];
+            this.daojuList = serverData.daojuList || [];
 
             for (var i = 0; i < this.gameList.length; i++) {
                 this.gameList[i].id -= 1;

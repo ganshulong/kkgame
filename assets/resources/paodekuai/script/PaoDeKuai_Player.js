@@ -125,8 +125,7 @@ cc.Class({
                         this._emjoNode.active = false;
                     }))
                     this._emjoNode.runAction(cc.sequence(acts));
-                }
-                else{
+                } else if(data.chatInfo.type === 2){
                     this._chatNode.active = true;
                     this._chatNode.stopAllActions();
                     let ShortList = Global.getShortList();
