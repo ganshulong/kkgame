@@ -171,7 +171,7 @@ cc.Class({
     onRcvChatNotify(data){
          data = data.detail;
         if(data.code === 200){
-            if(data.chatInfo.seat === this._seatIndex){
+            if(data.chatInfo.seat && data.chatInfo.seat === this._seatIndex){
                 if(data.chatInfo.type === 1){//表情
                     let list = Global.getEmjoList();
                     let index = list[data.chatInfo.index];
@@ -196,11 +196,11 @@ cc.Class({
                         this._chatNode.active = false;
                     })))
                 }
-            } else if (data.chatInfo.fromSeat === this._seatIndex) {
+            } else if (data.chatInfo.fromSeat && data.chatInfo.fromSeat === this._seatIndex) {
                 let toLocalSeat = cc.vv.gameData.getLocalChair(data.chatInfo.toSeat);
                 let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
-                let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
-                let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
+                let toUIPlayer = this._playerNode.parent.getChildByName("player"+toUISeat);
+                let moveByPos = cc.v2(toUIPlayer.position.x - this._playerNode.x, toUIPlayer.position.y - this._playerNode.y);
 
                 let daoju = cc.instantiate(this._playerNode.getChildByName("daoju"));
 
@@ -208,15 +208,33 @@ cc.Class({
                 let prefabIcon = prefabRes.getChildByName("dj_icon_"+(data.chatInfo.index));
                 daoju.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
                 
-                daoju.parent = this._playerNode.parent.getChildByName("ndoe_fly_icon");
+                let ndoe_fly_icon = this._playerNode.parent.getChildByName("ndoe_fly_icon");
+                daoju.parent = ndoe_fly_icon;
                 daoju.position = this._playerNode.position;
                 daoju.active = true;
                 daoju.runAction(
                     cc.sequence(
                         cc.moveBy(0.5, moveByPos),
-                        cc.delayTime(0.2), 
                         cc.callFunc(()=>{
                             daoju.removeFromParent();
+                            
+                            cc.loader.loadRes("common/daoju/"+data.chatInfo.index,(err,prefab)=>{
+                                if(err === null){
+                                    let daojuAni = cc.instantiate(prefab);
+                                    daojuAni.position = toUIPlayer.position;
+                                    daojuAni.parent = ndoe_fly_icon;
+                                    daojuAni.getComponent(cc.Animation).play("play");
+                                    daojuAni.runAction(
+                                        cc.sequence(
+                                            cc.delayTime(0.5),
+                                            cc.callFunc(()=>{
+                                                daojuAni.removeFromParent();
+                                            })
+                                        )
+                                    )
+
+                                }
+                            })
                         })
                     )
                 )
