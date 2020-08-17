@@ -73,6 +73,22 @@ cc.Class({
         if(this._selectLuoNode) this._selectLuoNode.active = false;
     },
 
+    // 吃
+    onChi(event){
+        let data = event.target.data;
+        if(data){
+            if(0 < data.length)   {
+                this._chi = {
+                    chiData:null,
+                    luoData:[],
+                    luoCount:data.luoCount
+                };
+                this.showSelectChi(data);
+            }
+        }
+        this.closeOperate();
+    },
+
     showSelectChi(list){
         if(this._selectChiNode === null){
             cc.loader.loadRes("common/prefab/chi", cc.Prefab, (error, prefab)=>{
@@ -169,12 +185,7 @@ cc.Class({
     onSelectChi(event){
         let list = event.target.data;
         if(list){
-            if(this.getIsAutoAllLuo(list.luoData, list.luoCount)){
-                cc.vv.gameData.chi(list);
-                event.target.data = null;
-                this.onCloseSelectChi();
-            }
-            else{
+            if(0 < list.luoData.length){
                 if(this._selectChiNode) this._selectChiNode.active = false;
                 if(this._chi.chiData ===null){
                     this._chi.chiData = list.chiData;
@@ -183,6 +194,10 @@ cc.Class({
                 this._chi.isChoose = list.isChoose;
                 this._chi.handInCards = list.handInCards;
                 this.initLuoData(list.luoData);
+            } else {
+                cc.vv.gameData.chi(list);
+                event.target.data = null;
+                this.onCloseSelectChi();
             }
         }
     },
@@ -342,27 +357,6 @@ cc.Class({
 
     closeOperate(){
         this._operateNode.active = false;
-    },
-
-    // 吃
-    onChi(event){
-        let data = event.target.data;
-
-        if(data){
-            if(data.length === 1)   {
-                cc.vv.gameData.chi(data[0]);
-                event.target.data = null
-            }
-            else {
-                this._chi = {
-                    chiData:null,
-                    luoData:[],
-                    luoCount:data.luoCount
-                };
-                this.showSelectChi(data);
-            }
-        }
-        this.closeOperate();
     },
 
     // 碰
