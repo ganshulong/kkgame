@@ -310,6 +310,15 @@ cc.Class({
                 card2DList[i+10] = [];
             }
         }
+        //二二+贰贰
+        for (let i = 1; i <= 10; i++) {
+            if (2 == card2DList[i].length && 2 == card2DList[i+10].length){
+                menziList.push(card2DList[i]);
+                card2DList[i] = [];
+                menziList.push(card2DList[i+10]);
+                card2DList[i+10] = [];
+            }
+        }
         //一二三
         for (let i = 1; i <= 10-2; i++) {
             if (card2DList[i].length && card2DList[i+1].length && card2DList[i+2].length) {
@@ -339,15 +348,6 @@ cc.Class({
                 menzi.push(card2DList[indesPair[i][1]].shift());
                 menzi.push(card2DList[indesPair[i][2]].shift());
                 menziList.push(menzi);
-            }
-        }
-        //二二+贰贰
-        for (let i = 1; i <= 10; i++) {
-            if (2 == card2DList[i].length && 2 == card2DList[i+10].length){
-                menziList.push(card2DList[i]);
-                card2DList[i] = [];
-                menziList.push(card2DList[i+10]);
-                card2DList[i+10] = [];
             }
         }
         //二二 贰贰
