@@ -463,10 +463,34 @@ cc.Class({
                     }
                     panel_show.getChildByName("txet_distance").getComponent(cc.Label).string = distanceStr;
 
+                    if (0 < clickLocalSeat) {
+                        let prefabRes = this.node.getChildByName("prefabRes");
+                        let content = cc.find("daoju_bg/scrollview/view/content", panel_show)
+                        content.removeAllChildren(true);
+                        let tempItem = cc.find("daoju_bg/scrollview/view/item_daoju", panel_show);
+                        tempItem.active = false;
+                        for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
+                            let item = cc.instantiate(tempItem);
+                            let spr_daoju = item.getChildByName("spr_daoju");
+                            let prefabIcon = prefabRes.getChildByName("dj_icon_"+(cc.vv.UserManager.gameList[i].id+1));
+                            spr_daoju.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+                            item.x = item.width * i;
+                            item.parent = content;
+                            item.active = true;
+                            item.daojuIndex = cc.vv.UserManager.gameList[i].id;
+                            item.clickLocalSeat = clickLocalSeat;
+                            Global.btnClickEvent(item,this.onClickDaoju,this);
+                        }
+                        content.width = tempItem.width * cc.vv.UserManager.gameList.length;
+                    }
                     panel_show.active = true;
                 }
             }
         }
+    },
+
+    onClickDaoju(event){
+
     },
 
     onRcvGpsTipsNotify(data){
