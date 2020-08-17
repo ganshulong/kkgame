@@ -212,9 +212,11 @@ cc.Class({
                 daoju.parent = ndoe_fly_icon;
                 daoju.position = this._playerNode.position;
                 daoju.active = true;
+                let aniShowTime = [0, 0,0,1,0,0, 0,0,0,0,0.5, 0,0,0];
                 daoju.runAction(
                     cc.sequence(
                         cc.moveBy(0.5, moveByPos),
+                        cc.delayTime(0.1),
                         cc.callFunc(()=>{
                             daoju.removeFromParent();
                             
@@ -226,7 +228,7 @@ cc.Class({
                                     daojuAni.getComponent(cc.Animation).play("play");
                                     daojuAni.runAction(
                                         cc.sequence(
-                                            cc.delayTime(0.5),
+                                            cc.delayTime(aniShowTime[data.chatInfo.index]),
                                             cc.callFunc(()=>{
                                                 daojuAni.removeFromParent();
                                             })
