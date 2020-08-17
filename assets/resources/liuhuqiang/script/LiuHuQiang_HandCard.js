@@ -68,9 +68,7 @@ cc.Class({
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
             if(this._seatIndex>-1){
                 let user = cc.vv.gameData.getUserInfo(this._seatIndex);
-                user.handInCards = [207,201,109,102,105,106,209,209,108,109,110,203,203,103];
                 if(user.handInCards && user.handInCards.length>0){
-
                     let list = cc.vv.gameData.sortCard(user.handInCards);
                     this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(user.handInCards);
                     for(let i=0;i<list.length;++i){

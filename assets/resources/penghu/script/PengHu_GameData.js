@@ -417,8 +417,22 @@ cc.Class({
         //散牌
         for (let i = 1; i <= 20; i++) {
             if (card2DList[i].length) {
-                menziList.push(card2DList[i]);
-                card2DList[i] = [];
+                if (10 > menziList.length) {
+                    menziList.push(card2DList[i]);
+                    card2DList[i] = [];
+                } else {
+                    for (let j = menziList.length-1; j >= 0; j--) {
+                        let k = menziList[j].length;
+                        for (k = menziList[j].length; k < 3; k++) {
+                            menziList[j].push(card2DList[i][0]);
+                            card2DList[i] = [];
+                            break;
+                        }
+                        if (k < 3) {
+                            break;
+                        }
+                    }
+                }
             }
         }
         return menziList;
