@@ -509,11 +509,12 @@ cc.Class({
 
     onClickInviteToWx(){
         let roomConf = cc.vv.gameData.getRoomConf();
+        let users = cc.vv.gameData.getUsers();
 
         let title = "闲去房间邀请";
         let description = "碰胡";
         description += ("," + roomConf.gamenum + "局");
-        description += ("," + roomConf.seat + "人场");
+        description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
         let bankerModeStr = ["连中","中庄x2","四首相乘"];
         description += ("," + bankerModeStr[roomConf.param1]);
         description += ("," + roomConf.score+ "倍");

@@ -497,11 +497,12 @@ cc.Class({
 
     onClickInviteToWx(){
         let roomConf = cc.vv.gameData.getRoomConf();
+        let users = cc.vv.gameData.getUsers();
 
         let title = "闲去房间邀请";
         let description = "十五张跑得快";
         description += ("," + roomConf.gamenum + "局");
-        description += ("," + roomConf.seat + "人场");
+        description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
         description += ("," + ["","","首轮最小手牌先出","首轮黑桃三先出"][roomConf.seat]);
         description += ("," + ["不扎鸟","红桃10扎鸟翻倍","红桃10扎鸟+5分","红桃10扎鸟+10分"][roomConf.param1]);
         description += ("," + roomConf.score+ "倍");
