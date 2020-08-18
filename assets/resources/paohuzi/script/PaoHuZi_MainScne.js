@@ -126,36 +126,11 @@ cc.Class({
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+    },
 
-        //  let data ={notyScoreChang:[{seat:2,roundScore:6},{seat:1,roundScore:-6}],
-        //      c:101405,code:200,seat:2,gameid:1,hcard:203,hupaiType:1,
-        //      users:[{qipai:[206],menzi:[{card:208,type:6},
-        //          {card:205,type:6},{card:108,type:6}],
-        //          roundScore:6,usericon:6,zhongZhangCount:0,
-        //          ip:"",cluster_info:{address:121,server:""},
-        //          huPaiCount:1,playername:"q111111",dianPaoCount:0,curTime:0,seat:2,
-        //          notChiPai:[206,206],time:0,ofline:0,state:2,uid:110002,autoc:0,sex:1,
-        //          handInCards:[209,103,109,109,203],notPengPai:[],score:6,
-        //          notHuPai:[206]},{qipai:[],menzi:[{card:105,type:6},{card:103,type:6}],
-        //          roundScore:-6,usericon:10,zhongZhangCount:0,ip:"",
-        //          cluster_info:{address:120,server:""},huPaiCount:0,playername:"G18295",
-        //          dianPaoCount:1,curTime:0,seat:1,notChiPai:[203],time:0,ofline:0,state:2,uid:110028,autoc:0,sex:1,
-        //          handInCards:[104,104,203,205,206,208,208,108],notPengPai:[],score:-6,notHuPai:[203]}],source:1,diPai:[103,103]}
-        // // let data2 = {actionInfo:{waitList:[],iswait:0,prioritySeat:0,nextaction:{seat:1,type:2},curaction:{type:7,time:500,card:101,seat:2,source:0}},
-        // //     notyScoreChang:[{seat:2,roundScore:-6},{seat:1,roundScore:6}],delQiPaiSeat:1,code:200,seat:1,gameid:1,delQiPaiCard:101,c:101411}
-        // //
-        // let index = 0;
-        // this.schedule(()=>{
-        //     ++index;
-        //     if(index === 1){
-        //         Global.dispatchEvent(EventId.HU_NOTIFY,data);
-        //
-        //
-        //     }
-        //     // else if(index === 2){
-        //     //     Global.dispatchEvent(EventId.PAO_NOTIFY,data2);
-        //     // }
-        // },1,1,1)
+    recvDeskInfoMsg(){
+        cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
     },
 
     onRcvOutCardResult(data){

@@ -29,8 +29,8 @@ cc.Class({
         // },
         enterScene(sceneName,callback){
             if(cc.vv.FloatTip) cc.vv.FloatTip.clear();
-            let curScene = cc.director.getScene();
-            if(curScene.name === sceneName) return;
+            // let curScene = cc.director.getScene();
+            // if(curScene.name === sceneName) return;
             let enterSceneName = sceneName;
             if(sceneName === 'hall'){
                 if(cc.vv.gameData) cc.vv.gameData.onExit();
