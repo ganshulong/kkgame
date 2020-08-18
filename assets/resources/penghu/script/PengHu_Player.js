@@ -220,7 +220,7 @@ cc.Class({
                     moveByPos.x *= 0.9;
                     moveByPos.y *= 0.9;
                 }
-                let aniShowTime = [0, 1.25,1.31,1,1.15,1.27, 2.17,2.21,0.3,0.3,0.5, 1.24,0.5,1.07];
+                let aniShowTime = [0, 1.25,1.31,1,1.15,1.27, 2.17,2.21,0.3,2.2,0.5, 1.24,0.5,1.07];
                 let bHaveSound = [false, true,true,true,false,true, false,false,true,true,true, false,true,true];
                 daoju.runAction(
                     cc.sequence(
@@ -231,6 +231,9 @@ cc.Class({
                             cc.loader.loadRes("common/daoju/"+data.chatInfo.index,(err,prefab)=>{
                                 if(err === null){
                                     let daojuAni = cc.instantiate(prefab);
+                                    if (9 === data.chatInfo.index) {
+                                        
+                                    }
                                     daojuAni.position = toUIPlayer.position;
                                     daojuAni.parent = ndoe_fly_icon;
                                     daojuAni.getComponent(cc.Animation).play("play");
@@ -250,6 +253,9 @@ cc.Class({
                         })
                     )
                 )
+                //jgq1_2 jgq1_2
+                //jgq1_1 animation0
+                //jgq_huo play
             }
         }
     },
