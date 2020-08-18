@@ -541,13 +541,13 @@ cc.Class({
 
     recvDeskInfoMsg(){
         let user = cc.vv.gameData.getUserInfo(cc.vv.gameData.getMySeatIndex());
+        let deskInfo = cc.vv.gameData.getDeskInfo();
         if (user) {
             this.showReady(user.state === 0);
-            this.showInviteWxCopyRoomId(user.state != 2);
+            this.showInviteWxCopyRoomId(user.state != 2 && 0 === deskInfo.round);
         }
 
         //解散重连处理
-        let deskInfo = cc.vv.gameData.getDeskInfo();
         if (deskInfo.dissolveInfo && deskInfo.dissolveInfo.iStart) {
             let msg = {c: MsgId.APPLY_DISMISS_NOTIFY};
             let data = {};
