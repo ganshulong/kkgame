@@ -109,10 +109,12 @@ cc.Class({
         let item = cc.instantiate(tempItem);
         let prefabIcon = prefabRes.getChildByName("moreIcon");
         item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+        item.getChildByName("selected_bg").active = false;
         item.x = item.width * cc.vv.UserManager.gameList.length;
         item.parent = this.content_gameBtns;
         item.active = true;
         item.id = "moreIcon";
+        Global.btnClickEvent(item,this.onClickMoreGame,this);
 
         this.content_gameBtns.width = tempItem.width * (cc.vv.UserManager.gameList.length+1);
 
@@ -151,6 +153,10 @@ cc.Class({
     onClickGameType(event){
         this.curGameIndex = event.target.id;
         this.showGameType();
+    },
+
+    onClickMoreGame(event){
+        cc.vv.AlertView.showTips("正在努力开发中喔");
     },
 
     onClickScoreDedution(){

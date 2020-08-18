@@ -617,7 +617,7 @@ cc.Class({
     showInviteWxCopyRoomId(bShow){
         cc.find("scene/operate_btn_view/btn_invite_wx",this.node).active = bShow;
         cc.find("scene/operate_btn_view/btn_copy_roomId",this.node).active = bShow;
-        cc.find("scene/btn_helper",this.node).active = bShow;
+        cc.find("scene/btn_helper",this.node).active = (bShow && cc.vv.UserManager.currClubId);
         this._isPlaying = !bShow;
     },
 
