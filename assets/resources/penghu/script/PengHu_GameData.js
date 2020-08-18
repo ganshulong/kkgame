@@ -548,7 +548,7 @@ cc.Class({
     onRecvNetReconnectDeskinfo(msg){
         if (msg.code === 200) {
             this._deskInfo = msg.deskInfo;
-            Global.dispatchEvent(EventId.GAME_RECONNECT_DESKINFO,msg);
+            cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
         }
     },
 

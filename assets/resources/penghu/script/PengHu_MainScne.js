@@ -97,11 +97,6 @@ cc.Class({
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-    },
-
-    recvDeskInfoMsg(){
-        cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
     },
 
     onRcvOutCardResult(data){
