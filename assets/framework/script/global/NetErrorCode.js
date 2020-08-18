@@ -185,6 +185,7 @@ codeCfg.code = {
     '440':"club_freeze",
     '441':"put_max_card",
     '442':"put_min_card",
+    '443':"not_desk_info",
 
 
 }

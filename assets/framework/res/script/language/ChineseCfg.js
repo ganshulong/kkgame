@@ -613,5 +613,6 @@ Wild只出现在2~5列",
     club_freeze:"亲友圈已冻结",
     put_max_card:"请出最大的牌",
     put_min_card:"请包含最小的牌",
+    not_desk_info:"当前未加入过游戏",
 };
 
