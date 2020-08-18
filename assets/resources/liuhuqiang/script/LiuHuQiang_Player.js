@@ -169,9 +169,9 @@ cc.Class({
     },
 
     onRcvChatNotify(data){
-         data = data.detail;
+        data = data.detail;
         if(data.code === 200){
-            if(data.chatInfo.seat === this._seatIndex){
+            if(2 >= data.chatInfo.type && data.chatInfo.seat === this._seatIndex){
                 if(data.chatInfo.type === 1){//表情
                     let list = Global.getEmjoList();
                     let index = list[data.chatInfo.index];
@@ -196,6 +196,100 @@ cc.Class({
                         this._chatNode.active = false;
                     })))
                 }
+            } else if (3 == data.chatInfo.type && data.chatInfo.fromSeat === this._seatIndex) {
+                let toLocalSeat = cc.vv.gameData.getLocalChair(data.chatInfo.toSeat);
+                let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
+                let toUIPlayer = this._playerNode.parent.getChildByName("player"+toUISeat);
+                let moveByPos = cc.v2(toUIPlayer.position.x - this._playerNode.x, toUIPlayer.position.y - this._playerNode.y);
+
+                let daoju = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
+
+                let prefabRes = this.node.getChildByName("prefabRes");
+                let prefabIcon = prefabRes.getChildByName("dj_icon_"+(data.chatInfo.index));
+                daoju.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+                
+                let ndoe_fly_icon = this._playerNode.parent.getChildByName("ndoe_fly_icon");
+                daoju.parent = ndoe_fly_icon;
+                let startPos = this._playerNode.position;
+                daoju.position = startPos;
+                daoju.active = true;
+                let moveTime = 0.5;
+                let delayTime = 0.1;
+                if (12 === data.chatInfo.index) {   //飞刀加快
+                    moveTime = 0.2;
+                    moveByPos.x *= 0.9;
+                    moveByPos.y *= 0.9;
+                }
+                if (9 === data.chatInfo.index) {   //机枪不显示
+                    daoju.scaleX = 0;
+                    moveTime = 0;
+                    delayTime = 0;
+                }
+                let aniShowTime = [0, 1.25,1.31,1,1.15,1.27, 2.17,2.21,0.3,2.2,0.5, 1.24,0.5,1.07];
+                let bHaveSound = [false, true,true,true,false,true, false,false,true,true,true, false,true,true];
+                daoju.runAction(
+                    cc.sequence(
+                        cc.moveBy(moveTime, moveByPos),
+                        cc.delayTime(delayTime),
+                        cc.callFunc(()=>{
+                            daoju.removeFromParent();
+                            if (9 === data.chatInfo.index) {    //机枪角度调整
+                                cc.loader.loadRes("common/daoju/9_gun",(err,prefab)=>{
+                                    if(err === null){
+                                        let daojuAni = cc.instantiate(prefab);
+                                        daojuAni.position = startPos;
+                                        daojuAni.parent = ndoe_fly_icon;
+
+                                        let endToStarPosX = toUIPlayer.position.x-startPos.x;
+                                        let endToStarPosY = toUIPlayer.position.y-startPos.y;
+                                        daojuAni.rotation = - Math.atan2(endToStarPosY, endToStarPosX)/3.1415926*180;
+
+                                        let jgq1_2 = daojuAni.getChildByName("jgq1_2");
+                                        jgq1_2.getComponent(cc.Animation).play("jgq1_2");
+                                        let jgq1_1 = daojuAni.getChildByName("jgq1_1");
+                                        jgq1_1.getComponent(cc.Animation).play("animation0");
+                                        let jgq_huo = daojuAni.getChildByName("jgq_huo");
+                                        jgq_huo.getComponent(cc.Animation).play("play");
+
+                                        daojuAni.runAction(
+                                            cc.sequence(
+                                                cc.delayTime(aniShowTime[data.chatInfo.index]),
+                                                cc.callFunc(()=>{
+                                                    daojuAni.removeFromParent();
+                                                })
+                                            )
+                                        )
+                                    }
+                                });
+                            }
+                            cc.loader.loadRes("common/daoju/"+data.chatInfo.index,(err,prefab)=>{
+                                if(err === null){
+                                    let daojuAni = cc.instantiate(prefab);
+                                    if (9 === data.chatInfo.index) {    //子弹方向和伸缩调整
+                                        let endToStarPosX = startPos.x-toUIPlayer.position.x;
+                                        let endToStarPosY = startPos.y-toUIPlayer.position.y;
+                                        daojuAni.rotation = 180 - Math.atan2(endToStarPosY, endToStarPosX)/3.1415926*180;
+                                        daojuAni.scaleX = Math.sqrt(Math.pow(Math.abs(endToStarPosX),2)+Math.pow(Math.abs(endToStarPosY),2))/600;
+                                    }
+                                    daojuAni.position = toUIPlayer.position;
+                                    daojuAni.parent = ndoe_fly_icon;
+                                    daojuAni.getComponent(cc.Animation).play("play");
+                                    if (bHaveSound[data.chatInfo.index]) {
+                                        cc.vv.AudioManager.playEff("", "daoju/"+data.chatInfo.index,true);
+                                    }
+                                    daojuAni.runAction(
+                                        cc.sequence(
+                                            cc.delayTime(aniShowTime[data.chatInfo.index]),
+                                            cc.callFunc(()=>{
+                                                daojuAni.removeFromParent();
+                                            })
+                                        )
+                                    )
+                                }
+                            })
+                        })
+                    )
+                )
             }
         }
     },

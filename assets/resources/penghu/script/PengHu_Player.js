@@ -202,7 +202,7 @@ cc.Class({
                 let toUIPlayer = this._playerNode.parent.getChildByName("player"+toUISeat);
                 let moveByPos = cc.v2(toUIPlayer.position.x - this._playerNode.x, toUIPlayer.position.y - this._playerNode.y);
 
-                let daoju = cc.instantiate(this._playerNode.getChildByName("daoju"));
+                let daoju = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
 
                 let prefabRes = this.node.getChildByName("prefabRes");
                 let prefabIcon = prefabRes.getChildByName("dj_icon_"+(data.chatInfo.index));
@@ -290,9 +290,6 @@ cc.Class({
                         })
                     )
                 )
-                //jgq1_2 jgq1_2
-                //jgq1_1 animation0
-                //jgq_huo play
             }
         }
     },

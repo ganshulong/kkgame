@@ -463,10 +463,44 @@ cc.Class({
                     }
                     panel_show.getChildByName("txet_distance").getComponent(cc.Label).string = distanceStr;
 
+                    if (0 < clickLocalSeat) {
+                        let prefabRes = this.node.getChildByName("prefabRes");
+                        let content = cc.find("daoju_bg/scrollview/view/content", panel_show)
+                        content.removeAllChildren(true);
+                        let tempItem = cc.find("daoju_bg/scrollview/view/item_daoju", panel_show);
+                        tempItem.active = false;
+                        for (var j = 0; j < cc.vv.UserManager.daojuList.length; j++) {
+                            let item = cc.instantiate(tempItem);
+                            let spr_daoju = item.getChildByName("spr_daoju");
+                            let prefabIcon = prefabRes.getChildByName("dj_icon_"+(cc.vv.UserManager.daojuList[j].id));
+                            spr_daoju.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+                            item.getChildByName("txet_price").getComponent(cc.Label).string = cc.vv.UserManager.daojuList[j].costGlod;
+                            item.x = item.width * j;
+                            item.parent = content;
+                            item.active = true;
+                            item.daojuIndex = cc.vv.UserManager.daojuList[j].id;
+                            item.toSeat = cc.vv.gameData.getUserSeatIndex(clickLocalSeat);
+                            Global.btnClickEvent(item,this.onClickDaoju,this);
+                        }
+                        content.width = tempItem.width * cc.vv.UserManager.daojuList.length;
+                    }
                     panel_show.active = true;
                 }
             }
         }
+    },
+
+    onClickDaoju(event){
+        let data = {
+            type:3,
+            index:event.target.daojuIndex,
+            fromSeat:cc.vv.gameData.getMySeatIndex(),
+            toSeat:event.target.toSeat
+        };
+        var req = { 'c': MsgId.CHAT};
+        req.chatInfo = data;
+        cc.vv.NetManager.send(req);
+        this.panel_player.active = false;
     },
 
     onRcvGpsTipsNotify(data){
