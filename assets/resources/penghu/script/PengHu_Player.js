@@ -169,9 +169,9 @@ cc.Class({
     },
 
     onRcvChatNotify(data){
-         data = data.detail;
+        data = data.detail;
         if(data.code === 200){
-            if(data.chatInfo.seat && data.chatInfo.seat === this._seatIndex){
+            if(2 >= data.chatInfo.type && data.chatInfo.seat === this._seatIndex){
                 if(data.chatInfo.type === 1){//表情
                     let list = Global.getEmjoList();
                     let index = list[data.chatInfo.index];
@@ -196,7 +196,7 @@ cc.Class({
                         this._chatNode.active = false;
                     })))
                 }
-            } else if (data.chatInfo.fromSeat && data.chatInfo.fromSeat === this._seatIndex) {
+            } else if (3 == data.chatInfo.type && data.chatInfo.fromSeat === this._seatIndex) {
                 let toLocalSeat = cc.vv.gameData.getLocalChair(data.chatInfo.toSeat);
                 let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
                 let toUIPlayer = this._playerNode.parent.getChildByName("player"+toUISeat);
@@ -212,20 +212,31 @@ cc.Class({
                 daoju.parent = ndoe_fly_icon;
                 daoju.position = this._playerNode.position;
                 daoju.active = true;
-                let aniShowTime = [0, 1.25,1.31,1,1.15,1.27, 2.17,2.21,1.5,0.3,0.5, 1.24,0.09,1.07];
+                let moveTime = 0.5;
+                let delayTime = 0.1;
+                if (12 === data.chatInfo.index) {   //飞刀
+                    moveTime = 0.2;
+                    delayTime = 0;
+                    moveByPos.x *= 0.9;
+                    moveByPos.y *= 0.9;
+                }
+                let aniShowTime = [0, 1.25,1.31,1,1.15,1.27, 2.17,2.21,0.3,0.3,0.5, 1.24,0.5,1.07];
+                let bHaveSound = [false, true,true,true,false,true, false,false,true,true,true, false,true,true];
                 daoju.runAction(
                     cc.sequence(
-                        cc.moveBy(0.5, moveByPos),
-                        cc.delayTime(0.1),
+                        cc.moveBy(moveTime, moveByPos),
+                        cc.delayTime(delayTime),
                         cc.callFunc(()=>{
                             daoju.removeFromParent();
-                            
                             cc.loader.loadRes("common/daoju/"+data.chatInfo.index,(err,prefab)=>{
                                 if(err === null){
                                     let daojuAni = cc.instantiate(prefab);
                                     daojuAni.position = toUIPlayer.position;
                                     daojuAni.parent = ndoe_fly_icon;
                                     daojuAni.getComponent(cc.Animation).play("play");
+                                    if (bHaveSound[data.chatInfo.index]) {
+                                        cc.vv.AudioManager.playEff("", "daoju/"+data.chatInfo.index,true);
+                                    }
                                     daojuAni.runAction(
                                         cc.sequence(
                                             cc.delayTime(aniShowTime[data.chatInfo.index]),
@@ -234,7 +245,6 @@ cc.Class({
                                             })
                                         )
                                     )
-
                                 }
                             })
                         })
