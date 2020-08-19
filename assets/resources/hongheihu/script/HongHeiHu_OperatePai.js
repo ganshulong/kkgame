@@ -228,8 +228,12 @@ cc.Class({
     },
 
     recvHandCardMsg(data){
-        if(data.detail.seat !== cc.vv.gameData.getMySeatIndex()){
-            this.recvHandCard(data);
+        if(this._operateCardNode && data.detail.seat !== cc.vv.gameData.getMySeatIndex()){
+            let self = this;
+            let detail = JSON.parse(JSON.stringify(data.detail));
+            this._operateCardNode.runAction(cc.sequence(cc.delayTime(1.25), cc.callFunc(()=>{
+                self.recvHandCard({detail:detail});
+            })));
         }
     },
 
