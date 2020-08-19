@@ -549,6 +549,7 @@ cc.Class({
         if (msg.code === 200) {
             this._deskInfo = msg.deskInfo;
             cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
+            cc.vv.FloatTip.show(""+msg.c);
         }
     },
 
