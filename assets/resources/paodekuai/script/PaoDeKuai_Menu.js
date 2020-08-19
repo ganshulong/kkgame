@@ -216,6 +216,7 @@ cc.Class({
             this.dismiss_small_bg.getChildByName("btn_define").active = false;
             this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = true;
         }
+        this.isShowJieSuan = data.detail.isShowJieSuan;
     },
 
     onClickDismiss(){
@@ -246,6 +247,9 @@ cc.Class({
 
     onClickCancelDismiss(){
         this.panel_dismiss.active = false;
+        if (0 == this.isShowJieSuan) {
+            this.onExit();
+        }
     },
 
     onClickExitToHall(){
