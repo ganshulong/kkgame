@@ -610,7 +610,7 @@ cc.Class({
             if(this._seatIndex === deskInfo.users[i].seat){
                 let cards = deskInfo.users[i].handInCards;
 
-                if(cards.length !== this._handcardNode.childrenCount){
+                if(cards && cards.length !== this._handcardNode.childrenCount){
                     this.clearDesk();
                     let list = cc.vv.gameData.sortCard(cards);
                     for(let i=0;i<list.length;++i){
