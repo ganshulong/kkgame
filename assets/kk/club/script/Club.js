@@ -147,6 +147,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_TABLEINFO, this.onRecvTableinfo, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, this);
+        cc.vv.NetManager.registerMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
@@ -161,6 +162,13 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_TABLEINFO, this.onRecvTableinfo,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
+    },
+
+    onRcvDismissNotify(msg){
+        if (msg.code === 200 && Global.curRoomID) {
+            Global.curRoomID = "";
+        }
     },
 
     onRcvClubExitApplyNotify(data){
