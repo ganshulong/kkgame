@@ -265,8 +265,9 @@ cc.Class({
         let time = cc.vv.gameData.getActionTime();
         node.opacity = 255;
 
+        let self = this;
         node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            this.node.getComponent("LiuHuQiang_Card").createCard(node.cardValue,2,node.showBg,node);
+            self.node.getComponent("LiuHuQiang_Card").createCard(node.cardValue,2,node.showBg,node);
             node.scale = 1;
             node.rotation = 0;
             node.opacity = 255;

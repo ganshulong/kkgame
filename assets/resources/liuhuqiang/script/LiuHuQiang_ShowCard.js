@@ -135,9 +135,10 @@ cc.Class({
         this._showCardNode.scale = 0;
         this._showCardNode.opacity = 50;
         let time = cc.vv.gameData.getActionTime();
+        let self = this;
         this._showCardNode.runAction(cc.sequence(cc.spawn(cc.moveTo(time,this._pos).easing(cc.easeOut(3)),cc.scaleTo(time,1),cc.fadeTo(time,255)),cc.callFunc(()=>{
-            this._showCardNode.scale = 1;
-            this._showCardNode.opacity = 255;
+            self._showCardNode.scale = 1;
+            self._showCardNode.opacity = 255;
         })))
     },
 
