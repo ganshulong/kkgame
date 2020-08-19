@@ -305,6 +305,8 @@ cc.Class({
     onClickBackRoom(){
         if (Global.curRoomID) {
             this.sendEnterRoomMsg(Global.curRoomID);
+        } else {
+            cc.vv.FloatTip.show("当前未加入过游戏");
         }
     },
 
