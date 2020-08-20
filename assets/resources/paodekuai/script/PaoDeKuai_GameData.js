@@ -205,10 +205,14 @@ cc.Class({
 
     onRcvDismissNotify(msg){
         if(msg.code == 200){
-            Global.dispatchEvent(EventId.DISMISS_NOTIFY,msg)
+            if (0 == msg.isShowJieSuan) {
+                this.exitGame();
+                cc.vv.FloatTip.show("房间超时已解散");
+            } else {
+                Global.dispatchEvent(EventId.DISMISS_NOTIFY,msg)
+            }
         }
     },
-
 
     onRcvPlayersDistanceData(msg){
         if(msg.code == 200){
