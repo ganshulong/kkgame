@@ -209,7 +209,7 @@ cc.Class({
                     bg_score.getChildByName("text_score"+j).active = false;
                 }
                 item.getChildByName("text_bigWinerName").getComponent(cc.Label).string = bigWinerName;
-                item.getChildByName("text_bigWinerID").getComponent(cc.Label).string = "ID:" + bigWinerID;
+                item.getChildByName("text_bigWinerID").getComponent(cc.Label).string = bigWinerID ? ("ID:" + bigWinerID) : "";
                 if (bigWinerID == cc.vv.UserManager.uid) {
                     ++bigWinerCount;
                 }
