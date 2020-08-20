@@ -38,6 +38,11 @@ GlobalFunc.getHeadId = function (id) {
 
 GlobalFunc.setHead = function (head, url) {
     if (cc.js.isString(url)) {
+        if (Global.defaultHead) {
+            head.getComponent(cc.Sprite).spriteFrame = Global.defaultHead;
+        } else {
+            Global.defaultHead = head.getComponent(cc.Sprite).spriteFrame;
+        }
         let index = url.indexOf("http");
         if (index >= 0) {
             head.getComponent("ImageLoader").setUserHeadUrl(url, (spr) => {

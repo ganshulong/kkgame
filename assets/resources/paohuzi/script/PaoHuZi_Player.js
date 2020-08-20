@@ -68,6 +68,18 @@ cc.Class({
         }
     },
 
+    recvDeskInfoMsg(){
+        let deskInfo = cc.vv.gameData.getDeskInfo();
+        if(deskInfo.isReconnect){
+            for(let i=0;i<deskInfo.users.length;++i){
+                if(this._seatIndex === deskInfo.users[i].seat){
+                    this.initPlayerInfo(deskInfo.users[i]);
+                    this.showZhuang(deskInfo.bankerInfo.seat === this._seatIndex, deskInfo.bankerInfo.count);
+                }
+            }
+        }
+    },
+
     onRcvReadyNotice(data){
         data = data.detail;
         if(data.seat === this._seatIndex){
@@ -347,17 +359,6 @@ cc.Class({
     //     }
     // },
 
-    recvDeskInfoMsg(){
-        let deskInfo = cc.vv.gameData.getDeskInfo();
-        if(deskInfo.isReconnect){
-            for(let i=0;i<deskInfo.users.length;++i){
-                if(this._seatIndex === deskInfo.users[i].seat){
-                    this.initPlayerInfo(deskInfo.users[i]);
-                    this.showZhuang(deskInfo.bankerInfo.seat === this._seatIndex, deskInfo.bankerInfo.count);
-                }
-            }
-        }
-    },
     onRecvHandCard(data){
         let bankInfo = data.detail.bankerInfo;
         if(bankInfo.seat === this._seatIndex) {
