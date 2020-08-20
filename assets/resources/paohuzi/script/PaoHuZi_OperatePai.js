@@ -258,12 +258,7 @@ cc.Class({
                                 list=[typeData.card,typeData.card,typeData.card,typeData.card];
                             }
                             else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
-                                if(typeData.source === 0){
-                                    list=[typeData.card,typeData.card,typeData.card];
-                                }
-                                else{
-                                    list=[typeData.card,typeData.card];
-                                }
+                                list=[typeData.card,typeData.card,typeData.card];
                                 source = typeData.source;
                             }
 
