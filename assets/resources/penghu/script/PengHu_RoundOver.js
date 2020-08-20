@@ -63,15 +63,15 @@ cc.Class({
         this._atlas = atlas;
     },
 
-    createType(type){
+    createType(type, bInHandCards = false){
         let node = new cc.Node();
         let spr = node.addComponent(cc.Sprite);
         let sprName = "";
         if(type === cc.vv.gameData.OPERATETYPE.CHI) sprName = "penghu_onwer-table-imgs-wz_chi";
-        else if(type === cc.vv.gameData.OPERATETYPE.KAN) sprName = "penghu_onwer-table-imgs-wz_kan";
+        else if(type === cc.vv.gameData.OPERATETYPE.KAN && bInHandCards) sprName = "penghu_onwer-table-imgs-wz_kan";
+        else if(type === cc.vv.gameData.OPERATETYPE.KAN && !bInHandCards) sprName = "penghu_onwer-table-imgs-wz_sao";
         else if(type === cc.vv.gameData.OPERATETYPE.PAO) sprName = "penghu_onwer-table-imgs-wz_pao";
         else if(type === cc.vv.gameData.OPERATETYPE.LONG) sprName = "penghu_onwer-table-imgs-wz_tilong";
-        else if(type === cc.vv.gameData.OPERATETYPE.SAO) sprName = "penghu_onwer-table-imgs-wz_sao";
         else if(type === cc.vv.gameData.OPERATETYPE.PENG) sprName = "penghu_onwer-table-imgs-wz_peng";
         spr.spriteFrame = this._atlas.getSpriteFrame(sprName);
         return node;
@@ -263,6 +263,15 @@ cc.Class({
                 node.parent = parent;
                 if(j ===0){
                     width = node.x+node.scale*node.width*0.5;
+                }
+                if (2 == j && 3 == tempList[i].length) {
+                    if (tempList[i][0] == tempList[i][1] && tempList[i][0] == tempList[i][2]) {
+                        let typeNode = this.createType(cc.vv.gameData.OPERATETYPE.KAN, true);
+                        typeNode.zIndex = 4;
+                        typeNode.x = node.x;
+                        typeNode.y = 120;
+                        typeNode.parent = parent;
+                    }
                 }
             }
         }

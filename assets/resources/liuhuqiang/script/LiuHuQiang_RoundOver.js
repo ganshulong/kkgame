@@ -63,15 +63,15 @@ cc.Class({
         this._atlas = atlas;
     },
 
-    createType(type){
+    createType(type, bInHandCards = false){
         let node = new cc.Node();
         let spr = node.addComponent(cc.Sprite);
         let sprName = "";
         if(type === cc.vv.gameData.OPERATETYPE.CHI) sprName = "penghu_onwer-table-imgs-wz_chi";
-        else if(type === cc.vv.gameData.OPERATETYPE.KAN) sprName = "penghu_onwer-table-imgs-wz_kan";
+        else if(type === cc.vv.gameData.OPERATETYPE.KAN && bInHandCards) sprName = "penghu_onwer-table-imgs-wz_kan";
+        else if(type === cc.vv.gameData.OPERATETYPE.KAN && !bInHandCards) sprName = "penghu_onwer-table-imgs-wz_sao";
         else if(type === cc.vv.gameData.OPERATETYPE.PAO) sprName = "penghu_onwer-table-imgs-wz_pao";
         else if(type === cc.vv.gameData.OPERATETYPE.LONG) sprName = "penghu_onwer-table-imgs-wz_tilong";
-        else if(type === cc.vv.gameData.OPERATETYPE.SAO) sprName = "penghu_onwer-table-imgs-wz_sao";
         else if(type === cc.vv.gameData.OPERATETYPE.PENG) sprName = "penghu_onwer-table-imgs-wz_peng";
         spr.spriteFrame = this._atlas.getSpriteFrame(sprName);
         return node;
@@ -182,6 +182,14 @@ cc.Class({
                         let node = this.node.getComponent("LiuHuQiang_Card").createCard(data.huCards[i][j],2);
                         node.y = node.height * j;
                         node.parent = cardArrItem;
+
+                        if (1 == j && 3 == data.huCards[i].length) {
+                            if (data.huCards[i][0] == data.huCards[i][1] && data.huCards[i][0] == data.huCards[i][2]) {
+                                let typeNode = this.createType(cc.vv.gameData.OPERATETYPE.KAN, true);
+                                typeNode.y = 200;
+                                typeNode.parent = cardArrItem;
+                            }
+                        }
                     }
                 }
             }
