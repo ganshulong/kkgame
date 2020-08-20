@@ -73,6 +73,9 @@ cc.Class({
 
         cc.find("Layer/img_card_bg",this.node).active = (info.createUid == cc.vv.UserManager.uid);
 
+        let txt_card_num = cc.find("Layer/img_card_bg/txt_card_num",this.node);
+        txt_card_num.getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
+
         let btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
         Global.btnClickEvent(btn_invite,this.onClickInviteToWx,this);
         btn_invite.active = (info.createUid == cc.vv.UserManager.uid);

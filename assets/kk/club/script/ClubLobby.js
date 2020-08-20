@@ -109,14 +109,21 @@ cc.Class({
             let gamedeskNum = cc.find("bg/img_online/text_online",item);
             gamedeskNum.getComponent(cc.Label).string = list[i].gamedeskNum;
 
+            let bOpenGameList = [];
             let gameList = list[i].clubGameList;
             let str = "";
             for(let i=0;i<gameList.length;++i){
-                if(gameList[i].gameid === 1) str += "碰胡 ";
-                else if(gameList[i].gameid === 2) str += "跑胡子 ";
-                else if(gameList[i].gameid === 5) str += "红黑胡 ";
-                else if(gameList[i].gameid === 7) str += "六胡抢 ";
-                else if(gameList[i].gameid === 9) str += "跑得快 ";
+                if(gameList[i].gameid === 1 && -1 === str.indexOf("碰胡")) {
+                    str += "碰胡 ";
+                } else if(gameList[i].gameid === 2 && -1 === str.indexOf("跑胡子")) {
+                    str += "跑胡子 ";
+                } else if(gameList[i].gameid === 5 && -1 ===  str.indexOf("红黑胡")) {
+                    str += "红黑胡 ";
+                } else if(gameList[i].gameid === 7 && -1 === str.indexOf("六胡抢")) {
+                    str += "六胡抢 ";
+                } else if(gameList[i].gameid === 9 && -1 === str.indexOf("跑得快")) {
+                    str += "跑得快 ";
+                }
             }
             // 游戏列表
             let gameListNode = cc.find("bg/img_game/text_game",item);
