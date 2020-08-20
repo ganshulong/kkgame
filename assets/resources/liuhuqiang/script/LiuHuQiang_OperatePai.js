@@ -327,7 +327,11 @@ cc.Class({
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
             let card = data.actionInfo.curaction.card;
-            this.showCard([card,card,card],data.actionInfo.curaction.type,0,true);      //扫碰 都显示三张  不同
+            if(data.actionInfo.curaction.source == 0){
+                this.showCard([card,card,card],data.actionInfo.curaction.type,0,true);      //扫显示三张
+            }else {
+                this.showCard([card,card],data.actionInfo.curaction.type,0,true);           //碰显示2张
+            }
         }
     },
 
