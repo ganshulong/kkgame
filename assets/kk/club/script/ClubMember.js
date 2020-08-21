@@ -276,6 +276,7 @@ cc.Class({
             bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;
             bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = showList[i].totalScore;
             let btn_tickout = bg_memberItem.getChildByName("btn_tickout");
+            btn_tickout.active = (clubCeateUid != showList[i].uid);
             btn_tickout.uid = showList[i].uid;
             btn_tickout.playername = showList[i].playername;
             Global.btnClickEvent(btn_tickout,this.onClickTickout,this);
