@@ -71,9 +71,9 @@ cc.Class({
         let clubName = cc.find("Layer/bg/img_club_name_bg/txt_clubName",this.node);
         clubName.getComponent(cc.Label).string = info?info.name:"";
 
-        cc.find("Layer/img_card_bg",this.node).active = (info.createUid == cc.vv.UserManager.uid);
+        cc.find("Layer/bg/img_card_bg",this.node).active = (info.createUid == cc.vv.UserManager.uid);
 
-        let txt_card_num = cc.find("Layer/img_card_bg/txt_card_num",this.node);
+        let txt_card_num = cc.find("Layer/bg/img_card_bg/txt_card_num",this.node);
         txt_card_num.getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
         let btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
