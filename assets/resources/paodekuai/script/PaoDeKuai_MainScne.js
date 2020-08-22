@@ -44,6 +44,7 @@ cc.Class({
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
 
         //防玩家同时进入，刷新桌子信息
+        let deskInfo = cc.vv.gameData.getDeskInfo();
         if (!deskInfo.isReconnect) {
             let req = {c: MsgId.UPDATE_TABLE_INFO};
             cc.vv.NetManager.send(req);
