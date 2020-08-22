@@ -82,7 +82,7 @@ cc.Class({
             this.node.addComponent("PengHu_OperatePai").init(i,conf.seat);
             this.node.addComponent("PengHu_HandCard").init(i,conf.seat);
         }
-        this.node.addComponent("PengHu_HandCard").init();
+        // this.node.addComponent("PengHu_HandCard").init();
         this.node.addComponent("PengHu_Operate");
         this.node.addComponent("PengHu_Tips");
         this.node.addComponent("PengHu_Action");
@@ -97,7 +97,16 @@ cc.Class({
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        // Global.registerEvent(EventId.UPDATE_TABLE_INFO,this.onRcvUpdateTableInfo,this);
+
+        // //防玩家同时进入，刷新桌子信息
+        // let req = {c: MsgId.UPDATE_TABLE_INFO};
+        // cc.vv.NetManager.send(req);
     },
+
+    // onRcvUpdateTableInfo(data){
+    //     data = data.detail;
+    // },
 
     onRcvOutCardResult(data){
         let tingPaiInfo = data.detail

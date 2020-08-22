@@ -111,7 +111,7 @@ cc.Class({
             this.node.addComponent("HongHeiHu_OperatePai").init(i,conf.seat);
             this.node.addComponent("HongHeiHu_HandCard").init(i,conf.seat);
         }
-        this.node.addComponent("HongHeiHu_HandCard").init();
+        // this.node.addComponent("HongHeiHu_HandCard").init();
         this.node.addComponent("HongHeiHu_Operate");
         this.node.addComponent("HongHeiHu_Tips");
         this.node.addComponent("HongHeiHu_Action");

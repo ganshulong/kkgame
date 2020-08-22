@@ -111,7 +111,7 @@ cc.Class({
             this.node.addComponent("PaoHuZi_OperatePai").init(i,conf.seat);
             this.node.addComponent("PaoHuZi_HandCard").init(i,conf.seat);
         }
-        this.node.addComponent("PaoHuZi_HandCard").init();
+        // this.node.addComponent("PaoHuZi_HandCard").init();
         this.node.addComponent("PaoHuZi_Operate");
         this.node.addComponent("PaoHuZi_Tips");
         this.node.addComponent("PaoHuZi_Action");

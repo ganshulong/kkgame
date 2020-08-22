@@ -111,7 +111,7 @@ cc.Class({
             this.node.addComponent("LiuHuQiang_OperatePai").init(i,conf.seat);
             this.node.addComponent("LiuHuQiang_HandCard").init(i,conf.seat);
         }
-        this.node.addComponent("LiuHuQiang_HandCard").init();
+        // this.node.addComponent("LiuHuQiang_HandCard").init();
         this.node.addComponent("LiuHuQiang_Operate");
         this.node.addComponent("LiuHuQiang_Tips");
         this.node.addComponent("LiuHuQiang_Action");
