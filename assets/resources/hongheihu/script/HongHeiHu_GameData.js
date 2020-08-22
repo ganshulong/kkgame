@@ -148,6 +148,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
 
         cc.vv.NetManager.registerMsg(MsgId.GAME_SWITCH_CLUB, this.onRcvNetExitRoom, this);
+        cc.vv.NetManager.registerMsg(MsgId.UPDATE_TABLE_INFO, this.onRcvUpdateTableInfo, this);
     },
 
     unregisterMsg() {
@@ -186,6 +187,14 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
 
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_SWITCH_CLUB, this.onRcvNetExitRoom, false, this);
+    },
+
+    onRcvUpdateTableInfo(msg){
+        if(msg.code == 200){
+            cc.vv.NetManager.unregisterMsg(MsgId.UPDATE_TABLE_INFO, this.onRcvUpdateTableInfo, false, this);
+            this._deskInfo = msg.deskInfo;
+            cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
+        }
     },
 
     onRcvDismissNotify(msg){
