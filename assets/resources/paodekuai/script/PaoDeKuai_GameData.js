@@ -190,7 +190,8 @@ cc.Class({
         if(msg.code == 200){
             cc.vv.NetManager.unregisterMsg(MsgId.UPDATE_TABLE_INFO, this.onRcvUpdateTableInfo, false, this);
             this._deskInfo = msg.deskInfo;
-            cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
+            // cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
+            Global.dispatchEvent(EventId.UPDATE_PLAYER_INFO)
         }
     },
 

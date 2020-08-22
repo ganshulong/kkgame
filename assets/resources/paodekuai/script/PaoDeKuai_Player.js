@@ -26,22 +26,25 @@ cc.Class({
 
         if(this._playerNode){
             this.registerMsg();
-            let users = cc.vv.gameData.getUsers();
-            for(let i=0;i<users.length;++i){
-                let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
+            let deskInfo = cc.vv.gameData.getDeskInfo();
+            for(let i=0;i<deskInfo.users.length;++i){
+                let chairId = cc.vv.gameData.getLocalChair(deskInfo.users[i].seat);
                 if(chairId === this._chairId){
-                    this._seatIndex = users[i].seat;
-                    this.initPlayerInfo(users[i]);
-
+                    this._seatIndex = deskInfo.users[i].seat;
+                    this.initPlayerInfo(deskInfo.users[i]);
+                    if(deskInfo.isReconnect){
+                        this.showZhuang(deskInfo.bankerInfo.seat === this._seatIndex, deskInfo.bankerInfo.count);
+                    }
                 }
             }
+
             this._emjoNode = this._playerNode.getChildByName("emoj");
             this._emjoNode.active = false;
 
             this._chatNode = this._playerNode.getChildByName("chat");
             this._chatNode.active = false;
 
-            this.recvDeskInfoMsg();
+            // this.recvDeskInfoMsg();
         }
     },
 
@@ -70,6 +73,26 @@ cc.Class({
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.HANDCARD,this.recvSendCard,this);
         Global.registerEvent(EventId.SCORE_UPDATE_NOTIFY,this.onRcvScoreUpdateNotify,this);
+        Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
+    },
+
+    onRcvUpdatePlayerInfo(){
+        let users = cc.vv.gameData.getUsers();
+        let bHavePlayer = false;
+        for(let i=0;i<users.length;++i){
+            let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
+            if(chairId === this._chairId){
+                bHavePlayer = true;
+                if (!this._playerNode.active) {     //刷新显示
+                    this._seatIndex = users[i].seat;
+                    this.initPlayerInfo(users[i]);
+                }
+            }
+        }
+        if (!bHavePlayer && this._playerNode.active) {
+            this._seatIndex = -1;
+            this._playerNode.active = false;
+        }
     },
 
     onRcvScoreUpdateNotify(data){

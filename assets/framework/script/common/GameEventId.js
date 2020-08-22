@@ -83,13 +83,7 @@ EventId.CLUB_EXIT_APPLY_NOTIFY = "club_exit_apply_notify";// 电量改变通知
 EventId.OUT_CARD_NOTIFY = "OUT_CARD_NOTIFY";	  		  // 出牌提示通知
 EventId.OUT_CARD = "OUT_CARD";	  		  				  // 出牌提示通知
 EventId.SCORE_UPDATE_NOTIFY = "SCORE_UPDATE_NOTIFY";	  // 积分更新通知
+EventId.UPDATE_PLAYER_INFO = "UPDATE_PLAYER_INFO";	  	  // 玩家更新通知
 
 //GSLTEST
 EventId.TEST_EVENT = "TEST_EVENT";	  // 积分更新通知
-
-
-
-
-
-
-
