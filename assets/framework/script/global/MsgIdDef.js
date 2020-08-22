@@ -62,7 +62,7 @@ GlobalMsgId.HALL_VERSOIN = 96;           //获取大厅最新的版本号
 GlobalMsgId.AGENT_REWARD_STATIC= 97; //代理查询
 
 
-GlobalMsgId.BANK_LOGIN = 100; //银行登录（进入）
+// GlobalMsgId.BANK_LOGIN = 100; //银行登录（进入）
 GlobalMsgId.BANK_HALL_INFO = 101; //获取银行大厅信息
 GlobalMsgId.BANK_SAVE_COIN =102; //存入银行
 GlobalMsgId.BANK_TAKE_COIN = 103; //取款从银行
@@ -272,8 +272,9 @@ GlobalMsgId.SCORE_UPDATE_NOTIFY = 18814; 	//得分更新
 
 GlobalMsgId.CLUB_DELETE_TABLE = 8806;   	// 俱乐部删除桌子
 
-GlobalMsgId.GAME_SWITCH_CLUB = 168;   	// 从游戏切换至俱乐部
-
+GlobalMsgId.GAME_SWITCH_CLUB = 168;   		// 从游戏切换至俱乐部
 GlobalMsgId.CLUB_SWITCH_GAME = 18815;   	// 从俱乐部切换至游戏
+
+GlobalMsgId.UPDATE_TABLE_INFO = 100;   		// 刷新桌子信息
 
 
