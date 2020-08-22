@@ -35,6 +35,7 @@ cc.Class({
 
     init(atlas){
         this._atlas = atlas;
+        this.prefabResCard = cc.find("prefabRes/card",this.node);
     },
 
     // onLoad () {},
@@ -61,7 +62,9 @@ cc.Class({
             else if(type === 2){ // 小
                 sprName = "hongheihu-imgs-cards-card_black_small";
             }
-            spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(sprName);
+            // spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(sprName);
+            let prefabResNode = this.prefabResCard.getChildByName(sprName);
+            spr.getComponent(cc.Sprite).spriteFrame = prefabResNode.getComponent(cc.Sprite).spriteFrame;
         }
         else{
             if(type === 0){ // 大
@@ -73,12 +76,13 @@ cc.Class({
             else if(type === 2){ // 小
                 sprName = cardValue>200?"hongheihu-imgs-cards-b_s_card":"hongheihu-imgs-cards-s_s_card";
             }
-            spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(sprName+value);
+            // spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(sprName+value);
+            let prefabResNode = this.prefabResCard.getChildByName(sprName+value);
+            spr.getComponent(cc.Sprite).spriteFrame = prefabResNode.getComponent(cc.Sprite).spriteFrame;
         }
         spr.cardValue = cardValue;
         spr.active = true;
         return spr;
-
     },
 
     changCardBg(node,isMoPai){

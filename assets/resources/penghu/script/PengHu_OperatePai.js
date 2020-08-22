@@ -186,7 +186,26 @@ cc.Class({
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HANDCARD,this.recvHandCardMsg,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.TEST_EVENT,this.recvTestEvent,this);
         this.recvDeskInfoMsg();
+    },
+
+    recvTestEvent(data){
+        data = data.detail;
+        if (0 >= this._seatIndex) {
+            return;
+        }
+        var testNode = this._operateCardNode.getChildByName("testNode") 
+        if (!testNode) {
+            testNode = new cc.Node("testNode");
+            testNode.addComponent(cc.Label);
+            testNode.parent = this._operateCardNode;
+        }
+        if (data.serviceSeat == this._seatIndex) {
+            testNode.getComponent(cc.Label).string = "s:"+data.serviceSeat+"  l:"+data.localSeat;
+        } else {
+            testNode.getComponent(cc.Label).string = "_s:"+this._seatIndex+" _c:"+this._chairId;
+        }
     },
 
     // 小局结束

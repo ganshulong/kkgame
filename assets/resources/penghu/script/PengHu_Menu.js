@@ -436,6 +436,13 @@ cc.Class({
         other_bg.active = false;
         var panel_show = (0 == clickLocalSeat) ? self_bg : other_bg;
 
+        //gsltest
+        let spr_chat = panel_show.getChildByName("spr_chat");
+        Global.btnClickEvent(spr_chat,()=>{
+            let serviceSeat = cc.vv.gameData.getUserSeatIndex(clickLocalSeat);
+            Global.dispatchEvent(EventId.TEST_EVENT,{localSeat:clickLocalSeat,serviceSeat:serviceSeat})
+        });
+
         if (data && data.locatingList) {
             let locatingList = data.locatingList;
             for (var i = 0; i < locatingList.length; i++) {
