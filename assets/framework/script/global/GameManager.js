@@ -454,6 +454,13 @@ cc.Class({
                         cc.vv.gameData.init(msgDic.deskInfo);
                         cc.vv.SceneMgr.enterScene("paodekuai");
                     }
+                } else if(msgDic.deskInfo.conf.gameid === 11 || msgDic.deskInfo.conf.gameid === 12){
+                    if(cc.vv.gameData === null){
+                        let data = require("HongZhong_GameData");
+                        cc.vv.gameData = new data();
+                        cc.vv.gameData.init(msgDic.deskInfo);
+                        cc.vv.SceneMgr.enterScene("hongzhong");
+                    }
                 }
             }
 

@@ -294,6 +294,13 @@ cc.Class({
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("paodekuai");
                 }
+            } else if(msg.response.deskInfo.conf.gameid === 11 || msg.response.deskInfo.conf.gameid === 12){
+                if(cc.vv.gameData === null){
+                    let data = require("HongZhong_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("hongzhong");
+                }
             }
         }
     },
@@ -396,6 +403,8 @@ cc.Class({
             bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4 ? this.tableBgs[4] : this.tableBgs[5];
         } else if (9 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4 ? this.tableBgs[6] : this.tableBgs[7];
+        } else if (11 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[8];
         }
             
         tableChar.active = true;

@@ -123,6 +123,8 @@ cc.Class({
                     str += "六胡抢 ";
                 } else if(gameList[i].gameid === 9 && -1 === str.indexOf("跑得快")) {
                     str += "跑得快 ";
+                } else if(gameList[i].gameid === 11 && -1 === str.indexOf("红中")) {
+                    str += "红中 ";
                 }
             }
             // 游戏列表
