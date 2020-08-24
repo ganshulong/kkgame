@@ -57,19 +57,19 @@ cc.Class({
 
     //下0 右1 上2 左3
     getUISeatBylocalSeat(localSeat){
-        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,2,-1,-1],[0,1,3,-1],[0,1,2,3]];
+        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1]];
         let maxSeat = cc.vv.gameData.getRoomConf().seat;
         return localSeatToUISeatArr[maxSeat][localSeat];
     },
 
     getLocalSeatByUISeat(UISeat){
-        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,-1,1,-1],[0,1,-1,2],[0,1,2,3]];
+        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1]];
         let maxSeat = cc.vv.gameData.getRoomConf().seat;
         return localSeatToUISeatArr[maxSeat][UISeat];
     },
 
     init(data){
-        this.RoomSeat = 4;
+        this.RoomSeat = 2;
         this.OPERATETYPE={
             GU0:1,  // 过
             PUT:2,  // 打牌
@@ -272,6 +272,34 @@ cc.Class({
         return list;
     },
 
+    getWanFaStrSimple(){
+        let wanFaStr = "";
+        let conf = this._deskInfo.conf;
+        wanFaStr += (conf.gamenum+"局 ");
+        wanFaStr += (conf.seat+ "人 ");
+        wanFaStr += (["不抓鸟 ","抓2鸟 ","抓4鸟 ","抓6鸟 "][conf.param1]);
+        wanFaStr += (conf.score+ "倍 ");
+        if(conf.speed === 1){
+            wanFaStr += ("快速 ");
+        }
+        if(conf.trustee){
+            wanFaStr += ("托管 ");
+        }
+        wanFaStr += (["禁止解散 ","允许解散 "][conf.isdissolve]);
+        return wanFaStr;
+    },
+
+    getWanFaStrDetail(){
+        let wanFaStr = this.getWanFaStrSimple();
+        let conf = this._deskInfo.conf;
+        if(conf.ipcheck){
+            wanFaStr += ("同IP禁止进入 "); 
+        } 
+        if(conf.distance){
+            wanFaStr += ("距离相近200米禁止加入 "); 
+        } 
+        return wanFaStr;
+    },
 
     onRcvGameOverNotfiy(msg){
         if(msg.code === 200){

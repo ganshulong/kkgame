@@ -84,7 +84,7 @@ cc.Class({
     recvRoundOver(data){
         data = data.detail;
         if(this._layer === null){
-            cc.loader.loadRes("common/prefab/Liuhuqiang_round_over_view",(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/HongZhong_round_over_view",(err,prefab)=>{
                 if(err === null){
                     this._layer = cc.instantiate(prefab);
                     this._layer.parent = this.node.getChildByName("scene");
@@ -137,7 +137,7 @@ cc.Class({
             if (data.hcard) {
                 let bgNode = new cc.Node();
                 bgNode.addComponent(cc.Sprite);
-                let cardNode = this.node.getComponent("LiuHuQiang_Card").createCard(data.hcard,0);
+                let cardNode = this.node.getComponent("HongZhong_Card").createCard(data.hcard,0);
                 cardNode.parent = bgNode;
                 bgNode.parent = panel_CardInfo.getChildByName("card_last");
             }
@@ -163,7 +163,7 @@ cc.Class({
                     }
 
                     for(let j = 0; j < cardArr.length; ++j){
-                        let node = this.node.getComponent("LiuHuQiang_Card").createCard(cardArr[j],2);
+                        let node = this.node.getComponent("HongZhong_Card").createCard(cardArr[j],2);
                         node.y = node.height * j;
                         node.parent = cardArrItem;
                     }
@@ -179,7 +179,7 @@ cc.Class({
                     cardArrItem.x = (winerInfo.menzi.length + i) * 70;
 
                     for(let j = 0; j < data.huCards[i].length; ++j) {
-                        let node = this.node.getComponent("LiuHuQiang_Card").createCard(data.huCards[i][j],2);
+                        let node = this.node.getComponent("HongZhong_Card").createCard(data.huCards[i][j],2);
                         node.y = node.height * j;
                         node.parent = cardArrItem;
 
@@ -228,7 +228,7 @@ cc.Class({
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
         for (let i = 0; i < data.diPai.length; i++) {
-            let node = this.node.getComponent("LiuHuQiang_Card").createCard(data.diPai[i],2);
+            let node = this.node.getComponent("HongZhong_Card").createCard(data.diPai[i],2);
             node.x = (node.width + 5) * i;
             node.parent = surplusCard;
         }
@@ -343,7 +343,7 @@ cc.Class({
         let width=0;
         for(let i=0;i<tempList.length;++i){
             for(let j=0;j<tempList[i].length;++j) {
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(tempList[i][j],1);
+                let node = this.node.getComponent("HongZhong_Card").createCard(tempList[i][j],1);
                 node.scale = 0.5;
                 node.y = (node.height-28)*j*node.scale+20;
                 node.x = node.width*i*node.scale+20;
@@ -378,7 +378,7 @@ cc.Class({
             let posX = 0;
             let PosY = 0;
             for(let j=0;j<menzilist.length;++j){
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(menzilist[j],0);
+                let node = this.node.getComponent("HongZhong_Card").createCard(menzilist[j],0);
                 node.scale = 0.45;
                 node.x = width+node.width*node.scale;
                 node.y = 44;
@@ -406,8 +406,8 @@ cc.Class({
         if(card){
             let bgNode = new cc.Node();
             bgNode.addComponent(cc.Sprite);
-            this.node.getComponent("LiuHuQiang_Card").changCardBg(bgNode,source===0);
-            let cardNode = this.node.getComponent("LiuHuQiang_Card").createCard(card,0);
+            this.node.getComponent("HongZhong_Card").changCardBg(bgNode,source===0);
+            let cardNode = this.node.getComponent("HongZhong_Card").createCard(card,0);
             bgNode.y = 43;
             bgNode.x = width+60;
             bgNode.scale = 0.6;
@@ -429,7 +429,7 @@ cc.Class({
 
     onDestroy(){
         if(this._layer){
-            cc.loader.releaseRes("common/prefab/Liuhuqiang_round_over_view",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/HongZhong_round_over_view",cc.Prefab);
         }
     }
     // update (dt) {},

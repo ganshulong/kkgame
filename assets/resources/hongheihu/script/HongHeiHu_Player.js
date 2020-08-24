@@ -412,7 +412,7 @@ cc.Class({
         if(user){
             let spr_head = cc.find("head/radio_mask/spr_head",this._playerNode);
             Global.setHead(spr_head,user.usericon);
-            cc.find("img_bg/txt_name",this._playerNode).getComponent(cc.Label).string = user.playername;
+            cc.find("head/txt_name",this._playerNode).getComponent(cc.Label).string = user.playername;
             this.setTotalScore(user.score);
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
@@ -430,25 +430,25 @@ cc.Class({
 
     // 胡熄
     setHuXi(score){
-        if (typeof score != 'undefined') {
-            if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"硬息";
-        }
+        // if (typeof score != 'undefined') {
+        //     if(this._playerNode) this._playerNode.getChildByName("txt_cur_score").getComponent(cc.Label).string =score+"硬息";
+        // }
     },
 
     // 总分
     setTotalScore(score){
         if (typeof score != 'undefined') {
-            if(this._playerNode)  cc.find("img_bg/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
+            if(this._playerNode)  cc.find("head/bg_total_score/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
         }
     },
 
     // 显示庄
     showZhuang(bShow, count = 1){
         if(this._playerNode) {
-            this._playerNode.getChildByName("sp_flag").active = bShow;
-            if (bShow && count) {
-                cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
-            }
+            this._playerNode.getChildByName("mask_banker").active = bShow;
+            // if (bShow && count) {
+            //     cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
+            // }
         }
     },
 

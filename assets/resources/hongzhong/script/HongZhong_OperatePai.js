@@ -85,7 +85,7 @@ cc.Class({
                     showBg = true;
                 }
             }
-            let node = this.node.getComponent("LiuHuQiang_Card").createCard(list[i],showAction?1:2,showBg);
+            let node = this.node.getComponent("HongZhong_Card").createCard(list[i],showAction?1:2,showBg);
 
             let endPos = cc.v2(0,0);
             endPos.y = 36*i;
@@ -126,7 +126,7 @@ cc.Class({
         let time = cc.vv.gameData.getActionTime();
         let self = this;
         node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos).easing(cc.easeOut(3)),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            self.node.getComponent("LiuHuQiang_Card").createCard(node.cardValue,2,node.showBg,node);
+            self.node.getComponent("HongZhong_Card").createCard(node.cardValue,2,node.showBg,node);
             node.scale = 1;
             node.opacity = 255;
         })))
@@ -286,14 +286,14 @@ cc.Class({
                 startX = this._operateCardNode.children[i].x;
                 ++num;
                 if(this._operateCardNode.children[i].index !==3){
-                    this.node.getComponent("LiuHuQiang_Card").createCard(card,2,showBg,this._operateCardNode.children[i]);
+                    this.node.getComponent("HongZhong_Card").createCard(card,2,showBg,this._operateCardNode.children[i]);
 
                 }
             }
         }
         if(num === 0){
             for(let i=0;i<4;++i){
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(card,2,(i<3)?showBg:false);
+                let node = this.node.getComponent("HongZhong_Card").createCard(card,2,(i<3)?showBg:false);
                 node.y = node.height*(num+i);
                 node.x = startX;
                 node.cardValue = card;
@@ -303,7 +303,7 @@ cc.Class({
         }
         else {
             for(let i=0;i<4-num;++i){
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(card,2,(num<3&&i==0)?showBg:false);
+                let node = this.node.getComponent("HongZhong_Card").createCard(card,2,(num<3&&i==0)?showBg:false);
                 node.y = node.height*(num+i);
                 node.x = startX;
                 node.cardValue = card;

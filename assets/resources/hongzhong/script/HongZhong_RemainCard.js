@@ -59,7 +59,7 @@ cc.Class({
         // 公牌
         let publicCard = cc.find("scene/playback_handle/public",this.node);
         for(let i=0;i<data.diPai.length;++i){
-            let node = this.node.getComponent("LiuHuQiang_Card").createCard(data.diPai[i],2);
+            let node = this.node.getComponent("HongZhong_Card").createCard(data.diPai[i],2);
 
             node.y = -node.height*parseInt(i/6);
             node.x = node.width*parseInt(i%6);
@@ -71,7 +71,7 @@ cc.Class({
         let tempList = cc.vv.gameData.sortCard(list);
         for(let i=0;i<tempList.length;++i){
             for(let j=0;j<tempList[i].length;++j) {
-                let node = this.node.getComponent("LiuHuQiang_Card").createCard(tempList[i][j],2);
+                let node = this.node.getComponent("HongZhong_Card").createCard(tempList[i][j],2);
 
                 node.y = node.height*j;
                 if (1 == chairId) {
