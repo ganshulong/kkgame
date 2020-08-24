@@ -83,7 +83,8 @@ cc.Class({
             PaoHuZi:1,
             HongHeiHu:2,
             LiuHuQiang:3,
-            PaoDeKuai:4
+            PaoDeKuai:4,
+            HongZhong:5
         };
 
         let btn_back = this._createLayer.getChildByName("btn_back");
@@ -120,13 +121,27 @@ cc.Class({
 
         //游戏玩法选项页面
         this.gamePanels = [];
-        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai"];
+        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong"];
         for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
             let panel = cc.find("img_bg/"+gamePanelStr[cc.vv.UserManager.gameList[i].id],this._createLayer);
             panel.id = cc.vv.UserManager.gameList[i].id;
-            let btn_create_room = cc.find("right_bg/btn_create_room", panel);
-            btn_create_room.id = cc.vv.UserManager.gameList[i].id;
-            Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
+
+            let round = cc.find("right_bg/scrollview/content/round", panel);
+            let roundData = cc.vv.UserManager.gameList[i].data.split(';');
+            for (let j = 0; j < roundData.length; j++) {
+                let roundItemData = roundData[j].split(':');
+                let toggle = round.getChildByName("toggle" + j);
+                toggle.round = roundItemData[0];
+                toggle.getChildByName("txt_inning_eight").getComponent(cc.Label).string = roundItemData[0] + "局";
+                toggle.getChildByName("txt_dou1").getComponent(cc.Label).string = "(房卡x"+ roundItemData[1] +")";
+                toggle.active = true;
+            }
+            for (let j = roundData.length; j < 3; j++) {
+                let toggle = round.getChildByName("toggle" + j);
+                if (toggle) {
+                    toggle.active = false;
+                }
+            }
 
             let bg_score = cc.find("right_bg/scrollview/content/bg_score", panel);
             let btn_deduction = bg_score.getChildByName("btn_deduction");
@@ -134,10 +149,16 @@ cc.Class({
             let btn_add = bg_score.getChildByName("btn_add");
             Global.btnClickEvent(btn_add,this.onClickScoreAdd,this);
 
+            let btn_create_room = cc.find("right_bg/btn_create_room", panel);
+            btn_create_room.id = cc.vv.UserManager.gameList[i].id;
+            Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
+
             cc.find("left_bg/btn_selectedGame/label_selectedGame", panel).getComponent(cc.Label).string = cc.vv.UserManager.gameList[i].title;
 
             this.gamePanels.push(panel);
-            this.initGamePanel(cc.vv.UserManager.gameList[i].id);
+
+            let content = cc.find("right_bg/scrollview/content", panel);
+            this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
         }
     },
 
@@ -196,33 +217,32 @@ cc.Class({
         let optionList = [];
         if (this.gameTypeIndex.PengHu == id) {
             req.gameid = this._isClubRoom ? 1 : 3;
-            optionList.push({option:"round",          valueList:[8,16,24]});
-            optionList.push({option:"player_num",     valueList:[2,4]});
-            optionList.push({option:"zhongzhuang",    valueList:[0,1,2]});
+            optionList.push({option:"player_num",       valueList:[2,4]});
+            optionList.push({option:"param1",           valueList:[0,1,2]});
 
         } else if (this.gameTypeIndex.PaoHuZi == id) {
             req.gameid = this._isClubRoom ? 2 : 4;
-            optionList.push({option:"round",          valueList:[8,16]});
-            optionList.push({option:"player_num",     valueList:[2,3]});
-            optionList.push({option:"wanfa",          valueList:[1,2,3]});
+            optionList.push({option:"player_num",       valueList:[2,3]});
+            optionList.push({option:"param1",           valueList:[1,2,3]});
 
         } else if (this.gameTypeIndex.HongHeiHu == id) {
             req.gameid = this._isClubRoom ? 5 : 6;
-            optionList.push({option:"round",          valueList:[8,16]});
-            optionList.push({option:"player_num",     valueList:[2,3]});
-            optionList.push({option:"baseScore",      valueList:[0,1,2,3,4,5]});
+            optionList.push({option:"player_num",       valueList:[2,3]});
+            optionList.push({option:"param1",           valueList:[0,1,2,3,4,5]});
 
         } else if (this.gameTypeIndex.LiuHuQiang == id) {
             req.gameid = this._isClubRoom ? 7 : 8;
-            optionList.push({option:"round",          valueList:[8,16,24]});
-            optionList.push({option:"player_num",     valueList:[2,3,4]});
-            optionList.push({option:"countScore",     valueList:[0,1]});
+            optionList.push({option:"player_num",       valueList:[2,3,4]});
+            optionList.push({option:"param1",           valueList:[0,1]});
 
         } else if (this.gameTypeIndex.PaoDeKuai == id) {
             req.gameid = this._isClubRoom ? 9 : 10;
-            optionList.push({option:"round",          valueList:[5,10,15]});
-            optionList.push({option:"player_num",     valueList:[2,3]});
-            optionList.push({option:"zhaniao",        valueList:[0,1,2,3]});
+            optionList.push({option:"player_num",       valueList:[2,3]});
+            optionList.push({option:"param1",           valueList:[0,1,2,3]});
+        } else if (this.gameTypeIndex.HongZhong == id) {
+            req.gameid = this._isClubRoom ? 11 : 12;
+            optionList.push({option:"player_num",       valueList:[2]});
+            optionList.push({option:"param1",           valueList:[0,1,2,3]});
         }
         this.onCreateCommom(layer, optionList, req);
     },
@@ -241,16 +261,25 @@ cc.Class({
         }
         req.tname = roomNameStr;
 
+        //局数
+        let round = layer.getChildByName("round");
+        for (let j = 0; j < round.children.length; j++) {
+            let toggle = round.getChildByName("toggle" + j);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.gamenum = parseInt(toggle.round);
+                break;
+            }
+        }
+
+        //人数 玩法
         for (let i = 0; i < optionList.length; i++) {
             let option = layer.getChildByName(optionList[i].option);
             for (let j = 0; j < optionList[i].valueList.length; j++) {
                 let toggle = option.getChildByName("toggle" + j);
                 if (toggle.getComponent(cc.Toggle).isChecked) {
-                    if ("round" == optionList[i].option) {
-                        req.gamenum = optionList[i].valueList[j]
-                    } else if ("player_num" == optionList[i].option) {
-                        req.seat = optionList[i].valueList[j]
-                    } else {
+                    if ("player_num" == optionList[i].option) {
+                        req.seat = optionList[i].valueList[j];
+                    } else if ("param1" == optionList[i].option) {
                         req.param1 = optionList[i].valueList[j];
                     }
                     break;
@@ -286,23 +315,6 @@ cc.Class({
         data.c = this._isClubRoom ? MsgId.ADDGAME : MsgId.GAME_CREATEROOM;
         data.gameInfo = req;
         cc.vv.NetManager.send(data);
-    },
-    
-    initGamePanel(id){
-        let layer = cc.find("right_bg/scrollview/content",this.gamePanels[id]);
-        let optionList = [];
-        if (this.gameTypeIndex.PengHu == id) {
-            optionList = ["round","player_num","zhongzhuang","speed"];
-        } else if (this.gameTypeIndex.PaoHuZi == id) {
-            optionList = ["round","player_num","wanfa","speed"];
-        } else if (this.gameTypeIndex.HongHeiHu == id) {
-            optionList = ["round","player_num","baseScore","speed"];
-        } else if (this.gameTypeIndex.LiuHuQiang == id) {
-            optionList = ["round","player_num","countScore","speed"];
-        } else if (this.gameTypeIndex.PaoDeKuai == id) {
-            optionList = ["round","player_num","zhaniao","speed"];
-        }
-        this.initGamePanelCommom(layer, optionList);
     },
 
     // 初始化游戏 共同部分

@@ -111,13 +111,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 340
-      },
-      {
-        "__id__": 341
-      },
-      {
         "__id__": 342
+      },
+      {
+        "__id__": 343
+      },
+      {
+        "__id__": 344
       }
     ],
     "_prefab": null,
@@ -11825,13 +11825,16 @@
       },
       {
         "__id__": 337
+      },
+      {
+        "__id__": 339
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 339
+        "__id__": 341
       }
     ],
     "_prefab": null,
@@ -12245,6 +12248,84 @@
     "_enabled": true,
     "_spriteFrame": {
       "__uuid__": "25b296fb-d20d-433a-9da8-fa61305897d4"
+    },
+    "_type": 0,
+    "_sizeMode": 1,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_atlas": null
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "5",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 328
+    },
+    "_children": [],
+    "_tag": -1,
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 340
+      }
+    ],
+    "_prefab": null,
+    "_id": "76wXBIKyRK7ZdhHV+q0kYT",
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_cascadeOpacityEnabled": true,
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 287,
+      "height": 287
+    },
+    "_rotationX": 0,
+    "_rotationY": 0,
+    "_scaleX": 1,
+    "_scaleY": 1,
+    "_position": {
+      "__type__": "cc.Vec2",
+      "x": 500,
+      "y": -200
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_localZOrder": 0,
+    "_globalZOrder": 0,
+    "_opacityModifyRGB": false,
+    "groupIndex": 0
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 339
+    },
+    "_enabled": true,
+    "_spriteFrame": {
+      "__uuid__": "9b555928-8680-459b-a401-38454076a0ae"
     },
     "_type": 0,
     "_sizeMode": 1,

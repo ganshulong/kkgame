@@ -32,9 +32,6 @@ cc.Class({
                 if(chairId === this._chairId){
                     this._seatIndex = deskInfo.users[i].seat;
                     this.initPlayerInfo(deskInfo.users[i]);
-                    if(deskInfo.isReconnect){
-                        this.showZhuang(deskInfo.bankerInfo.seat === this._seatIndex, deskInfo.bankerInfo.count);
-                    }
                 }
             }
 
