@@ -53,7 +53,7 @@ cc.Class({
                     this._canOutCard = true;
                 }
             }
-            this.showOutLine(this._canOutCard);
+            this.showOutLine();
         }
     },
 
@@ -86,13 +86,16 @@ cc.Class({
             }
             this.showAllCard(data);
             
-            if (this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
+            if (0 == this._chairId && this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
                 let self = this;
-                cc.sequence(
-                    cc.delayTime(self._canOutCard ? 1 : 0), 
-                    cc.callFunc(()=>{
-                        self.showOutLine(true);
-                    })
+                this.node.runAction(
+                    cc.sequence(
+                        cc.delayTime(self._canOutCard ? 1 : 0), 
+                        cc.callFunc(()=>{
+                            self._canOutCard = true;
+                            self.showOutLine();
+                        })
+                    )
                 )
             }
         }
@@ -114,8 +117,15 @@ cc.Class({
             } else if (1 === this._chairId) {  //上
                 node.x = -node.width * i;
             }
+            if (0 === this._chairId) {
+                node.addComponent(cc.Button);
+                node.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
+                node.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
+                node.on(cc.Node.EventType.TOUCH_END,this.onTouchEnd,this);
+                node.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
+            }
         }
-        
+
         //当前摸进牌
     },
 
@@ -153,7 +163,7 @@ cc.Class({
             if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
                 deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
                 this._canOutCard = true;
-                this.showOutLine(this._canOutCard);
+                this.showOutLine();
             }
         }
     },
@@ -213,25 +223,18 @@ cc.Class({
             node.isCanMove = (this._num >= this.greyCardArrCount);
         }
         ++this._num;
-
-    },
-
-
-    onTouchCancel(event){
-        if(this._canTouch){
-            this.onTouchEnd(event);
-        }
     },
 
     onTouchStart(event){
-        if(this._canTouch && event.target.isCanMove){
+        if(this._canOutCard){
             this._selectCard = event.target;
             this._selectCard.color = new cc.Color(200,200,200);
+            this._selectCardPos = this._selectCard.position;
         }
     },
 
     onTouchMove(event){
-        if(this._canTouch){
+        if(this._canOutCard){
             let pos = event.getDelta();
             if(this._selectCard){
                 this._selectCard.x += pos.x;
@@ -241,41 +244,21 @@ cc.Class({
     },
 
     onTouchEnd(event){
-        if(!this._canTouch) return;
-        if(this._selectCard){
+        if(this._canOutCard && this._selectCard){
             if(this._selectCard.y>this._outCardY){
-                if(this._canOutCard){
-                    if(this.isShowWarn(this._selectCard.cardValue)){
-                        let self = this
-                        let sureCall = function () {
-                            var req = { c: MsgId.WARN_5_FU};
-                            req.pcard = self._selectCard.cardValue;
-                            cc.vv.NetManager.send(req);
-
-                            self.outCard();
-                        }
-                        let cancelCall = function () {
-                            self.outCard();
-                        }
-                        let closeCall = function () {
-                            self._selectCard.color = new cc.Color(255,255,255);
-                            self.resetCardPos(true);
-                        }
-                        cc.vv.AlertView.show("是否发出警报", sureCall, cancelCall, true, closeCall)
-                    } else {
-                        this.outCard();
-                    }
-
-                }
-                else{
-                    this._selectCard.color = new cc.Color(255,255,255);
-                    this.resetCardPos(true);
-                }
                 // 出牌
+                this.outCard();
             }
             else{
-                this.checkMoveCard();
+                this._selectCard.position = this._selectCardPos;
+                // this.checkMoveCard();
             }
+        }
+    },
+
+    onTouchCancel(event){
+        if(this._canTouch){
+            this.onTouchEnd(event);
         }
     },
 
@@ -301,7 +284,7 @@ cc.Class({
         Global.dispatchEvent(EventId.OUTCARD,{card:this._selectCard.cardValue,pos:pos});
         cc.vv.gameData.outCard(this._selectCard.cardValue);
         this._canOutCard = false;
-        this.showOutLine(this._canOutCard);
+        this.showOutLine();
         this._selectCard.removeFromParent();
         this.clearSelectInCardBox();
         this.resetCardPos(true);
@@ -449,7 +432,7 @@ cc.Class({
             if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() &&
                 data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
                 this._canOutCard = true;
-                this.showOutLine(this._canOutCard);
+                this.showOutLine();
             }
 
             // 我当前吃牌
@@ -572,7 +555,8 @@ cc.Class({
         this._bPlaying = false;
         this.isCanWarn = false;
         if(this._chairId === 0){
-           this.showOutLine(false);
+            this._canOutCard = false;
+            this.showOutLine();
         }
     },
 
@@ -599,7 +583,7 @@ cc.Class({
             if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() &&
                 data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
                 this._canOutCard = true;
-                this.showOutLine(this._canOutCard);
+                this.showOutLine();
             }
         }
 
@@ -622,14 +606,14 @@ cc.Class({
             if(data.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() &&
                 data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
                 this._canOutCard = true;
-                this.showOutLine(this._canOutCard);
+                this.showOutLine();
             }
         }
 
     },
 
-    showOutLine(bShow){
-        this._outCardLineNode.active = bShow;
+    showOutLine(){
+        this._outCardLineNode.active = this._canOutCard;
         this.showOutCardTipsAni();
     },
 
