@@ -12,10 +12,6 @@ cc.Class({
 
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
-
     start () {
         Global.autoAdaptDevices(false);
 
