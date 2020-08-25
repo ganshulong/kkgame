@@ -46,7 +46,7 @@ cc.Class({
         Global.starBatteryReceiver();
         // this.onRcvBatteryChangeNotify();
 
-        this.txt_date = cc.find("scene/bg_view/room_info/txt_date",this.node);
+        this.txt_date = cc.find("scene/room_info/txt_date",this.node);
         let that = this;
         that.txt_date.runAction(
             cc.repeatForever(
@@ -69,17 +69,20 @@ cc.Class({
         )
 
         let conf = cc.vv.gameData.getRoomConf();
-        let roomId = cc.find("scene/bg_view/room_info/txt_room_id",this.node);
-        roomId.getComponent(cc.Label).string = "房间号:"+conf.deskId;
+        let roomId = cc.find("scene/room_info/txt_room_id",this.node);
+        roomId.getComponent(cc.Label).string = "游戏号:"+conf.deskId;
 
         this._gameCount = conf.gamenum;
         this.updateCount(cc.vv.gameData.getDeskInfo().round);
 
-        let txt_game_desc = cc.find("scene/bg_view/room_info/img_hear_bg/txt_game_desc",this.node);
-        txt_game_desc.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrSimple();
-
-        let txt_game_desc_detail = cc.find("scene/bg_view/room_info/img_hear_bg/txt_game_desc_detail",this.node);
-        txt_game_desc_detail.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrDetail();
+        let str = "";
+        let list = cc.vv.gameData.getWanFa();
+        for(let i=0;i<list.length;++i){
+            str += list[i];
+            if(i===2) str += "\n";
+        }
+        let desc = cc.find("scene/room_info/txt_game_desc",this.node);
+        desc.getComponent(cc.Label).string = str;
 
         this.node.addComponent("HongHeiHu_Card").init(this.cardsAtlas);
 
@@ -161,7 +164,7 @@ cc.Class({
     },
 
     onRcvBatteryChangeNotify(data){
-        let spr_battery = cc.find("scene/bg_view/room_info/bg_battery/spr_battery",this.node);
+        let spr_battery = cc.find("scene/room_info/bg_battery/spr_battery",this.node);
         spr_battery.scaleX = parseInt(data.detail) / 100;
     },
 
@@ -171,7 +174,7 @@ cc.Class({
     },
 
     updateCount(count){
-        let round = cc.find("scene/bg_view/room_info/txt_round_num",this.node);
+        let round = cc.find("scene/room_info/txt_round_num",this.node);
         round.getComponent(cc.Label).string = "("+count+"/"+this._gameCount+"局)";
         cc.vv.gameData.setCurRound(count);
     },
