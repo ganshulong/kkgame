@@ -70,16 +70,14 @@ cc.Class({
             }
         }
 
+        this.node.addComponent("HongZhong_Card").init();
+
         for(let i = 0; i < cc.vv.gameData.RoomSeat; ++i){
             this.node.addComponent("HongZhong_ShowCard").init(i,conf.seat);
             this.node.addComponent("HongZhong_Player").init(i,conf.seat,this.emjoAtlas);
             this.node.addComponent("HongZhong_OutCard").init(i,conf.seat);
-            // this.node.addComponent("HongZhong_OperatePai").init(i,conf.seat);
             this.node.addComponent("HongZhong_HandCard").init(i,conf.seat);
         }
-        // this.node.addComponent("HongZhong_Menu");
-        // this.node.addComponent("HongZhong_HandCard").init();
-        this.node.addComponent("HongZhong_Card").init();
         this.node.addComponent("HongZhong_Operate");
         this.node.addComponent("HongZhong_Tips");
         this.node.addComponent("HongZhong_Action");

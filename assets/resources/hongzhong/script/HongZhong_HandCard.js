@@ -34,7 +34,8 @@ cc.Class({
         if(-1 < this._seatIndex){
             for(let i=0; i<deskInfo.users.length; ++i){
                 if(this._seatIndex === deskInfo.users[i].seat){
-                    this.showAllCard(deskInfo.users[i]);
+                    this._handCards = cc.vv.gameData.sortCard(deskInfo.users[i].handInCards);
+                    this.showAllCard();
                 }
             }
         }
@@ -44,7 +45,8 @@ cc.Class({
             this.spr_outCardTipsLine = cc.find("scene/spr_outCardTipsLine",this.node);
             this.outCardDirTips = this.spr_outCardTipsLine.getChildByName("outCardDirTips");
 
-            this._outCardY = this._handcardNode.convertToNodeSpaceAR(this._outCardLineNode.parent.convertToWorldSpaceAR(this._outCardLineNode.position)).y;
+            let worldPos = this._outCardLineNode.parent.convertToWorldSpaceAR(this._outCardLineNode.position);
+            this._outCardY = this._handcardNode.convertToNodeSpaceAR(worldPos).y;
 
             this._canOutCard = false;
             if(deskInfo.isReconnect){
@@ -70,21 +72,37 @@ cc.Class({
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
 
         // this.recvDeskInfoMsg();
+    },
+
+    recvOutCardNotify(data){
+        data = data.detail;
+        if (data.seat === this._seatIndex) {
+            for(let i = 0 ; i < this._handcardNode.children.length; ++i){
+                if (data.card === this._handcardNode.children[i].cardValue && this._handcardNode.children[i].isSelected) {
+                    this._handCards.splice(i,1);
+                    this.showAllCard();
+                    break;
+                }
+            }
+        }
+        if (0 == this._chairId) {
+            this._canOutCard = false;
+            if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+                this._canOutCard = true;
+            }
+            this.showOutLine();
+        }
     },
 
     onRecvHandCard(data){
         data = data.detail;
         if (this._seatIndex === data.seat) {
             this.clearDesk();
-            if (0 != this._chairId) {
-                data.handInCards = [];
-                for (let i = 0; i < 13; i++) {
-                    data.handInCards.push(0);
-                }
-            }
-            this.showAllCard(data);
+            this._handCards = cc.vv.gameData.sortCard(data.handInCards);
+            this.showAllCard();
             
             if (0 == this._chairId && this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
                 let self = this;
@@ -101,14 +119,13 @@ cc.Class({
         }
     },
 
-    showAllCard(data){
+    showAllCard(){
         //杠牌
 
         //碰牌
 
         //手牌
         this._handcardNode.removeAllChildren();
-        this._handCards = cc.vv.gameData.sortCard(data.handInCards);
         for(let i = 0; i < this._handCards.length; ++i){
             let node = this.node.getComponent("HongZhong_Card").createCard(this._handCards[i], 0 === this._chairId);
             node.parent = this._handcardNode;
@@ -228,7 +245,6 @@ cc.Class({
     onTouchStart(event){
         if(this._canOutCard){
             this._selectCard = event.target;
-            this._selectCard.color = new cc.Color(200,200,200);
             this._selectCardPos = this._selectCard.position;
         }
     },
@@ -245,13 +261,14 @@ cc.Class({
 
     onTouchEnd(event){
         if(this._canOutCard && this._selectCard){
-            if(this._selectCard.y>this._outCardY){
+            if(this._selectCard.y > this._outCardY || this._selectCard.isSelected){
                 // 出牌
                 this.outCard();
-            }
-            else{
+            } else {
                 this._selectCard.position = this._selectCardPos;
-                // this.checkMoveCard();
+                this.initSelectState();
+                this._selectCard.isSelected = true;
+                this._selectCard.color = new cc.Color(150,150,150);
             }
         }
     },
@@ -259,6 +276,13 @@ cc.Class({
     onTouchCancel(event){
         if(this._canTouch){
             this.onTouchEnd(event);
+        }
+    },
+
+    initSelectState(){
+        for(let i = 0 ; i < this._handcardNode.children.length; ++i){
+            this._handcardNode.children[i].isSelected = false;
+            this._handcardNode.children[i].color = new cc.Color(255,255,255);
         }
     },
 
@@ -283,12 +307,12 @@ cc.Class({
         let pos = this._selectCard.parent.convertToWorldSpaceAR(this._selectCard.position);
         Global.dispatchEvent(EventId.OUTCARD,{card:this._selectCard.cardValue,pos:pos});
         cc.vv.gameData.outCard(this._selectCard.cardValue);
-        this._canOutCard = false;
-        this.showOutLine();
-        this._selectCard.removeFromParent();
-        this.clearSelectInCardBox();
-        this.resetCardPos(true);
-        this._selectCard = null;
+        // this._canOutCard = false;
+        // this.showOutLine();
+        // this._selectCard.removeFromParent();
+        // this.clearSelectInCardBox();
+        // this.resetCardPos(true);
+        // this._selectCard = null;
     },
 
     // 插入在前面中间

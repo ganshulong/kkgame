@@ -341,7 +341,9 @@ cc.Class({
                     let  str = JSON.stringify(msgDic);
                     //cc.warn("Recieved: ", str);
                     str = str.replace(/[\'\"\\\/\b\f\n\r\t]/g, '');
-                    AppLog.log("Recieved: ", str);
+                    if (-1 == str.indexOf('c:11,')) {
+                        AppLog.log("Recieved: ", str);
+                    }
                 }
                 self.handleMsg(JSON.parse(msgDic));
                 dataview = null; //释放对象
@@ -444,7 +446,9 @@ cc.Class({
                 if (Global.localVersion) {
                     let  str = JSON.stringify(msgDic);
                     str = str.replace(/[\'\\\/\b\f\n\r\t]/g, '');
-                    AppLog.log("send:: ", str);
+                    if (11 != msgDic.c) {
+                        AppLog.log("send:: ", str);
+                    }
                 }
                 
 

@@ -40,6 +40,25 @@ cc.Class({
 
     },
 
+    registerMsg () {
+        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
+        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
+        Global.registerEvent(EventId.CHI_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.PENG_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.PAO_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.KAN_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+    },
+
+    recvDeskInfoMsg(){
+        let deskInfo = cc.vv.gameData.getDeskInfo();
+        if(deskInfo.isReconnect){
+            if(deskInfo.actionInfo.iswait){
+                this.showOperate(deskInfo);
+            }
+        }
+    },
+
     clearDesk(){
         if(this._operateNode) this._operateNode.active = false;
         if(this._selectChiNode) this._selectChiNode.active = false;
@@ -351,12 +370,11 @@ cc.Class({
         btn.data = data;
     },
 
-    recvActionNotify(data){
+    recvOutCardNotify(data){
         data = data.detail;
         if(data.actionInfo.waitList.length>0){
             this.showOperate(data);
-        }
-        else{
+        }else{
             this.onCloseSelectChi();
         }
     },
@@ -376,25 +394,6 @@ cc.Class({
                     else if(data.actionInfo.waitList[i].type === cc.vv.gameData.OPERATETYPE.PENG) this.enableBtn(this._btnPeng);
 
                 }
-            }
-        }
-    },
-
-    registerMsg () {
-        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvActionNotify,this);
-        Global.registerEvent(EventId.CHI_NOTIFY,this.onCloseSelectChi,this);
-        Global.registerEvent(EventId.PENG_NOTIFY,this.onCloseSelectChi,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.onCloseSelectChi,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.onCloseSelectChi,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-    },
-
-    recvDeskInfoMsg(){
-        let deskInfo = cc.vv.gameData.getDeskInfo();
-        if(deskInfo.isReconnect){
-            if(deskInfo.actionInfo.iswait){
-                this.showOperate(deskInfo);
             }
         }
     },
