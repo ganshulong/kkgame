@@ -1,32 +1,8 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
         _handcardNode:null,
         _num:0,
         _cardBox:[],
@@ -42,52 +18,143 @@ cc.Class({
         _bPlaying:true,
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
-
     init(index,playerNum){
-        let cardNode = null;
-        if(index === 0) cardNode = cc.find("scene/handleCardView",this.node);
-        else if(index === 1) cardNode = cc.find("scene/playback_handle/left_user",this.node);
-        else if(index === 2) cardNode = cc.find("scene/playback_handle/top_user",this.node);
-        else if(index === 3) cardNode = cc.find("scene/playback_handle/right_user",this.node);
+        this._handcardNode = cc.find("scene/hand_cards/hand_card"+index,this.node);
+        this._playerNum = playerNum;
+        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
 
         let box = cc.find("scene/cardBox",this.node);
         this._cardBoXPos = box.parent.convertToWorldSpaceAR(box.position);
         this._cardBoXPos.x -= 8;
         this._cardBoXPos.y += 24;
-
-        this._playerNum = playerNum;
-        this._handcardNode = cardNode;
-        this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
-
         this.initCardBox();
 
-        if(this._handcardNode){
-            this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
-            if(this._seatIndex>-1){
-                let user = cc.vv.gameData.getUserInfo(this._seatIndex);
-                if(user.handInCards && user.handInCards.length>0){
-                    let list = cc.vv.gameData.sortCard(user.handInCards);
-                    this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(user.handInCards);
-                    for(let i=0;i<list.length;++i){
-                        this.showCard(list[i],list.length);
-                    }
+        this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
+        let deskInfo = cc.vv.gameData.getDeskInfo();
+        if(-1 < this._seatIndex){
+            for(let i=0; i<deskInfo.users.length; ++i){
+                if(this._seatIndex === deskInfo.users[i].seat){
+                    this.showAllCard(deskInfo.users[i]);
                 }
             }
         }
 
-        if(this._chairId === 0){
+        if( 0 === this._chairId){
+            this._outCardLineNode = cc.find("scene/sp_out_tips_line",this.node);
             this.spr_outCardTipsLine = cc.find("scene/spr_outCardTipsLine",this.node);
             this.outCardDirTips = this.spr_outCardTipsLine.getChildByName("outCardDirTips");
 
-            let outCardLine = cc.find("scene/sp_out_tips_line",this.node);
-            this._outCardLineNode = outCardLine;
-            this._outCardLineNode.active = false;
-            this.showOutCardTipsAni();
-            this._outCardY = this._handcardNode.convertToNodeSpaceAR(outCardLine.parent.convertToWorldSpaceAR(outCardLine.position)).y;
-            this.checkCanOutCard();
+            this._outCardY = this._handcardNode.convertToNodeSpaceAR(this._outCardLineNode.parent.convertToWorldSpaceAR(this._outCardLineNode.position)).y;
+
+            this._canOutCard = false;
+            if(deskInfo.isReconnect){
+                if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
+                    deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
+                    this._canOutCard = true;
+                }
+            }
+            this.showOutLine(this._canOutCard);
+        }
+    },
+
+    start () {
+        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
+        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
+        Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
+        Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
+        Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanAndKanNotify,this);
+        Global.registerEvent(EventId.PENG_NOTIFY,this.recvKanAndKanNotify,this);
+        Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoAndLongNotify,this);
+        Global.registerEvent(EventId.LONG_NOTIFY,this.recvPaoAndLongNotify,this);
+        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+
+        // this.recvDeskInfoMsg();
+    },
+
+    onRecvHandCard(data){
+        data = data.detail;
+        if (this._seatIndex === data.seat) {
+            this.clearDesk();
+            if (0 != this._chairId) {
+                data.handInCards = [];
+                for (let i = 0; i < 13; i++) {
+                    data.handInCards.push(0);
+                }
+            }
+            this.showAllCard(data);
+            
+            if (this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
+                let self = this;
+                cc.sequence(
+                    cc.delayTime(self._canOutCard ? 1 : 0), 
+                    cc.callFunc(()=>{
+                        self.showOutLine(true);
+                    })
+                )
+            }
+        }
+    },
+
+    showAllCard(data){
+        //杠牌
+
+        //碰牌
+
+        //手牌
+        this._handcardNode.removeAllChildren();
+        this._handCards = cc.vv.gameData.sortCard(data.handInCards);
+        for(let i = 0; i < this._handCards.length; ++i){
+            let node = this.node.getComponent("HongZhong_Card").createCard(this._handCards[i], 0 === this._chairId);
+            node.parent = this._handcardNode;
+            if (0 === this._chairId) {      //下
+                node.x = -(node.width*(this._handCards.length-1))/2 + node.width * i;
+            } else if (1 === this._chairId) {  //上
+                node.x = -node.width * i;
+            }
+        }
+        
+        //当前摸进牌
+    },
+
+    recvDeskInfoMsg(){
+        if(this._handcardNode === null) return;
+        let deskInfo = cc.vv.gameData.getDeskInfo();
+        for(let i=0;i<deskInfo.users.length;++i){
+            if(this._seatIndex === deskInfo.users[i].seat){
+                let cards = deskInfo.users[i].handInCards;
+
+                if(cards && cards.length !== this._handcardNode.childrenCount){
+                    this.clearDesk();
+                    let list = cc.vv.gameData.sortCard(cards);
+                    this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);
+                    for(let i=0;i<list.length;++i){
+                        this.showCard(list[i],list.length);
+                    }
+                }
+
+                let menziList = deskInfo.users[i].menzi;
+                let pengKanCount = 0;
+                for(let j = 0; j < menziList.length; ++j){
+                    if(cc.vv.gameData.OPERATETYPE.KAN === menziList[j].type || cc.vv.gameData.OPERATETYPE.PENG === menziList[j].type) // 坎
+                    {
+                        ++pengKanCount;
+                    }
+                }
+                if (4 == pengKanCount) {
+                    this.isCanWarn = true;
+                }
+
+            }
+        }
+        if(deskInfo.isReconnect){
+            if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
+                deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
+                this._canOutCard = true;
+                this.showOutLine(this._canOutCard);
+            }
         }
     },
 
@@ -456,74 +523,6 @@ cc.Class({
         }
     },
 
-    onRecvHandCard(data){
-        data = data.detail;
-        if(this._seatIndex === data.seat){
-            if(data.handInCards){
-                this._bPlaying = true;
-                this.clearDesk();
-                this._handCardData = data;
-                this._handCards = data.handInCards.slice(0);
-                let list = data.handInCards.slice(0);
-                for(let j=0;j<data.menzi.length;++j){
-                    let typeData = data.menzi[j];
-                    let num =0;
-                    if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN ) // 坎
-                    {
-                        num = 3;
-                    }
-                    else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || typeData.type === cc.vv.gameData.OPERATETYPE.SHE){
-                        num = 4;
-                    }
-                    for(let i=0;i<num;++i){
-                        list.push(typeData.card);
-                    }
-                }
-                // 随机洗下牌
-                for(let i=0;i<10;++i){
-                    let index = parseInt(cc.random0To1()*1000)%10;
-                    let temp = list[i];
-                    list[i] = list[index];
-                    list[index] = temp;
-                }
-                this.showCard(list,list.length,true);
-                let maxCol = 10 < list.length ? 10 : list.length;
-                let startX = this._handcardNode.parent.width*0.5-maxCol*0.5*this._handcardNode.children[0].width;
-                let startY =  this._handcardNode.children[0].height*0.5-20;
-
-                for(let i=0;i<this._handcardNode.childrenCount;++i){
-                    let child = this._handcardNode.children[i];
-                    child.position = child.parent.convertToNodeSpaceAR(this._cardBoXPos);
-
-                    let bg = child.getChildByName("bg");
-                    child.opacity = 0;
-                    let endPos = cc.v2(startX+(i%10)*child.width,startY+parseInt(i/10)*(child.height-22));
-                    let delaytimeAction = cc.delayTime(i*0.05);
-                    let callFunc1 = cc.callFunc(()=>{
-                        bg.opacity = 200;
-                        child.getComponent(cc.Sprite).enabled = false;
-                        Global.playEff(Global.SOUNDS.send_card);
-                    });
-                    let callFunc2 = cc.callFunc(()=>{
-                        child.getComponent(cc.Sprite).enabled = true;
-                        bg.active = false;
-                    });
-                    let scaleAction1 = cc.scaleTo(0.2, 0, 1);
-                    let scaleAction2 = cc.scaleTo(0.2, 1, 1);
-
-                    let spaw = cc.spawn(cc.moveTo(0.1,endPos),cc.fadeTo(0.1,255));
-                    let seq = cc.sequence(delaytimeAction,callFunc1,spaw,scaleAction1,callFunc2,scaleAction2);
-                    if(i === this._handcardNode.childrenCount-1){
-                        seq = cc.sequence(delaytimeAction,callFunc1,spaw,scaleAction1,callFunc2,scaleAction2,cc.callFunc(()=>{
-                            this.sortCard();
-                        }));
-                    }
-                    child.runAction(seq);
-                }
-            }
-        }
-    },
-
     sortCard(){
         if (this._bPlaying) {
             this.checkCanOutCard(this._handCardData.bankerInfo.seat);
@@ -569,23 +568,6 @@ cc.Class({
         this._num = 0;
     },
 
-    start () {
-        Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
-        Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
-        Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
-        Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanAndKanNotify,this);
-        Global.registerEvent(EventId.PENG_NOTIFY,this.recvKanAndKanNotify,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoAndLongNotify,this);
-        Global.registerEvent(EventId.LONG_NOTIFY,this.recvPaoAndLongNotify,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-        Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
-
-        this.recvDeskInfoMsg();
-    },
-
     recvOverRound(data){
         this._bPlaying = false;
         this.isCanWarn = false;
@@ -599,45 +581,6 @@ cc.Class({
         if(data.seat === this._seatIndex){
             this.delHandCard(data.card);
             this.resetCardPos();
-        }
-    },
-
-    recvDeskInfoMsg(){
-        if(this._handcardNode === null) return;
-        let deskInfo = cc.vv.gameData.getDeskInfo();
-        for(let i=0;i<deskInfo.users.length;++i){
-            if(this._seatIndex === deskInfo.users[i].seat){
-                let cards = deskInfo.users[i].handInCards;
-
-                if(cards && cards.length !== this._handcardNode.childrenCount){
-                    this.clearDesk();
-                    let list = cc.vv.gameData.sortCard(cards);
-                    this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);
-                    for(let i=0;i<list.length;++i){
-                        this.showCard(list[i],list.length);
-                    }
-                }
-
-                let menziList = deskInfo.users[i].menzi;
-                let pengKanCount = 0;
-                for(let j = 0; j < menziList.length; ++j){
-                    if(cc.vv.gameData.OPERATETYPE.KAN === menziList[j].type || cc.vv.gameData.OPERATETYPE.PENG === menziList[j].type) // 坎
-                    {
-                        ++pengKanCount;
-                    }
-                }
-                if (4 == pengKanCount) {
-                    this.isCanWarn = true;
-                }
-
-            }
-        }
-        if(deskInfo.isReconnect){
-            if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
-                deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
-                this._canOutCard = true;
-                this.showOutLine(this._canOutCard);
-            }
         }
     },
 

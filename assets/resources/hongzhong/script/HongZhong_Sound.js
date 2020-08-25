@@ -69,10 +69,11 @@ cc.Class({
         data = data.detail;
         let seat = data.seat;
         if(seat === cc.vv.gameData.getMySeatIndex()){
-            for(let j=0;j<data.menzi.length;++j){
-                let typeData = data.menzi[j];
-                this.playOperateType(seat,typeData.type);
-            }
+            //gsltodo
+            // for(let j=0;j<data.menzi.length;++j){
+            //     let typeData = data.menzi[j];
+            //     this.playOperateType(seat,typeData.type);
+            // }
         }
     },
 

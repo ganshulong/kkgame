@@ -441,7 +441,7 @@ cc.Class({
     // 总分
     setTotalScore(score){
         if (typeof score != 'undefined') {
-            if(this._playerNode)  cc.find("head/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
+            if(this._playerNode)  cc.find("head/bg_total_score/txt_total_score",this._playerNode).getComponent(cc.Label).string = "分数:"+score;
         }
     },
 

@@ -81,7 +81,6 @@ cc.Class({
         let txt_game_desc_detail = cc.find("scene/bg_view/room_info/img_hear_bg/txt_game_desc_detail",this.node);
         txt_game_desc_detail.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrDetail();
 
-        this.node.addComponent("HongZhong_Card").init(this.cardsAtlas);
 
         let btnMsg = cc.find("scene/operate_btn_view/btn_msg",this.node);
         Global.btnClickEvent(btnMsg,this.onShowMsg,this);
@@ -99,16 +98,16 @@ cc.Class({
             }
         }
 
-        // this.node.addComponent("HongZhong_Menu");
-
         for(let i = 0; i < cc.vv.gameData.RoomSeat; ++i){
             this.node.addComponent("HongZhong_ShowCard").init(i,conf.seat);
             this.node.addComponent("HongZhong_Player").init(i,conf.seat,this.emjoAtlas);
             this.node.addComponent("HongZhong_OutCard").init(i,conf.seat);
-            this.node.addComponent("HongZhong_OperatePai").init(i,conf.seat);
+            // this.node.addComponent("HongZhong_OperatePai").init(i,conf.seat);
             this.node.addComponent("HongZhong_HandCard").init(i,conf.seat);
         }
+        // this.node.addComponent("HongZhong_Menu");
         // this.node.addComponent("HongZhong_HandCard").init();
+        this.node.addComponent("HongZhong_Card").init();
         this.node.addComponent("HongZhong_Operate");
         this.node.addComponent("HongZhong_Tips");
         this.node.addComponent("HongZhong_Action");
