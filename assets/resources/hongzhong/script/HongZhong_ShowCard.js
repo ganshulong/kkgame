@@ -133,7 +133,7 @@ cc.Class({
         Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
         Global.registerEvent(EventId.PAO_NOTIFY,this.clearDesk,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.clearDesk,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         this.recvDeskInfoMsg();
     },

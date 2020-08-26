@@ -16,7 +16,7 @@ cc.Class({
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.GAMEOVER,this.recvGameOver,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
 
         this._OverScoreNode = cc.find("scene/over_score",this.node);
         this._OverScoreNode.active = false;

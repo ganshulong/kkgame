@@ -8,19 +8,20 @@ cc.Class({
     },
 
     start () {
-        //cc.vv.AudioManager.playBgm(this._soundPath, "music_bg_hhh", true);
+        //gsltodo
+        // //cc.vv.AudioManager.playBgm(this._soundPath, "music_bg_hhh", true);
 
-        Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
-        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
-        Global.registerEvent(EventId.CHI_NOTIFY,this.playOperate,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.playOperate,this);
-        Global.registerEvent(EventId.LONG_NOTIFY,this.playOperate,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanNotify,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvHuNotify,this);
-        Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
-        // Global.registerEvent(EventId.SHOW_MENZI_SOUND,this.onRecvMenziSound,this);
-        Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
+        // Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
+        // Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
+        // Global.registerEvent(EventId.CHI_NOTIFY,this.playOperate,this);
+        // Global.registerEvent(EventId.PAO_NOTIFY,this.playOperate,this);
+        // Global.registerEvent(EventId.LONG_NOTIFY,this.playOperate,this);
+        // Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanNotify,this);
+        // Global.registerEvent(EventId.HU_NOTIFY,this.recvHuNotify,this);
+        // Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
+        // Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        // // Global.registerEvent(EventId.SHOW_MENZI_SOUND,this.onRecvMenziSound,this);
+        // Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
 
     },
 

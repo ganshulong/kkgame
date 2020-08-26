@@ -47,23 +47,17 @@ cc.Class({
     init(data){
         this.RoomSeat = 2;
         this.OPERATETYPE={
-            GU0:1,  // 过
-            PUT:2,  // 打牌
-            MOPAI:3,// 摸牌
-            CHI:4,  // 吃
-            PENG:5, // 碰
-            KAN:6,  // 坎
-            LONG:8, // 踢龙
-            SHE:9,  // 蛇
-            PAO:7,
-            HU:10,
-            HANDPAO:11, // 手牌的跑
-            HANDLONG:12,  // 手牌的踢龙
-            // PENGSAN:11, // 碰三
-            // KANSAN:12,  // 坎三
-            // PENGSI:13, // 碰四
-            // KANSI:14,  // 坎四
-            CHI_LUO:15,  // 吃落
+            GU0     :1, // 过
+            PUT     :2, // 打牌
+            MOPAI   :3, // 摸牌
+            PENG    :4, // 碰
+            MGANG   :5, // 明杠
+            AGANG   :6, // 暗杠
+            JGANG   :7, // 接杠
+            FGANG   :8, // 放杠
+            HU      :9, // 胡牌
+            wait    :10,// 等待别人操作
+            GANG    :11,// 明杠
         },
 
         this.registerMsg();

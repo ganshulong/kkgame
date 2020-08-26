@@ -33,51 +33,29 @@ cc.Class({
     },
 
     getEndPos(cardsNum){
-        let endPos = cc.v2(0,0);
-        let y = parseInt(cardsNum/5);   //竖行
-        let x = cardsNum%5;
-        let width = 37;
-        let height = 36;
-
+        let scale = 1;
         // 下
         if(this._UISeat === 0){
-            endPos.x = width*x;
-            endPos.y = height*y;
-
-        //右
-        } else if(this._UISeat === 1){
-            endPos.y = height*x;
-            endPos.x = -width*y;
-        
+            scale = 0.9;
         //上
-        } else if(this._UISeat === 2){
-            endPos.x = width*x;
-            endPos.y = -height*y;
-        
-        //左
-        } else if(this._UISeat === 3){
-            endPos.y = height*x;
-            endPos.x = width*y;
+        } else if(this._UISeat === 1){
+            scale = -0.75;
         }
-        return endPos;
+        return cc.v2(0, 0);
     },
 
-    showCard(value,showAction = false){
+    showCard(value){
         let node = this.node.getComponent("HongZhong_Card").createCard(value,showAction?0:2);
-
-        let endPos = this.getEndPos(this._cardsNum);
-
-
-        if(showAction){
-            this.showCardAction(node,cc.v2(this._startPos.x,this._startPos.y),cc.v2(endPos.x,endPos.y));
-        }
-        else{
-            node.position = endPos;
+        if(this._UISeat === 0){             // 下
+            node.scale = 0.9;
+            node.x = node.width * node.scale * this._cardsNum;
+        } else if(this._UISeat === 1){      //上
+            node.scale = 0.75;
+            node.x = -node.width * node.scale * this._cardsNum;
         }
         node.parent = this._outCardNode;
         node.cardValue = value;
         ++this._cardsNum;
-
     },
 
     clearDesk(){
@@ -99,7 +77,7 @@ cc.Class({
         Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
         Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
 
         this.recvDeskInfoMsg();
     },
@@ -123,6 +101,23 @@ cc.Class({
         }
     },
 
+    recvMoPaiNotify(data){
+        // data = data.detail;
+        // this.showOutCard();
+    },
+
+    // 出牌
+    recvOutCardNotify(data){
+        data = data.detail;
+        if(data.actionInfo.curaction.seat === this._seatIndex){
+            // this.putOutCard(data.actionInfo.curaction.card);
+            this.showOutCard(data.actionInfo.curaction.card);
+        }
+    },
+
+    showOutCard(card){
+        this.showCard(this._outCardValue[i],true);
+    },
 
     // 过
     recvGuoNotify(data){
@@ -143,27 +138,6 @@ cc.Class({
         if(data.actionInfo.curaction.seat === this._seatIndex && data.luoData){
             for(let i=0;i<data.luoData.length;++i){
                 this.showCard(data.luoData[i],true);
-            }
-        }
-    },
-
-    recvMoPaiNotify(data){
-        data = data.detail;
-        this.showOutCard();
-    },
-
-    // 出牌
-    recvOutCardNotify(data){
-        data = data.detail;
-        this.showOutCard();
-        // 摸得牌
-        if(data.actionInfo.curaction.seat === this._seatIndex && data.actionInfo.iswait===0){
-            if(data.actionInfo.curaction.source === 0){
-                this.putOutCard(data.actionInfo.curaction.card);
-                this.showOutCard();
-            }
-            else{
-                this.putOutCard(data.actionInfo.curaction.card);
             }
         }
     },
@@ -214,14 +188,14 @@ cc.Class({
         }
     },
 
-    showOutCard(){
-        if(this._outCardValue){
-            for(let i=0;i<this._outCardValue.length;++i){
-                this.showCard(this._outCardValue[i],true);
-            }
-            this._outCardValue = null;
-        }
-    },
+    // showOutCard(){
+    //     if(this._outCardValue){
+    //         for(let i=0;i<this._outCardValue.length;++i){
+    //             this.showCard(this._outCardValue[i],true);
+    //         }
+    //         this._outCardValue = null;
+    //     }
+    // },
 
     recvPlayerEnter(data){
         data = data.detail;

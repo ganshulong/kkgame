@@ -69,7 +69,7 @@ cc.Class({
         Global.registerEvent(EventId.PENG_NOTIFY,this.recvKanAndKanNotify,this);
         Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoAndLongNotify,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.recvPaoAndLongNotify,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
@@ -146,44 +146,44 @@ cc.Class({
         //当前摸进牌
     },
 
-    recvDeskInfoMsg(){
-        if(this._handcardNode === null) return;
-        let deskInfo = cc.vv.gameData.getDeskInfo();
-        for(let i=0;i<deskInfo.users.length;++i){
-            if(this._seatIndex === deskInfo.users[i].seat){
-                let cards = deskInfo.users[i].handInCards;
+    // recvDeskInfoMsg(){
+    //     if(this._handcardNode === null) return;
+    //     let deskInfo = cc.vv.gameData.getDeskInfo();
+    //     for(let i=0;i<deskInfo.users.length;++i){
+    //         if(this._seatIndex === deskInfo.users[i].seat){
+    //             let cards = deskInfo.users[i].handInCards;
 
-                if(cards && cards.length !== this._handcardNode.childrenCount){
-                    this.clearDesk();
-                    let list = cc.vv.gameData.sortCard(cards);
-                    this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);
-                    for(let i=0;i<list.length;++i){
-                        this.showCard(list[i],list.length);
-                    }
-                }
+    //             if(cards && cards.length !== this._handcardNode.childrenCount){
+    //                 this.clearDesk();
+    //                 let list = cc.vv.gameData.sortCard(cards);
+    //                 this.greyCardArrCount = cc.vv.gameData.getGreyCardArrCount(cards);
+    //                 for(let i=0;i<list.length;++i){
+    //                     this.showCard(list[i],list.length);
+    //                 }
+    //             }
 
-                let menziList = deskInfo.users[i].menzi;
-                let pengKanCount = 0;
-                for(let j = 0; j < menziList.length; ++j){
-                    if(cc.vv.gameData.OPERATETYPE.KAN === menziList[j].type || cc.vv.gameData.OPERATETYPE.PENG === menziList[j].type) // 坎
-                    {
-                        ++pengKanCount;
-                    }
-                }
-                if (4 == pengKanCount) {
-                    this.isCanWarn = true;
-                }
+    //             let menziList = deskInfo.users[i].menzi;
+    //             let pengKanCount = 0;
+    //             for(let j = 0; j < menziList.length; ++j){
+    //                 if(cc.vv.gameData.OPERATETYPE.KAN === menziList[j].type || cc.vv.gameData.OPERATETYPE.PENG === menziList[j].type) // 坎
+    //                 {
+    //                     ++pengKanCount;
+    //                 }
+    //             }
+    //             if (4 == pengKanCount) {
+    //                 this.isCanWarn = true;
+    //             }
 
-            }
-        }
-        if(deskInfo.isReconnect){
-            if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
-                deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
-                this._canOutCard = true;
-                this.showOutLine();
-            }
-        }
-    },
+    //         }
+    //     }
+    //     if(deskInfo.isReconnect){
+    //         if(cc.vv.gameData.getMySeatIndex() === deskInfo.actionInfo.nextaction.seat &&
+    //             deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT){
+    //             this._canOutCard = true;
+    //             this.showOutLine();
+    //         }
+    //     }
+    // },
 
     // 检查是否可以出牌
     checkCanOutCard(seat){

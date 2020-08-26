@@ -23,7 +23,7 @@ cc.Class({
         Global.registerEvent(EventId.LONG_NOTIFY,this.operateNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.operateNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
-        Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         this.recvDeskInfoMsg();
     },
 
@@ -58,7 +58,6 @@ cc.Class({
         let bankInfo = data.bankerInfo;
         this.showDir(bankInfo.seat);
         if(data.cardcnt) this.updateRemainCards(data.cardcnt);
-
     },
 
     updateRemainCards(num){
@@ -69,7 +68,7 @@ cc.Class({
         let chairId = cc.vv.gameData.getLocalChair(seat);
         let UISeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
         let playerNum = cc.vv.gameData.getPlayerNum();
-        for(let i=0;i<4;++i){
+        for(let i=0;i<cc.vv.gameData.RoomSeat;++i){
            let arrow =  cc.find("panel_bg/arrow"+i,this._cardBox);
            arrow.active = UISeat === i;
         }
