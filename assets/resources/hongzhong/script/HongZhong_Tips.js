@@ -15,13 +15,15 @@ cc.Class({
         this._remaindCards = cc.find("scene/cardBox/panel_bg/txt_remain_card",this.node);
 
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         Global.registerEvent(EventId.CHI_NOTIFY,this.operateNotify,this);
         Global.registerEvent(EventId.KAN_NOTIFY,this.operateNotify,this);
         Global.registerEvent(EventId.PENG_NOTIFY,this.operateNotify,this);
         Global.registerEvent(EventId.PAO_NOTIFY,this.operateNotify,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.operateNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.operateNotify,this);
+
+        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         this.recvDeskInfoMsg();
@@ -41,6 +43,13 @@ cc.Class({
        }
     },
 
+    recvOutCardNotify(data){
+        data = data.detail;
+        if(data.actionInfo.iswait && 0 < data.actionInfo.waitList.length){
+            this.showDir(data.actionInfo.waitList[i].seat);
+        }
+    },
+
     recvMoPaiNotify(data){
         data = data.detail;
         this.showDir(data.seat);
@@ -52,11 +61,10 @@ cc.Class({
         this.showDir(data.actionInfo.iswait===1? data.actionInfo.curaction.seat:data.actionInfo.nextaction.seat);
     },
 
-    onRecvHandCard(data){
+    recvHandCard(data){
         data = data.detail;
         this._cardBox.active = true;
-        let bankInfo = data.bankerInfo;
-        this.showDir(bankInfo.seat);
+        this.showDir(data.bankerInfo.seat);
         if(data.cardcnt) this.updateRemainCards(data.cardcnt);
     },
 

@@ -88,7 +88,7 @@ cc.Class({
         this.node.addComponent("HongZhong_Chat");
         this.node.addComponent("HongZhong_Setting");
 
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
@@ -134,7 +134,7 @@ cc.Class({
         spr_battery.scaleX = parseInt(data.detail) / 100;
     },
 
-    onRecvHandCard(data){
+    recvHandCard(data){
         data = data.detail;
         this.updateCount(data.round);
     },

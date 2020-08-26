@@ -85,8 +85,10 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_KICK, this.onRcvNetKickNotice, this);
         //财富改变（金币改变）
         cc.vv.NetManager.registerMsg(MsgId.MONEY_CHANGED, this.onRcvNetMoneyChanged, this);
-        cc.vv.NetManager.registerMsg(MsgId.SENDCARD, this.onRcvHandCard, this);
-        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_OUTCARD, this.onRcvOutCardNotify, this);
+
+        cc.vv.NetManager.registerMsg(MsgId.SENDCARD, this.recvHandCard, this);
+        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_OUTCARD, this.recvOutCardNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_MOPAI, this.recvMoPaiNotify, this);
 
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, this);
@@ -102,7 +104,6 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_CHI, this.onRcvChiNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_PENG, this.onRcvPengNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_NOTIFY_GUO, this.onRcvGuoNotfiy, this);
-        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_MOPAI, this.onRcvMoPaiNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_HU, this.onRcvHuNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GAME_OVER, this.onRcvGameOverNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.CHAT_NOTIFY, this.onRcvChatNotify, this);
@@ -126,8 +127,8 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_RECONNECT_DESKINFO, this.onRecvNetReconnectDeskinfo, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_KICK, this.onRcvNetKickNotice, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MONEY_CHANGED,this.onRcvNetMoneyChanged, false, this);
-        cc.vv.NetManager.unregisterMsg(MsgId.SENDCARD,this.onRcvHandCard, false, this);
-        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_OUTCARD,this.onRcvOutCardNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.SENDCARD,this.recvHandCard, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_OUTCARD,this.recvOutCardNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.OUTCARD, this.onRcvOutCardReslut , false,this);
@@ -141,7 +142,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_CHI, this.onRcvChiNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_PENG, this.onRcvPengNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_NOTIFY_GUO, this.onRcvGuoNotfiy , false,this);
-        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_MOPAI, this.onRcvMoPaiNotfiy , false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_MOPAI, this.recvMoPaiNotify , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_HU, this.onRcvHuNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GAME_OVER, this.onRcvGameOverNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.CHAT_NOTIFY, this.onRcvChatNotify, false,this);
@@ -327,7 +328,7 @@ cc.Class({
     },
 
     // 摸牌
-    onRcvMoPaiNotfiy(msg){
+    recvMoPaiNotify(msg){
         if(msg.code === 200){
             Global.dispatchEvent(EventId.MOPAI_NOTIFY,msg);
         }
@@ -402,13 +403,13 @@ cc.Class({
     },
 
     // 出牌通知
-    onRcvOutCardNotify(msg){
+    recvOutCardNotify(msg){
         if(msg.code === 200){
             Global.dispatchEvent(EventId.OUTCARD_NOTIFY,msg);
         }
     },
 
-    onRcvHandCard(msg){
+    recvHandCard(msg){
         if(msg.code === 200){
             Global.dispatchEvent(EventId.HANDCARD,msg);
         }

@@ -95,7 +95,7 @@ cc.Class({
         Global.registerEvent(EventId.CLOSE_ROUNDVIEW,this.recvCloseRoundView,this);
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         Global.registerEvent(EventId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData,this);
         Global.registerEvent(EventId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify,this);
         Global.registerEvent(EventId.DISMISS_NOTIFY, this.onRcvDismissNotify,this);
@@ -554,7 +554,7 @@ cc.Class({
         }
     },
 
-    onRecvHandCard(data){
+    recvHandCard(data){
         data = data.detail;
         if(data.seat === cc.vv.gameData.getMySeatIndex()){
             this.showInviteWxCopyRoomId(false);

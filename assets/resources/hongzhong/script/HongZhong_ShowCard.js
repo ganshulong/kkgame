@@ -41,41 +41,44 @@ cc.Class({
     },
 
     recvOutcardNotify(data){
-        data = data.detail;
-        // 打出去摸得牌
-        if(this._cardValue){
-            // 没人要
-            if(data.actionInfo.iswait === 0){
-                this.clearDesk();
-            }
-        }
-        else{
-            if(data.actionInfo.curaction.seat === this._seatIndex){
+        //gsltodo
+        //其他玩家出牌 显示
 
-                if(data.actionInfo.curaction.type === cc.vv.gameData.OPERATETYPE.PUT){
-                    this.showCard(data.actionInfo.curaction.card);
-                    this.node.getComponent("HongZhong_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
-                    let chairId = cc.vv.gameData.getLocalChair(data.actionInfo.curaction.seat);
-                    chairId = cc.vv.gameData.getUISeatBylocalSeat(chairId);
-                    let playerNode = cc.find("scene/player"+chairId,this.node);
-                    let startPos = playerNode.position;
-                    if(this._chairId === 0){
-                        if(this._cardPos){
-                            startPos = cc.v2(this._cardPos.x,this._cardPos.y);
-                        }
-                        else {
-                            startPos = cc.v2(this._cardBoXPos.x,this._cardBoXPos.y);
-                        }
-                        this.showCardAction(startPos,data.actionInfo.iswait === 0 && data.actionInfo.source>0);
-                        this._cardPos = null;
-                    }
-                    else{
-                        this.showCardAction(playerNode.parent.convertToWorldSpaceAR(startPos),data.actionInfo.iswait === 0 && data.actionInfo.source>0);
-                    }
+        // data = data.detail;
+        // // 打出去摸得牌
+        // if(this._cardValue){
+        //     // 没人要
+        //     if(data.actionInfo.iswait === 0){
+        //         this.clearDesk();
+        //     }
+        // }
+        // else{
+        //     if(data.actionInfo.curaction.seat === this._seatIndex){
 
-                }
-            }
-        }
+        //         if(data.actionInfo.curaction.type === cc.vv.gameData.OPERATETYPE.PUT){
+        //             this.showCard(data.actionInfo.curaction.card);
+        //             this.node.getComponent("HongZhong_Card").changCardBg(this._showCardNode.getChildByName("card_light"),false);
+        //             let chairId = cc.vv.gameData.getLocalChair(data.actionInfo.curaction.seat);
+        //             chairId = cc.vv.gameData.getUISeatBylocalSeat(chairId);
+        //             let playerNode = cc.find("scene/player"+chairId,this.node);
+        //             let startPos = playerNode.position;
+        //             if(this._chairId === 0){
+        //                 if(this._cardPos){
+        //                     startPos = cc.v2(this._cardPos.x,this._cardPos.y);
+        //                 }
+        //                 else {
+        //                     startPos = cc.v2(this._cardBoXPos.x,this._cardBoXPos.y);
+        //                 }
+        //                 this.showCardAction(startPos,data.actionInfo.iswait === 0 && data.actionInfo.source>0);
+        //                 this._cardPos = null;
+        //             }
+        //             else{
+        //                 this.showCardAction(playerNode.parent.convertToWorldSpaceAR(startPos),data.actionInfo.iswait === 0 && data.actionInfo.source>0);
+        //             }
+
+        //         }
+        //     }
+        // }
     },
 
     recvChiCard(data){
@@ -91,14 +94,14 @@ cc.Class({
     },
 
     recvMoPaiNotify(data){
-        data = data.detail;
-        if(data.seat === this._seatIndex){
-           this.showCard(data.card);
+        // data = data.detail;
+        // if(data.seat === this._seatIndex){
+        //    this.showCard(data.card);
 
-            this.node.getComponent("HongZhong_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
-            this.showCardAction(this._cardBoXPos);
-        }
-        else this.clearDesk();
+        //     this.node.getComponent("HongZhong_Card").changCardBg(this._showCardNode.getChildByName("card_light"),true);
+        //     this.showCardAction(this._cardBoXPos);
+        // }
+        // else this.clearDesk();
     },
 
     showCardAction(worldPos){

@@ -19,7 +19,7 @@ cc.Class({
         // Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanNotify,this);
         // Global.registerEvent(EventId.HU_NOTIFY,this.recvHuNotify,this);
         // Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
-        // Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        // // Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         // // Global.registerEvent(EventId.SHOW_MENZI_SOUND,this.onRecvMenziSound,this);
         // Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
 
@@ -39,17 +39,17 @@ cc.Class({
     //     this.playOperateType(cc.vv.gameData.getMySeatIndex(),type);
     // },
 
-    onRecvHandCard(data){
-        data = data.detail;
-        let seat = data.seat;
-        if(seat === cc.vv.gameData.getMySeatIndex()){
-            //gsltodo
-            // for(let j=0;j<data.menzi.length;++j){
-            //     let typeData = data.menzi[j];
-            //     this.playOperateType(seat,typeData.type);
-            // }
-        }
-    },
+    // recvHandCard(data){
+    //     data = data.detail;
+    //     let seat = data.seat;
+    //     if(seat === cc.vv.gameData.getMySeatIndex()){
+    //         //gsltodo
+    //         // for(let j=0;j<data.menzi.length;++j){
+    //         //     let typeData = data.menzi[j];
+    //         //     this.playOperateType(seat,typeData.type);
+    //         // }
+    //     }
+    // },
 
     // 操作
     playOperate(data){

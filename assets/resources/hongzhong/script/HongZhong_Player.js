@@ -62,7 +62,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, this);
 
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
@@ -357,7 +357,7 @@ cc.Class({
             }
         }
     },
-    onRecvHandCard(data){
+    recvHandCard(data){
         let bankInfo = data.detail.bankerInfo;
         if(bankInfo.seat === this._seatIndex) {
             this.showZhuang(true);

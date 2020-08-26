@@ -8,29 +8,29 @@ cc.Class({
         _show:false,
         _isOver:false,
         _OverScoreNode:null,
-        _zhuang:-1,
+        // _zhuang:-1,
     },
 
     start () {
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.GAMEOVER,this.recvGameOver,this);
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        // Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
 
         this._OverScoreNode = cc.find("scene/over_score",this.node);
         this._OverScoreNode.active = false;
     },
 
-    onRecvHandCard(data){
-      data = data.detail;
-      this._zhuang = data.bankerInfo.seat;
+    // recvHandCard(data){
+    //   data = data.detail;
+    //   this._zhuang = data.bankerInfo.seat;
 
-    },
+    // },
 
-    recvDeskInfoMsg(){
-        this._zhuang = cc.vv.gameData.getDeskInfo().bankerInfo.seat;
-    },
+    // recvDeskInfoMsg(){
+    //     this._zhuang = cc.vv.gameData.getDeskInfo().bankerInfo.seat;
+    // },
 
     init(atlas){
         this._atlas = atlas;
@@ -67,8 +67,8 @@ cc.Class({
                     this._layer.active = false;
                     this._layer.x = this.node.width/2;
                     this._layer.y = this.node.height/2;
-                    this.showRoundInfo(data);
-                    this.initPlayerInfo(data, data.users,data.seat,data.hcard,data.source,data.hupaiType);
+                    // this.showRoundInfo(data);
+                    // this.initPlayerInfo(data, data.users,data.seat,data.hcard,data.source,data.hupaiType);
                     this.initRoomInfo();
                     let self = this;
                     this.scheduleOnce(()=>{
@@ -110,7 +110,7 @@ cc.Class({
             if (data.hcard) {
                 let bgNode = new cc.Node();
                 bgNode.addComponent(cc.Sprite);
-                let cardNode = this.node.getComponent("HongZhong_Card").createCard(data.hcard,0);
+                let cardNode = this.node.getComponent("HongZhong_Card").createCard(data.hcard,false);
                 cardNode.parent = bgNode;
                 bgNode.parent = panel_CardInfo.getChildByName("card_last");
             }
@@ -136,7 +136,7 @@ cc.Class({
                     }
 
                     for(let j = 0; j < cardArr.length; ++j){
-                        let node = this.node.getComponent("HongZhong_Card").createCard(cardArr[j],2);
+                        let node = this.node.getComponent("HongZhong_Card").createCard(cardArr[j],false);
                         node.y = node.height * j;
                         node.parent = cardArrItem;
                     }
@@ -152,7 +152,7 @@ cc.Class({
                     cardArrItem.x = (winerInfo.menzi.length + i) * 70;
 
                     for(let j = 0; j < data.huCards[i].length; ++j) {
-                        let node = this.node.getComponent("HongZhong_Card").createCard(data.huCards[i][j],2);
+                        let node = this.node.getComponent("HongZhong_Card").createCard(data.huCards[i][j],false);
                         node.y = node.height * j;
                         node.parent = cardArrItem;
 
@@ -201,7 +201,7 @@ cc.Class({
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
         for (let i = 0; i < data.diPai.length; i++) {
-            let node = this.node.getComponent("HongZhong_Card").createCard(data.diPai[i],2);
+            let node = this.node.getComponent("HongZhong_Card").createCard(data.diPai[i],false);
             node.x = (node.width + 5) * i;
             node.parent = surplusCard;
         }
@@ -281,10 +281,13 @@ cc.Class({
     initRoomInfo(){
         let conf = cc.vv.gameData.getRoomConf();
         let roomId = cc.find("roomInfoNode/txt_room_id",this._layer);
-        roomId.getComponent(cc.Label).string = "游戏号:" + conf.deskId;
+        roomId.getComponent(cc.Label).string = "房间号:" + conf.deskId;
 
         let roundNum = cc.find("roomInfoNode/txt_round_num",this._layer);
-        roundNum.getComponent(cc.Label).string = "(" + cc.vv.gameData.getDeskInfo().round + "/" + conf.gamenum + "局)";
+        roundNum.getComponent(cc.Label).string = "局数:" + cc.vv.gameData.getDeskInfo().round + "/" + conf.gamenum;
+
+        let txt_date = cc.find("roomInfoNode/txt_date",this._layer);
+        txt_date.getComponent(cc.Label).string = conf.deskId;
 
         let desc = cc.find("roomInfoNode/txt_game_desc",this._layer);
         let str = "";
@@ -316,7 +319,7 @@ cc.Class({
         let width=0;
         for(let i=0;i<tempList.length;++i){
             for(let j=0;j<tempList[i].length;++j) {
-                let node = this.node.getComponent("HongZhong_Card").createCard(tempList[i][j],1);
+                let node = this.node.getComponent("HongZhong_Card").createCard(tempList[i][j],false);
                 node.scale = 0.5;
                 node.y = (node.height-28)*j*node.scale+20;
                 node.x = node.width*i*node.scale+20;
@@ -351,7 +354,7 @@ cc.Class({
             let posX = 0;
             let PosY = 0;
             for(let j=0;j<menzilist.length;++j){
-                let node = this.node.getComponent("HongZhong_Card").createCard(menzilist[j],0);
+                let node = this.node.getComponent("HongZhong_Card").createCard(menzilist[j],false);
                 node.scale = 0.45;
                 node.x = width+node.width*node.scale;
                 node.y = 44;
@@ -380,7 +383,7 @@ cc.Class({
             let bgNode = new cc.Node();
             bgNode.addComponent(cc.Sprite);
             this.node.getComponent("HongZhong_Card").changCardBg(bgNode,source===0);
-            let cardNode = this.node.getComponent("HongZhong_Card").createCard(card,0);
+            let cardNode = this.node.getComponent("HongZhong_Card").createCard(card,false);
             bgNode.y = 43;
             bgNode.x = width+60;
             bgNode.scale = 0.6;

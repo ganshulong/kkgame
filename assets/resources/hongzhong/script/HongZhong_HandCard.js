@@ -34,7 +34,10 @@ cc.Class({
         if(-1 < this._seatIndex){
             for(let i=0; i<deskInfo.users.length; ++i){
                 if(this._seatIndex === deskInfo.users[i].seat){
-                    this._handCards = cc.vv.gameData.sortCard(deskInfo.users[i].handInCards);
+                    this._handCards = deskInfo.users[i].handInCards;
+                    if (this._seatIndex === deskInfo.actionInfo.curaction.seat && cc.vv.gameData.OPERATETYPE.MOPAI === deskInfo.actionInfo.curaction.type) {
+                        this.lastIsCurMoCard = true;
+                    }
                     this.showAllCard();
                 }
             }
@@ -61,7 +64,7 @@ cc.Class({
 
     start () {
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
         Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
         Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
@@ -73,35 +76,50 @@ cc.Class({
         Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
+        Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
 
         // this.recvDeskInfoMsg();
+    },
+
+    recvMoPaiNotify(data){
+        data = data.detail;
+        if (data.seat === this._seatIndex) {
+            this._handCards.push(data.actionInfo.curaction.card);
+            this.lastIsCurMoCard = true;
+            this.showAllCard();
+
+            if (0 == this._chairId) {
+                this._canOutCard = true;
+                this.showOutLine();
+            }
+        }
     },
 
     recvOutCardNotify(data){
         data = data.detail;
         if (data.seat === this._seatIndex) {
-            for(let i = 0 ; i < this._handcardNode.children.length; ++i){
-                if (data.card === this._handcardNode.children[i].cardValue && this._handcardNode.children[i].isSelected) {
-                    this._handCards.splice(i,1);
-                    this.showAllCard();
-                    break;
+            if (0 === this._chairId) {
+                for(let i = 0 ; i < this._handcardNode.children.length; ++i){
+                    if (data.actionInfo.curaction.card === this._handcardNode.children[i].cardValue && this._handcardNode.children[i].isSelected) {
+                        this._handCards.splice(i,1);
+                        break;
+                    }
                 }
+                this._canOutCard = false;
+                this.showOutLine();
+            } else {
+                this._handCards.splice(this._handCards.length-1,1);
             }
-        }
-        if (0 == this._chairId) {
-            this._canOutCard = false;
-            if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
-                this._canOutCard = true;
-            }
-            this.showOutLine();
+            this._handCards = cc.vv.gameData.sortCard(this._handCards);
+            this.showAllCard();
         }
     },
 
-    onRecvHandCard(data){
+    recvHandCard(data){
         data = data.detail;
         if (this._seatIndex === data.seat) {
             this.clearDesk();
-            this._handCards = cc.vv.gameData.sortCard(data.handInCards);
+            this._handCards = data.handInCards;
             this.showAllCard();
             
             if (0 == this._chairId && this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
@@ -124,15 +142,27 @@ cc.Class({
 
         //碰牌
 
-        //手牌
+        //手牌 
+        let curMoCardOffsetScale = 0.4;
+        let dir = 1;
+        let cardWidth = 90;
+        let startPosX = -(cardWidth * (this._handCards.length-1))/2;
+        if (0 === this._chairId && this.lastIsCurMoCard) {  //下,居中往右
+            startPosX -= (cardWidth * curMoCardOffsetScale / 2);
+        }
+        if (1 === this._chairId) {  //上,右对齐，往左
+            dir = -1;
+            cardWidth = 47;
+            startPosX = 0;
+        }
         this._handcardNode.removeAllChildren();
         for(let i = 0; i < this._handCards.length; ++i){
             let node = this.node.getComponent("HongZhong_Card").createCard(this._handCards[i], 0 === this._chairId);
             node.parent = this._handcardNode;
-            if (0 === this._chairId) {      //下
-                node.x = -(node.width*(this._handCards.length-1))/2 + node.width * i;
-            } else if (1 === this._chairId) {  //上
-                node.x = -node.width * i;
+            node.x = startPosX + dir * cardWidth * i;
+            if (this.lastIsCurMoCard && this._handCards.length-1 === i) {       //当前摸牌
+                node.x += dir * cardWidth * curMoCardOffsetScale;
+                this.lastIsCurMoCard = false;
             }
             if (0 === this._chairId) {
                 node.addComponent(cc.Button);
@@ -145,6 +175,8 @@ cc.Class({
 
         //当前摸进牌
     },
+
+
 
     // recvDeskInfoMsg(){
     //     if(this._handcardNode === null) return;
@@ -198,48 +230,48 @@ cc.Class({
     },
 
     showCard(list,len,showBg=false){
-        for(let i=0;i<list.length;++i){
-            let node = this.node.getComponent("HongZhong_Card").createCard(list[i],this._chairId==0?1:2);
-            node.name = "card";
-            if(this._chairId === 0) {
-                node.y = (node.height-22)*i+node.height*0.5-25;
-                node.addComponent(cc.Button);
-                node.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
-                node.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
-                node.on(cc.Node.EventType.TOUCH_END,this.onTouchEnd,this);
-                node.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
+        // for(let i=0;i<list.length;++i){
+        //     let node = this.node.getComponent("HongZhong_Card").createCard(list[i],this._chairId==0?1:2);
+        //     node.name = "card";
+        //     if(this._chairId === 0) {
+        //         node.y = (node.height-22)*i+node.height*0.5-25;
+        //         node.addComponent(cc.Button);
+        //         node.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
+        //         node.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
+        //         node.on(cc.Node.EventType.TOUCH_END,this.onTouchEnd,this);
+        //         node.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
 
-                if(showBg){
-                    let child = new cc.Node();
-                    child.addComponent(cc.Sprite);
-                    this.node.getComponent("HongZhong_Card").createCard(0,1,true,child);
-                    child.parent = node;
-                    child.name = "bg";
-                }
-            }
-            else node.y = node.height*i+node.height*0.5;
-            if(this._chairId === 0){
-                node.x = this._handcardNode.parent.width*0.5-len*0.5*node.width+node.width*this._num;
-            } else if(this._chairId === 3){
-                node.x = -node.width*this._num;
-            } else {
-                node.x = node.width*this._num;
-            }
+        //         if(showBg){
+        //             let child = new cc.Node();
+        //             child.addComponent(cc.Sprite);
+        //             this.node.getComponent("HongZhong_Card").createCard(0,1,true,child);
+        //             child.parent = node;
+        //             child.name = "bg";
+        //         }
+        //     }
+        //     else node.y = node.height*i+node.height*0.5;
+        //     if(this._chairId === 0){
+        //         node.x = this._handcardNode.parent.width*0.5-len*0.5*node.width+node.width*this._num;
+        //     } else if(this._chairId === 3){
+        //         node.x = -node.width*this._num;
+        //     } else {
+        //         node.x = node.width*this._num;
+        //     }
             
-            node.parent = this._handcardNode;
-            node.zIndex = 4-i;
-            node.cardBoxIndex = this._num*4+i;
-            node.cardValue = list[i];
-            if(this._num<this._cardBox.length && i<this._cardBox[this._num].length){
-                this._cardBox[this._num][i] = node;
-            }
+        //     node.parent = this._handcardNode;
+        //     node.zIndex = 4-i;
+        //     node.cardBoxIndex = this._num*4+i;
+        //     node.cardValue = list[i];
+        //     if(this._num<this._cardBox.length && i<this._cardBox[this._num].length){
+        //         this._cardBox[this._num][i] = node;
+        //     }
 
-            if (this._num < this.greyCardArrCount) {
-                node.color = new cc.Color(150,150,150);
-            }
-            node.isCanMove = (this._num >= this.greyCardArrCount);
-        }
-        ++this._num;
+        //     if (this._num < this.greyCardArrCount) {
+        //         node.color = new cc.Color(150,150,150);
+        //     }
+        //     node.isCanMove = (this._num >= this.greyCardArrCount);
+        // }
+        // ++this._num;
     },
 
     onTouchStart(event){
@@ -262,6 +294,7 @@ cc.Class({
     onTouchEnd(event){
         if(this._canOutCard && this._selectCard){
             if(this._selectCard.y > this._outCardY || this._selectCard.isSelected){
+                this._selectCard.isSelected = true;
                 // 出牌
                 this.outCard();
             } else {

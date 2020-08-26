@@ -52,7 +52,7 @@ cc.Class({
     recvDeskInfoMsg(){
         let deskInfo = cc.vv.gameData.getDeskInfo();
         if(deskInfo.isReconnect){
-            if(deskInfo.actionInfo.iswait){
+            if(deskInfo.actionInfo.iswait && 0 < deskInfo.actionInfo.waitList.length){
                 this.showOperate(deskInfo);
             }
         }
@@ -60,10 +60,8 @@ cc.Class({
 
     recvOutCardNotify(data){
         data = data.detail;
-        if(data.actionInfo.waitList.length>0){
+        if(data.actionInfo.iswait && 0 < data.actionInfo.waitList.length){
             this.showOperate(data);
-        }else{
-            this.onCloseSelectChi();
         }
     },
 

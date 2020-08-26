@@ -15,53 +15,20 @@ cc.Class({
         _outCardValue:null,
     },
     init(index,playerNum){
-        let outCardNode = cc.find("scene/out_cards/out_card"+index,this.node);
-
-        let showCardNode = cc.find("scene/out_cards/show_card"+index,this.node);
+        this._outCardNode = cc.find("scene/out_cards/out_card"+index,this.node);
+        this.curOutCardTipsAni = cc.find("scene/out_cards/curOutCardTipsPos"+index+"/curOutCardTipsAni",this.node);
+        this.showCurOutCardAni(false);
 
         this._playerNum = playerNum;
-
         this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
         this._UISeat = index;
-        this._outCardNode = outCardNode;
 
         if(this._outCardNode){
+            let showCardNode = cc.find("scene/out_cards/show_card"+index,this.node);
             let pos = showCardNode.parent.convertToWorldSpaceAR(showCardNode.position);
             this._startPos = this._outCardNode.convertToNodeSpaceAR(pos);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
         }
-    },
-
-    getEndPos(cardsNum){
-        let scale = 1;
-        // 下
-        if(this._UISeat === 0){
-            scale = 0.9;
-        //上
-        } else if(this._UISeat === 1){
-            scale = -0.75;
-        }
-        return cc.v2(0, 0);
-    },
-
-    showCard(value){
-        let node = this.node.getComponent("HongZhong_Card").createCard(value,showAction?0:2);
-        if(this._UISeat === 0){             // 下
-            node.scale = 0.9;
-            node.x = node.width * node.scale * this._cardsNum;
-        } else if(this._UISeat === 1){      //上
-            node.scale = 0.75;
-            node.x = -node.width * node.scale * this._cardsNum;
-        }
-        node.parent = this._outCardNode;
-        node.cardValue = value;
-        ++this._cardsNum;
-    },
-
-    clearDesk(){
-        this._outCardValue = null;
-        this._cardsNum = 0;
-        if(this._outCardNode) this._outCardNode.removeAllChildren();
     },
 
     start () {
@@ -72,11 +39,11 @@ cc.Class({
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
-        Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
-        Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
+        // Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
+        // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
+        // Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
+        // Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
+        // Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
 
         this.recvDeskInfoMsg();
@@ -102,21 +69,51 @@ cc.Class({
     },
 
     recvMoPaiNotify(data){
-        // data = data.detail;
-        // this.showOutCard();
+        // this.showCurOutCardAni(false);
     },
 
     // 出牌
     recvOutCardNotify(data){
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
-            // this.putOutCard(data.actionInfo.curaction.card);
-            this.showOutCard(data.actionInfo.curaction.card);
+            this.showCard(data.actionInfo.curaction.card);
+        }
+        this.showCurOutCardAni(data.actionInfo.curaction.seat === this._seatIndex);
+    },
+
+    showCard(value){
+        let node = this.node.getComponent("HongZhong_Card").createCard(value,false);
+        if(this._UISeat === 0){             // 下
+            // node.scale = 0.9;
+            node.x = node.width * this._cardsNum;
+        } else if(this._UISeat === 1){      //上
+            // node.scale = 0.75;
+            node.x = -node.width * this._cardsNum;
+        }
+        node.parent = this._outCardNode;
+        node.cardValue = value;
+        ++this._cardsNum;
+    },
+
+    showCurOutCardAni(bShow){
+        this.curOutCardTipsAni.active = bShow;
+        this.curOutCardTipsAni.stopAllActions();
+        if (bShow) {
+            let curOutCard = this._outCardNode.children[this._outCardNode.children.length-1];
+            this.curOutCardTipsAni.position = cc.v2(curOutCard.x,0);
+            this.curOutCardTipsAni.runAction(
+                cc.repeatForever(
+                    cc.sequence(
+                        cc.moveTo(0.3, cc.p(curOutCard.x, 10)),
+                        cc.moveTo(0.3, cc.p(curOutCard.x, 0)),
+                    )
+                )
+            )
         }
     },
 
     showOutCard(card){
-        this.showCard(this._outCardValue[i],true);
+        this.showCard(card,true);
     },
 
     // 过
@@ -206,19 +203,19 @@ cc.Class({
     },
 
     showCardAction(node,startPos,endPos){
-        node.position = startPos;
-        node.scale = 1;
+        // node.position = startPos;
+        // node.scale = 1;
 
-        let time = cc.vv.gameData.getActionTime();
-        node.opacity = 255;
+        // let time = cc.vv.gameData.getActionTime();
+        // node.opacity = 255;
 
-        let self = this;
-        node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            self.node.getComponent("HongZhong_Card").createCard(node.cardValue,2,node.showBg,node);
-            node.scale = 1;
-            node.rotation = 0;
-            node.opacity = 255;
-        })))
+        // let self = this;
+        // node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
+        //     self.node.getComponent("HongZhong_Card").createCard(node.cardValue,2,node.showBg,node);
+        //     node.scale = 1;
+        //     node.rotation = 0;
+        //     node.opacity = 255;
+        // })))
     },
 
     recvPlayerExit(data){
@@ -226,7 +223,25 @@ cc.Class({
         if(data === this._seatIndex){
             this._seatIndex = -1;
         }
-    }
+    },
+
+    getEndPos(cardsNum){
+        let scale = 1;
+        // 下
+        if(this._UISeat === 0){
+            scale = 0.9;
+        //上
+        } else if(this._UISeat === 1){
+            scale = -0.75;
+        }
+        return cc.v2(0, 0);
+    },
+
+    clearDesk(){
+        this._outCardValue = null;
+        this._cardsNum = 0;
+        if(this._outCardNode) this._outCardNode.removeAllChildren();
+    },
 
     // update (dt) {},
 });
