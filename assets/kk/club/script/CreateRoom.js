@@ -242,7 +242,7 @@ cc.Class({
         } else if (this.gameTypeIndex.HongZhong == id) {
             req.gameid = this._isClubRoom ? 11 : 12;
             optionList.push({option:"player_num",       valueList:[2]});
-            optionList.push({option:"param1",           valueList:[0,1,2,3]});
+            optionList.push({option:"param1",           valueList:[0,2,4,6]});
         }
         this.onCreateCommom(layer, optionList, req);
     },

@@ -487,7 +487,7 @@ cc.Class({
         let description = "红中";
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
-        description += ("," + ["不抓鸟","抓2鸟","抓4鸟","抓6鸟"][roomConf.param1]);
+        description += ("," + ["不抓鸟","抓2鸟","抓4鸟","抓6鸟"][roomConf.param1/2]);
         description += ("," + roomConf.score+ "倍");
         description += (",房间号:" + roomConf.deskId);
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
