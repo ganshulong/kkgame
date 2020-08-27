@@ -293,13 +293,13 @@ cc.Class({
     // 手牌排序 红中最左，从小到大，返回值大于0则互换位置
     sortCard(cards){
         cards.sort((a,b)=>{
-            // if (35 === a) {
-            //     return -1;
-            // } else if (35 === b) {
-            //     return 1;
-            // } else {
+            if (35 === a) {
+                return -1;
+            } else if (35 === b) {
+                return 1;
+            } else {
                 return (a-b);
-            // }
+            }
         });
         return cards;
     },
