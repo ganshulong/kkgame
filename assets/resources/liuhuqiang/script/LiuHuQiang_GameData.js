@@ -131,7 +131,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_HZ_TILONG, this.onRcvLongNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_CHI, this.onRcvChiNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_PENG, this.onRcvPengNotfiy, this);
-        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_NOTIFY_GUO, this.onRcvGuoNotfiy, this);
+        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GUO, this.onRcvGuoNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_MOPAI, this.onRcvMoPaiNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_HU, this.onRcvHuNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GAME_OVER, this.onRcvGameOverNotfiy, this);
@@ -170,7 +170,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_HZ_TILONG, this.onRcvLongNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_CHI, this.onRcvChiNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_PENG, this.onRcvPengNotfiy , false,this);
-        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_NOTIFY_GUO, this.onRcvGuoNotfiy , false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GUO, this.onRcvGuoNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_MOPAI, this.onRcvMoPaiNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_HU, this.onRcvHuNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GAME_OVER, this.onRcvGameOverNotfiy , false,this);

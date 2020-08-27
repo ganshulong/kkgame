@@ -36,6 +36,7 @@ cc.Class({
         Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
         Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
         Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
+        Global.registerEvent(EventId.GANG_NOTIFY,this.recvGangNotify,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
@@ -79,6 +80,24 @@ cc.Class({
             this.showCard(data.actionInfo.curaction.card);
         }
         this.showCurOutCardAni(data.actionInfo.curaction.seat === this._seatIndex);
+    },
+
+    recvPengNotify(data){
+        data = data.detail;
+        if(data.actionInfo.curaction.source === this._seatIndex){
+            this._outCardNode.children[this._outCardNode.children.length-1].removeFromParent();
+            --this._cardsNum;
+            this.showCurOutCardAni(false);
+        }
+    },
+
+    recvGangNotify(data){
+        data = data.detail;
+        if(data.actionInfo.curaction.source === this._seatIndex){
+            this._outCardNode.children[this._outCardNode.children.length-1].removeFromParent();
+            --this._cardsNum;
+            this.showCurOutCardAni(false);
+        }
     },
 
     showCard(value){
@@ -174,14 +193,6 @@ cc.Class({
                 this._cardsNum = num;
                 node.removeFromParent();
             }
-        }
-    },
-
-    recvPengNotify(data){
-        data = data.detail;
-        if(data.actionInfo.curaction.source === this._seatIndex){
-            this.putOutCard(data.actionInfo.curaction.card);
-            this.showOutCard();
         }
     },
 

@@ -104,12 +104,11 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_HZ_TILONG, this.onRcvLongNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_CHI, this.onRcvChiNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_PENG, this.recvPengNotify, this);
-        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GANG, this.recvGangNotfiy, this);
-        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_NOTIFY_GUO, this.onRcvGuoNotfiy, this);
+        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GANG, this.recvGangNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GUO, this.recvGuoNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_HU, this.onRcvHuNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GAME_OVER, this.onRcvGameOverNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.CHAT_NOTIFY, this.onRcvChatNotify, this);
-        cc.vv.NetManager.registerMsg(MsgId.DEL_HANDCARD, this.onRcvDelHandcardNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_READY, this.onRcvReadyNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.OFFLINE_NOTIFY, this.onRcvOfflineNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData, this);
@@ -144,13 +143,12 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_HZ_TILONG, this.onRcvLongNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_CHI, this.onRcvChiNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_PENG, this.recvPengNotify , false,this);
-        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GANG, this.recvGangNotfiy , false,this);
-        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_NOTIFY_GUO, this.onRcvGuoNotfiy , false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GANG, this.recvGangNotify , false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GUO, this.recvGuoNotify , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_MOPAI, this.recvMoPaiNotify , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_HU, this.onRcvHuNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GAME_OVER, this.onRcvGameOverNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.CHAT_NOTIFY, this.onRcvChatNotify, false,this);
-        cc.vv.NetManager.unregisterMsg(MsgId.DEL_HANDCARD, this.onRcvDelHandcardNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_READY, this.onRcvReadyNotice,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.OFFLINE_NOTIFY, this.onRcvOfflineNotice,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData,false,this);
@@ -207,13 +205,6 @@ cc.Class({
     onRcvReadyNotice(msg){
         if(msg.code == 200){
             Global.dispatchEvent(EventId.READY_NOTIFY,msg)
-        }
-    },
-
-    // 删除手牌
-    onRcvDelHandcardNotify(msg){
-        if(msg.code === 200){
-            Global.dispatchEvent(EventId.DEL_HANDCARD_NOTIFY,msg)
         }
     },
 
@@ -375,19 +366,18 @@ cc.Class({
     },
 
     // 通知杠
-    recvGangNotfiy(msg){
+    recvGangNotify(msg){
         if(msg.code === 200){
             Global.dispatchEvent(EventId.GANG_NOTIFY,msg);
         }
     },
 
     // 通知过
-    onRcvGuoNotfiy(msg){
+    recvGuoNotify(msg){
         if(msg.code === 200){
             Global.dispatchEvent(EventId.GUO_NOTIFY,msg);
         }
     },
-
 
     // 吃结果
     onRcvChiResult(msg){
@@ -544,10 +534,10 @@ cc.Class({
         req.card = cardValue;
         cc.vv.NetManager.send(req);
     },
-
-    // 碰
-    peng(){
-        var req = { c: MsgId.PENG };
+    
+    // 胡
+    hu(){
+        var req = { c: MsgId.HU };
         cc.vv.NetManager.send(req);
     },
 
@@ -557,6 +547,11 @@ cc.Class({
         cc.vv.NetManager.send(req);
     },
 
+    // 碰
+    peng(){
+        var req = { c: MsgId.PENG };
+        cc.vv.NetManager.send(req);
+    },
     // 过
     pass(){
         var req = { c: MsgId.GUO };
@@ -795,7 +790,7 @@ cc.Class({
 // GlobalMsgId.NOTIFY_HU = 101405;              // 胡牌通知
 // GlobalMsgId.NOTIFY_OUTCARD_ERROR = 101406;   //出牌出错了，同步手牌，出牌
 // GlobalMsgId.NOTIFY_HZ_LIUJU =  101407;            //流局通知
-// GlobalMsgId.NOTIFY_NOTIFY_GUO = 101408;           // 过通知
+// GlobalMsgId.NOTIFY_GUO = 101408;           // 过通知
 // GlobalMsgId.NOTIFY_TUOGUAN_SUCEESS = 101409;      // 取消托管通知
 // GlobalMsgId.NOTIFY_HZ_PAO = 101411;         // 通知玩家跑起
 // GlobalMsgId.NOTIFY_HZ_KAN = 101412;         // 通知玩家扫

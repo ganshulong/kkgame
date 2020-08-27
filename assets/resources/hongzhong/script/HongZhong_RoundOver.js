@@ -185,9 +185,9 @@ cc.Class({
             panel_CardInfo.getChildByName("text_zimo_huType").getComponent(cc.Label).string = zimoHuTypeStr;
 
             let tunFanStr = "";
-            if (1 == cc.vv.gameData.getRoomConf().param1) {
-                tunFanStr += "囤数:" + (parseInt((data.huxi-6) / 3) + 1) + " ";
-            }
+            // if (1 == cc.vv.gameData.getRoomConf().param1) {
+            //     tunFanStr += "囤数:" + (parseInt((data.huxi-6) / 3) + 1) + " ";
+            // }
             if (data.isZimo || 0 < data.mingTangType) {
                 if (data.isZimo && 0 < data.mingTangType) {
                     tunFanStr += "番数:4"; 
