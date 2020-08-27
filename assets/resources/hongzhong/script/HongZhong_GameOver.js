@@ -37,51 +37,48 @@ cc.Class({
                 this._layer.x = this.node.width/2;
                 this._layer.y = this.node.height/2;
 
-                this._winBgSpr = cc.find("game_end_bg/player0/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
-                this._loseBgSpr = cc.find("game_end_bg/player1/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
-
-                this.huxiNum_winSpr = cc.find("game_end_bg/player0/img_bg/title_huxi_num",this._layer).getComponent(cc.Sprite).spriteFrame;
-                this.huxiNum_loseSpr = cc.find("game_end_bg/player1/img_bg/title_huxi_num",this._layer).getComponent(cc.Sprite).spriteFrame;
-
                 let btnBtn = this._layer.getChildByName("btn_back");
                 Global.btnClickEvent(btnBtn,this.onBack,this);
 
                 let btn_share = this._layer.getChildByName("btn_share");
                 Global.btnClickEvent(btn_share,this.onShare,this);
 
-                this._layer.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
-                this._layer.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
+                this._layer.getChildByName("txt_room_id").getComponent(cc.Label).string = "房间号:" + cc.vv.gameData.getRoomConf().deskId;
+                this._layer.getChildByName("txt_round_num").getComponent(cc.Label).string = "局数:" + cc.vv.gameData.getDeskInfo().round + "/" + cc.vv.gameData.getRoomConf().gamenum;
+                this._layer.getChildByName("txt_date").getComponent(cc.Label).string = data.overTime;
 
                 // 创建者
-                let creator = cc.find("game_end_bg/creator",this._layer);
-                let icon = cc.find("radio_mask/spr_head",creator);
-                Global.setHead(icon,data.createUser.usericon);
+                let bg_creator = this._layer.getChildByName("bg_creator");
+                let spr_head = cc.find("head/radio_mask/spr_head",bg_creator);
+                Global.setHead(spr_head,data.createUser.usericon);
+                bg_creator.getChildByName("text_name").getComponent(cc.Label).string = data.createUser.playername;
+                bg_creator.getChildByName("text_id").getComponent(cc.Label).string = "ID:"+data.createUser.uid;
 
-                creator.getChildByName("name").getComponent(cc.Label).string = data.createUser.playername;
-                creator.getChildByName("id").getComponent(cc.Label).string = "ID:"+data.createUser.uid;
+                let txt_game_desc = this._layer.getChildByName("txt_game_desc");
+                txt_game_desc.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrDetail();
 
-                let paoList = data.users.slice(0);
-                paoList.sort((a,b)=>{
-                    return b.dianPaoCount - a.dianPaoCount;
-                });
+                // let paoList = data.users.slice(0);
+                // paoList.sort((a,b)=>{
+                //     return b.dianPaoCount - a.dianPaoCount;
+                // });
 
-                let scoreList = data.users.slice(0);
-                scoreList.sort((a,b)=>{
-                    return b.score - a.score;
-                });
+                // let scoreList = data.users.slice(0);
+                // scoreList.sort((a,b)=>{
+                //     return b.score - a.score;
+                // });
 
-                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-375,0,375],[-420,-130,160,450]];
-                let dianPaoWangId = paoList[0].dianPaoCount > 0 ? paoList[0].uid : 0;
-                let bigWinerId = scoreList[0].uid;
-                for(let i = 0; i < data.users.length; ++i){
-                    let player = cc.find("game_end_bg/player"+i,this._layer);
-                    this.initPlayer(player,data.users[i], dianPaoWangId, bigWinerId);
-                    player.x = posArr[data.users.length][i];
-                    player.active = true;
-                }
-                for(let i = data.users.length; i < 4; ++i){
-                    cc.find("game_end_bg/player"+i,this._layer).active = false;
-                }
+                // let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-375,0,375],[-420,-130,160,450]];
+                // let dianPaoWangId = paoList[0].dianPaoCount > 0 ? paoList[0].uid : 0;
+                // let bigWinerId = scoreList[0].uid;
+                // for(let i = 0; i < data.users.length; ++i){
+                //     let player = cc.find("game_end_bg/player"+i,this._layer);
+                //     this.initPlayer(player,data.users[i], dianPaoWangId, bigWinerId);
+                //     player.x = posArr[data.users.length][i];
+                //     player.active = true;
+                // }
+                // for(let i = data.users.length; i < 4; ++i){
+                //     cc.find("game_end_bg/player"+i,this._layer).active = false;
+                // }
             }
         })
     },
