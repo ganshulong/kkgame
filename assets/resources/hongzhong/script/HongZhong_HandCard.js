@@ -247,7 +247,7 @@ cc.Class({
             }
             node.x = curPosX;
             curPosX += cardWidth * dir;
-            if (0 === this._chairId) {
+            if (0 === this._chairId && 35 != this._handCards[i]) {
                 node.addComponent(cc.Button);
                 node.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
                 node.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
