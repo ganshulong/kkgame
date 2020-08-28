@@ -30,11 +30,11 @@ cc.Class({
     recvRoundOverNotify(data){
         data = data.detail;
         if(data.hupaiType > 0){
+            this.playCardSound("hu", data.seat);
             if(cc.vv.gameData.getMySeatIndex() === data.seat){
-                cc.vv.AudioManager.playEff(this._soundPath, "win",true);
-            }
-            else{
-                cc.vv.AudioManager.playEff(this._soundPath, "loss",true);
+                cc.vv.AudioManager.playEff("hongzhong/", "sound_win",true);
+            } else{
+                cc.vv.AudioManager.playEff("hongzhong/", "sound_lost",true);
             }
         }
     },

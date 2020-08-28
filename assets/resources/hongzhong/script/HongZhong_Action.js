@@ -3,103 +3,53 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        _paoNode:null,
-        _tiNode:null,
-        _chiNode:null,
         _pengNode:null,
-        _huNode:null,
-        _weiNode:null,
-        _shaoNode:null,
+        _gangNode:null,
     },
 
     start () {
-        this._paoNode = cc.find("scene/action/pao",this.node);
-        this._tiNode = cc.find("scene/action/ti",this.node);
-        this._chiNode = cc.find("scene/action/chi",this.node);
         this._pengNode = cc.find("scene/action/peng",this.node);
-        this._huNode = cc.find("scene/action/hu",this.node);
-        this._weiNode = cc.find("scene/action/wei",this.node);
-        this._shaoNode = cc.find("scene/action/shao",this.node);
-
-        this._huNode.getComponent(cc.Animation).on("finished",()=>{
-            this._huNode.active = false;
-        });
+        this._gangNode = cc.find("scene/action/gang",this.node);
 
         this.clearDesk();
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
-        Global.registerEvent(EventId.CHI_NOTIFY,this.recvAction,this);
-        Global.registerEvent(EventId.PENG_NOTIFY,this.recvAction,this);
-        Global.registerEvent(EventId.PAO_NOTIFY,this.recvAction,this);
-        Global.registerEvent(EventId.LONG_NOTIFY,this.recvAction,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.recvAction,this);
-        // Global.registerEvent(EventId.HU_NOTIFY,this.recvHuAction,this);
-
+        Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
+        Global.registerEvent(EventId.GANG_NOTIFY,this.recvGangNotify,this);
     },
 
-    recvHuAction(data){
+    recvPengNotify(data){
         data = data.detail;
-        if(data.hupaiType>-1){
-            this.showAction(data.seat,cc.vv.gameData.OPERATETYPE.HU);
-        }
+        this.showAction(data.actionInfo.curaction.seat, this._pengNode);
     },
 
-    recvAction(data){
+    recvGangNotify(data){
         data = data.detail;
-        this.showAction(data.actionInfo.curaction.seat,data.actionInfo.curaction.type);
+        this.showAction(data.actionInfo.curaction.seat, this._gangNode);
     },
 
-    showAction(seat,type){
-        this._paoNode.active = type === cc.vv.gameData.OPERATETYPE.PAO;
-        this._tiNode.active = type === cc.vv.gameData.OPERATETYPE.LONG;
-        this._chiNode.active = type === cc.vv.gameData.OPERATETYPE.CHI;
-        this._pengNode.active = type === cc.vv.gameData.OPERATETYPE.PENG;
-        this._huNode.active = type === cc.vv.gameData.OPERATETYPE.HU;
-        this._weiNode.active = type === cc.vv.gameData.OPERATETYPE.WEI;
-        this._shaoNode.active = type === cc.vv.gameData.OPERATETYPE.SHE;
-        
+    showAction(seat,actionNode){
         let chairId = cc.vv.gameData.getLocalChair(seat);
         let uiSeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
         let node = cc.find("scene/action/player"+uiSeat,this.node);
-        let actionNode = null;
-        if(type === cc.vv.gameData.OPERATETYPE.PAO) {
-            actionNode = this._paoNode;
-        }
-        else if(type === cc.vv.gameData.OPERATETYPE.LONG) {
-            actionNode = this._tiNode;
-        }
-        else if(type === cc.vv.gameData.OPERATETYPE.CHI) {
-            actionNode = this._chiNode;
-        }
-        else if(type === cc.vv.gameData.OPERATETYPE.PENG) {
-            actionNode = this._pengNode;
-        }
-        else if(type === cc.vv.gameData.OPERATETYPE.HU) {
-            actionNode = this._huNode;
-        }
-        else if(type === cc.vv.gameData.OPERATETYPE.WEI) {
-            actionNode = this._weiNode;
-        }
-        else if(type === cc.vv.gameData.OPERATETYPE.SHE) {
-            actionNode = this._shaoNode;
-        }
-        if(actionNode){
-            if(type !== cc.vv.gameData.OPERATETYPE.HU){
-                actionNode.position = cc.v2(0,node.y);
-            }
-            else actionNode.position = cc.v2(node.x,node.y);
-            actionNode.getComponent(cc.Animation).play("show");
-        }
 
+        actionNode.position = cc.v2(node.x,node.y);
+        actionNode.active = true;
+        actionNode.scale = 0;
+        actionNode.runAction(
+            cc.sequence(
+                cc.scaleTo(0.5,1.2,1.2),
+                cc.scaleTo(0.1,1,1),
+                cc.delayTime(0.4),
+                cc.callFunc(()=>{
+                    actionNode.active = false;
+                })
+            )
+        )
     },
 
     clearDesk(){
-        this._paoNode.active = false;
-        this._tiNode.active = false;
-        this._chiNode.active = false;
         this._pengNode.active = false;
-        this._huNode.active = false;
-        this._weiNode.active = false;
-        this._shaoNode.active = false;
+        this._gangNode.active = false;
     },
 
     // update (dt) {},
