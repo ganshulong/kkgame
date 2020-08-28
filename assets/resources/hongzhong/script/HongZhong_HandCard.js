@@ -104,13 +104,13 @@ cc.Class({
         data = data.detail;
         if (data.seat === this._seatIndex) {
             this.removeCardFromHand(data.actionInfo.curaction.card, 1);
+            this._handCards = cc.vv.gameData.sortCard(this._handCards);
             this.showAllCard();
 
             if (0 === this._chairId) {
                 this._canOutCard = false;
                 this.showOutLine();
             }
-            this._handCards = cc.vv.gameData.sortCard(this._handCards);
         }
     },
 

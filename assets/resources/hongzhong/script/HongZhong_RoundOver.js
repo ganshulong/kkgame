@@ -92,76 +92,81 @@ cc.Class({
     },
 
     showRoundInfo(data){
+        this._layer.getChildByName("spr_draw").active = (0 == data.smallState);
+        this._layer.getChildByName("bg_zhongNiao").active = (0 < data.smallState);
         let panle_playerInfo = this._layer.getChildByName("panle_playerInfo");
-        for(let i = 0; i < data.users.length; ++i){
-            let chairId = cc.vv.gameData.getLocalChair(data.users[i].seat);
-            let player = panle_playerInfo.getChildByName("player" + chairId);
+        panle_playerInfo.active = (0 < data.smallState);
+        if (panle_playerInfo.active) {
+            for(let i = 0; i < data.users.length; ++i){
+                let chairId = cc.vv.gameData.getLocalChair(data.users[i].seat);
+                let player = panle_playerInfo.getChildByName("player" + chairId);
 
-            player.getChildByName("bg_other").active = (data.users[i].uid != cc.vv.UserManager.uid)
-            player.getChildByName("bg_self").active = (data.users[i].uid === cc.vv.UserManager.uid)
-            
-            let spr_head = cc.find("head/radio_mask/spr_head",player);
-            Global.setHead(spr_head, data.users[i].usericon);
-            player.getChildByName("spr_banker").active = (data.buck ==- data.users[i].uid);
-            player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
+                player.getChildByName("bg_other").active = (data.users[i].uid != cc.vv.UserManager.uid)
+                player.getChildByName("bg_self").active = (data.users[i].uid === cc.vv.UserManager.uid)
+                
+                let spr_head = cc.find("head/radio_mask/spr_head",player);
+                Global.setHead(spr_head, data.users[i].usericon);
+                player.getChildByName("spr_banker").active = (data.buck ==- data.users[i].uid);
+                player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
 
-            player.getChildByName("spr_huType").active = (data.seat === data.users[i].seat);
-            player.getChildByName("mask_lastCardHu").active = (data.seat === data.users[i].seat);
-            if (data.seat === data.users[i].seat) {
-                let node = this.node.getComponent("HongZhong_Card").createCard(data.hcard);
-                node.parent = player.getChildByName("lastCard");
-            }
+                player.getChildByName("spr_huType").active = (data.seat === data.users[i].seat);
+                player.getChildByName("mask_lastCardHu").active = (data.seat === data.users[i].seat);
+                if (data.seat === data.users[i].seat) {
+                    let node = this.node.getComponent("HongZhong_Card").createCard(data.hcard);
+                    node.parent = player.getChildByName("lastCard");
+                }
 
-            let handCard = player.getChildByName("handCard");
-            let curPosX = 0;
-            let cardWidth = 43;
-            //杠牌
-            for(let j = 0; j < data.users[i].gangpai.length; ++j){
-                for (let k = 0; k < 4; k++) {
-                    let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].gangpai[j]);
-                    node.parent = handCard;
-                    if (3 > k) {
+                let handCard = player.getChildByName("handCard");
+                let curPosX = 0;
+                let cardWidth = 43;
+                //杠牌
+                for(let j = 0; j < data.users[i].gangpai.length; ++j){
+                    for (let k = 0; k < 4; k++) {
+                        let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].gangpai[j]);
+                        node.parent = handCard;
+                        if (3 > k) {
+                            node.x = curPosX;
+                            curPosX += cardWidth;
+                        } else if (3 == k){
+                            node.x = curPosX - cardWidth * 2;
+                            node.y = node.height/4;
+                        }
+                    }
+                    curPosX += 25;
+                }
+                //碰牌
+                for(let j = 0; j < data.users[i].pengpai.length; ++j){
+                    for (let k = 0; k < 3; k++) {
+                        let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].pengpai[j]);
+                        node.parent = handCard;
                         node.x = curPosX;
                         curPosX += cardWidth;
-                    } else if (3 == k){
-                        node.x = curPosX - cardWidth * 2;
-                        node.y = node.height/4;
                     }
+                    curPosX += 25;
                 }
-                curPosX += 25;
-            }
-            //碰牌
-            for(let j = 0; j < data.users[i].pengpai.length; ++j){
-                for (let k = 0; k < 3; k++) {
-                    let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].pengpai[j]);
+                //手牌
+                for(let j = 0; j < data.users[i].handInCards.length; ++j){
+                    let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].handInCards[j]);
                     node.parent = handCard;
                     node.x = curPosX;
                     curPosX += cardWidth;
                 }
-                curPosX += 25;
-            }
-            //手牌
-            for(let j = 0; j < data.users[i].handInCards.length; ++j){
-                let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].handInCards[j]);
-                node.parent = handCard;
-                node.x = curPosX;
-                curPosX += cardWidth;
+
+                if (0 <= data.users[i].roundScore) {
+                    player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+                    player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
+                } else {
+                    player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                    player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+                }
             }
 
-            if (0 <= data.users[i].roundScore) {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
-            } else {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+            let zhongNiaoCard = this._layer.getChildByName("bg_zhongNiao/zhongNiaoCard");
+            for (let i = 0; i < data.bird.length; i++) {
+                let node = this.node.getComponent("HongZhong_Card").createCard(data.bird[i]);
+                node.parent = zhongNiaoCard;
+                node.x = node.width * i;
             }
-        }
-
-        let zhongNiaoCard = this._layer.getChildByName("bg_zhongNiao/zhongNiaoCard");
-        for (let i = 0; i < data.bird.length; i++) {
-            let node = this.node.getComponent("HongZhong_Card").createCard(data.bird[i]);
-            node.parent = zhongNiaoCard;
-            node.x = node.width * i;
         }
     },
 

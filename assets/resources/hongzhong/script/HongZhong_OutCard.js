@@ -107,12 +107,14 @@ cc.Class({
 
     showCard(value){
         let node = this.node.getComponent("HongZhong_Card").createCard(value,false);
+        let row = parseInt(this._cardsNum/25);
+        let col = this._cardsNum%25;
         if(this._UISeat === 0){             // 下
-            // node.scale = 0.9;
-            node.x = node.width * this._cardsNum;
+            node.x = 43 * col;
+            node.y = -70 * row;
         } else if(this._UISeat === 1){      //上
-            // node.scale = 0.75;
-            node.x = -node.width * this._cardsNum;
+            node.x = -43 * col;
+            node.y = 70 * row;
         }
         node.parent = this._outCardNode;
         node.cardValue = value;
@@ -124,12 +126,12 @@ cc.Class({
         this.curOutCardTipsAni.stopAllActions();
         if (bShow) {
             let curOutCard = this._outCardNode.children[this._outCardNode.children.length-1];
-            this.curOutCardTipsAni.position = cc.v2(curOutCard.x,0);
+            this.curOutCardTipsAni.position = cc.v2(curOutCard.x,curOutCard.y);
             this.curOutCardTipsAni.runAction(
                 cc.repeatForever(
                     cc.sequence(
-                        cc.moveTo(0.3, cc.p(curOutCard.x, 10)),
-                        cc.moveTo(0.3, cc.p(curOutCard.x, 0)),
+                        cc.moveTo(0.3, cc.p(curOutCard.x, curOutCard.y+10)),
+                        cc.moveTo(0.3, cc.p(curOutCard.x, curOutCard.y)),
                     )
                 )
             )
