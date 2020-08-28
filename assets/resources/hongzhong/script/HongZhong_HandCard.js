@@ -82,6 +82,24 @@ cc.Class({
         // this.recvDeskInfoMsg();
     },
 
+    recvOverRound(data){
+        data = data.detail;
+        this._bPlaying = false;
+        if(this._chairId === 0){
+            this._canOutCard = false;
+            this.showOutLine();
+        } else {
+            for(let i=0; i<data.users.length; ++i){
+                if(this._seatIndex === data.users[i].seat){
+                    this._gangCards = data.users[i].gangpai;
+                    this._pengCards = data.users[i].pengpai;
+                    this._handCards = data.users[i].handInCards;
+                    this.showAllCard();
+                }
+            }
+        }
+    },
+
     recvOutCardNotify(data){
         data = data.detail;
         if (data.seat === this._seatIndex) {
@@ -92,6 +110,7 @@ cc.Class({
                 this._canOutCard = false;
                 this.showOutLine();
             }
+            this._handCards = cc.vv.gameData.sortCard(this._handCards);
         }
     },
 
@@ -112,7 +131,7 @@ cc.Class({
     recvGangNotify(data){
         data = data.detail;
         if (data.seat === this._seatIndex) {
-            this._gengCards.push(data.actionInfo.curaction.card);
+            this._gangCards.push(data.actionInfo.curaction.card);
             this.removeCardFromHand(data.actionInfo.curaction.card, 3);
             this.showAllCard();
         }
@@ -132,7 +151,6 @@ cc.Class({
         } else {
             this._handCards.splice(0,removeCardNum);
         }
-        this._handCards = cc.vv.gameData.sortCard(this._handCards);
     },
 
     recvMoPaiNotify(data){
@@ -296,14 +314,6 @@ cc.Class({
         }
         this._selectCard = null;
         this._num = 0;
-    },
-
-    recvOverRound(data){
-        this._bPlaying = false;
-        if(this._chairId === 0){
-            this._canOutCard = false;
-            this.showOutLine();
-        }
     },
 
     showOutLine(){

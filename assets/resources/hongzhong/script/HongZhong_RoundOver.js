@@ -82,7 +82,7 @@ cc.Class({
         for(let i=0;i<data.users.length;++i){
             let chairId = cc.vv.gameData.getLocalChair(data.users[i].seat);
             let score = this._OverScoreNode.getChildByName("score"+chairId);
-            score.getComponent(cc.Label).string = data.users[i].roundHuXi + "胡息";
+            score.getComponent(cc.Label).string = data.users[i].roundScore;
             score.color = data.users[i].roundScore>0?(new cc.Color(236,187,111)):(new cc.Color(209,114,96));
         }
         this._OverScoreNode.runAction(cc.sequence(cc.delayTime(2),cc.callFunc(()=>{

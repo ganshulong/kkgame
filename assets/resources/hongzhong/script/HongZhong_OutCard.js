@@ -40,6 +40,7 @@ cc.Class({
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
         // Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
         // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
         // Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
@@ -67,6 +68,10 @@ cc.Class({
                 }
             }
         }
+    },
+
+    recvOverRound(){
+        this.showCurOutCardAni(false);
     },
 
     recvMoPaiNotify(data){
@@ -138,13 +143,13 @@ cc.Class({
     // 过
     recvGuoNotify(data){
         data = data.detail;
-        this.showOutCard();
-        if(data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.MOPAI){
-            if(data.actionInfo.curaction.seat === this._seatIndex){
-                let card = data.actionInfo.curaction.card;
-                this.putOutCard(card);
-            }
-        }
+        // this.showOutCard();
+        // if(data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.MOPAI){
+        //     if(data.actionInfo.curaction.seat === this._seatIndex){
+        //         let card = data.actionInfo.curaction.card;
+        //         this.putOutCard(card);
+        //     }
+        // }
     },
 
     // 吃

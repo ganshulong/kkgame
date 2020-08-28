@@ -28,7 +28,7 @@ cc.Class({
 
         // 杠
         this._btnGang = cc.find("scene/play_action_view/btn_gang",this.node);
-        Global.btnClickEvent(this.btn_gang,this.onGang,this);
+        Global.btnClickEvent(this._btnGang,this.onGang,this);
 
         // 过
         this._btnGuo = cc.find("scene/play_action_view/btn_guo",this.node);

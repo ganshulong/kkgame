@@ -81,7 +81,7 @@ cc.Class({
         this.node.addComponent("HongZhong_Operate");
         this.node.addComponent("HongZhong_Tips");
         this.node.addComponent("HongZhong_Action");
-        this.node.addComponent("HongZhong_RemainCard");
+        // this.node.addComponent("HongZhong_RemainCard");
         this.node.addComponent("HongZhong_RoundOver").init(this.tableAtlas);
         this.node.addComponent("HongZhong_GameOver").init(this.tableAtlas,this.yinxiAtlas);
         this.node.addComponent("HongZhong_Sound");

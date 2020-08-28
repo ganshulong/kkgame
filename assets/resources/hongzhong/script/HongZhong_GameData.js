@@ -573,6 +573,18 @@ cc.Class({
     // update (dt) {},
 });
 
+// GlobalMsgId.OUTCARD = 1401;                  // 出牌操作
+// GlobalMsgId.MOPAI = 1402;                    // 摸牌操作
+// GlobalMsgId.PENG = 1403;                     // 碰牌操作
+// GlobalMsgId.GANG = 1404;                     // 杠牌
+// GlobalMsgId.HU = 1405;                       // 胡牌
+// GlobalMsgId.GUO = 1407;                      // 过
+
+// GlobalMsgId.NOTIFY_OUTCARD = 101401;         // 出牌通知
+// GlobalMsgId.NOTIFY_MOPAI = 101402;           // 摸牌通知
+// GlobalMsgId.NOTIFY_PENG = 101403;            // 碰牌通知
+// GlobalMsgId.NOTIFY_GANG = 101404;            // 杠牌通知
+// GlobalMsgId.NOTIFY_HU = 101405;              // 胡牌通知
 
 /*
 ** Define the messge id 
@@ -773,21 +785,11 @@ cc.Class({
 // GlobalMsgId.NOTICE_PLAYER_EXIT = 1016;         // 有玩家离开
 // GlobalMsgId.SENDCARD = 1006;                   // 发送手牌
 
-// GlobalMsgId.OUTCARD = 1401;                  // 出牌操作
-// GlobalMsgId.MOPAI = 1402;                    // 摸牌操作
-// GlobalMsgId.PENG = 1403;                     // 碰牌操作
-// GlobalMsgId.GANG = 1404;                     // 杠牌
-// GlobalMsgId.HU = 1405;                       // 胡牌
-// GlobalMsgId.GUO = 1407;                      // 过
 // GlobalMsgId.CANCELTUOGUAN = 1408;            // 取消托管
 // GlobalMsgId.CHI = 1409;                      // 吃
 
 // GlobalMsgId.NOTIFY_SHOW_ACTION = 101400;     // --通知玩家显示出碰或者杠或者胡牌的按钮
-// GlobalMsgId.NOTIFY_OUTCARD = 101401;         // 出牌通知
-// GlobalMsgId.NOTIFY_MOPAI = 101402;           // 摸牌通知
-// GlobalMsgId.NOTIFY_PENG = 101403;            // 碰牌通知
-// GlobalMsgId.NOTIFY_GANG = 101404;            // 杠牌通知
-// GlobalMsgId.NOTIFY_HU = 101405;              // 胡牌通知
+
 // GlobalMsgId.NOTIFY_OUTCARD_ERROR = 101406;   //出牌出错了，同步手牌，出牌
 // GlobalMsgId.NOTIFY_HZ_LIUJU =  101407;            //流局通知
 // GlobalMsgId.NOTIFY_GUO = 101408;           // 过通知
