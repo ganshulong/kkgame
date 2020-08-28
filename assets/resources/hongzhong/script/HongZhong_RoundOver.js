@@ -67,9 +67,9 @@ cc.Class({
                     this._layer.active = false;
                     this._layer.x = this.node.width/2;
                     this._layer.y = this.node.height/2;
-                    // this.showRoundInfo(data);
-                    // this.initPlayerInfo(data, data.users,data.seat,data.hcard,data.source,data.hupaiType);
-                    this.initRoomInfo();
+                    this.initRoomInfo(data);
+                    this.showRoundInfo(data);
+                    
                     let self = this;
                     this.scheduleOnce(()=>{
                         self._layer.active = true;
@@ -92,118 +92,76 @@ cc.Class({
     },
 
     showRoundInfo(data){
-        this._layer.getChildByName("spr_draw").active = (0 >= data.huxi);
-        let panel_CardInfo = this._layer.getChildByName("panel_CardInfo");
-        panel_CardInfo.active = (0 < data.huxi);
-        if (panel_CardInfo.active) {
-            let winerInfo = null;
-            for(let i = 0; i < data.users.length; ++i){
-                if (data.users[i].uid == cc.vv.UserManager.uid) {
-                    panel_CardInfo.getChildByName("spr_lose").active = (0 >= data.users[i].roundScore);
-                    panel_CardInfo.getChildByName("spr_win").active = (0 < data.users[i].roundScore);
-                }
-                if (data.users[i].seat == data.seat) {
-                    winerInfo = data.users[i];
-                }
+        let panle_playerInfo = this._layer.getChildByName("panle_playerInfo");
+        for(let i = 0; i < data.users.length; ++i){
+            let chairId = cc.vv.gameData.getLocalChair(data.users[i].seat);
+            let player = panle_playerInfo.getChildByName("player" + chairId);
+
+            player.getChildByName("bg_other").active = (data.users[i].uid != cc.vv.UserManager.uid)
+            player.getChildByName("bg_self").active = (data.users[i].uid === cc.vv.UserManager.uid)
+            
+            let spr_head = cc.find("head/radio_mask/spr_head",player);
+            Global.setHead(spr_head, data.users[i].usericon);
+            player.getChildByName("spr_banker").active = (data.buck ==- data.users[i].uid);
+            player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
+
+            player.getChildByName("spr_huType").active = (data.seat === data.users[i].seat);
+            player.getChildByName("mask_lastCardHu").active = (data.seat === data.users[i].seat);
+            if (data.seat === data.users[i].seat) {
+                let node = this.node.getComponent("HongZhong_Card").createCard(data.hcard);
+                node.parent = player.getChildByName("lastCard");
             }
 
-            if (data.hcard) {
-                let bgNode = new cc.Node();
-                bgNode.addComponent(cc.Sprite);
-                let cardNode = this.node.getComponent("HongZhong_Card").createCard(data.hcard,false);
-                cardNode.parent = bgNode;
-                bgNode.parent = panel_CardInfo.getChildByName("card_last");
-            }
-
-            if (winerInfo) {
-                let panel_cardArrs = panel_CardInfo.getChildByName("panel_cardArrs");
-                let cardArrItemTemp = panel_cardArrs.getChildByName("cardArrItemTemp");
-
-                for (let i = 0; i < winerInfo.menzi.length; i++) {
-                    let cardArrItem = cc.instantiate(cardArrItemTemp);
-                    cardArrItem.parent = panel_cardArrs;
-                    cardArrItem.x = i * 70;
-
-                    let cardArr = winerInfo.menzi[i].data;
-                    if(winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.KAN ||
-                       winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.PENG) {
-                        cardArr=[winerInfo.menzi[i].card,winerInfo.menzi[i].card,winerInfo.menzi[i].card];
-
-                    } else if(winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.LONG ||
-                             winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.SHE ||
-                             winerInfo.menzi[i].type === cc.vv.gameData.OPERATETYPE.PAO) {
-                        cardArr=[winerInfo.menzi[i].card,winerInfo.menzi[i].card,winerInfo.menzi[i].card,winerInfo.menzi[i].card];
-                    }
-
-                    for(let j = 0; j < cardArr.length; ++j){
-                        let node = this.node.getComponent("HongZhong_Card").createCard(cardArr[j],false);
-                        node.y = node.height * j;
-                        node.parent = cardArrItem;
-                    }
-
-                    let typeNode = this.createType(winerInfo.menzi[i].type);
-                    typeNode.y = 200;
-                    typeNode.parent = cardArrItem;
-                }
-
-                for(let i=0; i < data.huCards.length; ++i){
-                    let cardArrItem = cc.instantiate(cardArrItemTemp);
-                    cardArrItem.parent = panel_cardArrs;
-                    cardArrItem.x = (winerInfo.menzi.length + i) * 70;
-
-                    for(let j = 0; j < data.huCards[i].length; ++j) {
-                        let node = this.node.getComponent("HongZhong_Card").createCard(data.huCards[i][j],false);
-                        node.y = node.height * j;
-                        node.parent = cardArrItem;
-
-                        if (1 == j && 3 == data.huCards[i].length) {
-                            if (data.huCards[i][0] == data.huCards[i][1] && data.huCards[i][0] == data.huCards[i][2]) {
-                                let typeNode = this.createType(cc.vv.gameData.OPERATETYPE.KAN, true);
-                                typeNode.y = 200;
-                                typeNode.parent = cardArrItem;
-                            }
-                        }
+            let handCard = player.getChildByName("handCard");
+            let curPosX = 0;
+            let cardWidth = 43;
+            //杠牌
+            for(let j = 0; j < data.users[i].gangpai.length; ++j){
+                for (let k = 0; k < 4; k++) {
+                    let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].gangpai[j]);
+                    node.parent = handCard;
+                    if (3 > k) {
+                        node.x = curPosX;
+                        curPosX += cardWidth;
+                    } else if (3 == k){
+                        node.x = curPosX - cardWidth * 2;
+                        node.y = node.height/4;
                     }
                 }
+                curPosX += 25;
             }
-            cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore
-            panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("胡息： " + data.huxi);
-
-            let zimoHuTypeStr = "";
-            if (data.isZimo) {
-                zimoHuTypeStr += "自摸x2\n";
-            }
-            if (0 < data.source) {
-                zimoHuTypeStr += "点炮胡\n";
-            }
-            if (0 < data.mingTangType) {
-                zimoHuTypeStr += ["","红胡x2","一点红x2","黑胡x2"][data.mingTangType];
-            }
-            if ("" == zimoHuTypeStr) {
-                zimoHuTypeStr += "平胡";
-            }
-            panel_CardInfo.getChildByName("text_zimo_huType").getComponent(cc.Label).string = zimoHuTypeStr;
-
-            let tunFanStr = "";
-            // if (1 == cc.vv.gameData.getRoomConf().param1) {
-            //     tunFanStr += "囤数:" + (parseInt((data.huxi-6) / 3) + 1) + " ";
-            // }
-            if (data.isZimo || 0 < data.mingTangType) {
-                if (data.isZimo && 0 < data.mingTangType) {
-                    tunFanStr += "番数:4"; 
-                } else {
-                    tunFanStr += "番数:2"; 
+            //碰牌
+            for(let j = 0; j < data.users[i].pengpai.length; ++j){
+                for (let k = 0; k < 3; k++) {
+                    let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].pengpai[j]);
+                    node.parent = handCard;
+                    node.x = curPosX;
+                    curPosX += cardWidth;
                 }
+                curPosX += 25;
+            }
+            //手牌
+            for(let j = 0; j < data.users[i].handInCards.length; ++j){
+                let node = this.node.getComponent("HongZhong_Card").createCard(data.users[i].handInCards[j]);
+                node.parent = handCard;
+                node.x = curPosX;
+                curPosX += cardWidth;
+            }
+
+            if (0 <= data.users[i].roundScore) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
-                tunFanStr += "番数:1"; 
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
             }
-            panel_CardInfo.getChildByName("text_tun_fan").getComponent(cc.Label).string = tunFanStr;
         }
-        let surplusCard = this._layer.getChildByName("surplusCard");
-        for (let i = 0; i < data.diPai.length; i++) {
-            let node = this.node.getComponent("HongZhong_Card").createCard(data.diPai[i],false);
-            node.x = (node.width + 5) * i;
-            node.parent = surplusCard;
+
+        let zhongNiaoCard = this._layer.getChildByName("bg_zhongNiao/zhongNiaoCard");
+        for (let i = 0; i < data.bird.length; i++) {
+            let node = this.node.getComponent("HongZhong_Card").createCard(data.bird[i]);
+            node.parent = zhongNiaoCard;
+            node.x = node.width * i;
         }
     },
 
@@ -278,7 +236,7 @@ cc.Class({
     },
 
 
-    initRoomInfo(){
+    initRoomInfo(data){
         let conf = cc.vv.gameData.getRoomConf();
         let roomId = cc.find("roomInfoNode/txt_room_id",this._layer);
         roomId.getComponent(cc.Label).string = "房间号:" + conf.deskId;
@@ -287,15 +245,10 @@ cc.Class({
         roundNum.getComponent(cc.Label).string = "局数:" + cc.vv.gameData.getDeskInfo().round + "/" + conf.gamenum;
 
         let txt_date = cc.find("roomInfoNode/txt_date",this._layer);
-        txt_date.getComponent(cc.Label).string = conf.deskId;
+        txt_date.getComponent(cc.Label).string = data.overTime;
 
-        let desc = cc.find("roomInfoNode/txt_game_desc",this._layer);
-        let str = "";
-        let list = cc.vv.gameData.getWanFa();
-        for(let i=0;i<list.length;++i){
-            str += list[i];
-        }
-        desc.getComponent(cc.Label).string = str;
+        let txt_game_desc = cc.find("roomInfoNode/txt_game_desc",this._layer);
+        txt_game_desc.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrDetail();
 
         let okBtn = this._layer.getChildByName("btn_comfirm");
         Global.btnClickEvent(okBtn,this.onClose,this);
