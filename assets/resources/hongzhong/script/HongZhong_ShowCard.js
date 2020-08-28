@@ -137,7 +137,7 @@ cc.Class({
         Global.registerEvent(EventId.PAO_NOTIFY,this.clearDesk,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.clearDesk,this);
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
         this.recvDeskInfoMsg();
     },
 
@@ -162,7 +162,7 @@ cc.Class({
         }
     },
 
-    recvRoundOver(data){
+    recvRoundOverNotify(data){
         data = data.detail;
         if(data.hcard>0){
             if(data.source>0){

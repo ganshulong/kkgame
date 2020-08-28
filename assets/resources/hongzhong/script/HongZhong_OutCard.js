@@ -40,7 +40,7 @@ cc.Class({
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
         // Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
         // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
         // Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
@@ -70,7 +70,7 @@ cc.Class({
         }
     },
 
-    recvOverRound(){
+    recvRoundOverNotify(){
         this.showCurOutCardAni(false);
     },
 

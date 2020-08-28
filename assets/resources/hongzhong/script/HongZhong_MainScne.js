@@ -91,7 +91,7 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        // Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
 
         //防玩家同时进入，刷新桌子信息
         if (!deskInfo.isReconnect) {
@@ -125,9 +125,9 @@ cc.Class({
         }
     },
 
-    recvRoundOver(data){
-        cc.find("scene/panel_ting",this.node).active = false;
-    },
+    // recvRoundOverNotify(data){
+    //     cc.find("scene/panel_ting",this.node).active = false;
+    // },
 
     onRcvBatteryChangeNotify(data){
         let spr_battery = cc.find("scene/bg_view/room_info/bg_battery/spr_battery",this.node);

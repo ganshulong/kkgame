@@ -183,12 +183,12 @@ cc.Class({
         Global.registerEvent(EventId.LONG_NOTIFY,this.recvLongNotify,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HANDCARD,this.recvHandCardMsg,this);
-        // Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        // Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
         this.recvDeskInfoMsg();
     },
 
     // 小局结束
-    recvOverRound(data){
+    recvRoundOverNotify(data){
         // if (this._operateCardNode ) {
         //     let users = data.detail.users;
         //     for(let i=0; i < users.length; ++i){

@@ -12,7 +12,7 @@ cc.Class({
     },
 
     start () {
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.GAMEOVER,this.recvGameOver,this);
         // Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
@@ -54,7 +54,7 @@ cc.Class({
         this._isOver = true;
     },
 
-    recvRoundOver(data){
+    recvRoundOverNotify(data){
         data = data.detail;
         if(this._layer === null){
             cc.loader.loadRes("common/prefab/HongZhong_round_over_view",(err,prefab)=>{

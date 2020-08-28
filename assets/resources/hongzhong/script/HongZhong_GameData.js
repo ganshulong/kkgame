@@ -106,7 +106,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_PENG, this.recvPengNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GANG, this.recvGangNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GUO, this.recvGuoNotify, this);
-        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_HU, this.onRcvHuNotfiy, this);
+        cc.vv.NetManager.registerMsg(MsgId.NOTIFY_HU, this.recvRoundOverNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_GAME_OVER, this.onRcvGameOverNotfiy, this);
         cc.vv.NetManager.registerMsg(MsgId.CHAT_NOTIFY, this.onRcvChatNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_READY, this.onRcvReadyNotice, this);
@@ -146,7 +146,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GANG, this.recvGangNotify , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GUO, this.recvGuoNotify , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_MOPAI, this.recvMoPaiNotify , false,this);
-        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_HU, this.onRcvHuNotfiy , false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_HU, this.recvRoundOverNotify , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_GAME_OVER, this.onRcvGameOverNotfiy , false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.CHAT_NOTIFY, this.onRcvChatNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_READY, this.onRcvReadyNotice,false,this);
@@ -317,7 +317,7 @@ cc.Class({
     }, 
 
     // 胡牌通知
-    onRcvHuNotfiy(msg){
+    recvRoundOverNotify(msg){
         if(msg.code === 200){
             Global.dispatchEvent(EventId.HU_NOTIFY,msg);
         }

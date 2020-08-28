@@ -73,7 +73,7 @@ cc.Class({
         Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
         Global.registerEvent(EventId.PLAYER_EXIT,this.recvPlayerExit,this);
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
@@ -82,7 +82,7 @@ cc.Class({
         // this.recvDeskInfoMsg();
     },
 
-    recvOverRound(data){
+    recvRoundOverNotify(data){
         data = data.detail;
         this._bPlaying = false;
         if(this._chairId === 0){

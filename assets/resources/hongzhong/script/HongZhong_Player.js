@@ -75,7 +75,7 @@ cc.Class({
         Global.registerEvent(EventId.PAO_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.updateScore,this);
         Global.registerEvent(EventId.HANDCARD,this.updateScore,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
     },
 
@@ -123,7 +123,7 @@ cc.Class({
     },
 
 
-    recvRoundOver(data){
+    recvRoundOverNotify(data){
         let self = this;
         this._playerNode.runAction(
             cc.sequence(
