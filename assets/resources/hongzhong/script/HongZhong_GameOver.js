@@ -10,8 +10,8 @@ cc.Class({
     },
     
     init(atlas,yinxiAtlas){
-        this._atlas = atlas;
-        this._yinxiAtlas = yinxiAtlas;
+        // this._atlas = atlas;
+        // this._yinxiAtlas = yinxiAtlas;
     },
 
     start () {
@@ -21,7 +21,9 @@ cc.Class({
 
     recvShowGameOver(){
         this._show = true;
-        if(this._layer) this._layer.active = true;
+        if(this._layer) {
+            this._layer.active = true;
+        }
     },
 
     recvGameOver(data){
@@ -47,6 +49,8 @@ cc.Class({
                 this._layer.getChildByName("txt_round_num").getComponent(cc.Label).string = "局数:" + cc.vv.gameData.getDeskInfo().round + "/" + cc.vv.gameData.getRoomConf().gamenum;
                 this._layer.getChildByName("txt_date").getComponent(cc.Label).string = data.overTime;
 
+                this.showPlayerInfo(data);
+
                 // 创建者
                 let bg_creator = this._layer.getChildByName("bg_creator");
                 let spr_head = cc.find("head/radio_mask/spr_head",bg_creator);
@@ -56,31 +60,42 @@ cc.Class({
 
                 let txt_game_desc = this._layer.getChildByName("txt_game_desc");
                 txt_game_desc.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrDetail();
-
-                // let paoList = data.users.slice(0);
-                // paoList.sort((a,b)=>{
-                //     return b.dianPaoCount - a.dianPaoCount;
-                // });
-
-                // let scoreList = data.users.slice(0);
-                // scoreList.sort((a,b)=>{
-                //     return b.score - a.score;
-                // });
-
-                // let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-375,0,375],[-420,-130,160,450]];
-                // let dianPaoWangId = paoList[0].dianPaoCount > 0 ? paoList[0].uid : 0;
-                // let bigWinerId = scoreList[0].uid;
-                // for(let i = 0; i < data.users.length; ++i){
-                //     let player = cc.find("game_end_bg/player"+i,this._layer);
-                //     this.initPlayer(player,data.users[i], dianPaoWangId, bigWinerId);
-                //     player.x = posArr[data.users.length][i];
-                //     player.active = true;
-                // }
-                // for(let i = data.users.length; i < 4; ++i){
-                //     cc.find("game_end_bg/player"+i,this._layer).active = false;
-                // }
             }
         })
+    },
+
+    showPlayerInfo(data){
+        let bigWinerScore = 0;
+        for(let i = 0; i < data.users.length; ++i){
+            if (bigWinerScore < data.users[i].score) {
+                bigWinerScore = data.users[i].score;
+            }
+        }
+
+        let bg_playerInfo = this._layer.getChildByName("bg_playerInfo");
+        for(let i = 0; i < data.users.length; ++i){
+            let player = bg_playerInfo.getChildByName("player" + i);
+
+            player.getChildByName("img_bigwiner").active = (0 < bigWinerScore && bigWinerScore === data.users[i].score);
+            let spr_head = cc.find("head/radio_mask/spr_head",player);
+            Global.setHead(spr_head, data.users[i].usericon);
+            player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
+            player.getChildByName("text_id").getComponent(cc.Label).string = data.users[i].uid;
+
+            player.getChildByName("text_zimo_count").getComponent(cc.Label).string = data.users[i].zimoCount;
+            player.getChildByName("text_angang_count").getComponent(cc.Label).string = data.users[i].angangCount;
+            player.getChildByName("text_minggang_count").getComponent(cc.Label).string = data.users[i].mingangCount;
+            player.getChildByName("text_jiegang_count").getComponent(cc.Label).string = data.users[i].jiegangCount;
+
+            let bg_score = player.getChildByName("bg_score");
+            if (0 <= data.users[i].score) {
+                bg_score.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].score));
+                bg_score.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
+            } else {
+                bg_score.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                bg_score.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].score));
+            }
+        }
     },
 
     // 分享
@@ -90,46 +105,6 @@ cc.Class({
 
     onBack(){
         if(cc.vv.gameData) cc.vv.gameData.exitGame();
-    },
-
-    initPlayer(player,user,dianPaoWangId,dayingjiaID){
-        if(player){
-            let img_bg = player.getChildByName("img_bg");
-            img_bg.getComponent(cc.Sprite).spriteFrame = user.score >= 0 ? this._winBgSpr : this._loseBgSpr;
-
-            let head = player.getChildByName("head");
-            let icon = cc.find("radio_mask/spr_head",head);
-            Global.setHead(icon,user.usericon);
-
-            player.getChildByName("flag_dianpao").active = user.uid === dianPaoWangId;
-            player.getChildByName("flag_dayingjia").active = user.uid === dayingjiaID;
-
-            player.getChildByName("txt_name").getComponent(cc.Label).string = user.playername;
-            player.getChildByName("txt_id").getComponent(cc.Label).string = "ID:"+user.uid;
-
-            img_bg.getChildByName("title_hu_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
-                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_hu_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_hu_num");
-
-            img_bg.getChildByName("title_huxi_num").getComponent(cc.Sprite).spriteFrame = user.score >= 0 ? this.huxiNum_winSpr : this.huxiNum_loseSpr;
-
-            img_bg.getChildByName("title_dianpao_num").getComponent(cc.Sprite).spriteFrame = user.score>=0?
-                this._atlas.getSpriteFrame("penghu_onwer-table-imgs-win_dianpao_num"):this._atlas.getSpriteFrame("penghu_onwer-table-imgs-lose_dianpao_num");
-
-            img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
-            img_bg.getChildByName("huxi_num").getComponent(cc.Label).string = user.totalHuXi;
-            img_bg.getChildByName("dianpao_num").getComponent(cc.Label).string = user.dianPaoCount;
-
-            let score = user.score + "";
-            if(score < 0) {
-                score = "/"+ (-score);
-            }
-            img_bg.getChildByName("score").getComponent(cc.Label).string = score;
-
-            if(cc.vv.UserManager.uid === user.uid){
-                cc.find("game_end_bg/win_title",this._layer).active = user.score >= 0;
-                cc.find("game_end_bg/lose_title",this._layer).active = user.score < 0;
-            }
-        }
     },
 
     onDestroy(){

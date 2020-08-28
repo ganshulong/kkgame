@@ -92,10 +92,9 @@ cc.Class({
     },
 
     showRoundInfo(data){
-        this._layer.getChildByName("spr_draw").active = (0 == data.smallState);
-        this._layer.getChildByName("bg_zhongNiao").active = (0 < data.smallState);
+        this._layer.getChildByName("spr_draw").active = (0 > data.hupaiType && 0 == data.smallState);
         let panle_playerInfo = this._layer.getChildByName("panle_playerInfo");
-        panle_playerInfo.active = (0 < data.smallState);
+        panle_playerInfo.active = (0 < data.hupaiType || 0 < data.smallState);
         if (panle_playerInfo.active) {
             for(let i = 0; i < data.users.length; ++i){
                 let chairId = cc.vv.gameData.getLocalChair(data.users[i].seat);
@@ -109,8 +108,8 @@ cc.Class({
                 player.getChildByName("spr_banker").active = (data.buck ==- data.users[i].uid);
                 player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
 
-                player.getChildByName("spr_huType").active = (data.seat === data.users[i].seat);
-                player.getChildByName("mask_lastCardHu").active = (data.seat === data.users[i].seat);
+                player.getChildByName("spr_huType").active = (data.seat === data.users[i].seat && 0 < data.hupaiType);
+                player.getChildByName("mask_lastCardHu").active = (data.seat === data.users[i].seat && 0 < data.hupaiType);
                 if (data.seat === data.users[i].seat) {
                     let node = this.node.getComponent("HongZhong_Card").createCard(data.hcard);
                     node.parent = player.getChildByName("lastCard");
@@ -160,8 +159,12 @@ cc.Class({
                     player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
                 }
             }
+        }
 
-            let zhongNiaoCard = this._layer.getChildByName("bg_zhongNiao/zhongNiaoCard");
+        let bg_zhongNiao = this._layer.getChildByName("bg_zhongNiao");
+        bg_zhongNiao.active = (0 < data.hupaiType && 0 < data.smallState);
+        if (bg_zhongNiao.active) {
+            let zhongNiaoCard = bg_zhongNiao.getChildByName("zhongNiaoCard");
             for (let i = 0; i < data.bird.length; i++) {
                 let node = this.node.getComponent("HongZhong_Card").createCard(data.bird[i]);
                 node.parent = zhongNiaoCard;
