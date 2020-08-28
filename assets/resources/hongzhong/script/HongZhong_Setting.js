@@ -34,6 +34,7 @@ cc.Class({
 
                     cc.find("language/toggle1",this._settingNode).getComponent(cc.Toggle).isChecked = Global.language == 0;
                     cc.find("language/toggle2",this._settingNode).getComponent(cc.Toggle).isChecked = Global.language == 1;
+                    cc.find("language/toggle2/label",this._settingNode).getComponent(cc.Label).string = "长沙话";
 
                     this.showSettingAction();
                 }
