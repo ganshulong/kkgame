@@ -8,8 +8,6 @@ cc.Class({
     },
 
     start () {
-        //cc.vv.AudioManager.playBgm(this._soundPath, "music_bg_hhh", true);
-
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);

@@ -35,8 +35,6 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        //cc.vv.AudioManager.playBgm(this._soundPath, "music_bg_hhh", true);
-
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.CHI_NOTIFY,this.playOperate,this);
