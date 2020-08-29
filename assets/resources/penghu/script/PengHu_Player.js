@@ -383,6 +383,7 @@ cc.Class({
             }
         }
     },
+
     onRecvHandCard(data){
         let bankInfo = data.detail.bankerInfo;
         if(bankInfo.seat === this._seatIndex) {
@@ -392,7 +393,7 @@ cc.Class({
             if (0 < bankInfo.count) {
                 cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == bankInfo.count);
                 cc.find("sp_flag/zhaung2",this._playerNode).active = (1 < bankInfo.count);
-                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < bankInfo.count) ? bankInfo.count : "";
+                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < bankInfo.count) ? ("X"+bankInfo.count) : "";
             }
         }
 
@@ -458,7 +459,7 @@ cc.Class({
             if (bShow && count) {
                 cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
                 cc.find("sp_flag/zhaung2",this._playerNode).active = (1 < count);
-                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < count) ? count : "";
+                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < count) ? ("X"+count) : "";
             }
         }
     },
