@@ -317,8 +317,8 @@ cc.Class({
     },
 
     showOutLine(){
-        // this._outCardLineNode.active = this._canOutCard;
-        // this.showOutCardTipsAni();
+        this._outCardLineNode.active = this._canOutCard;
+        this.showOutCardTipsAni();
     },
 
     showOutCardTipsAni(){
