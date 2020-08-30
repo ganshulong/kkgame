@@ -122,7 +122,11 @@ cc.Class({
             this.showAllCard();
 
             if (0 === this._chairId) {
-                this._canOutCard = true;
+                this._canOutCard = false;
+                if (data.actionInfo.nextaction.seat === this._seatIndex && 
+                    data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT) {
+                    this._canOutCard = true;
+                }
                 this.showOutLine();
             }
         }
@@ -161,7 +165,11 @@ cc.Class({
             this.showAllCard();
 
             if (0 == this._chairId) {
-                this._canOutCard = true;
+                this._canOutCard = false;
+                if (data.actionInfo.nextaction.seat === this._seatIndex && 
+                    data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT) {
+                    this._canOutCard = true;
+                }
                 this.showOutLine();
             }
         }
