@@ -151,6 +151,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, this);
         cc.vv.NetManager.registerMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, this); //退出房间
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
@@ -166,6 +167,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.NOTIFY_DELETE_TABLE, this.onRecvDeleteTable,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, false, this); //退出房间
     },
 
     onRcvDismissNotify(msg){
@@ -327,7 +329,7 @@ cc.Class({
             let self = this;
             let sureCall = function () {
                 self.sendExitRoomMsg();
-                self.sendEnterRoomMsg(deskId);
+                self.newDeskId = deskId;
             }
             let cancelCall = function () {
             }
@@ -343,6 +345,15 @@ cc.Class({
         cc.vv.NetManager.send(req);
 
         Global.curRoomID = "";
+    },
+
+    onRcvNetExitRoom(msg) {
+        if (msg.code === 200) {
+            if (this.newDeskId) {
+                this.sendEnterRoomMsg(this.newDeskId);
+            }
+            this.newDeskId = '';
+        }
     },
 
     sendEnterRoomMsg(deskId){
@@ -536,6 +547,7 @@ cc.Class({
             let self = this;
             let sureCall = function () {
                 self.sendExitRoomMsg();
+                this.newDeskId = '';
                 cc.vv.SceneMgr.enterScene("club_lobby");
             }
             let cancelCall = function () {
