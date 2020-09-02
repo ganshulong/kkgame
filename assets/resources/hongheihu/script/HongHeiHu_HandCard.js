@@ -175,27 +175,7 @@ cc.Class({
         if(this._selectCard){
             if(this._selectCard.y>this._outCardY){
                 if(this._canOutCard){
-                    if(this.isShowWarn(this._selectCard.cardValue)){
-                        let self = this
-                        let sureCall = function () {
-                            var req = { c: MsgId.WARN_5_FU};
-                            req.pcard = self._selectCard.cardValue;
-                            cc.vv.NetManager.send(req);
-
-                            self.outCard();
-                        }
-                        let cancelCall = function () {
-                            self.outCard();
-                        }
-                        let closeCall = function () {
-                            self._selectCard.color = new cc.Color(255,255,255);
-                            self.resetCardPos(true);
-                        }
-                        cc.vv.AlertView.show("是否发出警报", sureCall, cancelCall, true, closeCall)
-                    } else {
-                        this.outCard();
-                    }
-
+                    this.outCard();
                 }
                 else{
                     this._selectCard.color = new cc.Color(255,255,255);
@@ -207,23 +187,6 @@ cc.Class({
                 this.checkMoveCard();
             }
         }
-    },
-
-    isShowWarn(selectCardValue){
-        if (this.isCanWarn && 3 == this._handcardNode.children.length) {
-            let handCardsValue = [];
-            for(let i = 0 ; i < this._handcardNode.children.length; ++i){
-                if (this._handcardNode.children[i].cardValue == selectCardValue) {
-                    selectCardValue = 0;
-                } else {
-                    handCardsValue.push(this._handcardNode.children[i].cardValue);
-                }
-            }
-            if (handCardsValue[0] == handCardsValue[1]) {
-                return true;
-            }
-        }
-        return false;
     },
 
     outCard(){
@@ -585,7 +548,6 @@ cc.Class({
 
     recvOverRound(data){
         this._bPlaying = false;
-        this.isCanWarn = false;
         if(this._chairId === 0){
            this.showOutLine(false);
         }
@@ -614,19 +576,6 @@ cc.Class({
                         this.showCard(list[i],list.length);
                     }
                 }
-
-                let menziList = deskInfo.users[i].menzi;
-                let pengKanCount = 0;
-                for(let j = 0; j < menziList.length; ++j){
-                    if(cc.vv.gameData.OPERATETYPE.KAN === menziList[j].type || cc.vv.gameData.OPERATETYPE.PENG === menziList[j].type) // 坎
-                    {
-                        ++pengKanCount;
-                    }
-                }
-                if (4 == pengKanCount) {
-                    this.isCanWarn = true;
-                }
-
             }
         }
         if(deskInfo.isReconnect){
@@ -662,11 +611,6 @@ cc.Class({
     // 收到坎
     recvKanAndKanNotify(data){
         data = data.detail;
-        // if (data.seat === this._seatIndex) {
-        //     if (cc.vv.gameData.OPERATETYPE.PENGSI == data.pengType || cc.vv.gameData.OPERATETYPE.KANSI == data.kanType) {
-        //         this.isCanWarn = true;
-        //     }
-        // }
         if(this._chairId === 0){
             if(data.actionInfo.curaction.seat === cc.vv.gameData.getMySeatIndex()){
                 this.delHandCard(data.actionInfo.curaction.card);

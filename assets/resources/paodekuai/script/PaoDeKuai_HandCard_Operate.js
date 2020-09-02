@@ -445,23 +445,6 @@ cc.Class({
         return list;
     },
 
-    isShowWarn(selectCardValue){
-        if (this.isCanWarn && 3 == this._handcardNode.children.length) {
-            let handCardsValue = [];
-            for(let i = 0 ; i < this._handcardNode.children.length; ++i){
-                if (this._handcardNode.children[i].cardValue == selectCardValue) {
-                    selectCardValue = 0;
-                } else {
-                    handCardsValue.push(this._handcardNode.children[i].cardValue);
-                }
-            }
-            if (handCardsValue[0] == handCardsValue[1]) {
-                return true;
-            }
-        }
-        return false;
-    },
-
     outCard(){
         let pos = this._selectCard.parent.convertToWorldSpaceAR(this._selectCard.position);
         Global.dispatchEvent(EventId.OUTCARD,{card:this._selectCard.cardValue,pos:pos});
@@ -806,7 +789,6 @@ cc.Class({
     },
 
     recvRoundOver(data){
-        this.isCanWarn = false;
     },
 
     recvDelHandcardNotify(data){
@@ -840,11 +822,6 @@ cc.Class({
     // 收到坎
     recvKanAndKanNotify(data){
         data = data.detail;
-        // if (data.seat === this._seatIndex) {
-        //     if (cc.vv.gameData.OPERATETYPE.PENGSI == data.pengType || cc.vv.gameData.OPERATETYPE.KANSI == data.kanType) {
-        //         this.isCanWarn = true;
-        //     }
-        // }
         if(this._chairId === 0){
             if(data.actionInfo.curaction.seat === this._seatIndex){
                 this.delHandCard(data.actionInfo.curaction.card);
