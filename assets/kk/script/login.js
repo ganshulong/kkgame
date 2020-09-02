@@ -66,6 +66,8 @@ cc.Class({
         Global.btnClickEvent(phone_login, this.onClickBindPhone, this);
 
         this.initBindPhoneUI();
+        
+        //Global.initRecord();
 
         if (Global.isAndroid()) {
             let result = Global.setAppidWithAppsecretForJS(app_id, app_sceret);

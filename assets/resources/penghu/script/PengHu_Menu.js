@@ -120,6 +120,14 @@ cc.Class({
         btn_helper.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
         btn_helper.on(cc.Node.EventType.TOUCH_END,this.onClickSwitchToClub,this);
 
+        if (Global.isNative()) {
+            let btn_voice = cc.find("scene/operate_btn_view/btn_voice",this.node);
+            btn_voice.on(cc.Node.EventType.TOUCH_START,this.onTouchVoiceBtnStart,this);
+            btn_voice.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchVoiceBtnMove,this);
+            btn_voice.on(cc.Node.EventType.TOUCH_END,this.onTouchVoiceBtnEnd,this);
+            btn_voice.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCanVoiceBtncel,this);
+        }
+
         Global.registerEvent(EventId.CLOSE_ROUNDVIEW,this.recvCloseRoundView,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
@@ -129,6 +137,27 @@ cc.Class({
         Global.registerEvent(EventId.DISMISS_NOTIFY, this.onRcvDismissNotify,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onTouchVoiceBtnStart(event){
+        this.VoiceBtnTouching = true;
+        cc.log("onTouchVoiceBtnStart");
+        Global.startRecord();
+    },
+
+    onTouchVoiceBtnMove(event){
+        this.VoiceBtnTouching = false;
+    },
+
+    onTouchVoiceBtnEnd(event){
+        if (this.VoiceBtnTouching) {
+            this.VoiceBtnTouching = false;
+            Global.stopRecord();
+        }
+    },
+
+    onTouchCanVoiceBtncel(event){
+        this.VoiceBtnTouching = false;
     },
 
     onClickSwitchToClub(event){

@@ -1457,3 +1457,45 @@ Global.getDataStr = function (year,month,day){
     }
     return dataStr;
 }
+
+GlobalFunc.initRecord = function (){
+    if (GlobalFunc.isAndroid()) {
+        cc.vv.FloatTip.show("initRecord isAndroid");
+
+        Global.voicemgr = yvcc.IMDispatchMsgNode.getInstance();
+        cc.vv.FloatTip.show("voicemgr getInstance()");
+
+        Global.voicemgr.setCallback(Global.recordCallback, this);
+        cc.vv.FloatTip.show("voicemgr setCallback");
+
+        Global.voicemgr.initSDK(1003818);
+        cc.vv.FloatTip.show("voicemgr initSDK");
+
+        Global.voicemgr.cpLogin("lucky88", "19100");
+        cc.vv.FloatTip.show("voicemgr cpLogin");
+    } else if (GlobalFunc.isIOS()) {
+
+    }
+}
+
+GlobalFunc.recordCallback = function (data){
+    let rsp = JSON.parse(data);
+    Global.dispatchEvent(EventId.VOICE_EVENT, rsp);
+    cc.vv.FloatTip.show("voiceCallback"+data);
+}
+
+GlobalFunc.startRecord = function (){
+    if (GlobalFunc.isAndroid()) {
+        Global.voicemgr.startRecord(10, "startRecord10");
+    } else if (GlobalFunc.isIOS()) {
+
+    }
+}
+
+GlobalFunc.stopRecord = function (){
+    if (GlobalFunc.isAndroid()) {
+        Global.voicemgr.stopRecord();
+    } else if (GlobalFunc.isIOS()) {
+
+    }
+}
