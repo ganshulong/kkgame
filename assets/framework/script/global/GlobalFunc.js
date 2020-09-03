@@ -8,6 +8,7 @@ GlobalFunc.centerPos = cc.v2(640, 360);
 GlobalFunc.shake = false;
 
 GlobalFunc.ANDROID_CLASS_NAME = 'org/cocos2dx/javascript/AppActivity';
+GlobalFunc.IOS_CLASS_NAME = 'AppController';
 
 /*
 ** 是否是原生app端
@@ -1301,9 +1302,9 @@ Global.isWXAppInstalled = function () {
         return result;
     }
     else if (GlobalFunc.isIOS()) {
-
-        //暂时返回false
-        return false;
+        let result = false;
+        result = jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "isWXAppInstalled");
+        return result;
     }else {
         return false;
     }
@@ -1317,8 +1318,9 @@ Global.setAppidWithAppsecretForJS = function (app_id, app_sceret) {
         return result;
     }
     else if (GlobalFunc.isIOS()) {
-
-    }else {
+        let result = false;
+        result = jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "setAppidWithAppsecretForJS", app_id, app_sceret);
+        return result;
     }
 }
 
@@ -1353,9 +1355,9 @@ Global.onWxAuthorize = function (callback, target) {
         result = jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWxAuthorize", "()Z");
         return result;
     } else if (GlobalFunc.isIOS()) {
-
-    } else {
-
+        let result = false;
+        result = jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "onWxAuthorize");
+        return result;
     }
 }
 
