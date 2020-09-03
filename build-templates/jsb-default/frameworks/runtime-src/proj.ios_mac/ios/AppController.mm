@@ -137,8 +137,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     return [WXApi isWXAppInstalled];
 }
 
-+ (BOOL)onWxAuthorize:(NSDictionary *)dict
-{
++ (BOOL)onWxAuthorize{
     SendAuthReq *req = [[[SendAuthReq alloc] init]autorelease];
     req.scope = @"snsapi_userinfo";
     req.state = @"kkgame";
