@@ -35,9 +35,9 @@
 
 + (BOOL)isWXAppInstalled;
 + (BOOL)onWxAuthorize;
-+ (BOOL)onWXShareText:(NSDictionary *)dict;
-+ (BOOL)onWXShareImage:(NSDictionary *)dict;
-+ (BOOL)onWXShareLink:(NSDictionary *)dict;
+// + (BOOL)onWXShareText:(NSDictionary *)dict;
+// + (BOOL)onWXShareImage:(NSDictionary *)dict;
+// + (BOOL)onWXShareLink:(NSDictionary *)dict;
 
 @end
 
