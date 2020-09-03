@@ -125,7 +125,7 @@ static AppDelegate* s_sharedApplication = nullptr;
 }
 
 //定义参数的返回
--(void)callJsEngineCallBack:(NSString*) funcNameStr :(NSString*) contentStr
+-(void)iosCallJs:(NSString*) funcNameStr :(NSString*) contentStr
 {
     std::string funcName = [funcNameStr UTF8String];
     std::string param = [contentStr UTF8String];
