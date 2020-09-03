@@ -31,6 +31,7 @@
 
 #import "cocos-analytics/CAAgent.h"
 
+#include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 using namespace cocos2d;
 
 @implementation AppController
@@ -87,12 +88,64 @@ static AppDelegate* s_sharedApplication = nullptr;
     cocos2d::GLView *glview = cocos2d::GLViewImpl::createWithEAGLView((__bridge void *)_viewController.view);
     cocos2d::Director::getInstance()->setOpenGLView(glview);
 
+    //向微信注册
+    [WXApi registerApp:@"wx82256d3bda922e13" withDescription:@"demo 2.0"];
+
     //run the cocos2d-x game scene
     app->run();
 
     return YES;
 }
 
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    return  [WXApi handleOpenURL:url delegate:self];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [WXApi handleOpenURL:url delegate:self];
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray<id<UIUserActivityRestoring>> * __nullable restorableObjects))restorationHandler
+{
+    return [WXApi handleOpenUniversalLink:userActivity delegate:self];
+}
+
+-(void) onReq:(BaseReq*)reqonReq{
+
+}
+
+-(void) onResp:(BaseResp*)resp{
+    if([resp isKindOfClass:[SendAuthResp class]])
+    {
+        SendAuthResp *aresp = (SendAuthResp *)resp;
+        if (aresp.errCode== 0) {
+            [self iosCallJs:@"Global.WXCode" :aresp.code];  //此处的cc.jsEngineCallback是creator里面js定义的全局函数
+        }
+    }
+}
+
+//定义参数的返回
+-(void)callJsEngineCallBack:(NSString*) funcNameStr :(NSString*) contentStr
+{
+    std::string funcName = [funcNameStr UTF8String];
+    std::string param = [contentStr UTF8String];
+    std::string jsCallStr = cocos2d::StringUtils::format("%s(\"%s\");",funcName.c_str(), param.c_str());
+    se::ScriptEngine::getInstance()->evalString(jsCallStr.c_str());
+}
+
++ (BOOL)isWXAppInstalled{
+    return [WXApi isWXAppInstalled];
+}
+
++ (BOOL)onWxAuthorize:(NSDictionary *)dict
+{
+    SendAuthReq *req = [[[SendAuthReq alloc] init]autorelease];
+    req.scope = @"snsapi_userinfo";
+    req.state = @"kkgame";
+    
+    [WXApi sendReq:req completion:nil];
+    return  true;
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     /*

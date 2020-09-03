@@ -23,14 +23,21 @@
  THE SOFTWARE.
  ****************************************************************************/
 #import <UIKit/UIKit.h>
+#import "WXApi.h"
 
 @class RootViewController;
 
-@interface AppController : NSObject <UIApplicationDelegate>
+@interface AppController : NSObject <UIApplicationDelegate, WXApiDelegate>
 {
 }
 
 @property(nonatomic, readonly) RootViewController* viewController;
+
++ (BOOL)isWXAppInstalled;
++ (BOOL)onWxAuthorize;
++ (BOOL)onWXShareText:(NSDictionary *)dict;
++ (BOOL)onWXShareImage:(NSDictionary *)dict;
++ (BOOL)onWXShareLink:(NSDictionary *)dict;
 
 @end
 
