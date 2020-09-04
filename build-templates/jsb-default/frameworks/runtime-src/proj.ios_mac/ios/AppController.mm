@@ -166,7 +166,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     req.text = description;
     req.scene = [self getWxShareScene:shareSceneType];
 
-    [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"唤起微信:%@", success ? @"成功" : @"失败");  }];
+    [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"onWXShareText:%@", success ? @"成功" : @"失败");  }];
     return  true;
 }
 
