@@ -89,7 +89,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     cocos2d::Director::getInstance()->setOpenGLView(glview);
 
     //向微信注册
-    [WXApi registerApp:@"wx82256d3bda922e13" withDescription:@"demo 2.0"];
+    [WXApi registerApp:@"wx82256d3bda922e13"];
 
     //run the cocos2d-x game scene
     app->run();
@@ -142,7 +142,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     req.scope = @"snsapi_userinfo";
     req.state = @"kkgame";
     
-    [WXApi sendReq:req completion:nil];
+    [WXApi sendReq:req];
     return  true;
 }
 
