@@ -89,7 +89,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     cocos2d::Director::getInstance()->setOpenGLView(glview);
 
     //向微信注册
-    [WXApi registerApp:@"wx82256d3bda922e13" universalLink:@"https://help.wechat.com/app/"];
+    [WXApi registerApp:@"wx82256d3bda922e13" universalLink:@"https://tjgosd.xinstall.top/tolink/"];
 
     //run the cocos2d-x game scene
     app->run();
@@ -110,7 +110,8 @@ static AppDelegate* s_sharedApplication = nullptr;
     return [WXApi handleOpenUniversalLink:userActivity delegate:self];
 }
 
--(void) onReq:(BaseReq*)reqonReq{
+-(void) onReq:(BaseReq*)reqonReq
+{
 
 }
 
@@ -133,15 +134,80 @@ static AppDelegate* s_sharedApplication = nullptr;
     se::ScriptEngine::getInstance()->evalString(jsCallStr.c_str());
 }
 
-+ (BOOL)isWXAppInstalled{
++ (BOOL)isWXAppInstalled
+{
     return [WXApi isWXAppInstalled];
 }
 
-+ (BOOL)onWxAuthorize{
++ (BOOL)onWxAuthorize
+{
     SendAuthReq *req = [[[SendAuthReq alloc] init]autorelease];
     req.scope = @"snsapi_userinfo";
     req.state = @"kkgame";
+    [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"onWxAuthorize:%@", success ? @"成功" : @"失败");  }];
+    return  true;
+}
+
++ (int) getWxShareScene:(NSString*) shareSceneType
+{
+    if ([shareSceneType isEqualToString:@"WXSceneSession"]) {
+        return WXScene::WXSceneSession;
+    } else if ([shareSceneType isEqualToString:@"WXSceneTimeline"]) {
+        return WXScene::WXSceneTimeline;
+    } else {
+        return WXScene::WXSceneFavorite;
+    }
+}
+
++ (BOOL)onWXShareText:(NSString*)shareSceneType title:(NSString*)title description:(NSString*)description
+{
+    SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
+    req.bText = YES;
+    req.text = description;
+    req.scene = [self getWxShareScene:shareSceneType];
+
     [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"唤起微信:%@", success ? @"成功" : @"失败");  }];
+    return  true;
+}
+
++ (BOOL)onWXShareImage:(NSString*)shareSceneType imgPath:(NSString*)imgPath
+{
+    UIImage *image = [UIImage imageNamed:imgPath];
+    imageData = UIImageJPEGRepresentation(image, 0.7);
+       
+    WXImageObject *imageObject = [WXImageObject object];
+    imageObject.imageData = imageData;
+
+    WXMediaMessage *message = [WXMediaMessage message];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"res5"
+                                                         ofType:@"jpg"];
+    message.thumbData = [NSData dataWithContentsOfFile:filePath];
+    message.mediaObject = imageObject;
+
+    SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = [self getWxShareScene:shareSceneType];
+
+    [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"onWXShareImage:%@", success ? @"成功" : @"失败");  }];
+    return  true;
+}
+
++ (BOOL)onWXShareLink:(NSString*)shareSceneType title:(NSString*)title description:(NSString*)description iconUrl:(NSString*)iconUrl linkUrl:(NSString*)linkUrl
+{
+    WXWebpageObject *webpageObject = [WXWebpageObject object];
+    webpageObject.webpageUrl = linkUrl;
+    WXMediaMessage *message = [WXMediaMessage message];
+    message.title = title;
+    message.description = description;
+    [message setThumbImage:[UIImage imageNamed:iconUrl]];
+    message.mediaObject = webpageObject;
+    SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = [self getWxShareScene:shareSceneType];
+
+    [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"onWXShareLink:%@", success ? @"成功" : @"失败");  }];
     return  true;
 }
 

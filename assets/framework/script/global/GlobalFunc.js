@@ -1367,11 +1367,8 @@ Global.onWxAuthorize = function (callback, target) {
 GlobalFunc.onWXShareText = function (shareSceneType, title, description) {
     if (GlobalFunc.isAndroid()) {
         jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareText", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", shareSceneType, title, description);
-
     } else if (GlobalFunc.isIOS()) {
-
-    } else {
-        
+        jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "onWXShareText:title:description:", shareSceneType, title, description);
     }
 }
 
@@ -1397,9 +1394,8 @@ GlobalFunc.onWXShareImage = function (shareSceneType) {
             rt.removeFromParent();
             if(GlobalFunc.isAndroid()){
                 jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareImage", "(Ljava/lang/String;Ljava/lang/String;)V", shareSceneType, imgPath);
-
             }else if(GlobalFunc.isIOS()){
-
+                jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "onWXShareImage:imgPath:", shareSceneType, imgPath);
             }
         });
     }
@@ -1414,7 +1410,7 @@ GlobalFunc.onWXShareLink = function (shareSceneType, title, description, iconUrl
     if(GlobalFunc.isAndroid()){
         jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "onWXShareLink", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", shareSceneType, title, description, iconUrl, linkUrl);
     }else if(GlobalFunc.isIOS()){
-
+        jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "onWXShareLink:title:description:iconUrl:linkUrl:", shareSceneType, title, description, iconUrl, linkUrl);
     }
 }
 

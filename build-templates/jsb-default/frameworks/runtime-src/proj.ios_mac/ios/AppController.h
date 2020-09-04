@@ -35,9 +35,9 @@
 
 + (BOOL)isWXAppInstalled;
 + (BOOL)onWxAuthorize;
-// + (BOOL)onWXShareText:(NSDictionary *)dict;
-// + (BOOL)onWXShareImage:(NSDictionary *)dict;
-// + (BOOL)onWXShareLink:(NSDictionary *)dict;
++ (BOOL)onWXShareText: (NSString*)shareSceneType title:(NSString*)title description:(NSString*)description;
++ (BOOL)onWXShareImage: (NSString*)shareSceneType imgPath:(NSString*)imgPath;
++ (BOOL)onWXShareLink: (NSString*)shareSceneType title:(NSString*)title description:(NSString*)description iconUrl:(NSString*)iconUrl linkUrl:(NSString*)linkUrl;
 
 @end
 
