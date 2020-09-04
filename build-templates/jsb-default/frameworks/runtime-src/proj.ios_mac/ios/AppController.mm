@@ -89,7 +89,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     cocos2d::Director::getInstance()->setOpenGLView(glview);
 
     //向微信注册
-    [WXApi registerApp:@"wx82256d3bda922e13"];
+    [WXApi registerApp:@"wx82256d3bda922e13" universalLink:@"https://help.wechat.com/app/"];
 
     //run the cocos2d-x game scene
     app->run();
@@ -141,8 +141,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     SendAuthReq *req = [[[SendAuthReq alloc] init]autorelease];
     req.scope = @"snsapi_userinfo";
     req.state = @"kkgame";
-    
-    [WXApi sendReq:req];
+    [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"唤起微信:%@", success ? @"成功" : @"失败");  }];
     return  true;
 }
 
