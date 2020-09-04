@@ -172,17 +172,12 @@ static AppDelegate* s_sharedApplication = nullptr;
 
 + (BOOL)onWXShareImage:(NSString*)shareSceneType imgPath:(NSString*)imgPath
 {
-    UIImage *image = [UIImage imageNamed:imgPath];
-    imageData = UIImageJPEGRepresentation(image, 0.7);
-       
     WXImageObject *imageObject = [WXImageObject object];
-    imageObject.imageData = imageData;
+    imageObject.imageData = [NSData dataWithContentsOfFile:imgPath];
 
     WXMediaMessage *message = [WXMediaMessage message];
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"res5"
-                                                         ofType:@"jpg"];
-    message.thumbData = [NSData dataWithContentsOfFile:filePath];
     message.mediaObject = imageObject;
+    message.thumbData = [NSData dataWithContentsOfFile:imgPath];;
 
     SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
     req.bText = NO;
