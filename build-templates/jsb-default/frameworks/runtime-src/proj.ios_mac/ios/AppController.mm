@@ -172,13 +172,16 @@ static AppDelegate* s_sharedApplication = nullptr;
 
 + (BOOL)onWXShareImage:(NSString*)shareSceneType imgPath:(NSString*)imgPath
 {
+    UIImage *temp_img = [UIImage imageWithContentsOfFile:imgPath];
+    UIImage *thumbImage = [AppController scaleToSize:CGSizeMake(320, 320) Target:temp_img];
+                               
     WXImageObject *imageObject = [WXImageObject object];
     imageObject.imageData = [NSData dataWithContentsOfFile:imgPath];
 
     WXMediaMessage *message = [WXMediaMessage message];
     message.mediaObject = imageObject;
-    message.thumbData = [NSData dataWithContentsOfFile:imgPath];;
-
+    [message setThumbImage:thumbImage];
+    
     SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
     req.bText = NO;
     req.message = message;
@@ -186,6 +189,47 @@ static AppDelegate* s_sharedApplication = nullptr;
 
     [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"onWXShareImage:%@", success ? @"成功" : @"失败");  }];
     return  true;
+}
+
++(UIImage*)scaleToSize:(CGSize)size Target:(UIImage*)target_img
+{
+    CGFloat width = target_img.size.width;
+    CGFloat height = target_img.size.height;
+    
+    float verticalRadio = size.height*1.0/height;
+    float horizontalRadio = size.width*1.0/width;
+    
+    float radio = 1;
+    if(verticalRadio>1 && horizontalRadio>1)
+    {
+        radio = verticalRadio > horizontalRadio ? horizontalRadio : verticalRadio;
+    }
+    else
+    {
+        radio = verticalRadio < horizontalRadio ? verticalRadio : horizontalRadio;
+    }
+    
+    width = width*radio;
+    height = height*radio;
+    
+    int xPos = (size.width - width)/2;
+    int yPos = (size.height-height)/2;
+    
+    // 创建一个bitmap的context
+    // 并把它设置成为当前正在使用的context
+    UIGraphicsBeginImageContext(size);
+    
+    // 绘制改变大小的图片
+    [target_img drawInRect:CGRectMake(xPos, yPos, width, height)];
+    
+    // 从当前context中创建一个改变大小后的图片
+    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // 使当前的context出堆栈
+    UIGraphicsEndImageContext();
+    
+    // 返回新的改变大小后的图片
+    return scaledImage;
 }
 
 + (BOOL)onWXShareLink:(NSString*)shareSceneType title:(NSString*)title description:(NSString*)description iconUrl:(NSString*)iconUrl linkUrl:(NSString*)linkUrl
