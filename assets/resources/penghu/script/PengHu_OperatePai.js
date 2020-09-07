@@ -226,7 +226,7 @@ cc.Class({
         for(let j = 0; j < menzi.length; ++j){
             let typeData = menzi[j];
             let list = [];
-            if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN ||typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
+            if(typeData.type === cc.vv.gameData.OPERATETYPE.KAN){
                 list = [typeData.card, typeData.card, typeData.card];
 
             } else if(typeData.type === cc.vv.gameData.OPERATETYPE.LONG || 
