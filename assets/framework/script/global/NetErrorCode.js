@@ -186,6 +186,5 @@ codeCfg.code = {
     '441':"put_max_card",
     '442':"put_min_card",
     '443':"not_desk_info",
-
-
+    '9932':"coin_not_enough",
 }

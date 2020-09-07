@@ -204,7 +204,7 @@ cc.Class({
                 zimoHuTypeStr += "点炮胡\n";
             }
             if (0 < data.mingTangType) {
-                zimoHuTypeStr += ["","红胡x2","一点红x2","黑胡x2"][data.mingTangType];
+                zimoHuTypeStr += ["","红胡x2","一点红x2","黑胡x2","一点红x3","小红x2","大红x4","黑胡x5"][data.mingTangType];
             }
             if ("" == zimoHuTypeStr) {
                 zimoHuTypeStr += "平胡";
@@ -215,15 +215,7 @@ cc.Class({
             if (1 == cc.vv.gameData.getRoomConf().param1) {
                 tunFanStr += "囤数:" + (parseInt((data.huxi-6) / 3) + 1) + " ";
             }
-            if (data.isZimo || 0 < data.mingTangType) {
-                if (data.isZimo && 0 < data.mingTangType) {
-                    tunFanStr += "番数:4"; 
-                } else {
-                    tunFanStr += "番数:2"; 
-                }
-            } else {
-                tunFanStr += "番数:1"; 
-            }
+            tunFanStr += "番数:" + data.fanshu;
             panel_CardInfo.getChildByName("text_tun_fan").getComponent(cc.Label).string = tunFanStr;
         }
         let surplusCard = this._layer.getChildByName("surplusCard");

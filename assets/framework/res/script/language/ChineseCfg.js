@@ -614,5 +614,6 @@ Wild只出现在2~5列",
     put_max_card:"请出最大的牌",
     put_min_card:"请包含最小的牌",
     not_desk_info:"当前未加入过游戏",
+    coin_not_enough:"金币不足",
 };
 

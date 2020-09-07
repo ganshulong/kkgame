@@ -393,10 +393,11 @@ cc.Class({
             if (0 < bankInfo.count) {
                 cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == bankInfo.count);
                 cc.find("sp_flag/zhaung2",this._playerNode).active = (1 < bankInfo.count);
-                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < bankInfo.count) ? ("X"+bankInfo.count) : "";
+                let roomConf = cc.vv.gameData.getRoomConf();
+                cc.find("sp_flag/text_count",this._playerNode).getComponent(cc.Label).string = (1 < bankInfo.count && 0 < roomConf.param1) ? ("X"+bankInfo.count) : "";
+                cc.find("sp_flag/spr_count",this._playerNode).getComponent(cc.Label).string = (1 < bankInfo.count && 0 == roomConf.param1) ? bankInfo.count : "";
             }
         }
-
     },
 
     onRcvPlayerExitNotice(msg){
@@ -459,7 +460,9 @@ cc.Class({
             if (bShow && count) {
                 cc.find("sp_flag/zhaung1",this._playerNode).active = (1 == count);
                 cc.find("sp_flag/zhaung2",this._playerNode).active = (1 < count);
-                cc.find("sp_flag/count",this._playerNode).getComponent(cc.Label).string = (1 < count) ? ("X"+count) : "";
+                let roomConf = cc.vv.gameData.getRoomConf();
+                cc.find("sp_flag/text_count",this._playerNode).getComponent(cc.Label).string = (1 < count && 0 < roomConf.param1) ? ("X"+count) : "";
+                cc.find("sp_flag/spr_count",this._playerNode).getComponent(cc.Label).string = (1 < count && 0 == roomConf.param1) ? count : "";
             }
         }
     },
