@@ -274,6 +274,7 @@ GlobalMsgId.CLUB_DELETE_TABLE = 8806;   	// 俱乐部删除桌子
 
 GlobalMsgId.GAME_SWITCH_CLUB = 168;   		// 从游戏切换至俱乐部
 GlobalMsgId.CLUB_SWITCH_GAME = 18815;   	// 从俱乐部切换至游戏
+GlobalMsgId.BACK_GAME = 8823;   			// 返回游戏
 
 GlobalMsgId.UPDATE_TABLE_INFO = 100;   		// 刷新桌子信息
 

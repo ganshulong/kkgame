@@ -358,6 +358,10 @@ cc.Class({
 
     sendEnterRoomMsg(deskId){
         if(!this._sendSit){
+            var req = { 'c': MsgId.BACK_GAME};
+            req.clubid = cc.vv.UserManager.currClubId;
+            cc.vv.NetManager.send(req);
+
             var req = { 'c': MsgId.SEATDOWN};
             req.clubid = cc.vv.UserManager.currClubId;
             req.deskId = deskId;

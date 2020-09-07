@@ -126,8 +126,16 @@ cc.Class({
             cc.vv.NetManager.registerMsg(MsgId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify, this);
 
             cc.vv.NetManager.registerMsg(MsgId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
-        
+
+            cc.vv.NetManager.registerMsg(MsgId.BACK_GAME, this.onRcvBackGame, this);
+
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvBackGame(msg){
+            if(msg.code === 200){
+                
+            }
         },
 
         onRcvClubExitApplyNotify(msg){
