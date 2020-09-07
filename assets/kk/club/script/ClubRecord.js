@@ -225,6 +225,7 @@ cc.Class({
             }
             cc.find("bg_right/panel_gameRecord/bg_top/text_roundNum",this._layer).getComponent(cc.Label).string = msg.data.length;
             cc.find("bg_right/panel_gameRecord/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = bigWinerCount;
+            cc.find("bg_right/panel_gameRecord/bg_top/text_score",this._layer).getComponent(cc.Label).string = msg.totalScore;
         }
     },
 
