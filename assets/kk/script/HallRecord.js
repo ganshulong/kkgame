@@ -311,8 +311,8 @@ cc.Class({
                 this._isShowDetailList[i] = false;
                 this._detailPlayerRowList[i] = 2 < playerData.length ? 2 : 1;
             }
-            cc.find("todatConsume_node/text_todayConsumeCoin", this._gameRecordLayer).getComponent(cc.Label).string = "今日消耗幸运豆：" + msg.costCoin;
-            cc.find("todatConsume_node/text_todayConsumeCard", this._gameRecordLayer).getComponent(cc.Label).string = "消耗专属豆：" + msg.costRoomCard;
+            cc.find("todatConsume_node/text_todayConsumeCoin", this._gameRecordLayer).getComponent(cc.Label).string = "今日消耗金币：" + msg.costCoin;
+            cc.find("todatConsume_node/text_todayConsumeCard", this._gameRecordLayer).getComponent(cc.Label).string = "消耗房卡：" + msg.costRoomCard;
 
             this.updateItemPosX();
         }
