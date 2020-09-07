@@ -24,14 +24,16 @@
  ****************************************************************************/
 #import <UIKit/UIKit.h>
 #import "WXApi.h"
+#import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
 
 @class RootViewController;
 
-@interface AppController : NSObject <UIApplicationDelegate, WXApiDelegate>
+@interface AppController : NSObject <UIApplicationDelegate, WXApiDelegate,  AMapLocationManagerDelegate>
 {
 }
-
 @property(nonatomic, readonly) RootViewController* viewController;
+@property(nonatomic, strong) AMapLocationManager* locationManager;
 
 + (BOOL)isWXAppInstalled;
 + (BOOL)onWxAuthorize;

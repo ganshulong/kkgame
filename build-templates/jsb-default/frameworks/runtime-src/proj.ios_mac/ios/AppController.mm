@@ -90,11 +90,40 @@ static AppDelegate* s_sharedApplication = nullptr;
 
     //向微信注册
     [WXApi registerApp:@"wx82256d3bda922e13" universalLink:@"https://tjgosd.xinstall.top/tolink/"];
+    
+    //注册高德地图定位
+    [AMapServices sharedServices].apiKey = @"c9e271f2f4216a766fb65e3570948733";
+    
+    self.locationManager = [[AMapLocationManager alloc] init];
+    self.locationManager.delegate = self;
+//    self.locationManager.distanceFilter ＝ 200;
+    //设置允许连续定位逆地理
+    [self.locationManager setLocatingWithReGeocode:YES];
+    
+    //iOS 9（不包含iOS 9） 之前设置允许后台定位参数，保持不会被系统挂起
+    [self.locationManager setPausesLocationUpdatesAutomatically:NO];
 
+    //iOS 9（包含iOS 9）之后新特性：将允许出现这种场景，同一app中多个locationmanager：一些只能在前台定位，另一些可在后台定位，并可随时禁止其后台定位。
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9) {
+        self.locationManager.allowsBackgroundLocationUpdates = YES;
+    }
+    //开始持续定位
+    [self.locationManager startUpdatingLocation];
+    
+    [self.locationManager setLocatingWithReGeocode:YES];
+    [self.locationManager startUpdatingLocation];
+    
     //run the cocos2d-x game scene
     app->run();
 
     return YES;
+}
+
+- (void)amapLocationManager:(AMapLocationManager *)manager didUpdateLocation:(CLLocation *)location reGeocode:(AMapLocationReGeocode *)reGeocode
+{
+    NSLog(@"location:{lat:%f; lon:%f; district:%@}", location.coordinate.latitude, location.coordinate.longitude, reGeocode.district);
+    NSString *GPSDataStr = [NSString stringWithFormat:@"%f,%f,%@", location.coordinate.longitude,location.coordinate.latitude,reGeocode.district];
+    [self iosCallJs:@"Global.GetGPSData" :GPSDataStr];
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {

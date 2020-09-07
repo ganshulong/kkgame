@@ -35,6 +35,11 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weixin</string>
+		<string>weixinULAPI</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -42,6 +47,16 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>AMapLocationKit需要定位权限才可以正常使用，如果您需要使用后台定位功能请选择“始终允许”。</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>AMapLocationKit需要定位权限才可以使用</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>AMapLocationKit需要定位权限才可以正常使用</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIPrerenderedIcon</key>
@@ -55,11 +70,6 @@
 	</dict>
 	<key>UIRequiresFullScreen</key>
 	<true/>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>weixin</string>
-		<string>weixinULAPI</string>
-	</array>
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
