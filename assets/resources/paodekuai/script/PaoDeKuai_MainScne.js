@@ -12,7 +12,6 @@ cc.Class({
 
     start () {
         Global.autoAdaptDevices(false);
-        Global.starBatteryReceiver();
 
         this.initUI();
 
@@ -42,6 +41,8 @@ cc.Class({
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        
+        Global.starBatteryReceiver();
 
         //防玩家同时进入，刷新桌子信息
         let deskInfo = cc.vv.gameData.getDeskInfo();

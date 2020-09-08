@@ -40,6 +40,7 @@
 + (BOOL)onWXShareText: (NSString*)shareSceneType title:(NSString*)title description:(NSString*)description;
 + (BOOL)onWXShareImage: (NSString*)shareSceneType imgPath:(NSString*)imgPath;
 + (BOOL)onWXShareLink: (NSString*)shareSceneType title:(NSString*)title description:(NSString*)description iconUrl:(NSString*)iconUrl linkUrl:(NSString*)linkUrl;
++ (float)starBatteryReceiver;
 
 @end
 

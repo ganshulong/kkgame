@@ -1428,9 +1428,8 @@ GlobalFunc.starBatteryReceiver = function () {
     if (GlobalFunc.isAndroid()) {
         jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "starBatteryReceiver", "()V");
     } else if (GlobalFunc.isIOS()) {
-
-    } else {
-        
+        let parameterStr = jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "starBatteryReceiver");
+        Global.dispatchEvent(EventId.BATTERY_CHANGE_NOTIFY, parameterStr);
     }
 }
 

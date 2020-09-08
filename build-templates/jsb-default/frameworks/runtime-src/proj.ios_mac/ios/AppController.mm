@@ -279,6 +279,21 @@ static AppDelegate* s_sharedApplication = nullptr;
     return  true;
 }
 
++ (float)starBatteryReceiver
+{
+    UIDevice * device = [UIDevice currentDevice];
+    [device setBatteryMonitoringEnabled:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeBatteryLevel:) name:@"UIDeviceBatteryLevelDidChangeNotification" object:device];
+    return [device batteryLevel]*100;
+}
+
+- (void)didChangeBatteryLevel:(id)sender{
+    UIDevice *device = [UIDevice currentDevice];
+    [device setBatteryMonitoringEnabled:YES];
+    NSString *batteryLevelStr = [NSString stringWithFormat:@"%f",[device batteryLevel]*100];
+    [self iosCallJs:@"Global.GetBatteryChange" :batteryLevelStr];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     /*
       Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
