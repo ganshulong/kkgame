@@ -123,6 +123,11 @@ static AppDelegate* s_sharedApplication = nullptr;
     [self iosCallJs:@"Global.GetGPSData" :GPSDataStr];
 }
 
+- (void)amapLocationManager:(AMapLocationManager *)manager doRequireLocationAuth:(CLLocationManager*)locationManager
+{
+    [locationManager requestAlwaysAuthorization];
+}
+
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     return  [WXApi handleOpenURL:url delegate:self];
 }
