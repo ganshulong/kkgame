@@ -21,7 +21,6 @@ EventId.UPATE_COINS = "upate_coins";                  // 更新金币
 EventId.EXIT_GAME = "exit_game";                      // 退出游戏
 EventId.SHOW_BIGBANG = "show_bigbang";                // 显示Bigbang动画
 EventId.HIDE_BIGBANG = "hide_bigbang";                // 隐藏Bigbang动画
-EventId.RECHARGE_SUCC = "recharge_succ";              // 上下分成功
 EventId.SPECIAL_ACTION_FINISH = "special_action_finish";   // 特殊动画，主要指停止后，结算前播放动画
 EventId.LOAD_ITEM_FINISH = "load_Items_finish";       // 加载item完成
 EventId.SHOW_ALL_GAMEITEM = "show_all_gameitem";       // 显示所有游戏图标
@@ -86,6 +85,8 @@ EventId.SCORE_UPDATE_NOTIFY = "SCORE_UPDATE_NOTIFY";	  // 积分更新通知
 EventId.UPDATE_PLAYER_INFO = "UPDATE_PLAYER_INFO";	  	  // 玩家更新通知
 EventId.GANG_NOTIFY = "GANG_NOTIFY";                      // 杠通知
 EventId.VOICE_EVENT = "VOICE_EVENT";                      // 语言事件通知
+EventId.ROOMCRAD_CHANGE = "ROOMCRAD_CHANGE";              // 房卡更新
+EventId.COIN_CHANGE = "COIN_CHANGE";              		  // 金币更新
 
 
 //GSLTEST

@@ -87,8 +87,8 @@ cc.Class({
 
         cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;
         cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
-        cc.find("money_bg/gold_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
-        cc.find("room_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
+        cc.find("icon_bg/icon_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
+        cc.find("roomCard_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
         this.notHaveClub_btn = this.node.getChildByName("notHaveClub_btn");
         Global.btnClickEvent(this.notHaveClub_btn,this.onToClubLobby,this);
@@ -128,9 +128,19 @@ cc.Class({
 
         Global.registerEvent(EventId.SELF_GPS_DATA, this.onRecvSelfGpsData,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
+        Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
+        Global.registerEvent(EventId.COIN_CHANGE, this.onRcvNetCoinChanged,this);
 
         //testgsl
         // this.onClub();
+    },
+
+    onRcvNetRoomcardChanged(){
+        cc.find("icon_bg/icon_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
+    },
+
+    onRcvNetCoinChanged(){
+        cc.find("roomCard_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
     },
 
     initClubBtn(){

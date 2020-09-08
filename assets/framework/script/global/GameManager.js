@@ -104,10 +104,8 @@ cc.Class({
             //App需要重启，可能是强更
             cc.vv.NetManager.registerMsg(MsgId.GAME_NEED_RESTART, this.onRcvNetGameRestarNotice, this);
 
-            //财富改变（金币改变）
-            cc.vv.NetManager.registerMsg(MsgId.MONEY_CHANGED, this.onRcvNetMoneyChanged, this);
-            //主动同步金币
-            cc.vv.NetManager.registerMsg(MsgId.SYNC_COIN, this.onRcvNetSyncMoney, this);
+            //更新房卡金币
+            cc.vv.NetManager.registerMsg(MsgId.MONEY_CHANGED, this.onRcvNetRoomcardCoinChanged, this);
             //同步玩家信息
             cc.vv.NetManager.registerMsg(MsgId.SYNC_PLAYER_INFO, this.onRcvNetSyncPlayerInfo, this);
             //幸运红包变化
@@ -506,23 +504,16 @@ cc.Class({
 
         },
 
-        //财富变化
-        onRcvNetMoneyChanged: function (msgDic) {
+        //更新房卡金币
+        onRcvNetRoomcardCoinChanged: function (msgDic) {
             if (msgDic.code === 200) {
-                if(msgDic.uid === cc.vv.UserManager.uid){
-                    Global.playerData.coin = msgDic.coin;
-                    if (msgDic.count > 0 && msgDic.type === 1) cc.vv.AlertView.showTips(cc.js.formatStr(cc.vv.Language.add_score_succ, Global.S2P(msgDic.count)), () => {
-                    });
+                if(1 == msgDic.type){
+                    Global.playerData.roomcard = msgDic.value;
+                    Global.dispatchEvent(EventId.ROOMCRAD_CHANGE,msgDic);
+                } else if (2 == msgDic.type) {
+                    Global.playerData.coin = msgDic.value;
+                    Global.dispatchEvent(EventId.COIN_CHANGE,msgDic);
                 }
-                Global.dispatchEvent(EventId.RECHARGE_SUCC,msgDic);
-            }
-        },
-
-        //主动同步金币
-        onRcvNetSyncMoney: function (msgDic) {
-            if (msgDic.code === 200) {
-                Global.playerData.coin = msgDic.coin;
-                Global.dispatchEvent(EventId.RECHARGE_SUCC,msgDic);
             }
         },
 

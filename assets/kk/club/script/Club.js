@@ -157,6 +157,7 @@ cc.Class({
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
         Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
         Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
+        Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
     },
 
     unregisterMsg(){
@@ -168,6 +169,11 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, false, this); //退出房间
+    },
+
+    onRcvNetRoomcardChanged(){
+        let txt_card_num = cc.find("Layer/bg/img_card_bg/txt_card_num",this.node);
+        txt_card_num.getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
     },
 
     onRcvDismissNotify(msg){

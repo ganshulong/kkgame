@@ -17,7 +17,6 @@ GlobalMsgId.LOGIN = 1; //登录游戏
 GlobalMsgId.LOGIN_USERID = 2; //ID登录
 GlobalMsgId.RELOGIN_USERID = 3; //断线重登陆
 GlobalMsgId.LOGIN_OUT = 12, //登出
-GlobalMsgId.SYNC_COIN = 29  ,//客户端主动同步金币
 GlobalMsgId.GAME_FIELDS_LIST = 30; //获取指定游戏的场次列表
 
 //大厅UI弹框协议
