@@ -110,9 +110,6 @@ static AppDelegate* s_sharedApplication = nullptr;
     //开始持续定位
     [self.locationManager startUpdatingLocation];
     
-    [self.locationManager setLocatingWithReGeocode:YES];
-    [self.locationManager startUpdatingLocation];
-    
     //run the cocos2d-x game scene
     app->run();
 
@@ -327,7 +324,7 @@ static AppDelegate* s_sharedApplication = nullptr;
       Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
     */
     cocos2d::Application::getInstance()->applicationWillEnterForeground();
-    
+
     if (CAAgent.isInited) {
         [CAAgent onResume];
     }
