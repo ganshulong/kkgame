@@ -326,11 +326,8 @@ static AppDelegate* s_sharedApplication = nullptr;
     /*
       Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
     */
-    auto glview = (__bridge CCEAGLView*)(Director::getInstance()->getOpenGLView()->getEAGLView());
-    auto currentView = [[[[UIApplication sharedApplication] keyWindow] subviews] lastObject];
-    if (glview == currentView) {
-        cocos2d::Application::getInstance()->applicationWillEnterForeground();
-    }
+    cocos2d::Application::getInstance()->applicationWillEnterForeground();
+    
     if (CAAgent.isInited) {
         [CAAgent onResume];
     }
