@@ -78,6 +78,7 @@ cc.Class({
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
         Global.registerEvent(EventId.GANG_NOTIFY,this.recvGangNotify,this);
+        Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
 
         // this.recvDeskInfoMsg();
     },
@@ -138,6 +139,19 @@ cc.Class({
             this._gangCards.push(data.actionInfo.curaction.card);
             this.removeCardFromHand(data.actionInfo.curaction.card, 3);
             this.showAllCard();
+        }
+    },
+
+    // 过
+    recvGuoNotify(data){
+        data = data.detail;
+        if (data.seat === this._seatIndex && 0 === this._chairId) {
+            this._canOutCard = false;
+            if (data.actionInfo.nextaction.seat === this._seatIndex && 
+                data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.PUT) {
+                this._canOutCard = true;
+            }
+            this.showOutLine();
         }
     },
 

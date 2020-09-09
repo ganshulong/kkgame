@@ -105,6 +105,12 @@ cc.Class({
         }
     },
 
+    // 过
+    recvGuoNotify(data){
+        data = data.detail;
+        this.showCurOutCardAni(data.actionInfo.curaction.seat === this._seatIndex);
+    },
+
     showCard(value){
         let node = this.node.getComponent("HongZhong_Card").createCard(value,false);
         let row = parseInt(this._cardsNum/25);
@@ -140,18 +146,6 @@ cc.Class({
 
     showOutCard(card){
         this.showCard(card,true);
-    },
-
-    // 过
-    recvGuoNotify(data){
-        data = data.detail;
-        // this.showOutCard();
-        // if(data.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.MOPAI){
-        //     if(data.actionInfo.curaction.seat === this._seatIndex){
-        //         let card = data.actionInfo.curaction.card;
-        //         this.putOutCard(card);
-        //     }
-        // }
     },
 
     // 吃
