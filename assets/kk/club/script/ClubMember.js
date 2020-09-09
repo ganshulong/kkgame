@@ -17,6 +17,8 @@ cc.Class({
 
     start () {
         cc.vv.NetManager.registerMsg(MsgId.CLUB_MEMBER_LIST, this.onRcvMemberList, this);
+        cc.vv.NetManager.registerMsg(MsgId.MEMBER_FORBID_PLAY, this.onRcvMemberState, this);
+        cc.vv.NetManager.registerMsg(MsgId.MEMBER_RECOVER_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.registerMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
     },
 
@@ -72,8 +74,8 @@ cc.Class({
         }
 
         this.memberListContent = cc.find("bg_member/panel_list/scrollView/content",this._layer);
-        let spr_head = cc.find("bg_memberItem/UserHead/radio_mask/spr_head", this.memberListContent.children[0])
-        this.defaultSpriteFrame = spr_head.getComponent(cc.Sprite).spriteFrame;
+        this.memberItem = cc.find("bg_member/panel_list/scrollView/memberItem",this._layer);
+        this.memberItem.active = false;
     },
 
     initShow(){
@@ -81,10 +83,6 @@ cc.Class({
         for (let i = 0; i < this.sortBtnArr.length; i++) {
             this.sortBtnArr[i].isSmallToBig = true;
         }
-        for(let i = 0; i < this.memberListContent.children.length; ++i){
-            this.memberListContent.children[i].active = false;
-        }
-
         this.panel_dateSelect.active = false;
 
         let selectData = new Date();
@@ -246,23 +244,17 @@ cc.Class({
                 break;
             }
         }
+
+        this.memberListContent.removeAllChildren();
         for (let i = 0; i < showList.length; i++) {
-            let item = null;
-            if(i < this.memberListContent.children.length) {
-                item = this.memberListContent.children[i];
-            } else {
-                item = cc.instantiate(this.memberListContent.children[0]);
-                item.parent = this.memberListContent;
-            }
-            item.y = this.memberListContent.children[0].y - i * (item.height + 5);
-            item.active = true;
+            let item =  cc.instantiate(this.memberItem);
+            item.parent = this.memberListContent;
+            item.y = - item.height * i;
+            item.uid = showList[i].uid;
             
             let bg_memberItem = item.getChildByName("bg_memberItem");
-
             bg_memberItem.getChildByName("spr_creater").active = (clubCeateUid == showList[i].uid);
-
             let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
-            spr_head.getComponent(cc.Sprite).spriteFrame = this.defaultSpriteFrame;
             Global.setHead(spr_head, showList[i].usericon);
 
             bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = showList[i].playername;
@@ -275,18 +267,62 @@ cc.Class({
             bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
             bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;
             bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = showList[i].totalScore;
-            let btn_tickout = bg_memberItem.getChildByName("btn_tickout");
-            btn_tickout.active = (clubCeateUid != showList[i].uid);
-            btn_tickout.uid = showList[i].uid;
-            btn_tickout.playername = showList[i].playername;
-            Global.btnClickEvent(btn_tickout,this.onClickTickout,this);
 
-        }
-        this.memberListContent.height = showList.length * (this.memberListContent.children[0].height + 5);
+            let bg_btns = bg_memberItem.getChildByName("bg_btns");
+            bg_btns.active = (clubCeateUid != showList[i].uid);
+            if (bg_btns.active) {
+                let btn_forbidPlay = bg_btns.getChildByName("btn_forbidPlay");
+                btn_forbidPlay.active = (1 == showList.state);
+                if (btn_forbidPlay.active) {
+                    btn_forbidPlay.uid = showList[i].uid;
+                    btn_forbidPlay.playername = showList[i].playername;
+                    Global.btnClickEvent(btn_forbidPlay, this.onClickForbidPlay,this);
+                }
 
-        for(let i = showList.length; i < this.memberListContent.children.length; ++i){
-            this.memberListContent.children[i].active = false;
+                let btn_recoverPlay = bg_btns.getChildByName("btn_recoverPlay");
+                btn_recoverPlay.active = (0 == showList.state);
+                if (btn_recoverPlay.active) {
+                    btn_recoverPlay.uid = showList[i].uid;
+                    btn_recoverPlay.playername = showList[i].playername;
+                    Global.btnClickEvent(btn_recoverPlay, this.onClickRecoverPlay,this); 
+                }
+                
+                let btn_tickout = bg_btns.getChildByName("btn_tickout");
+                btn_tickout.uid = showList[i].uid;
+                btn_tickout.playername = showList[i].playername;
+                Global.btnClickEvent(btn_tickout, this.onClickTickout,this);
+            }
+            item.active = true;
         }
+        this.memberListContent.height = this.memberItem.height * showList.length;
+    },
+
+    onClickForbidPlay(event){
+        let self = this;
+        self.kickUid = event.target.uid;
+        let sureCall = function () {
+            let req = { 'c': MsgId.MEMBER_FORBID_PLAY};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.pauseUid = self.kickUid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将" + event.target.playername + "禁止娱乐吗", sureCall, cancelCall);
+    },
+
+    onClickRecoverPlay(event){
+        let self = this;
+        self.kickUid = event.target.uid;
+        let sureCall = function () {
+            let req = { 'c': MsgId.MEMBER_RECOVER_PLAY};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.recoverUid = self.kickUid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将" + event.target.playername + "恢复娱乐吗", sureCall, cancelCall);
     },
 
     onClickTickout(event){
@@ -303,6 +339,25 @@ cc.Class({
         cc.vv.AlertView.show("确定将" + event.target.playername + "踢出亲友圈吗", sureCall, cancelCall);
     },
 
+    onRcvMemberState(msg){
+        if (200 == msg.code) {
+            for(let i = 0; i < this.memberListContent.children.length; ++i){
+                let childrenItem = this.memberListContent.children[i];
+                if (msg.uid === childrenItem.uid && childrenItem.active) {
+                    cc.find("bg_memberItem/bg_btns/btn_forbidPlay", childrenItem).active = (1 == msg.state);
+                    cc.find("bg_memberItem/bg_btns/btn_recoverPlay", childrenItem).active = (0 == msg.state);
+                    break;
+                }
+            }
+            for (let i = 0; i < this.memberList.length; i++) {
+                if (msg.uid === this.memberList[i].uid) {
+                    this.memberList[i].state = msg.state;
+                    break;
+                }
+            }
+        }
+    },
+
     onRcvTickoutMember(msg){
         if (200 == msg.code) {
             this.sendMemberListReq();
@@ -312,6 +367,8 @@ cc.Class({
 
     onDestroy(){
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_MEMBER_LIST, this.onRcvMemberList, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.MEMBER_FORBID_PLAY, this.onRcvMemberState, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.MEMBER_RECOVER_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.unregisterMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_member",cc.Prefab);

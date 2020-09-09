@@ -258,6 +258,8 @@ GlobalMsgId.CLUB_AGREE_EXIT = 8820; 		// 同意退出俱乐部
 GlobalMsgId.CLUB_MEMBER_LIST = 8821; 		// 俱乐部成员列表
 
 GlobalMsgId.TICKOUT_CLUB_MEMBER = 8822; 	// 踢出俱乐部成员
+GlobalMsgId.MEMBER_FORBID_PLAY = 8824; 		// 成员禁止游戏
+GlobalMsgId.MEMBER_RECOVER_PLAY = 8825; 	// 成员恢复游戏
 
 GlobalMsgId.FREEZE_CLUB_NOTIFY = 18811; 	// 冻结/解冻俱乐部通知
 GlobalMsgId.DISMISS_CLUB_NOTIFY = 18810; 	// 解散俱乐部通知

@@ -187,4 +187,5 @@ codeCfg.code = {
     '442':"put_min_card",
     '443':"not_desk_info",
     '9932':"coin_not_enough",
+    '444':"club_state_is_dorbid",
 }
