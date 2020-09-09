@@ -54,23 +54,10 @@ cc.Class({
         let btnMsg = cc.find("scene/operate_btn_view/btn_msg",this.node);
         Global.btnClickEvent(btnMsg,this.onShowMsg,this);
 
-        cc.find("scene/panel_ting",this.node).active = false;
-
-        let deskInfo = cc.vv.gameData.getDeskInfo();
-        if(deskInfo.isReconnect){
-            for(let i=0;i<deskInfo.users.length;++i){
-                let chairId = cc.vv.gameData.getLocalChair(deskInfo.users[i].seat);
-                let uiSeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
-                if(0 == uiSeat && 0 < deskInfo.users[i].tingPaiInfo.length){
-                    this.showTingCards(deskInfo.users[i].tingPaiInfo);
-                }
-            }
-        }
-
         this.node.addComponent("HongZhong_Card").init();
 
         for(let i = 0; i < cc.vv.gameData.RoomSeat; ++i){
-            this.node.addComponent("HongZhong_ShowCard").init(i,conf.seat);
+            // this.node.addComponent("HongZhong_ShowCard").init(i,conf.seat);
             this.node.addComponent("HongZhong_Player").init(i,conf.seat,this.emjoAtlas);
             this.node.addComponent("HongZhong_OutCard").init(i,conf.seat);
             this.node.addComponent("HongZhong_HandCard").init(i,conf.seat);
@@ -87,45 +74,15 @@ cc.Class({
 
         Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
-        Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
 
         Global.starBatteryReceiver();
 
         //防玩家同时进入，刷新桌子信息
+        let deskInfo = cc.vv.gameData.getDeskInfo();
         if (!deskInfo.isReconnect) {
             let req = {c: MsgId.UPDATE_TABLE_INFO};
             cc.vv.NetManager.send(req);
         }
-    },
-
-    onRcvOutCardResult(data){
-        let tingPaiInfo = data.detail
-        this.showTingCards(tingPaiInfo);
-    },
-
-    showTingCards(tingPaiInfo){
-        cc.find("scene/panel_ting",this.node).active = 0 < tingPaiInfo.length;
-        if (0 < tingPaiInfo.length) {
-            let ting_cards = cc.find("scene/panel_ting/ting_cards",this.node);
-            ting_cards.removeAllChildren();
-            for (let i = 0; i < tingPaiInfo.length; i++) {
-                let cardNode = new cc.Node();
-                cardNode.addComponent(cc.Sprite);
-                if (200 < tingPaiInfo[i]) {
-                    tingPaiInfo[i] -= (200-16);
-                } else {
-                    tingPaiInfo[i] -= 100;
-                }
-                cardNode.getComponent(cc.Sprite).spriteFrame = this.tingAtlas.getSpriteFrame("hongheihu-imgs-ting-" + tingPaiInfo[i]);
-                cardNode.parent = ting_cards;
-                cardNode.x = i * (37 + 3);
-            }
-        }
-    },
-
-    recvRoundOverNotify(data){
-        cc.find("scene/panel_ting",this.node).active = false;
     },
 
     onRcvBatteryChangeNotify(data){

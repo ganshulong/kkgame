@@ -34,6 +34,31 @@ cc.Class({
         this._btnGuo = cc.find("scene/play_action_view/btn_guo",this.node);
         Global.btnClickEvent(this._btnGuo,this.onGuo,this);
 
+        // 听
+        this.panel_ting = cc.find("scene/panel_ting",this.node);
+        this.panel_ting.active = false;
+
+        this.btn_checkTing = this.panel_ting.getChildByName("btn_checkTing");
+        Global.btnClickEvent(this.btn_checkTing, this.onClickCheckTing,this);
+        this.mask_checkTing = this.panel_ting.getChildByName("mask");
+        Global.btnClickEvent(this.mask_checkTing, this.onClickHideTing,this);
+
+        this.scrollview_tingCard = this.panel_ting.getChildByName("scrollview_tingCard");
+        this.tingCard_content = cc.find("view/content", this.scrollview_tingCard);
+        this.tingCard_item = cc.find("view/item", this.scrollview_tingCard);
+        this.tingCard_item.active = false;
+
+        let deskInfo = cc.vv.gameData.getDeskInfo();
+        if(deskInfo.isReconnect){
+            for(let i=0;i<deskInfo.users.length;++i){
+                let chairId = cc.vv.gameData.getLocalChair(deskInfo.users[i].seat);
+                let uiSeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
+                if(0 == uiSeat && 0 < deskInfo.users[i].tingPaiInfo.length){
+                    this.showTingCards(deskInfo.users[i].tingPaiInfo);
+                }
+            }
+        }
+
         this.registerMsg();
     },
 
@@ -41,16 +66,54 @@ cc.Class({
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
-        // Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
-        // Global.registerEvent(EventId.GANG_NOTIFY,this.recvGangNotify,this);
-
-        // Global.registerEvent(EventId.CHI_NOTIFY,this.onCloseSelectChi,this);
-        // Global.registerEvent(EventId.PENG_NOTIFY,this.onCloseSelectChi,this);
-        // Global.registerEvent(EventId.PAO_NOTIFY,this.onCloseSelectChi,this);
-        // Global.registerEvent(EventId.KAN_NOTIFY,this.onCloseSelectChi,this);
-        // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onRcvOutCardResult(data){
+        let tingPaiInfo = data.detail
+        this.showTingCards(tingPaiInfo);
+    },
+
+    recvRoundOverNotify(data){
+        this.panel_ting.active = false;
+    },
+
+    showTingCards(tingPaiInfo){
+        this.tingPaiInfo = tingPaiInfo;
+        this.panel_ting.active = 0 < tingPaiInfo.length;
+        if (this.panel_ting.active) {
+            this.btn_checkTing.active = true;
+            this.scrollview_tingCard.active = false;
+            this.mask_checkTing.active = false;
+        }
+    },
+
+    onClickCheckTing(){
+        this.tingCard_content.removeAllChildren();
+        for (let i = 0; i < this.tingPaiInfo.length; i++) {
+            let tingCard_item = cc.instantiate(this.tingCard_item);
+            tingCard_item.parent = this.tingCard_content;
+            tingCard_item.x = tingCard_item.width * i;
+            let spr_card = tingCard_item.getChildByName("spr_card");
+            this.node.getComponent("HongZhong_Card").createCard(this.tingPaiInfo[i].card, true , false, spr_card);
+            tingCard_item.getChildByName("text_tingZhangNum").getComponent(cc.Label).string = this.tingPaiInfo[i].num;
+
+            tingCard_item.active = true;
+        }
+        this.tingCard_content.width = this.tingCard_item.width * this.tingPaiInfo.length;
+
+        this.btn_checkTing.active = false;
+        this.scrollview_tingCard.active = true;
+        this.mask_checkTing.active = true;
+    },
+
+    onClickHideTing(){
+        this.btn_checkTing.active = true;
+        this.scrollview_tingCard.active = false;
+        this.mask_checkTing.active = false;
     },
 
     recvDeskInfoMsg(){
