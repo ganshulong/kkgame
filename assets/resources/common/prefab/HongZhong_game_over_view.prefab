@@ -512,7 +512,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -235,
+      "x": -500,
       "y": 253
     },
     "_skewX": 0,
@@ -601,7 +601,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -60,
+      "x": -320,
       "y": 253
     },
     "_skewX": 0,
@@ -676,7 +676,7 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0,
+      "x": 1,
       "y": 0.5
     },
     "_contentSize": {
@@ -690,7 +690,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 50,
+      "x": 500,
       "y": 253
     },
     "_skewX": 0,
@@ -5335,7 +5335,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 200,
+      "x": 90.8,
       "y": -232
     },
     "_skewX": 0,
@@ -5425,7 +5425,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 200,
-      "y": -248
+      "y": -218
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -5799,9 +5799,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 160,
+      "g": 80,
+      "b": 30,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -5821,8 +5821,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 354.99999999999994,
-      "y": -370
+      "x": 318,
+      "y": -318
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -5844,8 +5844,10 @@
     "_fontSize": 24,
     "_lineHeight": 26,
     "_enableWrapText": true,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_N$string": "游戏结果仅供娱乐用途，禁止用于赌博行为",
     "_N$horizontalAlign": 0,

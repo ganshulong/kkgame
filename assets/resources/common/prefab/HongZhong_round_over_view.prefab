@@ -749,7 +749,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": -565,
-      "y": -229
+      "y": -200
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -929,7 +929,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1130,
-      "height": 480
+      "height": 450
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -938,7 +938,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 15
+      "y": 30
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1029,7 +1029,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": 15
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1123,7 +1123,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": 15
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1210,7 +1210,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 175
+      "y": 160
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -4071,7 +4071,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -260
+      "y": -230
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -4227,7 +4227,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 285,
-      "y": -275
+      "y": -245
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -4450,9 +4450,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 160,
+      "g": 80,
+      "b": 30,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -4473,7 +4473,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -373
+      "y": -322
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -4496,7 +4496,7 @@
     "_left": 271,
     "_right": 271,
     "_top": 0,
-    "_bottom": 2,
+    "_bottom": 53,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -4521,8 +4521,10 @@
     "_fontSize": 24,
     "_lineHeight": 26,
     "_enableWrapText": true,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_N$string": "温馨提示：游戏虽好，可不要贪玩哟！请您合理安排时间，享受健康生活！",
     "_N$horizontalAlign": 0,
