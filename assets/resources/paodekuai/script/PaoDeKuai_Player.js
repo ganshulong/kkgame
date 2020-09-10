@@ -148,7 +148,7 @@ cc.Class({
                 } else if(data.chatInfo.type === 2){
                     this._chatNode.active = true;
                     this._chatNode.stopAllActions();
-                    let ShortList = Global.getShortList();
+                    let ShortList = Global.getShortListPaoDeKuai();
                     this._chatNode.getChildByName("label").getComponent(cc.Label).string = ShortList[data.chatInfo.index];
                     this._chatNode.runAction(cc.sequence(cc.delayTime(2),cc.callFunc(()=>{
                         this._chatNode.active = false;
@@ -249,6 +249,14 @@ cc.Class({
                     )
                 )
             }
+        }
+    },
+
+    getSex(seat){
+        let user = cc.vv.gameData.getUserInfo(seat);
+        if(user){
+            if(user.sex === 1) return "nan/";
+            else  return "nv/";
         }
     },
 

@@ -32,7 +32,7 @@ cc.Class({
                     }
 
                     let content = cc.find("img_bg/img_bg_txt/scrollview/view/content",this._chatNode);
-                    let ShortList = Global.getShortList();
+                    let ShortList = Global.getShortListPaoDeKuai();
                     let height = 0;
                     for(let i=0;i<ShortList.length;++i){
                         let item = null;

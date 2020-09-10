@@ -85,8 +85,8 @@ cc.Class({
         data = data.detail;
         let chatInfo = data.chatInfo;
         if(chatInfo.type === 2){ // 表情
-            let path = "chattext/"+this.getSex(chatInfo.seat)+"chat"+(chatInfo.index+1);
-            cc.vv.AudioManager.playEff(this._soundPath, path,true);
+            let path = "chat/" + this.getSex(chatInfo.seat) + "chat_" + (data.chatInfo.index + 1);
+            cc.vv.AudioManager.playEff("paodekuai/", path, true);
         }
     },
 

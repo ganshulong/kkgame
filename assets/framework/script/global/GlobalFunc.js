@@ -1278,6 +1278,20 @@ Global.getShortList = function () {
     ];
 }
 
+Global.getShortListPaoDeKuai = function () {
+    return [
+        '搏一搏，单车变摩托',
+        '风吹鸡蛋壳，财去人安乐',
+        '姑娘，你真是条汉子',
+        '我等得假花都谢了',
+        '我炸你个桃花朵朵开',
+        '一走一停真有型，一秒一卡好潇洒',
+        '炸得好',
+        '真怕猪一样的队友',
+        '你要是不装逼，我们还是好朋友',
+    ];
+}
+
 Global.getEmjoList = function () {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 }
