@@ -358,7 +358,7 @@ cc.Class({
                 icon.runAction(
                     cc.sequence(
                         cc.delayTime(j * intervalTime), 
-                        cc.moveBy(0.4, moveByPos),
+                        cc.moveBy(0.5, moveByPos),
                         cc.callFunc(()=>{
                             Global.playEff(Global.SOUNDS.fly_icon);
                         }),
