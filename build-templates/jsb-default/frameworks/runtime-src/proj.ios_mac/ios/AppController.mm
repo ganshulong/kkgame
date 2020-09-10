@@ -110,10 +110,31 @@ static AppDelegate* s_sharedApplication = nullptr;
     //开始持续定位
     [self.locationManager startUpdatingLocation];
     
+    
+    UIDevice * device = [UIDevice currentDevice];
+    [device setBatteryMonitoringEnabled:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeBatteryLevel:) name:@"UIDeviceBatteryLevelDidChangeNotification" object:device];
+    
     //run the cocos2d-x game scene
     app->run();
 
     return YES;
+}
+
++ (float)starBatteryReceiver
+{
+    UIDevice * device = [UIDevice currentDevice];
+    [device setBatteryMonitoringEnabled:YES];
+    return [device batteryLevel]*100;
+}
+
+- (void)didChangeBatteryLevel:(id)sender{
+    UIDevice *device = [UIDevice currentDevice];
+    [device setBatteryMonitoringEnabled:YES];
+    float batteryLevel = [device batteryLevel]*100;
+    NSString *batteryLevelStr = [NSString stringWithFormat:@"%f",batteryLevel];
+    NSLog(@"didChangeBatteryLevel:%@", batteryLevelStr);
+    [self iosCallJs:@"Global.GetBatteryChange" :batteryLevelStr];
 }
 
 - (void)amapLocationManager:(AMapLocationManager *)manager didUpdateLocation:(CLLocation *)location reGeocode:(AMapLocationReGeocode *)reGeocode
@@ -279,21 +300,6 @@ static AppDelegate* s_sharedApplication = nullptr;
 
     [WXApi sendReq:req completion:^(BOOL success) { NSLog(@"onWXShareLink:%@", success ? @"成功" : @"失败");  }];
     return  true;
-}
-
-+ (float)starBatteryReceiver
-{
-    UIDevice * device = [UIDevice currentDevice];
-    [device setBatteryMonitoringEnabled:YES];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeBatteryLevel:) name:@"UIDeviceBatteryLevelDidChangeNotification" object:device];
-    return [device batteryLevel]*100;
-}
-
-- (void)didChangeBatteryLevel:(id)sender{
-    UIDevice *device = [UIDevice currentDevice];
-    [device setBatteryMonitoringEnabled:YES];
-    NSString *batteryLevelStr = [NSString stringWithFormat:@"%f",[device batteryLevel]*100];
-    [self iosCallJs:@"Global.GetBatteryChange" :batteryLevelStr];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
