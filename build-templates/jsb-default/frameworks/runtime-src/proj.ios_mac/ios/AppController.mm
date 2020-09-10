@@ -83,6 +83,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     [window makeKeyAndVisible];
 
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [UIApplication sharedApplication].idleTimerDisabled = true;
 
     // IMPORTANT: Setting the GLView should be done after creating the RootViewController
     cocos2d::GLView *glview = cocos2d::GLViewImpl::createWithEAGLView((__bridge void *)_viewController.view);
