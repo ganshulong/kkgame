@@ -909,24 +909,15 @@ GlobalFunc.autoAdaptDevices = function (isShowAll = true) {
 
 GlobalFunc.clickService = function () {
     cc.sys.openURL("https://mapped.vorsco.com/talk/chatClient/chatbox.jsp?companyID=631049927&configID=1490&jid=7922767770&s=1");
-},
+}
 
 // 适配iphoneX
-    GlobalFunc.setAdaptIphoneX = function () {
-        var nameStr = 'safe_node';
+GlobalFunc.setAdaptIphoneX = function () {
+    if (812 == screen.width && 375 == screen.height) {
         var canvas = cc.find("Canvas").getComponent(cc.Canvas);
-        let safe_node = canvas.node.getChildByName(nameStr);
-        if (safe_node) {
-            let widget = safe_node.getComponent(cc.Widget);
-            if (widget) {
-                widget.top = 0;
-                widget.bottom = 0;
-                widget.left = 0;
-                widget.right = 0;
-            }
-        }
-
+        canvas.node.scaleX = (1 - 34 * 2 / 812);
     }
+}
 
 GlobalFunc.getStrBLen = function (str) {
     if (str == null) return 0;
