@@ -272,7 +272,7 @@ cc.Class({
             bg_btns.active = (clubCeateUid != showList[i].uid);
             if (bg_btns.active) {
                 let btn_forbidPlay = bg_btns.getChildByName("btn_forbidPlay");
-                btn_forbidPlay.active = (1 == showList.state);
+                btn_forbidPlay.active = (1 == showList[i].state);
                 if (btn_forbidPlay.active) {
                     btn_forbidPlay.uid = showList[i].uid;
                     btn_forbidPlay.playername = showList[i].playername;
@@ -280,7 +280,7 @@ cc.Class({
                 }
 
                 let btn_recoverPlay = bg_btns.getChildByName("btn_recoverPlay");
-                btn_recoverPlay.active = (0 == showList.state);
+                btn_recoverPlay.active = (0 == showList[i].state);
                 if (btn_recoverPlay.active) {
                     btn_recoverPlay.uid = showList[i].uid;
                     btn_recoverPlay.playername = showList[i].playername;

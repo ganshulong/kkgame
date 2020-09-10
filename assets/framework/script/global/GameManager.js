@@ -125,14 +125,15 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
 
-            cc.vv.NetManager.registerMsg(MsgId.BACK_GAME, this.onRcvBackGame, this);
+            cc.vv.NetManager.registerMsg(MsgId.BACK_GAME, this.onRcvPublicCodeCheck, this);
+            cc.vv.NetManager.registerMsg(MsgId.CHAT, this.onRcvPublicCodeCheck, this);
+            cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvPublicCodeCheck, this);
 
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
         },
 
-        onRcvBackGame(msg){
-            if(msg.code === 200){
-                
+        onRcvPublicCodeCheck(msg){
+            if(msg.code === 200){  
             }
         },
 

@@ -204,7 +204,7 @@ cc.Class({
     onRcvFreezeClubNotify(data){
         if (cc.vv.UserManager.currClubId == data.detail.clubid) {
             cc.find("Layer/bg/txt_freeze",this.node).active = (0 == data.detail.state);
-            cc.vv.FloatTip.show((0 == data.detail) ? "亲友圈冻结成功" : "亲友圈解冻成功");
+            cc.vv.FloatTip.show((0 == data.detail.state) ? "亲友圈冻结成功" : "亲友圈解冻成功");
         }
     },
 
@@ -372,9 +372,9 @@ cc.Class({
             req.clubid = cc.vv.UserManager.currClubId;
             req.deskId = deskId;
             cc.vv.NetManager.send(req);
-            this.scheduleOnce(()=>{
-                this._sendSit = true;
-            },0.2)
+            // this.scheduleOnce(()=>{
+            //     this._sendSit = true;
+            // },0.2)
 
             Global.curRoomID = "";
         }
