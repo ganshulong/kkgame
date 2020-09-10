@@ -414,6 +414,7 @@ cc.Class({
         Global.registerEvent(EventId.PENG_NOTIFY,this.onCloseSelectChi,this);
         Global.registerEvent(EventId.PAO_NOTIFY,this.onCloseSelectChi,this);
         Global.registerEvent(EventId.KAN_NOTIFY,this.onCloseSelectChi,this);
+        Global.registerEvent(EventId.GUO_NOTIFY,this.onCloseSelectChi,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
     },
 
