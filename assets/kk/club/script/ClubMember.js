@@ -273,19 +273,15 @@ cc.Class({
             if (bg_btns.active) {
                 let btn_forbidPlay = bg_btns.getChildByName("btn_forbidPlay");
                 btn_forbidPlay.active = (1 == showList[i].state);
-                if (btn_forbidPlay.active) {
-                    btn_forbidPlay.uid = showList[i].uid;
-                    btn_forbidPlay.playername = showList[i].playername;
-                    Global.btnClickEvent(btn_forbidPlay, this.onClickForbidPlay,this);
-                }
+                btn_forbidPlay.uid = showList[i].uid;
+                btn_forbidPlay.playername = showList[i].playername;
+                Global.btnClickEvent(btn_forbidPlay, this.onClickForbidPlay,this);
 
                 let btn_recoverPlay = bg_btns.getChildByName("btn_recoverPlay");
                 btn_recoverPlay.active = (0 == showList[i].state);
-                if (btn_recoverPlay.active) {
-                    btn_recoverPlay.uid = showList[i].uid;
-                    btn_recoverPlay.playername = showList[i].playername;
-                    Global.btnClickEvent(btn_recoverPlay, this.onClickRecoverPlay,this); 
-                }
+                btn_recoverPlay.uid = showList[i].uid;
+                btn_recoverPlay.playername = showList[i].playername;
+                Global.btnClickEvent(btn_recoverPlay, this.onClickRecoverPlay,this); 
                 
                 let btn_tickout = bg_btns.getChildByName("btn_tickout");
                 btn_tickout.uid = showList[i].uid;
