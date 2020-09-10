@@ -289,13 +289,10 @@ cc.Class({
 
         let bFind = false;
         for(let i=0;i<this._cardBox.length;++i){
-            let card = this._cardBox[i][0];
+            let card = (this._cardBox[i][0] === this._selectCard) ? this._cardBox[i][1] : this._cardBox[i][0];
             if(card){
                 if(this._selectCard.x>card.x-card.width*0.5 && this._selectCard.x<=card.x+card.width*0.5){
                     bFind = true;
-                    if(card === this._selectCard){
-                        continue;
-                    }
                     if(this._cardBox[i][2]===null && this._cardBox[i][3]===null){
                         insertX  = i;
                         if(x==0 && y===0 && this._cardBox[x][1] === null) insertX = 0;

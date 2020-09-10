@@ -250,13 +250,10 @@ cc.Class({
 
         let bFind = false;
         for(let i=0;i<this._cardBox.length;++i){
-            let card = this._cardBox[i][0];
+            let card = (this._cardBox[i][0] === this._selectCard) ? this._cardBox[i][1] : this._cardBox[i][0];
             if(card){
                 if(this._selectCard.x>card.x-card.width*0.5 && this._selectCard.x<=card.x+card.width*0.5){
                     bFind = true;
-                    if(card === this._selectCard){
-                        continue;
-                    }
                     if(this._cardBox[i][2]===null && this._cardBox[i][3]===null){
                         insertX  = i;
                         if(x==0 && y===0 && this._cardBox[x][1] === null) insertX = 0;
@@ -280,7 +277,7 @@ cc.Class({
             let card = this._cardBox[0][0];
             // 插在最前面
             if(this._selectCard.x<card.x){
-                if(this._num<10){
+                if(this._num<10 && !this.greyCardArrCount){
                     insertX  = -1;
                     this.resetBoxInsertFront(insertX);
                 }
