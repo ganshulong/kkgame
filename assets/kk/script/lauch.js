@@ -71,6 +71,10 @@ cc.Class({
         let AlertViewMgr = require("AlertViewMgr");
         cc.vv.AlertView = new AlertViewMgr();
 
+        let ExChangeTip = require("ExChangeTip");
+        cc.vv.ExChangeTip = new ExChangeTip();
+        cc.vv.ExChangeTip.init("common/prefab/ExChangeTip");
+
         let sceneMgr = require("SceneMgr");
         cc.vv.SceneMgr = sceneMgr;
 

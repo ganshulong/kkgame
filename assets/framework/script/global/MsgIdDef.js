@@ -276,5 +276,4 @@ GlobalMsgId.CLUB_SWITCH_GAME = 18815;   	// 从俱乐部切换至游戏
 GlobalMsgId.BACK_GAME = 8823;   			// 返回游戏
 
 GlobalMsgId.UPDATE_TABLE_INFO = 100;   		// 刷新桌子信息
-
-
+GlobalMsgId.EXCHANGE_COIN = 169;   			// 兑换金币

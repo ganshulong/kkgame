@@ -126,10 +126,26 @@ cc.Class({
             cc.vv.NetManager.registerMsg(MsgId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
 
             cc.vv.NetManager.registerMsg(MsgId.BACK_GAME, this.onRcvPublicCodeCheck, this);
-            cc.vv.NetManager.registerMsg(MsgId.CHAT, this.onRcvPublicCodeCheck, this);
             cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvPublicCodeCheck, this);
+            cc.vv.NetManager.registerMsg(MsgId.CHAT, this.onRcvChat, this);
+
+            cc.vv.NetManager.registerMsg(MsgId.EXCHANGE_COIN, this.onRcvExChangeCoin, this);
 
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvExChangeCoin(msg){
+            if(msg.code === 200){  
+                Global.playerData.roomcard = msg.roomcard;
+                Global.playerData.coin = msg.coin;
+                cc.vv.FloatTip.show("兑换成功");
+            }
+        },
+
+        onRcvChat(msg){
+            if(msg.code === 9932){  
+                cc.vv.ExChangeTip.show();
+            }
         },
 
         onRcvPublicCodeCheck(msg){
