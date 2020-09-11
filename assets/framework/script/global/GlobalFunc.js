@@ -913,10 +913,10 @@ GlobalFunc.clickService = function () {
 
 // 适配iphoneX
 GlobalFunc.setAdaptIphoneX = function () {
-    if (812 == screen.width && 375 == screen.height) {
-        var canvas = cc.find("Canvas").getComponent(cc.Canvas);
-        canvas.node.scaleX = (1 - 34 * 2 / 812);
-    }
+    // if (812 == screen.width && 375 == screen.height) {
+        // var canvas = cc.find("Canvas").getComponent(cc.Canvas);
+        // canvas.node.scaleX = (1 - 34 * 2 / 812);
+    // }
 }
 
 GlobalFunc.getStrBLen = function (str) {
