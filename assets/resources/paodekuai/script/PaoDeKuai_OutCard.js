@@ -202,7 +202,7 @@ cc.Class({
     },
 
     setShowTimeCount(bShow, time){
-        this.ani_clock.active = bShow;
+        this.ani_clock.active = bShow && cc.vv.gameData.getRoomConf().trustee;
         if (bShow) {
             let text_clockNum = this.ani_clock.getChildByName("text_clockNum");
             text_clockNum.getComponent(cc.Label).string = time;
