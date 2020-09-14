@@ -94,8 +94,9 @@ cc.Class({
                     this._overRoundNode.y = this.node.height/2;
                     this.initPlayerInfo(data.users,data.seat,data.hcard,data.source,data.hupaiType);
                     this.initRoomInfo(data.seat>0);
+                    let self = this;
                     this.scheduleOnce(()=>{
-                        this._overRoundNode.active = true;
+                        self._overRoundNode.active = true;
                     },2);
                 }
             })
