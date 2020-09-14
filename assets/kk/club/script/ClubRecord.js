@@ -151,7 +151,6 @@ cc.Class({
 
     onRcvGameRecord(msg){
         if (200 == msg.code && msg.data && 1 < msg.clubid) {
-            let bigWinerCount = 0;
             for (var i = 0; i < msg.data.length; i++) {
                 let item = null;
                 if(i < this.gameRecordContent.children.length) {
@@ -210,9 +209,6 @@ cc.Class({
                 }
                 item.getChildByName("text_bigWinerName").getComponent(cc.Label).string = bigWinerName;
                 item.getChildByName("text_bigWinerID").getComponent(cc.Label).string = bigWinerID ? ("ID:" + bigWinerID) : "";
-                if (bigWinerID == cc.vv.UserManager.uid) {
-                    ++bigWinerCount;
-                }
 
                 let btn_detail = item.getChildByName("btn_detail");
                 btn_detail.deskid = msg.data[i].deskid;
@@ -224,7 +220,7 @@ cc.Class({
                 this.gameRecordContent.children[i].active = false;
             }
             cc.find("bg_right/panel_gameRecord/bg_top/text_roundNum",this._layer).getComponent(cc.Label).string = msg.data.length;
-            cc.find("bg_right/panel_gameRecord/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = bigWinerCount;
+            cc.find("bg_right/panel_gameRecord/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = msg.bigWinCnt;
             cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = 0 <= msg.totalScore ? '/' + msg.totalScore : "";
             cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = 0 > msg.totalScore ? '/' + Math.abs(msg.totalScore) : "";
         }
