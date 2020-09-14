@@ -77,7 +77,7 @@ cc.Class({
             let item = cc.instantiate(tempItem);
             let prefabIcon = prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
             item.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
-            item.x = item.width * i;
+            item.x = item.width * item.scaleX * i;
             item.parent = content;
             item.active = true;
             item.id = cc.vv.UserManager.gameList[i].id;

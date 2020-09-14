@@ -110,6 +110,7 @@ cc.Class({
         let item = cc.instantiate(tempItem);
         let prefabIcon = prefabRes.getChildByName("moreIcon");
         item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+        item.getChildByName("gameIcon").scale = 0.8;
         item.getChildByName("selected_bg").active = false;
         item.x = item.width * cc.vv.UserManager.gameList.length;
         item.parent = this.content_gameBtns;
