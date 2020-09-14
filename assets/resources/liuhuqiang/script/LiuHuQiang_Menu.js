@@ -511,7 +511,7 @@ cc.Class({
         let roomConf = cc.vv.gameData.getRoomConf();
         let users = cc.vv.gameData.getUsers();
 
-        let title = "闲去房间邀请";
+        let title = "闲游房间邀请";
         let description = "六胡抢";
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
