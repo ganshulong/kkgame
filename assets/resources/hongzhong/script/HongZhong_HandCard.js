@@ -137,9 +137,20 @@ cc.Class({
         data = data.detail;
         if (data.seat === this._seatIndex) {
             this._gangCards.push(data.actionInfo.curaction.card);
-            this.removeCardFromHand(data.actionInfo.curaction.card, 3);
+            let gangCardNum = this.getSelfGangCardNum(data.actionInfo.curaction.card);
+            this.removeCardFromHand(data.actionInfo.curaction.card, gangCardNum);
             this.showAllCard();
         }
+    },
+
+    getSelfGangCardNum(card){
+        let gangCardCount = 0;
+        for(let i = this._handCards.length-1 ; i >= 0; --i){
+            if (card === this._handCards[i]) {
+                ++gangCardCount;
+            }
+        }
+        return gangCardCount;
     },
 
     // 过

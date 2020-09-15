@@ -99,9 +99,13 @@ cc.Class({
     recvGangNotify(data){
         data = data.detail;
         if(data.actionInfo.curaction.source === this._seatIndex){
-            this._outCardNode.children[this._outCardNode.children.length-1].removeFromParent();
-            --this._cardsNum;
-            this.showCurOutCardAni(false);
+            if (0 < this._outCardNode.children.length) {
+                if (data.actionInfo.curaction.card == this._outCardNode.children[this._outCardNode.children.length-1].cardValue) {
+                    this._outCardNode.children[this._outCardNode.children.length-1].removeFromParent();
+                    --this._cardsNum;
+                    this.showCurOutCardAni(false);
+                }
+            }
         }
     },
 
