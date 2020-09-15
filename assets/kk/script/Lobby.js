@@ -83,7 +83,7 @@ cc.Class({
             item.id = cc.vv.UserManager.gameList[i].id;
             Global.btnClickEvent(item,this.onClickCreateRoom,this);
         }
-        content.width = tempItem.width * cc.vv.UserManager.gameList.length;
+        content.width = tempItem.width * tempItem.scaleX * cc.vv.UserManager.gameList.length;
 
         cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;
         cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
