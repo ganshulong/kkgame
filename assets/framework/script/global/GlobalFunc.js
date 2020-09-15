@@ -907,16 +907,16 @@ GlobalFunc.autoAdaptDevices = function (isShowAll = true) {
     Global.setAdaptIphoneX();
 }
 
-GlobalFunc.clickService = function () {
-    cc.sys.openURL("https://mapped.vorsco.com/talk/chatClient/chatbox.jsp?companyID=631049927&configID=1490&jid=7922767770&s=1");
-}
-
 // 适配iphoneX
 GlobalFunc.setAdaptIphoneX = function () {
-    // if (812 == screen.width && 375 == screen.height) {
-        // var canvas = cc.find("Canvas").getComponent(cc.Canvas);
-        // canvas.node.scaleX = (1 - 34 * 2 / 812);
-    // }
+    if (Global.isIOS() && 812*2 == cc.winSize.width) {
+        var canvas = cc.find("Canvas").getComponent(cc.Canvas);
+        canvas.node.scaleX = (1 - 34 * 2 / 812);
+    }
+}
+
+GlobalFunc.clickService = function () {
+    cc.sys.openURL("https://mapped.vorsco.com/talk/chatClient/chatbox.jsp?companyID=631049927&configID=1490&jid=7922767770&s=1");
 }
 
 GlobalFunc.getStrBLen = function (str) {
