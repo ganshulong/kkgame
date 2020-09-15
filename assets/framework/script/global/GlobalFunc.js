@@ -911,7 +911,7 @@ GlobalFunc.autoAdaptDevices = function (isShowAll = true) {
 GlobalFunc.setAdaptIphoneX = function () {
     if (Global.isIOS() && 812*2 == cc.winSize.width) {
         var canvas = cc.find("Canvas").getComponent(cc.Canvas);
-        canvas.node.scaleX = (1 - 34 * 2 / 812);
+        canvas.node.scaleX = (1 - 32 * 2 / 812);
     }
 }
 
