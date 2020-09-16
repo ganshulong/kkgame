@@ -55,6 +55,7 @@ cc.Class({
             req.rechargeUid = uidInt;
             req.rechargeNum = numInt;
             cc.vv.NetManager.send(req);
+            this.onClose();
         } else {
             cc.vv.FloatTip.show("输入的ID或数量无效");
         }

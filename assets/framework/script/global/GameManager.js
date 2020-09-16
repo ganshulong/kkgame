@@ -127,12 +127,17 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.BACK_GAME, this.onRcvPublicCodeCheck, this);
             cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvPublicCodeCheck, this);
-            cc.vv.NetManager.registerMsg(MsgId.RECHARGE_ROOM_CARD, this.onRcvPublicCodeCheck, this);
             cc.vv.NetManager.registerMsg(MsgId.CHAT, this.onRcvChat, this);
 
             cc.vv.NetManager.registerMsg(MsgId.EXCHANGE_COIN, this.onRcvExChangeCoin, this);
-
+            cc.vv.NetManager.registerMsg(MsgId.RECHARGE_ROOM_CARD, this.onRcvRechargeRoomCard, this);
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvRechargeRoomCard(msg){
+            if(msg.code === 200){  
+                cc.vv.FloatTip.show("充值成功");
+            }
         },
 
         onRcvExChangeCoin(msg){
