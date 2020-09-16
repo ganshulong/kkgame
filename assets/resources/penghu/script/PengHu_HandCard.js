@@ -246,7 +246,7 @@ cc.Class({
     // 出牌
     recvOutCardNotify(data){
         data = data.detail;
-        if(data.actionInfo.curaction.seat === this._seatIndex && 0 === this._chairId){
+        if(data.actionInfo.curaction.source === this._seatIndex && 0 === this._chairId){
             this._canOutCard = false;
             this.showOutLine(this._canOutCard);
 

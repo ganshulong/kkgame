@@ -455,7 +455,9 @@ cc.Class({
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("ani_warn").active = (0 < user.isBaoJin);
             this._playerNode.getChildByName("mask_trustee").active = (0 < user.autoc);
-            cc.find("scene/panel_trustee", this.node).active = (0 < user.autoc && 0 == this._chairId);
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = (0 < user.autoc);
+            }
         }
     },
 
