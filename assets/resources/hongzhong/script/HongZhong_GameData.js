@@ -119,6 +119,9 @@ cc.Class({
 
         cc.vv.NetManager.registerMsg(MsgId.GAME_SWITCH_CLUB, this.onRcvNetExitRoom, this);
         cc.vv.NetManager.registerMsg(MsgId.UPDATE_TABLE_INFO, this.onRcvUpdateTableInfo, this);
+        cc.vv.NetManager.registerMsg(MsgId.TRUSTEE_NOTIFY, this.onRcvTrusteeNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.CANCEL_TRUSTEE, this.onRcvCancelTrustee, this);
+        cc.vv.NetManager.registerMsg(MsgId.CANCEL_TRUSTEE_NOTIFY, this.onRcvCancelTrusteeNotify, this);
     },
 
     unregisterMsg() {
@@ -158,6 +161,26 @@ cc.Class({
 
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_SWITCH_CLUB, this.onRcvNetExitRoom, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.UPDATE_TABLE_INFO, this.onRcvUpdateTableInfo, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.TRUSTEE_NOTIFY, this.onRcvTrusteeNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CANCEL_TRUSTEE, this.onRcvCancelTrustee, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CANCEL_TRUSTEE_NOTIFY, this.onRcvCancelTrusteeNotify, false, this);
+    },
+
+    onRcvCancelTrusteeNotify(msg){
+        if(msg.code == 200){
+            Global.dispatchEvent(EventId.CANCEL_TRUSTEE_NOTIFY, msg)
+        }
+    },
+
+    onRcvCancelTrustee(msg){
+        if(msg.code == 200){
+        }
+    },
+
+    onRcvTrusteeNotify(msg){
+        if(msg.code == 200){
+            Global.dispatchEvent(EventId.TRUSTEE_NOTIFY, msg)
+        }
     },
 
     onRcvUpdateTableInfo(msg){

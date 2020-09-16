@@ -29,6 +29,33 @@ cc.Class({
             this._startPos = this._outCardNode.convertToNodeSpaceAR(pos);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
         }
+
+        this.ani_clock = cc.find("scene/out_cards/ani_clock" + index, this.node);
+        this.setShowTimeCount(false);
+    },
+
+    setShowTimeCount(bShow, time){
+        this.ani_clock.active = bShow && cc.vv.gameData.getRoomConf().trustee;
+        if (bShow) {
+            let text_clockNum = this.ani_clock.getChildByName("text_clockNum");
+            text_clockNum.getComponent(cc.Label).string = time;
+            if(0 < time){
+                text_clockNum.stopAllActions();
+                text_clockNum.runAction(
+                    cc.repeatForever(
+                        cc.sequence(
+                            cc.delayTime(1), 
+                            cc.callFunc(()=>{
+                                text_clockNum.getComponent(cc.Label).string = --time;
+                                if (0 == time) {
+                                    text_clockNum.stopAllActions();
+                                }
+                            })
+                        )
+                    )
+                )
+            }
+        }
     },
 
     start () {
@@ -41,6 +68,7 @@ cc.Class({
         Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
+        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         // Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
         // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
         // Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
@@ -49,6 +77,19 @@ cc.Class({
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onRecvHandCard(data){
+        data = data.detail;
+        this.checkShowTimeCount(data);
+    },
+
+    checkShowTimeCount(data){
+        this.setShowTimeCount(false);
+        if (0 < data.actionInfo.nextaction.time && 
+            (data.actionInfo.nextaction.seat === this._seatIndex || data.actionInfo.curaction.seat === this._seatIndex)) {
+            this.setShowTimeCount(true, data.actionInfo.nextaction.time);
+        }
     },
 
     recvDeskInfoMsg(){
@@ -67,6 +108,7 @@ cc.Class({
                     }
                 }
             }
+            this.checkShowTimeCount(deskInfo);
         }
     },
 
@@ -75,6 +117,8 @@ cc.Class({
     },
 
     recvMoPaiNotify(data){
+        data = data.detail;
+        this.checkShowTimeCount(data);
         // this.showCurOutCardAni(false);
     },
 
@@ -85,6 +129,7 @@ cc.Class({
             this.showCard(data.actionInfo.curaction.card);
         }
         this.showCurOutCardAni(data.actionInfo.curaction.seat === this._seatIndex);
+        this.checkShowTimeCount(data);
     },
 
     recvPengNotify(data){
@@ -94,6 +139,7 @@ cc.Class({
             --this._cardsNum;
             this.showCurOutCardAni(false);
         }
+        this.checkShowTimeCount(data);
     },
 
     recvGangNotify(data){
@@ -107,12 +153,14 @@ cc.Class({
                 }
             }
         }
+        this.checkShowTimeCount(data);
     },
 
     // 过
     recvGuoNotify(data){
         data = data.detail;
         this.showCurOutCardAni(data.actionInfo.curaction.seat === this._seatIndex);
+        this.checkShowTimeCount(data);
     },
 
     showCard(value){

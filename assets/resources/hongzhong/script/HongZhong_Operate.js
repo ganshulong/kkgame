@@ -68,6 +68,7 @@ cc.Class({
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
+        Global.registerEvent(EventId.GUO_NOTIFY,this.closeOperate,this);
 
         this.recvDeskInfoMsg();
     },
@@ -79,6 +80,7 @@ cc.Class({
 
     recvRoundOverNotify(data){
         this.panel_ting.active = false;
+        this.closeOperate();
     },
 
     showTingCards(tingPaiInfo){
