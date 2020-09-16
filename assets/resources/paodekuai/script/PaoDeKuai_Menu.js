@@ -15,8 +15,8 @@ cc.Class({
     start () {
         this.registerMsg();
 
-        let readyBtn = cc.find("scene/operate_btn_view/ready_btn",this.node);
-        Global.btnClickEvent(readyBtn,this.onReady,this);
+        this.readyBtn = cc.find("scene/operate_btn_view/ready_btn",this.node);
+        Global.btnClickEvent(this.readyBtn,this.onReady,this);
         
         // let setting = cc.find("scene/operate_btn_view/btn_setting",this.node);
         // Global.btnClickEvent(setting,this.onClickSetting,this);
@@ -130,6 +130,7 @@ cc.Class({
 
     recvRoundOver(){
         this.panel_dismiss.active = false;
+        this.readyBtn.active = false;
     },
 
     onRcvDismissNotify(data){
