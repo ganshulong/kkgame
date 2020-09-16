@@ -193,12 +193,30 @@ cc.Class({
         let pos = this._selectCard.parent.convertToWorldSpaceAR(this._selectCard.position);
         Global.dispatchEvent(EventId.OUTCARD,{card:this._selectCard.cardValue,pos:pos});
         cc.vv.gameData.outCard(this._selectCard.cardValue);
-        this._canOutCard = false;
-        this.showOutLine(this._canOutCard);
-        this._selectCard.removeFromParent();
-        this.clearSelectInCardBox();
-        this.resetCardPos(true);
-        this._selectCard = null;
+        // this._canOutCard = false;
+        // this.showOutLine(this._canOutCard);
+        // this._selectCard.removeFromParent();
+        // this.clearSelectInCardBox();
+        // this.resetCardPos(true);
+        // this._selectCard = null;
+    },
+
+    // 出牌
+    recvOutCardNotify(data){
+        data = data.detail;
+        if(data.actionInfo.curaction.source === this._seatIndex && 0 === this._chairId){
+            this._canOutCard = false;
+            this.showOutLine(this._canOutCard);
+
+            if (this._selectCard) {
+                this._selectCard.removeFromParent();
+                this.clearSelectInCardBox();
+                this._selectCard = null;
+            } else {
+                this.delHandCard(data.actionInfo.curaction.card);
+            }
+            this.resetCardPos(false);
+        }
     },
 
     // 插入在前面中间
@@ -537,8 +555,9 @@ cc.Class({
         Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoAndLongNotify,this);
         Global.registerEvent(EventId.LONG_NOTIFY,this.recvPaoAndLongNotify,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-        Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
+        // Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
 
         this.recvDeskInfoMsg();
     },

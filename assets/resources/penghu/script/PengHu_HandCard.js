@@ -250,10 +250,14 @@ cc.Class({
             this._canOutCard = false;
             this.showOutLine(this._canOutCard);
 
-            this.delHandCard(data.actionInfo.curaction.card);
+            if (this._selectCard) {
+                this._selectCard.removeFromParent();
+                this.clearSelectInCardBox();
+                this._selectCard = null;
+            } else {
+                this.delHandCard(data.actionInfo.curaction.card);
+            }
             this.resetCardPos(false);
-
-            this._selectCard = null;
         }
     },
 
