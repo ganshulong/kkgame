@@ -147,11 +147,11 @@ cc.Class({
     },
 
     onRcvNetRoomcardChanged(){
-        cc.find("icon_bg/icon_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
+        cc.find("roomCard_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
     },
 
     onRcvNetCoinChanged(){
-        cc.find("roomCard_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
+        cc.find("icon_bg/icon_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
     },
 
     initClubBtn(){
