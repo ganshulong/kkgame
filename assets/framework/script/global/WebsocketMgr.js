@@ -321,7 +321,6 @@ cc.Class({
 
             cc.vv.NetManager.sendHeartbeat();
 
-            console.log("send head msg.");
             if (this.m_nHeartbeatNum != -1) {
                 clearTimeout(this.m_nHeartbeatNum);
             }
