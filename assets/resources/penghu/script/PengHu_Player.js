@@ -108,6 +108,28 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.updateScore,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
+        Global.registerEvent(EventId.TRUSTEE_NOTIFY,this.onRcvTrusteeNotify,this);
+        Global.registerEvent(EventId.CANCEL_TRUSTEE_NOTIFY,this.onRcvCancelTrusteeNotify,this);
+    },
+
+    onRcvCancelTrusteeNotify(data){
+        data = data.detail;
+        if(data.seat === this._seatIndex){
+            this._playerNode.getChildByName("mask_trustee").active = false;
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = false;
+            }
+        }
+    },
+
+    onRcvTrusteeNotify(data){
+        data = data.detail;
+        if(data.seat === this._seatIndex){
+            this._playerNode.getChildByName("mask_trustee").active = true;
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = true;
+            }
+        }
     },
 
     onRcvUpdatePlayerInfo(){
@@ -432,6 +454,8 @@ cc.Class({
             this.setHuXi(user.roundScore?user.roundScore:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("ani_warn").active = (0 < user.isBaoJin);
+            this._playerNode.getChildByName("mask_trustee").active = (0 < user.autoc);
+            cc.find("scene/panel_trustee", this.node).active = (0 < user.autoc && 0 == this._chairId);
         }
     },
 

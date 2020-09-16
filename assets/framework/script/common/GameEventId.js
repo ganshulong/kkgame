@@ -87,7 +87,7 @@ EventId.GANG_NOTIFY = "GANG_NOTIFY";                      // 杠通知
 EventId.VOICE_EVENT = "VOICE_EVENT";                      // 语言事件通知
 EventId.ROOMCRAD_CHANGE = "ROOMCRAD_CHANGE";              // 房卡更新
 EventId.COIN_CHANGE = "COIN_CHANGE";              		  // 金币更新
+EventId.TRUSTEE_NOTIFY = "TRUSTEE_NOTIFY";  			  // 托管通知
+EventId.CANCEL_TRUSTEE = "CANCEL_TRUSTEE";  			  // 取消托管
+EventId.CANCEL_TRUSTEE_NOTIFY = "CANCEL_TRUSTEE_NOTIFY";  // 取消托管
 
-
-//GSLTEST
-EventId.TEST_EVENT = "TEST_EVENT";	  // 积分更新通知

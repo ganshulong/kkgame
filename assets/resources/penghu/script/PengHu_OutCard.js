@@ -63,6 +63,32 @@ cc.Class({
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
         }
 
+        this.ani_clock = cc.find("scene/out_cards/ani_clock" + index, this.node);
+        this.setShowTimeCount(false);
+    },
+
+    setShowTimeCount(bShow, time){
+        this.ani_clock.active = bShow && cc.vv.gameData.getRoomConf().trustee;
+        if (bShow) {
+            let text_clockNum = this.ani_clock.getChildByName("text_clockNum");
+            text_clockNum.getComponent(cc.Label).string = time;
+            if(0 < time){
+                text_clockNum.stopAllActions();
+                text_clockNum.runAction(
+                    cc.repeatForever(
+                        cc.sequence(
+                            cc.delayTime(1), 
+                            cc.callFunc(()=>{
+                                text_clockNum.getComponent(cc.Label).string = --time;
+                                if (0 == time) {
+                                    text_clockNum.stopAllActions();
+                                }
+                            })
+                        )
+                    )
+                )
+            }
+        }
     },
 
     getEndPos(cardsNum){
@@ -128,31 +154,25 @@ cc.Class({
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
         Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
-        Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
-        Global.registerEvent(EventId.KAN_NOTIFY,this.showOutCard,this);
-        Global.registerEvent(EventId.HU_NOTIFY,this.showOutCard,this);
+        Global.registerEvent(EventId.LONG_NOTIFY,this.recvLongNotify,this);
+        Global.registerEvent(EventId.KAN_NOTIFY,this.recvKanNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
-
-        Global.registerEvent(EventId.TEST_EVENT,this.recvTestEvent,this);
 
         this.recvDeskInfoMsg();
     },
 
-    recvTestEvent(data){
+    onRecvHandCard(data){
         data = data.detail;
-        if (0 >= this._seatIndex) {
-            return;
-        }
-        var testNode = this._outCardNode.getChildByName("testNode") 
-        if (!testNode) {
-            testNode = new cc.Node("testNode");
-            testNode.addComponent(cc.Label);
-            testNode.parent = this._outCardNode;
-        }
-        if (data.serviceSeat == this._seatIndex) {
-            testNode.getComponent(cc.Label).string = "s:"+data.serviceSeat+"  l:"+data.localSeat;
-        } else {
-            testNode.getComponent(cc.Label).string = "_s:"+this._seatIndex+" _c:"+this._chairId;
+        this.checkShowTimeCount(data);
+    },
+
+    checkShowTimeCount(data){
+        this.setShowTimeCount(false);
+        if (0 < data.actionInfo.nextaction.time && 
+            (data.actionInfo.nextaction.seat === this._seatIndex || data.actionInfo.curaction.seat === this._seatIndex)) {
+            this.setShowTimeCount(true, data.actionInfo.nextaction.time);
         }
     },
 
@@ -172,9 +192,9 @@ cc.Class({
                     }
                 }
             }
+            this.checkShowTimeCount(deskInfo);
         }
     },
-
 
     // 过
     recvGuoNotify(data){
@@ -186,6 +206,7 @@ cc.Class({
                 this.putOutCard(card);
             }
         }
+        this.checkShowTimeCount(data);
     },
 
     // 吃
@@ -197,6 +218,7 @@ cc.Class({
                 this.showCard(data.luoData[i],true);
             }
         }
+        this.checkShowTimeCount(data);
     },
 
     recvMoPaiNotify(data){
@@ -218,6 +240,7 @@ cc.Class({
                 this.putOutCard(data.actionInfo.curaction.card);
             }
         }
+        this.checkShowTimeCount(data);
     },
 
     putOutCard(card){
@@ -256,6 +279,7 @@ cc.Class({
                 node.removeFromParent();
             }
         }
+        this.checkShowTimeCount(data);
     },
 
     recvPengNotify(data){
@@ -264,6 +288,25 @@ cc.Class({
             this.putOutCard(data.actionInfo.curaction.card);
             this.showOutCard();
         }
+        this.checkShowTimeCount(data);
+    },
+
+    recvKanNotify(data){
+        data = data.detail;
+        this.showOutCard();
+        this.checkShowTimeCount(data);
+    },
+
+    recvLongNotify(data){
+        data = data.detail;
+        this.showOutCard();        
+        this.checkShowTimeCount(data);
+    },
+
+    recvRoundOver(data){
+        this.showOutCard();
+        data = data.detail;
+        this.setShowTimeCount(false);
     },
 
     showOutCard(){

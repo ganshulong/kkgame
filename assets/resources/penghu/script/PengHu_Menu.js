@@ -128,6 +128,9 @@ cc.Class({
             btn_voice.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCanVoiceBtncel,this);
         }
 
+        let btn_cancelTrustee = cc.find("scene/panel_trustee/btn_cancelTrustee", this.node);
+        Global.btnClickEvent(btn_cancelTrustee,this.onClickCancelTrustee,this);
+
         Global.registerEvent(EventId.CLOSE_ROUNDVIEW,this.recvCloseRoundView,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
@@ -137,6 +140,11 @@ cc.Class({
         Global.registerEvent(EventId.DISMISS_NOTIFY, this.onRcvDismissNotify,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onClickCancelTrustee(event){
+        let req = {c: MsgId.CANCEL_TRUSTEE};
+        cc.vv.NetManager.send(req);
     },
 
     onTouchVoiceBtnStart(event){

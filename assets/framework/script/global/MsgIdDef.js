@@ -212,7 +212,6 @@ GlobalMsgId.NOTIFY_HU = 101405;              // 胡牌通知
 GlobalMsgId.NOTIFY_OUTCARD_ERROR = 101406;   //出牌出错了，同步手牌，出牌
 GlobalMsgId.NOTIFY_HZ_LIUJU =  101407;            //流局通知
 GlobalMsgId.NOTIFY_GUO = 101408;           // 过通知
-GlobalMsgId.NOTIFY_TUOGUAN_SUCEESS = 101409;      // 取消托管通知
 GlobalMsgId.NOTIFY_HZ_PAO = 101411;         // 通知玩家跑起
 GlobalMsgId.NOTIFY_HZ_KAN = 101412;         // 通知玩家扫
 GlobalMsgId.NOTIFY_HZ_TILONG  = 101413;     // 通知玩家踢龙
@@ -277,3 +276,7 @@ GlobalMsgId.BACK_GAME = 8823;   			// 返回游戏
 
 GlobalMsgId.UPDATE_TABLE_INFO = 100;   		// 刷新桌子信息
 GlobalMsgId.EXCHANGE_COIN = 169;   			// 兑换金币
+
+GlobalMsgId.TRUSTEE_NOTIFY = 18816; 		// 通知玩家托管
+GlobalMsgId.CANCEL_TRUSTEE = 1408; 			// 取消托管
+GlobalMsgId.CANCEL_TRUSTEE_NOTIFY = 101409; // 取消托管通知
