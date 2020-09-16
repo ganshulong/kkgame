@@ -240,7 +240,7 @@ cc.Class({
         }else {
             //web端模拟，调试用
             //首次拉起微信的登录，才有这个值
-            let openid = "0";
+            let openid = "12";
             cc.sys.localStorage.setItem("openid", openid);
             //14 表示二次登录，FIX ME. 后续将14 改为常量
             cc.vv.GameManager.reqLogin(openid, "", 11, "", "", "");
@@ -254,7 +254,7 @@ cc.Class({
         var self = this;
         self._nickname = this.node.getChildByName("input_name").getComponent(cc.EditBox).string;
         if (self._nickname.length == 0) {
-            self._nickname = '1'
+            self._nickname = '11'
         }
         if (self._nickname.length == 0) {
             var localNickname = Global.getLocal('account', '');

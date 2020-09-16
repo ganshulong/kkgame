@@ -276,6 +276,7 @@ GlobalMsgId.BACK_GAME = 8823;   			// 返回游戏
 
 GlobalMsgId.UPDATE_TABLE_INFO = 100;   		// 刷新桌子信息
 GlobalMsgId.EXCHANGE_COIN = 169;   			// 兑换金币
+GlobalMsgId.RECHARGE_ROOM_CARD = 170;   	// 充值房卡
 
 GlobalMsgId.TRUSTEE_NOTIFY = 18816; 		// 通知玩家托管
 GlobalMsgId.CANCEL_TRUSTEE = 1408; 			// 取消托管

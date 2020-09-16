@@ -90,6 +90,13 @@ cc.Class({
         cc.find("icon_bg/icon_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.coin;
         cc.find("roomCard_bg/roomcard_num",this.node).getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
+        if (cc.vv.UserManager.supervip) {
+            let btn_rechargeRoomCard = cc.find("roomCard_bg/btn_rechargeRoomCard",this.node);
+            Global.btnClickEvent(btn_rechargeRoomCard, this.onClickRechargeRoomCard,this);
+            this.node.addComponent("RechargeRoomCard");
+            this.RechargeRoomCardJS = this.node.getComponent("RechargeRoomCard");
+        }
+        
         this.notHaveClub_btn = this.node.getChildByName("notHaveClub_btn");
         Global.btnClickEvent(this.notHaveClub_btn,this.onToClubLobby,this);
         this.haveClub_btn = this.node.getChildByName("haveClub_btn");
@@ -133,6 +140,10 @@ cc.Class({
 
         //testgsl
         // this.onClub();
+    },
+
+    onClickRechargeRoomCard(){
+        this.RechargeRoomCardJS.showLayer();
     },
 
     onRcvNetRoomcardChanged(){

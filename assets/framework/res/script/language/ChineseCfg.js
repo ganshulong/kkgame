@@ -617,5 +617,6 @@ Wild只出现在2~5列",
     coin_not_enough:"金币不足",
     club_state_is_dorbid:"抱歉，您暂时被群主暂停娱乐了",
     club_is_haved:"该亲友圈名已存在",
+    permission_denied:"权限不足",
 };
 

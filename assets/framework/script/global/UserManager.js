@@ -68,6 +68,7 @@ cc.Class({
         noityList:[],
         clubs:[],
         daojuList:[],
+        supervip:0,
 
         //初始化
         init: function () {
@@ -168,6 +169,7 @@ cc.Class({
             this.GpsCity = playerData.city || "";
             this.noityList = serverData.noityList || [];
             this.daojuList = serverData.daojuList || [];
+            this.supervip = playerData.supervip;
 
             for (var i = 0; i < this.gameList.length; i++) {
                 this.gameList[i].id -= 1;

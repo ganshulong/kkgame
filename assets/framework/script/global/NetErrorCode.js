@@ -189,5 +189,5 @@ codeCfg.code = {
     '9932':"coin_not_enough",
     '444':"club_state_is_dorbid",
     '435':"club_is_haved",
-
+    '9934':"permission_denied",
 }
