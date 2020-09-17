@@ -24,7 +24,7 @@ var GlobalVar = cc.Class({
 
         // 语言
         language:1,
-        openUpdate:false,
+        openUpdate:true,
         openAPIModel:false, //api模式登陆开关
         //tAccountServer:"", //测试账号的服务器
         //loginStateUrl:"",//登录状态检测地址
