@@ -21,8 +21,8 @@ cc.Class({
                 if(err===null){
                     this._chatNode = cc.instantiate(prefab);
                     this._chatNode.parent = this.node;
-                    this._chatNode.x = -this.node.width/2;
-                    this._chatNode.y = -this.node.height/2;
+                    // this._chatNode.x = -this.node.width/2;
+                    // this._chatNode.y = -this.node.height/2;
                     this._chatNode.zIndex = 3;
                     for(let i=1;i<13;++i){
                         let emjo = cc.find("img_bg/img_bg_bq/btn_bq_"+i,this._chatNode);
