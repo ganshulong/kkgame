@@ -147,13 +147,13 @@ cc.Class({
                     // AppLog.log("AppVersion: " + cc.vv.PlatformApiMgr.getAppVersion());
                     // AppLog.log("ReviewVersion: " + remoteVersionObj.ios_review_version);
 
-                    if (Global.isIOS() && cc.vv.PlatformApiMgr.getAppVersion() == remoteVersionObj.ios_review_version) {
-                        AppLog.log('当前是提审版本！');
+                    // if (Global.isIOS() && cc.vv.PlatformApiMgr.getAppVersion() == remoteVersionObj.ios_review_version) {
+                    //     AppLog.log('当前是提审版本！');
 
-                        Global.isReview = true;
-                        this.enterLoginScene();
-                        return;
-                    }
+                    //     Global.isReview = true;
+                    //     this.enterLoginScene();
+                    //     return;
+                    // }
 
                     var localAppVersion = parseInt(cc.vv.PlatformApiMgr.getAppVersion().split('.').join(''));
                     var remoteAppVersion = parseInt(remoteVersionObj.android_app_version.split('.').join(''));
