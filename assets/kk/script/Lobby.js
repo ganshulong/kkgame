@@ -106,6 +106,9 @@ cc.Class({
 
         this.initClubBtn();
 
+        let server_btn = cc.find("dt_xmt/server_btn",this.node)
+        Global.btnClickEvent(server_btn,this.onClickServer,this);
+
         let share_btn = cc.find("dt_xmt/share_btn",this.node)
         Global.btnClickEvent(share_btn,this.onClickShare,this);
         this.panel_share = this.node.getChildByName("panel_share");
@@ -140,6 +143,10 @@ cc.Class({
 
         //testgsl
         // this.onClub();
+    },
+
+    onClickServer(){
+        cc.vv.AlertView.showTips("客服号:"+cc.vv.UserManager.serverInfo);
     },
 
     onClickRechargeRoomCard(){

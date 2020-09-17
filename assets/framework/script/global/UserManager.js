@@ -69,6 +69,7 @@ cc.Class({
         clubs:[],
         daojuList:[],
         supervip:0,
+        serverInfo:"",      //客服
 
         //初始化
         init: function () {
@@ -170,6 +171,7 @@ cc.Class({
             this.noityList = serverData.noityList || [];
             this.daojuList = serverData.daojuList || [];
             this.supervip = playerData.supervip;
+            this.serverInfo = serverData.serverInfo;
 
             for (var i = 0; i < this.gameList.length; i++) {
                 this.gameList[i].id -= 1;
