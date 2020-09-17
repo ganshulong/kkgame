@@ -57,6 +57,12 @@ cc.Class({
         this._visitor_btn = this.node.getChildByName("visitor_login");
         Global.btnClickEvent(this._visitor_btn, this.onVisitorLogin, this);
 
+        //不显示游客登陆
+        if (Global.isNative()) {
+            this.node.getChildByName("input_name").active = false;
+            this.node.getChildByName("visitor_login").active = false;
+        }
+
         // 微信登录
         this._wechat_login = this.node.getChildByName("wechat_login");
         Global.btnClickEvent(this._wechat_login, this.onWeChatLogin, this);

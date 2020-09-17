@@ -136,6 +136,11 @@ cc.Class({
     recvGangNotify(data){
         data = data.detail;
         if (data.seat === this._seatIndex) {
+            for (let i = 0; i < this._pengCards.length; i++) {
+                if (this._pengCards[i] == data.actionInfo.curaction.card) {
+                    this._pengCards.splice(i,1);
+                }
+            }
             this._gangCards.push(data.actionInfo.curaction.card);
             let gangCardNum = this.getSelfGangCardNum(data.actionInfo.curaction.card);
             this.removeCardFromHand(data.actionInfo.curaction.card, gangCardNum);
