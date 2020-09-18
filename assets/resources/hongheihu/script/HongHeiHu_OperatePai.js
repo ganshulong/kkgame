@@ -184,7 +184,21 @@ cc.Class({
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HANDCARD,this.recvHandCardMsg,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
+        Global.registerEvent(EventId.TEST_EVENT,this.recvTestEvent,this);
         this.recvDeskInfoMsg();
+    },
+
+    recvTestEvent(){
+        if (this._operateCardNode) {
+            this._operateCardNode.active = true;
+            var testNode = this._operateCardNode.getChildByName("testNode") 
+            if (!testNode) {
+                testNode = new cc.Node("testNode");
+                testNode.addComponent(cc.Label);
+                testNode.parent = this._operateCardNode;
+            }
+            testNode.getComponent(cc.Label).string = "s:"+this._seatIndex;
+        }
     },
 
     // 小局结束

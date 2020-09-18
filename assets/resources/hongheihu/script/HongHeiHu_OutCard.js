@@ -146,8 +146,22 @@ cc.Class({
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.TEST_EVENT,this.recvTestEvent,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    recvTestEvent(){
+        if (this._outCardNode) {
+            this._outCardNode.active = true;
+            var testNode = this._outCardNode.getChildByName("testNode") 
+            if (!testNode) {
+                testNode = new cc.Node("testNode");
+                testNode.addComponent(cc.Label);
+                testNode.parent = this._outCardNode;
+            }
+            testNode.getComponent(cc.Label).string = "s:"+this._seatIndex;
+        }
     },
 
     onRecvHandCard(data){

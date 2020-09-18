@@ -444,6 +444,12 @@ cc.Class({
         other_bg.active = false;
         var panel_show = (0 == clickLocalSeat) ? self_bg : other_bg;
 
+        //gsltest
+        let spr_chat = panel_show.getChildByName("spr_chat");
+        Global.btnClickEvent(spr_chat,()=>{
+            Global.dispatchEvent(EventId.TEST_EVENT)
+        });
+
         if (data && data.locatingList) {
             let locatingList = data.locatingList;
             for (var i = 0; i < locatingList.length; i++) {
