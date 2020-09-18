@@ -91,3 +91,4 @@ EventId.TRUSTEE_NOTIFY = "TRUSTEE_NOTIFY";  			  // 托管通知
 EventId.CANCEL_TRUSTEE = "CANCEL_TRUSTEE";  			  // 取消托管
 EventId.CANCEL_TRUSTEE_NOTIFY = "CANCEL_TRUSTEE_NOTIFY";  // 取消托管
 
+EventId.TEST_EVENT = "TEST_EVENT";  					  // 测试

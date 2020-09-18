@@ -172,7 +172,21 @@ cc.Class({
         Global.registerEvent(EventId.LONG_NOTIFY,this.clearDesk,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.TEST_EVENT,this.recvTestEvent,this);
         this.recvDeskInfoMsg();
+    },
+
+    recvTestEvent(){
+        if (this._showCardNode) {
+            this._showCardNode.active = true;
+            var testNode = this._showCardNode.getChildByName("testNode") 
+            if (!testNode) {
+                testNode = new cc.Node("testNode");
+                testNode.addComponent(cc.Label);
+                testNode.parent = this._showCardNode;
+            }
+            testNode.getComponent(cc.Label).string = "s:"+this._seatIndex;
+        }
     },
 
     recvDeskInfoMsg(){
