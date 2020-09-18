@@ -393,36 +393,15 @@ cc.Class({
                 Global.dispatchEvent(EventId.ENTER_LOGIN_SUCCESS, msgDic);
                 let loginType = cc.vv.UserManager.getLoginType();
                 this._inGameServer = true;
-                // //登录成功后，将user字段替换成palyername
-                // if (msgDic.playerInfo && loginType == Global.LoginType.WX) {
-                //     let reloginData = JSON.parse(Global.getLocal(Global.SAVE_KEY_REQ_LOGIN, ''));
-                //     reloginData.user = cc.vv.WxMgr.getWXToken()
-                //     Global.saveLocal(Global.SAVE_KEY_REQ_LOGIN, JSON.stringify(reloginData));
-                // }
-
 
                 //游戏断线重连
                 if (msgDic.deskFlag == 1) {
-
-                    if ( !Global.isNative() || !Global.openUpdate || (Global.isNative() &&
-                            cc.vv.SubGameUpdateNode.getComponent("SubGameUpdate").isDownLoadSubGame(msgDic.deskInfo.conf.gameid)) ||
-                        msgDic.deskInfo.conf.gameid===1 || msgDic.deskInfo.conf.gameid===2) {
                         msgDic.deskInfo.isReconnect = true;
                         cc.vv.NetManager.dispatchNetMsg({
                             c: MsgId.GAME_RECONNECT_DESKINFO,
                             code: Global.ERROR_CODE.NORMAL,
                             deskInfo: msgDic.deskInfo
                         });
-
-                    } else {
-                        // 断线重连如果在游戏中，游戏没有下载，自动退出房间.
-                        let req = {c: MsgId.GAME_LEVELROOM};
-                        req.deskid = this._gameId;
-                        cc.vv.NetManager.send(req);
-                        cc.vv.EventManager.emit(EventId.ENTER_HALL);
-                        // let gameName = Global.SUBGAME[msgDic.deskInfo.gameid].title;
-                        // cc.vv.AlertView.showTips(cc.js.formatStr(cc.vv.Language.cannot_entergame, gameName, gameName));
-                    }
 
                 } else {//进入大厅
                     if (loginType == Global.LoginType.APILOGIN) {
@@ -437,9 +416,6 @@ cc.Class({
                             cc.vv.EventManager.emit(EventId.ENTER_HALL);
                         }
                     }
-
-
-                    //cc.vv.EventManager.emit(EventId.ENTER_LOGIN_SUCCESS); 
                 }
             }
         },
