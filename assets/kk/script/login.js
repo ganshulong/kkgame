@@ -57,11 +57,12 @@ cc.Class({
         this._visitor_btn = this.node.getChildByName("visitor_login");
         Global.btnClickEvent(this._visitor_btn, this.onVisitorLogin, this);
 
+        //临时改动
         //不显示游客登陆
-        if (Global.isNative()) {
-            this.node.getChildByName("input_name").active = false;
-            this.node.getChildByName("visitor_login").active = false;
-        }
+        // if (Global.isNative()) {
+        //     this.node.getChildByName("input_name").active = false;
+        //     this.node.getChildByName("visitor_login").active = false;
+        // }
 
         // 微信登录
         this._wechat_login = this.node.getChildByName("wechat_login");
@@ -142,6 +143,10 @@ cc.Class({
 
 
     onClickBindPhone(){
+        //临时改动
+        cc.vv.FloatTip.show("暂时关闭此功能");
+        return;
+
         this.panel_bind_phone.active = !this.panel_bind_phone.active;
         if (this.panel_bind_phone.active) {
             this.input_phoneNumStr.string = "";
