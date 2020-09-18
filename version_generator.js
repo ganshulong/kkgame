@@ -7,10 +7,12 @@ var manifest = {
     packageUrl: 'http://106.12.7.114/remote-assets/',
     remoteManifestUrl: 'http://106.12.7.114/remote-assets/project.manifest',
     remoteVersionUrl: 'http://106.12.7.114/remote-assets/version.manifest',
-    version: '1.0.3',
+    version: '1.0.4',
     assets: {},
     searchPaths: []
 };
+
+// 生成命令 node version_generator.js
 
 //生成的manifest文件存放目录
 var dest = './assets/';
