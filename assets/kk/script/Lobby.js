@@ -140,9 +140,6 @@ cc.Class({
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
         Global.registerEvent(EventId.COIN_CHANGE, this.onRcvNetCoinChanged,this);
-
-        //testgsl
-        // this.onClub();
     },
 
     onClickServer(){
