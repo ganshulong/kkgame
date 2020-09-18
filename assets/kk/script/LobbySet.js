@@ -93,6 +93,8 @@ cc.Class({
 
         let btn_confirm = cc.find("bg_bind_phone/btn_confirm",this.panel_bind_phone);
         Global.btnClickEvent(btn_confirm,this.onClickConfirm,this);
+
+        this._lobbySetLayer.getChildByName("text_version").getComponent(cc.Label).string = "闲游棋牌版本号 " + Global.resVersion;
     },
 
     initShow(){
