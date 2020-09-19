@@ -115,10 +115,24 @@ cc.Class({
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
 
         this.recvDeskInfoMsg();
     },
 
+    onRcvUpdatePlayerInfo(){
+        if (0 >= this._seatIndex) {
+            let users = cc.vv.gameData.getUsers();
+            for(let i=0;i<users.length;++i){
+                let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
+                if(chairId === this._chairId){
+                    this._seatIndex = users[i].seat;
+                    break;
+                }
+            }
+        }
+    },
+    
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
         if(data.isReconnect && this._outCardNode){

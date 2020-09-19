@@ -69,6 +69,7 @@ cc.Class({
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
+        Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
         // Global.registerEvent(EventId.CHI_NOTIFY,this.recvChiCard,this);
         // Global.registerEvent(EventId.PAO_NOTIFY,this.recvPaoNotify,this);
         // Global.registerEvent(EventId.LONG_NOTIFY,this.showOutCard,this);
@@ -77,6 +78,19 @@ cc.Class({
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onRcvUpdatePlayerInfo(){
+        if (0 >= this._seatIndex) {
+            let users = cc.vv.gameData.getUsers();
+            for(let i=0;i<users.length;++i){
+                let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
+                if(chairId === this._chairId){
+                    this._seatIndex = users[i].seat;
+                    break;
+                }
+            }
+        }
     },
 
     onRecvHandCard(data){

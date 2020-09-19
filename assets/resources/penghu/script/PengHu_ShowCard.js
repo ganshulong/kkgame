@@ -172,6 +172,7 @@ cc.Class({
         Global.registerEvent(EventId.LONG_NOTIFY,this.clearDesk,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
         Global.registerEvent(EventId.TEST_EVENT,this.recvTestEvent,this);
         this.recvDeskInfoMsg();
     },
@@ -186,6 +187,19 @@ cc.Class({
                 testNode.parent = this._showCardNode;
             }
             testNode.getComponent(cc.Label).string = "s:"+this._seatIndex;
+        }
+    },
+
+    onRcvUpdatePlayerInfo(){
+        if (0 >= this._seatIndex) {
+            let users = cc.vv.gameData.getUsers();
+            for(let i=0;i<users.length;++i){
+                let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
+                if(chairId === this._chairId){
+                    this._seatIndex = users[i].seat;
+                    break;
+                }
+            }
         }
     },
 
