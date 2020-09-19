@@ -457,7 +457,7 @@ cc.Class({
         }
     },
 
-    onRcvPlayerLeaveNotice(msg){
+    onRcvPlayerExitNotice(msg){
         if (msg.code === 200) {
             let users = this._deskInfo.users;
             for(let i=0;i<users.length;++i){
@@ -467,12 +467,6 @@ cc.Class({
                 }
             }
             Global.dispatchEvent(EventId.PLAYER_EXIT,msg.seat);
-        }
-    },
-
-    onRcvPlayerExitNotice(msg){
-        if (msg.code === 200) {
-
         }
     },
 
