@@ -4,10 +4,10 @@ var crypto = require('crypto');
 
 var manifest = {
     //服务器上资源文件存放路径（src，res的路径）
-    packageUrl: 'http://106.12.7.114/remote-assets/',
-    remoteManifestUrl: 'http://106.12.7.114/remote-assets/project.manifest',
-    remoteVersionUrl: 'http://106.12.7.114/remote-assets/version.manifest',
-    version: '1.0.8',
+    packageUrl: 'http://123.57.94.118/remote-assets/',
+    remoteManifestUrl: 'http://123.57.94.118/remote-assets/project.manifest',
+    remoteVersionUrl: 'http://123.57.94.118/remote-assets/version.manifest',
+    version: '1.0.9',
     assets: {},
     searchPaths: []
 };

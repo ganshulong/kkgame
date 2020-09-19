@@ -476,7 +476,7 @@ cc.Class({
         //gsltest
         let spr_chat = panel_show.getChildByName("spr_chat");
         Global.btnClickEvent(spr_chat,()=>{
-            Global.dispatchEvent(EventId.TEST_EVENT)
+            // Global.dispatchEvent(EventId.TEST_EVENT)
         });
 
         if (data && data.locatingList) {
