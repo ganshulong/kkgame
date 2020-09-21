@@ -12,12 +12,12 @@ var GlobalVar = cc.Class({
     statics: {
   		// 登录游戏服地址
         loginServerAddress:"123.57.94.118:7180",        //正式123.57.94.118:7180  www.jhtao.com.cn  开发106.12.7.114:9180  www.zonzu.net  开发:9180  正式+测试:7180 
-        localVersion:true,
-
+        resVersion:"1.0.11",
+        
         //非常用的配置
+        localVersion:true,
         isReview: false,
         appId: 4,           //产品id 1 BB 4 Poly
-        resVersion:"v1.0.0.0",
         appVersion: '1.0.0',
         designSize: cc.size(1280,720),
         centerPos: cc.v2(640,360),

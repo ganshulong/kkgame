@@ -256,9 +256,6 @@ cc.Class({
                 req.passwd = pwd;
                 req.email = email;
                 req.v = Global.resVersion;
-                if (Global.isNative()) {
-                    req.av = cc.vv.PlatformApiMgr.getAppVersion();
-                }
                 let _loginExData = loginExData || Global.LoginExData.reloginAction
                 req.t = loginType; //1随机 2 微信 3fb
                 req.accessToken = accesstoken;

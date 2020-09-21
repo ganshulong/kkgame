@@ -224,7 +224,7 @@ cc.Class({
                     cc.vv.LoadingTip.hide(0.5);
                 }
                 if(msgDic.code && msgDic.code != 200 && msgDic.code != 20000) {  //200正常处理，20000不予处理
-                    if (!this.handleCommonErrorCode(msgDic.code)) {
+                    if (!this.handleCommonErrorCode(msgDic.code, msgDic)) {
                         if(msgDic.code===203)  Global.dispatchEvent(EventId.RELOGIN);
                         // 提示需要更新
                         if(msgDic.code === 214 ){
@@ -252,7 +252,7 @@ cc.Class({
         },
 
         //处理常用错误码
-        handleCommonErrorCode: function ( errorCode ) {
+        handleCommonErrorCode: function (errorCode, msgDic) {
             switch (errorCode) {
                 case 415: //需要重新登录
                     cc.vv.FloatTip.show(cc.vv.Language.reconnect);
@@ -275,20 +275,17 @@ cc.Class({
                         cc.game.restart();
                     });
                     break;
-                case 803: //游戏维护中
-                    this.no_need_reconnect = true //不需要重连了
-                    Global.dispatchEvent(EventId.STOP_ACTION);
-                    //
-                    let curScene = cc.director.getScene()
-                    if(curScene.name != 'login'){
-                        cc.vv.GameManager.goBackLoginScene();
-                        cc.vv.AlertView.showTips(cc.vv.Language.system_maintenance_tips);
+                case 803: //游戏正在维护中
+                    let exitCall = function () {
+                        cc.game.end();
                     }
-                    else{
-                        this.close()
-                        cc.vv.AlertView.showTips(cc.vv.Language.system_maintenance_tips);
+                    cc.vv.AlertView.showTips("游戏正在维护中", exitCall);
+                    break;
+                case 215: //游戏需重新下载
+                    let openURLCall = function () {
+                        cc.sys.openURL(msgDic.shareLink);
                     }
-                   
+                    cc.vv.AlertView.showTips("游戏需重新下载", openURLCall);
                     break;
                 case 804: //金币不足
                     Global.showAd();
