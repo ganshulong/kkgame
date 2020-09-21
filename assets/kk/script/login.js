@@ -248,10 +248,10 @@ cc.Class({
         }else {
             //web端模拟，调试用
             //首次拉起微信的登录，才有这个值
-            let openid = "oJtfO5hIYLq0gi7CAQWpIdOkZQMM";
+            let openid = "0";
             cc.sys.localStorage.setItem("openid", openid);
             //14 表示二次登录，FIX ME. 后续将14 改为常量
-            cc.vv.GameManager.reqLogin(openid, "", 14, "", "", "");
+            cc.vv.GameManager.reqLogin(openid, "", 11, "", "", "");
         }
 
     },
