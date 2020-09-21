@@ -31,7 +31,7 @@ cc.Class({
         _tiNode:null,
         _chiNode:null,
         _pengNode:null,
-        _huNode:null,
+        // _huNode:null,
         _weiNode:null,
         _shaoNode:null,
     },
@@ -45,13 +45,13 @@ cc.Class({
         this._tiNode = cc.find("scene/action/ti",this.node);
         this._chiNode = cc.find("scene/action/chi",this.node);
         this._pengNode = cc.find("scene/action/peng",this.node);
-        this._huNode = cc.find("scene/action/hu",this.node);
+        // this._huNode = cc.find("scene/action/hu",this.node);
         this._weiNode = cc.find("scene/action/wei",this.node);
         this._shaoNode = cc.find("scene/action/shao",this.node);
 
-        this._huNode.getComponent(cc.Animation).on("finished",()=>{
-            this._huNode.active = false;
-        });
+        // this._huNode.getComponent(cc.Animation).on("finished",()=>{
+        //     this._huNode.active = false;
+        // });
 
         this.clearDesk();
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
@@ -83,7 +83,7 @@ cc.Class({
         this._tiNode.active = type === cc.vv.gameData.OPERATETYPE.LONG;
         this._chiNode.active = type === cc.vv.gameData.OPERATETYPE.CHI;
         this._pengNode.active = type === cc.vv.gameData.OPERATETYPE.PENG;
-        this._huNode.active = type === cc.vv.gameData.OPERATETYPE.HU;
+        // this._huNode.active = type === cc.vv.gameData.OPERATETYPE.HU;
         this._weiNode.active = type === cc.vv.gameData.OPERATETYPE.WEI;
         this._shaoNode.active = type === cc.vv.gameData.OPERATETYPE.SHE;
         let node = cc.find("scene/action/player"+chairId,this.node);
@@ -100,9 +100,9 @@ cc.Class({
         else if(type === cc.vv.gameData.OPERATETYPE.PENG) {
             actionNode = this._pengNode;
         }
-        else if(type === cc.vv.gameData.OPERATETYPE.HU) {
-            actionNode = this._huNode;
-        }
+        // else if(type === cc.vv.gameData.OPERATETYPE.HU) {
+        //     actionNode = this._huNode;
+        // }
         else if(type === cc.vv.gameData.OPERATETYPE.WEI) {
             actionNode = this._weiNode;
         }
@@ -124,7 +124,7 @@ cc.Class({
         this._tiNode.active = false;
         this._chiNode.active = false;
         this._pengNode.active = false;
-        this._huNode.active = false;
+        // this._huNode.active = false;
         this._weiNode.active = false;
         this._shaoNode.active = false;
     },

@@ -202,6 +202,21 @@ cc.Class({
                     }
                     this.showFlyIcon(toServerSeat, -data.notyScoreChang[i].changeScore);
                 }
+                if (0 < data.users[i].roundScore) {
+                    let ani_huPai = this._playerNode.getChildByName("ani_huPai");
+                    ani_huPai.active = true;
+                    ani_huPai.scale = 0;
+                    ani_huPai.runAction(
+                        cc.sequence(
+                            cc.scaleTo(0.5,1.2,1.2),
+                            cc.scaleTo(0.1,1,1),
+                            cc.delayTime(1.4),
+                            cc.callFunc(()=>{
+                                self._playerNode.getChildByName("ani_huPai").active = false;
+                            })
+                        )
+                    )
+                }
                 break;
             }
         }
@@ -454,6 +469,7 @@ cc.Class({
             this.setHuXi(user.roundScore?user.roundScore:0);
             this.showReady(user.state === 1);
             this._playerNode.getChildByName("ani_warn").active = (0 < user.isBaoJin);
+            this._playerNode.getChildByName("ani_huPai").active = false;
             this._playerNode.getChildByName("mask_trustee").active = (0 < user.autoc);
             if (0 == this._chairId) {
                 cc.find("scene/panel_trustee", this.node).active = (0 < user.autoc);

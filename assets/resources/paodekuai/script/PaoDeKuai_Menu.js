@@ -115,6 +115,11 @@ cc.Class({
         this.recvDeskInfoMsg();
     },
 
+    recvRoundOver(){
+        this.panel_dismiss.active = false;
+        this.readyBtn.active = false;
+    },
+
     onClickSwitchToClub(event){
         if (!this.bMoving) {
             let req = {c: MsgId.GAME_SWITCH_CLUB};
@@ -126,11 +131,6 @@ cc.Class({
     onTouchMove(event){
         this.bMoving = true;
         event.target.y += event.getDelta().y;
-    },
-
-    recvRoundOver(){
-        this.panel_dismiss.active = false;
-        this.readyBtn.active = false;
     },
 
     onRcvDismissNotify(data){

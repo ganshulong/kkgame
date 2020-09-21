@@ -14,8 +14,8 @@ cc.Class({
     start () {
         this.registerMsg();
 
-        let readyBtn = cc.find("scene/operate_btn_view/ready_btn",this.node);
-        Global.btnClickEvent(readyBtn,this.onReady,this);
+        this.readyBtn = cc.find("scene/operate_btn_view/ready_btn",this.node);
+        Global.btnClickEvent(this.readyBtn,this.onReady,this);
         
         let setting = cc.find("scene/operate_btn_view/btn_setting",this.node);
         Global.btnClickEvent(setting,this.onClickSetting,this);
@@ -102,8 +102,14 @@ cc.Class({
         Global.registerEvent(EventId.PLAYER_DISTANCE_DATA, this.onRcvPlayersDistanceData,this);
         Global.registerEvent(EventId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify,this);
         Global.registerEvent(EventId.DISMISS_NOTIFY, this.onRcvDismissNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    recvRoundOver(){
+        this.panel_dismiss.active = false;
+        this.readyBtn.active = false;
     },
 
     onClickCancelTrustee(event){
