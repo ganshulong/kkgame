@@ -134,7 +134,7 @@ cc.Class({
             } else if (3 == data.hupaiType || 14 == data.hupaiType || 15 == data.hupaiType) {
                 path += "_dihu";
             } else if (4 == data.hupaiType) {
-                path += "_tilong";
+                // path += "_tilong";
             } else if (5 == data.hupaiType) {
                 path += "_paohu";
             } else if (6 == data.hupaiType || 9 == data.hupaiType || 11 == data.hupaiType) {
