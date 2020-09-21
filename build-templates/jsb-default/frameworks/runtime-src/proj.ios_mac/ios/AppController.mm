@@ -292,7 +292,10 @@ static AppDelegate* s_sharedApplication = nullptr;
     WXMediaMessage *message = [WXMediaMessage message];
     message.title = title;
     message.description = description;
-    [message setThumbImage:[UIImage imageNamed:iconUrl]];
+
+    NSData *data = [NSData  dataWithContentsOfURL:[NSURL URLWithString:iconUrl]];
+    UIImage *image =  [UIImage imageWithData:data];
+    [message setThumbImage:image];
     message.mediaObject = webpageObject;
     SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
     req.bText = NO;
