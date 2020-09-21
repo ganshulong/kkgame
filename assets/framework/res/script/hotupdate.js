@@ -394,17 +394,15 @@ cc.Class({
         for (var i=0; i < verA.length; ++i) {
             var a = parseInt(verA[i]);
             var b = parseInt(verB[i]);
-            if (a === b) {
+            if (a >= b) {
                 continue;
-            }
-            else {
+            } else {
                 return -1;
             }
         }
         if (verB.length > verA.length) {
             return -1;
-        }
-        else {
+        } else {
             return 0;
         }
     },
