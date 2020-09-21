@@ -498,6 +498,9 @@ cc.Class({
         description += ("," + ["不抓鸟","抓2鸟","抓4鸟","抓6鸟"][roomConf.param1/2]);
         description += ("," + roomConf.score+ "倍");
         description += (",房间号:" + roomConf.deskId);
+        if (cc.vv.UserManager.currClubId) {
+            description += (",亲友圈ID:" + cc.vv.UserManager.currClubId);
+        }
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
     },
 

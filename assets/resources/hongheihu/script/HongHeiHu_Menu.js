@@ -532,6 +532,9 @@ cc.Class({
         description += ("," + ["一胡一分","1分底","2分底","3分底","4分底","5分底"][roomConf.param1]);
         description += ("," + roomConf.score+ "倍");
         description += (",房间号:" + roomConf.deskId);
+        if (cc.vv.UserManager.currClubId) {
+            description += (",亲友圈ID:" + cc.vv.UserManager.currClubId);
+        }
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
     },
 

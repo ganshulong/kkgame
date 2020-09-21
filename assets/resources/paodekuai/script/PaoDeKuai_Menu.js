@@ -508,6 +508,9 @@ cc.Class({
         description += ("," + ["不扎鸟","红桃10扎鸟翻倍","红桃10扎鸟+5分","红桃10扎鸟+10分"][roomConf.param1]);
         description += ("," + roomConf.score+ "倍");
         description += (",房间号:" + roomConf.deskId);
+        if (cc.vv.UserManager.currClubId) {
+            description += (",亲友圈ID:" + cc.vv.UserManager.currClubId);
+        }
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
     },
 

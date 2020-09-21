@@ -526,6 +526,9 @@ cc.Class({
         description += ("," + ["蚂蚁上树","见三加一","见六加一"][roomConf.param1-1]);
         description += ("," + roomConf.score+ "倍");
         description += (",房间号:" + roomConf.deskId);
+        if (cc.vv.UserManager.currClubId) {
+            description += (",亲友圈ID:" + cc.vv.UserManager.currClubId);
+        }
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
     },
 
