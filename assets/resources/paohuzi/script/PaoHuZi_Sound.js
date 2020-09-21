@@ -130,15 +130,13 @@ cc.Class({
             let path = "effect/"+this.getLanguage()+this.getSex(data.seat)+"hu";
             if (2 == data.hupaiType) {
                 path += "_tian";
-            } else if (3 == data.hupaiType || 14 == data.hupaiType || 15 == data.hupaiType) {
+            } else if (3 == data.hupaiType || 14 == data.hupaiType || 15 == data.hupaiType || 17 == data.hupaiType || 18 == data.hupaiType) {
                 path += "_dihu";
-            } else if (4 == data.hupaiType) {
-                // path += "_tilong";
             } else if (5 == data.hupaiType) {
                 path += "_paohu";
-            } else if (6 == data.hupaiType || 9 == data.hupaiType || 11 == data.hupaiType) {
+            } else if (6 == data.hupaiType) {
                 path += "_saohu";
-            } else if (7 == data.hupaiType || 8 == data.hupaiType || 10 == data.hupaiType) {
+            } else if (7 == data.hupaiType) {
                 path += "_penghu";
             } else if (12 == data.hupaiType) {
                 path += "_shuanglong";
