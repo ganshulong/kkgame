@@ -394,9 +394,11 @@ cc.Class({
         for (var i=0; i < verA.length; ++i) {
             var a = parseInt(verA[i]);
             var b = parseInt(verB[i]);
-            if (a >= b) {
-                continue;
-            } else {
+            if (a > b) {
+                return 0;
+            } else if ((a === b)) {
+                return continue;
+            } else if ((a < b)) {
                 return -1;
             }
         }
