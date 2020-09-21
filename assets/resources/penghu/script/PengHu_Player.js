@@ -202,7 +202,7 @@ cc.Class({
                     }
                     this.showFlyIcon(toServerSeat, -data.notyScoreChang[i].changeScore);
                 }
-                if (0 < data.users[i].roundScore) {
+                if (data.seat === this._seatIndex && 0 < data.hupaiType) {
                     let ani_huPai = this._playerNode.getChildByName("ani_huPai");
                     ani_huPai.active = true;
                     ani_huPai.scale = 0;
