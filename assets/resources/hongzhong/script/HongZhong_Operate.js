@@ -139,6 +139,9 @@ cc.Class({
         if(data.actionInfo.iswait && 0 < data.actionInfo.waitList.length){
             this.showOperate(data);
         }
+        if (data.seat === cc.vv.gameData.getMySeatIndex()) {
+            this.panel_ting.active = false;
+        }
     },
 
     showOperate(data){
