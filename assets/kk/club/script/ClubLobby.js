@@ -125,6 +125,8 @@ cc.Class({
                     str += "跑得快 ";
                 } else if(gameList[i].gameid === 11 && -1 === str.indexOf("红中")) {
                     str += "红中 ";
+                } else if(gameList[i].gameid === 13 && -1 === str.indexOf("十胡卡")) {
+                    str += "十胡卡 ";
                 }
             }
             // 游戏列表

@@ -309,6 +309,13 @@ cc.Class({
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("hongzhong");
                 }
+            } else if(msg.response.deskInfo.conf.gameid === 11 || msg.response.deskInfo.conf.gameid === 12){
+                if(cc.vv.gameData === null){
+                    let data = require("ShiHuKa_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("shihuka");
+                }
             }
         }
     },
@@ -426,6 +433,8 @@ cc.Class({
             bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4 ? this.tableBgs[6] : this.tableBgs[7];
         } else if (11 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[8];
+        } else if (13 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[9];
         }
             
         tableChar.active = true;

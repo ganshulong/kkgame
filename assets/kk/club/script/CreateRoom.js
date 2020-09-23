@@ -84,7 +84,8 @@ cc.Class({
             HongHeiHu:2,
             LiuHuQiang:3,
             PaoDeKuai:4,
-            HongZhong:5
+            HongZhong:5,
+            ShiHuKa:6
         };
 
         let btn_back = this._createLayer.getChildByName("btn_back");
@@ -122,7 +123,7 @@ cc.Class({
 
         //游戏玩法选项页面
         this.gamePanels = [];
-        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong"];
+        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka"];
         for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
             let panel = cc.find("img_bg/"+gamePanelStr[cc.vv.UserManager.gameList[i].id],this._createLayer);
             panel.id = cc.vv.UserManager.gameList[i].id;
@@ -244,6 +245,10 @@ cc.Class({
             req.gameid = this._isClubRoom ? 11 : 12;
             optionList.push({option:"player_num",       valueList:[2]});
             optionList.push({option:"param1",           valueList:[0,2,4,6]});
+        } else if (this.gameTypeIndex.ShiHuKa == id) {
+            req.gameid = this._isClubRoom ? 13 : 14;
+            optionList.push({option:"player_num",       valueList:[2,3]});
+            optionList.push({option:"param1",           valueList:[0,1]});
         }
         this.onCreateCommom(layer, optionList, req);
     },

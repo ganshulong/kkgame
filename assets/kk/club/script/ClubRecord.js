@@ -163,7 +163,7 @@ cc.Class({
                 item.active = true;
 
                 let gameIcon = item.getChildByName("gameIcon");
-                let gameIconStr = ["","penghu","paohuzi","penghu","paohuzi","hongheihu","hongheihu","liuhuqiang","liuhuqiang","paodekuai","paodekuai","hongzhong","hongzhong","erqigui","erqigui"];
+                let gameIconStr = ["","penghu","paohuzi","penghu","paohuzi","hongheihu","hongheihu","liuhuqiang","liuhuqiang","paodekuai","paodekuai","hongzhong","hongzhong","shihuka","shihuka"];
                 let gameIconPrefabRes= cc.find("prefabRes/" + gameIconStr[msg.data[i].gameid], this._layer);
                 gameIcon.getComponent(cc.Sprite).spriteFrame  = gameIconPrefabRes.getComponent(cc.Sprite).spriteFrame;
 
