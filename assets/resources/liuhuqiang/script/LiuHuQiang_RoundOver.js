@@ -194,7 +194,12 @@ cc.Class({
                 }
             }
             cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore
-            panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("胡息： " + data.huxi);
+
+            let huXiWakeStr = "胡息： " + data.huxi;
+            if (data.xingnum) {
+                huXiWakeStr += "   " + data.xingnum + "个醒";
+            }
+            panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = huXiWakeStr;
 
             let zimoHuTypeStr = "";
             if (data.isZimo) {

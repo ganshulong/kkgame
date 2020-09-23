@@ -309,7 +309,7 @@ cc.Class({
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("hongzhong");
                 }
-            } else if(msg.response.deskInfo.conf.gameid === 11 || msg.response.deskInfo.conf.gameid === 12){
+            } else if(msg.response.deskInfo.conf.gameid === 13 || msg.response.deskInfo.conf.gameid === 14){
                 if(cc.vv.gameData === null){
                     let data = require("ShiHuKa_GameData");
                     cc.vv.gameData = new data();

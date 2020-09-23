@@ -161,7 +161,12 @@ cc.Class({
             this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
 
             let content = cc.find("right_bg/scrollview/content", panel);
-            this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
+
+            if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name) {
+                this.initGamePanelCommom(content, ["round","player_num","param1","param2","speed"]);
+            } else {
+                this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
+            }
         }
     },
 
@@ -237,20 +242,25 @@ cc.Class({
             req.gameid = this._isClubRoom ? 7 : 8;
             optionList.push({option:"player_num",       valueList:[2,3,4]});
             optionList.push({option:"param1",           valueList:[0,1]});
+            optionList.push({option:"param2",           valueList:[0,1,2]});
 
         } else if (this.gameTypeIndex.PaoDeKuai == id) {
             req.gameid = this._isClubRoom ? 9 : 10;
             optionList.push({option:"player_num",       valueList:[2,3]});
             optionList.push({option:"param1",           valueList:[0,1,2,3]});
+
         } else if (this.gameTypeIndex.HongZhong == id) {
             req.gameid = this._isClubRoom ? 11 : 12;
             optionList.push({option:"player_num",       valueList:[2]});
             optionList.push({option:"param1",           valueList:[0,2,4,6]});
+
         } else if (this.gameTypeIndex.ShiHuKa == id) {
             req.gameid = this._isClubRoom ? 13 : 14;
             optionList.push({option:"player_num",       valueList:[2,3]});
             optionList.push({option:"param1",           valueList:[0,1]});
+            optionList.push({option:"param2",           valueList:[0,1,2]});
         }
+
         this.onCreateCommom(layer, optionList, req);
     },
 
@@ -288,6 +298,8 @@ cc.Class({
                         req.seat = optionList[i].valueList[j];
                     } else if ("param1" == optionList[i].option) {
                         req.param1 = optionList[i].valueList[j];
+                    } else if ("param2" == optionList[i].option) {
+                        req.param2 = optionList[i].valueList[j];
                     }
                     break;
                 }
