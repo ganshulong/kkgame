@@ -106,7 +106,7 @@ cc.Class({
                     player.x = posArr[data.users.length][i];
                     player.active = true;
                 }
-                for(let i = data.users.length; i < 4; ++i){
+                for(let i = data.users.length; i < cc.vv.gameData.RoomSeat; ++i){
                     cc.find("game_end_bg/player"+i,this._layer).active = false;
                 }
             }

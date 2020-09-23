@@ -261,7 +261,7 @@ cc.Class({
         if (0 < bigWinerScore) {
             bigWinerNode.getChildByName("spr_bigWiner").active = true;
         }
-        for (let i = data.users.length; i < 3; i++) {
+        for (let i = data.users.length; i < cc.vv.gameData.RoomSeat; i++) {
             this._layer.getChildByName("player" + i).active = false;
         }
     },
