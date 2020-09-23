@@ -77,7 +77,9 @@ cc.Class({
     },
 
     showAction(seat,type){
-        let chairId = cc.vv.gameData.getLocalChair(seat)+1;
+        let chairId = cc.vv.gameData.getLocalChair(seat);
+        let uiSeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
+        let node = cc.find("scene/action/player"+uiSeat,this.node);
         if(cc.vv.gameData.getPlayerNum() === 2 && chairId === 2) chairId = 3;
         this._paoNode.active = type === cc.vv.gameData.OPERATETYPE.PAO;
         this._tiNode.active = type === cc.vv.gameData.OPERATETYPE.LONG;
@@ -86,7 +88,6 @@ cc.Class({
         // this._huNode.active = type === cc.vv.gameData.OPERATETYPE.HU;
         this._weiNode.active = type === cc.vv.gameData.OPERATETYPE.WEI;
         this._shaoNode.active = type === cc.vv.gameData.OPERATETYPE.SHE;
-        let node = cc.find("scene/action/player"+chairId,this.node);
         let actionNode = null;
         if(type === cc.vv.gameData.OPERATETYPE.PAO) {
             actionNode = this._paoNode;
