@@ -44,6 +44,12 @@ cc.Class({
             });
         },
 
+        preloadScene(sceneName){
+            cc.director.preloadScene(sceneName,()=>{
+                AppLog.log("preloadScene succeed: " + sceneName)
+            });
+        },
+
         //是否再大厅场景
         isInHallScene(){
             let self = this

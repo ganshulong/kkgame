@@ -78,6 +78,17 @@ cc.Class({
         let sceneMgr = require("SceneMgr");
         cc.vv.SceneMgr = sceneMgr;
 
+        cc.vv.SceneMgr.preloadScene('lobby');
+        cc.vv.SceneMgr.preloadScene('club');
+        cc.vv.SceneMgr.preloadScene('club_lobby');
+        cc.vv.SceneMgr.preloadScene('penghu');
+        cc.vv.SceneMgr.preloadScene('paohuzi');
+        cc.vv.SceneMgr.preloadScene('hongheihu');
+        cc.vv.SceneMgr.preloadScene('liuhuqiang');
+        cc.vv.SceneMgr.preloadScene('paodekuai');
+        cc.vv.SceneMgr.preloadScene('hongzhong');
+        cc.vv.SceneMgr.preloadScene('shihuka');
+
         let node = new cc.Node();
         node.addComponent('SubGameUpdate');
         cc.vv.SubGameUpdateNode = node;
@@ -126,7 +137,6 @@ cc.Class({
     },
     start () {
         var self = this;
-
         var node = cc.find('Canvas');
         Global.centerPos = cc.v2(node.width/2,node.height/2);
     	
@@ -142,8 +152,6 @@ cc.Class({
         }
     },
 
-    // update (dt) {},
-
     loadNextScene: function () {
         //淡出动画
         this.node.runAction(cc.fadeOut(1.0));
@@ -154,8 +162,6 @@ cc.Class({
             else{
                 cc.vv.SceneMgr.enterScene("login", this.onLoadLoginSceneFinish.bind(this))
             }
-
-
     	}
     	else { //H5不需要热更新
     		cc.vv.SceneMgr.enterScene("login", this.onLoadLoginSceneFinish.bind(this))
