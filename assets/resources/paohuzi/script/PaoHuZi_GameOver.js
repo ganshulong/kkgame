@@ -61,7 +61,7 @@ cc.Class({
                 // this._layer.scaleX = this.node.width / this._layer.width;
                 // this._layer.scaleY = this.node.height / this._layer.height;
                 this._layer.active = this._show;
-                this._layer.zIndex = 1;
+                this._layer.zIndex = 3;
                 this._layer.x = this.node.width/2;
                 this._layer.y = this.node.height/2;
 

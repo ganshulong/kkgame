@@ -45,7 +45,7 @@ cc.Class({
         Global.btnClickEvent(btn_quit,this.onClickDismiss,this);
 
         this.panel_dismiss = cc.find("scene/panel_dismiss",this.node);
-        this.panel_dismiss.zIndex = 4;
+        this.panel_dismiss.zIndex = 2;
         this.panel_dismiss.active = false;
         this.dismiss_small_bg = this.panel_dismiss.getChildByName("dismiss_small_bg");
         this.dismiss_big_bg = this.panel_dismiss.getChildByName("dismiss_big_bg");
@@ -116,7 +116,7 @@ cc.Class({
     },
 
     recvRoundOver(){
-        this.panel_dismiss.active = false;
+        // this.panel_dismiss.active = false;
         this.readyBtn.active = false;
     },
 
