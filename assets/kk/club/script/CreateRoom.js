@@ -157,7 +157,8 @@ cc.Class({
 
             cc.find("left_bg/btn_selectedGame/label_selectedGame", panel).getComponent(cc.Label).string = cc.vv.UserManager.gameList[i].title;
 
-            this.gamePanels.push(panel);
+            // this.gamePanels.push(panel);
+            this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
 
             let content = cc.find("right_bg/scrollview/content", panel);
             this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
