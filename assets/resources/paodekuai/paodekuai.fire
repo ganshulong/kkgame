@@ -18413,7 +18413,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 667,
-      "y": 225
+      "y": 350
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -18556,7 +18556,7 @@
     },
     "_children": [],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 511
@@ -18680,7 +18680,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "5a9cab9e-045e-44df-a9a0-9b2295f5ea2b"
+      "__uuid__": "bf9c31be-78d3-4402-8f43-2cc3c775df69"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -18695,9 +18695,7 @@
     "_isTrimmedMode": false,
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_atlas": {
-      "__uuid__": "95fb68c8-cfde-4192-82d8-958e4341ef0a"
-    }
+    "_atlas": null
   },
   {
     "__type__": "cc.Widget",

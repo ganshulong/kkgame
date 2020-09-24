@@ -72,7 +72,7 @@ cc.Class({
         Global.btnClickEvent(btn_invite_wx,this.onClickInviteToWx,this);
         
         let btn_copy_roomId = cc.find("scene/operate_btn_view/btn_copy_roomId",this.node)
-        Global.btnClickEvent(btn_copy_roomId,this.onClickCopyRoomIdToWx,this);
+        Global.btnClickEvent(btn_copy_roomId,this.onClickCopyRoomInfoOpenWx,this);
 
         this.btn_gps = bg_top.getChildByName("btn_gps");
         this.btn_gps.btnID = -1;
@@ -497,27 +497,39 @@ cc.Class({
     },
 
     onClickInviteToWx(){
+        let title = "闲游房间邀请";
+        let description = this.getRoomInfoStr();
+        Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
+    },
+
+    getRoomInfoStr(){
         let roomConf = cc.vv.gameData.getRoomConf();
         let users = cc.vv.gameData.getUsers();
 
-        let title = "闲游房间邀请";
         let description = "十五张跑得快";
+        description += (",房间号:" + roomConf.deskId);
+        if (cc.vv.UserManager.currClubId) {
+            description += (",亲友圈ID:" + cc.vv.UserManager.currClubId);
+        }
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
         description += ("," + ["","","首轮最小手牌先出","首轮黑桃三先出"][roomConf.seat]);
         description += ("," + ["不扎鸟","红桃10扎鸟翻倍","红桃10扎鸟+5分","红桃10扎鸟+10分"][roomConf.param1]);
         description += ("," + roomConf.score+ "倍");
-        description += (",房间号:" + roomConf.deskId);
-        if (cc.vv.UserManager.currClubId) {
-            description += (",亲友圈ID:" + cc.vv.UserManager.currClubId);
-        }
-        Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
+        return description;
     },
 
     onClickCopyRoomIdToWx(){
         let title = "房间ID";
         let description = cc.vv.gameData.getRoomConf().deskId;
         Global.onWXShareText(Global.ShareSceneType.WXSceneSession, title, description);
+    },
+
+    onClickCopyRoomInfoOpenWx(){
+        let description = this.getRoomInfoStr();
+        description += ",速来玩!\n";
+        description += "复制信息打开游戏将自动入座";
+        Global.copyStrToClipboard(description);
     },
 
     onClose(){
