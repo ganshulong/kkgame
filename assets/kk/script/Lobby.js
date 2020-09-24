@@ -140,6 +140,23 @@ cc.Class({
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
         Global.registerEvent(EventId.COIN_CHANGE, this.onRcvNetCoinChanged,this);
+        Global.registerEvent(EventId.GET_CLIPBOARDSTR_CALLBACKK, this.onRcvGetClipboardStrCallBack,this);
+        Global.getClipboardStr();
+    },
+
+    onRcvGetClipboardStrCallBack(data){
+        let clipboardStr = data.detail;
+        if (clipboardStr && 0 <= clipboardStr.indexOf("速来玩")) {
+            let clipboardStrArr = clipboardStr.split(":");
+            if (1 < clipboardStrArr.length) {
+                let roomID = parseInt(clipboardStrArr[1]);
+                if (99999 <= roomID && roomID <= 999999) {
+                    var req = { 'c': MsgId.GAME_JOINROOM};
+                    req.deskId = roomID.toString();
+                    cc.vv.NetManager.send(req);
+                }
+            }
+        }
     },
 
     onClickServer(){

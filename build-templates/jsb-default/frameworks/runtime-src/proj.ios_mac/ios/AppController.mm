@@ -306,6 +306,23 @@ static AppDelegate* s_sharedApplication = nullptr;
     return  true;
 }
 
++ (void)copyStrToClipboard: (NSString*)description
+{
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = description;
+}
+
++ (NSString*)getClipboardStr
+{
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    NSLog(@"%@", pasteboard.string);
+    if (pasteboard.string !=NULL)
+    {
+        return pasteboard.string;
+    }
+    return @"";
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     /*
       Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

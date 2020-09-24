@@ -406,12 +406,13 @@ cc.Class({
                         let nId = cc.vv.UserManager.getApiGameId()
                         this.sendEnterGameReq(nId)
                     } else {
-                        if (cc.vv.SceneMgr.isInLoginScene()) {
-                            //在登录界面，预加载下资源
-                            cc.vv.SceneMgr.enterScene('lobby');
-                        } else {
-                            cc.vv.EventManager.emit(EventId.ENTER_HALL);
-                        }
+                        cc.vv.SceneMgr.enterScene('lobby');
+                        // if (cc.vv.SceneMgr.isInLoginScene()) {
+                        //     //在登录界面，预加载下资源
+                        //     cc.vv.SceneMgr.enterScene('lobby');
+                        // } else {
+                        //     cc.vv.EventManager.emit(EventId.ENTER_HALL);
+                        // }
                     }
                 }
             }

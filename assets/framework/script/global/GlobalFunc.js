@@ -1501,3 +1501,24 @@ GlobalFunc.stopRecord = function (){
 
     }
 }
+
+GlobalFunc.copyStrToClipboard = function (description) {
+    if (GlobalFunc.isAndroid()) {
+        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "copyStrToClipboard", "(Ljava/lang/String;)V", description);
+    } else if (GlobalFunc.isIOS()) {
+        jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "copyStrToClipboard:", description);
+    }
+}
+
+GlobalFunc.getClipboardStr = function () {
+    if (GlobalFunc.isAndroid()) {
+        jsb.reflection.callStaticMethod(Global.ANDROID_CLASS_NAME, "getClipboardStr", "()V");
+    } else if (GlobalFunc.isIOS()) {
+        let clipboardStr = jsb.reflection.callStaticMethod(Global.IOS_CLASS_NAME, "getClipboardStr");
+        Global.dispatchEvent(EventId.GET_CLIPBOARDSTR_CALLBACKK, clipboardStr);
+    }
+}
+
+Global.getClipboardStrCallBackk = function (clipboardStr) {
+    Global.dispatchEvent(EventId.GET_CLIPBOARDSTR_CALLBACKK, clipboardStr);
+}

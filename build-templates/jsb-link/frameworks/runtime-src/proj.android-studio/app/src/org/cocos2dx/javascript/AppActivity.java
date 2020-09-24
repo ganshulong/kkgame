@@ -65,6 +65,8 @@ import com.amap.api.location.AMapLocationQualityReport;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.ClipboardManager;
+import android.content.ClipData;
 
 public class AppActivity extends Cocos2dxActivity {
     public static AppActivity instance;
@@ -492,4 +494,32 @@ public class AppActivity extends Cocos2dxActivity {
         api.sendReq(req);
     }
 
+    public static void copyStrToClipboard(final String description) {
+        ClipboardManager clipboardManager = (ClipboardManager) instance.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("Label", description);
+        clipboardManager.setPrimaryClip(clipData);
+
+        //打开微信
+        if (api.isWXAppInstalled()) {     
+            api.openWXApp();
+        }
+    }
+
+    public static void getClipboardStr(){
+        instance.runOnGLThread(new Runnable() {
+            @Override
+            public void run() {
+                ClipboardManager clipboardManager = (ClipboardManager) instance.getSystemService(Context.CLIPBOARD_SERVICE);
+                if(clipboardManager.getText() != null)  
+                {
+                    final String clipBoardStr = clipboardManager.getText().toString();
+                    String jsCallStr = "Global.getClipboardStrCallBackk('"+ clipBoardStr +"')";
+                    Cocos2dxJavascriptJavaBridge.evalString(jsCallStr);
+
+                    ClipData clipData = ClipData.newPlainText("Label", "");
+                    clipboardManager.setPrimaryClip(clipData);
+                }
+            }
+        });
+    }
 }

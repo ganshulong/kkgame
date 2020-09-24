@@ -90,5 +90,6 @@ EventId.COIN_CHANGE = "COIN_CHANGE";              		  // 金币更新
 EventId.TRUSTEE_NOTIFY = "TRUSTEE_NOTIFY";  			  // 托管通知
 EventId.CANCEL_TRUSTEE = "CANCEL_TRUSTEE";  			  // 取消托管
 EventId.CANCEL_TRUSTEE_NOTIFY = "CANCEL_TRUSTEE_NOTIFY";  // 取消托管
+EventId.GET_CLIPBOARDSTR_CALLBACKK = "GET_CLIPBOARDSTR_CALLBACKK";  // 获得剪贴板字符串回调
 
 EventId.TEST_EVENT = "TEST_EVENT";  					  // 测试
