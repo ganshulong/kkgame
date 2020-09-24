@@ -528,7 +528,7 @@ cc.Class({
     onClickCopyRoomInfoOpenWx(){
         if (!cc.vv.UserManager.currClubId) {
             let description = this.getRoomInfoStr();
-            description += ",速来玩!\n";
+            description += ",速来玩! ";
             description += "复制信息打开游戏将自动入座";
             Global.copyStrToClipboard(description);
         }
