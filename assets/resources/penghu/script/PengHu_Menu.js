@@ -120,13 +120,13 @@ cc.Class({
         btn_helper.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
         btn_helper.on(cc.Node.EventType.TOUCH_END,this.onClickSwitchToClub,this);
 
-        if (Global.isNative()) {
-            let btn_voice = cc.find("scene/operate_btn_view/btn_voice",this.node);
-            btn_voice.on(cc.Node.EventType.TOUCH_START,this.onTouchVoiceBtnStart,this);
-            btn_voice.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchVoiceBtnMove,this);
-            btn_voice.on(cc.Node.EventType.TOUCH_END,this.onTouchVoiceBtnEnd,this);
-            btn_voice.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCanVoiceBtncel,this);
-        }
+        // if (Global.isNative()) {
+        //     let btn_voice = cc.find("scene/operate_btn_view/btn_voice",this.node);
+        //     btn_voice.on(cc.Node.EventType.TOUCH_START,this.onTouchVoiceBtnStart,this);
+        //     btn_voice.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchVoiceBtnMove,this);
+        //     btn_voice.on(cc.Node.EventType.TOUCH_END,this.onTouchVoiceBtnEnd,this);
+        //     btn_voice.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCanVoiceBtncel,this);
+        // }
 
         let btn_cancelTrustee = cc.find("scene/panel_trustee/btn_cancelTrustee", this.node);
         Global.btnClickEvent(btn_cancelTrustee,this.onClickCancelTrustee,this);
