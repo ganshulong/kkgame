@@ -310,6 +310,11 @@ static AppDelegate* s_sharedApplication = nullptr;
 {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = description;
+    
+    if ([WXApi isWXAppInstalled])
+    {
+        [WXApi openWXApp];
+    }
 }
 
 + (NSString*)getClipboardStr
@@ -318,7 +323,9 @@ static AppDelegate* s_sharedApplication = nullptr;
     NSLog(@"%@", pasteboard.string);
     if (pasteboard.string !=NULL)
     {
-        return pasteboard.string;
+        NSString *pasteboardStr = pasteboard.string;
+        pasteboard.string = @"";
+        return pasteboardStr;
     }
     return @"";
 }
