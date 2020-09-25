@@ -313,7 +313,9 @@ static AppDelegate* s_sharedApplication = nullptr;
     
     if ([WXApi isWXAppInstalled])
     {
-        [WXApi openWXApp];
+        if (description.contains("速来玩")) {
+            [WXApi openWXApp];
+        }
     }
 }
 

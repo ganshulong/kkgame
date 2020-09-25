@@ -159,7 +159,7 @@ public class AppActivity extends Cocos2dxActivity {
 
     public AMapLocationClientOption getLocationOption(){
         AMapLocationClientOption mOption = new AMapLocationClientOption();
-        // mOption.setInterval(20000);//可选，设置定位间隔。默认为2秒
+        mOption.setInterval(30000);//可选，设置定位间隔。默认为2秒
         // mOption.setLocationMode(AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
         // mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
         // mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
@@ -500,8 +500,10 @@ public class AppActivity extends Cocos2dxActivity {
         clipboardManager.setPrimaryClip(clipData);
 
         //打开微信
-        if (api.isWXAppInstalled()) {     
-            api.openWXApp();
+        if (api.isWXAppInstalled()) {
+            if ([description containsString:@"速来玩"]) {
+                api.openWXApp();
+            }
         }
     }
 
