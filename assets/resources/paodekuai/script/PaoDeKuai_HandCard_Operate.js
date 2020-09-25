@@ -192,7 +192,9 @@ cc.Class({
             return cardIsCanOutList;
         }
         for (let i = 0; i < hint.length; i++) {
-            if (3 == hint[i].length || 4 == hint[i].length) {
+            if (3 == hint[i].length || 
+                4 == hint[i].length || 
+                (6 == hint[i].length && (hint[i][0] % 0x10 - 1) == hint[i][5] % 0x10)) {
                 for (let i = 0; i < 0x10; i++) {
                     cardIsCanOutList[i] = true;
                 }
