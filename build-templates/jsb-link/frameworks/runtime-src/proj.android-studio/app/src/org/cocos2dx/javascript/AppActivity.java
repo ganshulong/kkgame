@@ -501,7 +501,7 @@ public class AppActivity extends Cocos2dxActivity {
 
         //打开微信
         if (api.isWXAppInstalled()) {
-            if ([description containsString:@"速来玩"]) {
+            if (description.contains("速来玩")) {
                 api.openWXApp();
             }
         }
