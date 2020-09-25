@@ -629,7 +629,6 @@ cc.Class({
                 } else {
                     cc.vv.SceneMgr.enterScene('lobby');
                 }
-                Global.copyStrToClipboard("")
             }
         }
     },

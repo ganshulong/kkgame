@@ -141,7 +141,7 @@ cc.Class({
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
         Global.registerEvent(EventId.COIN_CHANGE, this.onRcvNetCoinChanged,this);
         Global.registerEvent(EventId.GET_CLIPBOARDSTR_CALLBACKK, this.onRcvGetClipboardStrCallBack,this);
-        Global.getClipboardStr();
+        // Global.getClipboardStr();
     },
 
     onRcvGetClipboardStrCallBack(data){
