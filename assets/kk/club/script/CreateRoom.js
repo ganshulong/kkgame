@@ -124,7 +124,10 @@ cc.Class({
         //游戏玩法选项页面
         this.gamePanels = [];
         let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka"];
-        for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
+        for (let i = 0; i < gamePanelStr.length; i++) {
+            cc.find("img_bg/"+gamePanelStr[i],this._createLayer).active = false;
+        }
+        for (let i = 0; i < cc.vv.UserManager.gameList.length; i++) {
             let panel = cc.find("img_bg/"+gamePanelStr[cc.vv.UserManager.gameList[i].id],this._createLayer);
             panel.id = cc.vv.UserManager.gameList[i].id;
 
