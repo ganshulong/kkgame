@@ -1,6 +1,6 @@
 function loadImage(_url,callback){
-    cc.loader.load({url:_url, type: 'jpg'},function (err,tex) {
-        if(tex)
+    cc.loader.load(_url+"?aa=aa.jpg",function (err,tex) {
+        if(tex && !err)
         {
             let spriteFrame = new cc.SpriteFrame(tex, cc.Rect(0, 0, tex.width, tex.height));
             callback(err,spriteFrame);
