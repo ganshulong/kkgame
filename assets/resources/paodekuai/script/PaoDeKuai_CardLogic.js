@@ -59,6 +59,18 @@ cc.Class({
                 if (typeCards.length) {
                     return typeCards;
                 }
+                if (4 === handCardNum) {
+                    typeCards = this.getThreeOne(cards, card2DList, handCardNum, lastCardValue);
+                    if (typeCards.length) {
+                        return typeCards;
+                    }
+                }
+                if (3 === handCardNum) {
+                    typeCards = this.getThree(cards, card2DList, handCardNum, lastCardValue);
+                    if (typeCards.length) {
+                        return typeCards;
+                    }
+                }
                 break;
             case cc.vv.gameData.CARDTYPE.BOMB_ONE_CARD:
                 typeCards = this.getBombOne(cards, card2DList, handCardNum, lastCardValue);
