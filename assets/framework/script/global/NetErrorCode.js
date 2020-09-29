@@ -191,4 +191,5 @@ codeCfg.code = {
     '435':"club_is_haved",
     '9934':"permission_denied",
     '405':"player_not_exits",
+    '438':"player_not_exits_in_club",
 }
