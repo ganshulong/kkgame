@@ -281,3 +281,5 @@ GlobalMsgId.RECHARGE_ROOM_CARD = 170;   	// 充值房卡
 GlobalMsgId.TRUSTEE_NOTIFY = 18816; 		// 通知玩家托管
 GlobalMsgId.CANCEL_TRUSTEE = 1408; 			// 取消托管
 GlobalMsgId.CANCEL_TRUSTEE_NOTIFY = 101409; // 取消托管通知
+
+GlobalMsgId.PLAY_BACK_MSG_LIST = 171; 		// 回放消息列表

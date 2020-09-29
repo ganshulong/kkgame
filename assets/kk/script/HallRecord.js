@@ -105,7 +105,19 @@ cc.Class({
         let dataStr = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);       
         this.text_data.getComponent(cc.Label).string = dataStr;
 
-        this.onShowRecordType(0)
+        if (Global.backRecordData) {
+            this.curShowRecordType = Global.backRecordData.clubid;
+            for (var i = 0; i < 2; i++) {
+                this.left_list_view.getChildByName("btn_" + i + "_nor").active = (i != this.curShowRecordType);
+                this.left_list_view.getChildByName("btn_" + i + "_dis").active = (i == this.curShowRecordType);
+            }
+            var req = { 'c': MsgId.ROUND_RECORD};
+            req.deskid = Global.backRecordData.deskid;
+            cc.vv.NetManager.send(req);
+            Global.backRecordData = null;
+        } else {
+            this.onShowRecordType(0)
+        }
     },
 
     onClose(){
@@ -119,7 +131,6 @@ cc.Class({
     onShowRecordType(type){
         this.curShowRecordType = type;
         for (var i = 0; i < 2; i++) {
-            let isShowDis = (i == type);
             this.left_list_view.getChildByName("btn_" + i + "_nor").active = (i != this.curShowRecordType);
             this.left_list_view.getChildByName("btn_" + i + "_dis").active = (i == this.curShowRecordType);
         }
@@ -315,6 +326,8 @@ cc.Class({
             cc.find("todatConsume_node/text_todayConsumeCard", this._gameRecordLayer).getComponent(cc.Label).string = "消耗房卡：" + msg.costRoomCard;
 
             this.updateItemPosX();
+            this.scroll_gameRecord.active = true;
+            this.panel_roundRecord.active = false;
         }
         this._gameRecordLayer.getChildByName("tips").active = (0 == this._gameRecordItemList.length);
     },
@@ -370,11 +383,33 @@ cc.Class({
                     bg_score.getChildByName("text_score_win" + j).active = false;
                     bg_score.getChildByName("text_score_lose" + j).active = false;
                 }
+
+                let btn_replay = cc.find("bg_btn/btn_replay", this._roundRecordItemList[i]);
+                btn_replay.deskid = msg.data[i].deskid;
+                btn_replay.round = i;
+                btn_replay.gameid = msg.data[i].gameid;
+                Global.btnClickEvent(btn_replay,this.onClickReplay,this);
+
                 this._roundRecordItemList[i].active = true;
             }
             this.roundRecordContent.height = msg.data.length * this.roundRecordItem.height;
             this.scroll_gameRecord.active = false;
             this.panel_roundRecord.active = true;
+        }
+    },
+
+    onClickReplay(event){
+        if (1 === event.target.gameid || 3 === event.target.gameid) {
+            var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
+            req.fromSence = 'lobby';
+            req.clubid = this.curShowRecordType;
+            req.deskid = event.target.deskid;
+            req.round = event.target.round + 1;
+            req.startid = 1;
+            req.endid = 1;
+            cc.vv.NetManager.send(req);
+        } else {
+            cc.vv.FloatTip.show("该游戏回放暂未实现");
         }
     },
 

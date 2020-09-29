@@ -59,7 +59,9 @@ cc.Class({
         this.panel_roundRecord = cc.find("bg_right/panel_roundRecord",this._layer);
         let btn_closeRoundRecord = this.panel_roundRecord.getChildByName("btn_closeRoundRecord");
         Global.btnClickEvent(btn_closeRoundRecord,this.onShowGameRecord,this);
+
         this.roundRecordContent = cc.find("scrollview/content",this.panel_roundRecord);
+        Global.btnClickEvent(cc.find("bg_btn/btn_replay", this.roundRecordContent.children[0]), this.onClickReplay,this);
     },
 
     initShow(){
@@ -95,10 +97,17 @@ cc.Class({
         }
 
         this.curDateIndex = 0;
-        this.onShowGameRecord();
-        this.onClickRefresh();
-
         this.curRoomID = null;
+
+        if (Global.backRecordData) {
+            var req = { 'c': MsgId.ROUND_RECORD};
+            req.deskid = Global.backRecordData.deskid;
+            cc.vv.NetManager.send(req);
+            Global.backRecordData = null;
+        } else {
+            this.onShowGameRecord();
+            this.onClickRefresh();
+        }
     },
 
     onClose(){
@@ -223,6 +232,8 @@ cc.Class({
             cc.find("bg_right/panel_gameRecord/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = msg.bigWinCnt;
             cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = 0 <= msg.totalScore ? '/' + msg.totalScore : "";
             cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = 0 > msg.totalScore ? '/' + Math.abs(msg.totalScore) : "";
+
+            this.onShowGameRecord();
         }
     },
 
@@ -237,7 +248,14 @@ cc.Class({
                 } else {
                     item = cc.instantiate(this.roundRecordContent.children[0]);
                     item.parent = this.roundRecordContent;
+                    Global.btnClickEvent(cc.find("bg_btn/btn_replay", item), this.onClickReplay,this);
                 }
+
+                let btn_replay = cc.find("bg_btn/btn_replay", item);
+                btn_replay.deskid = msg.data[i].deskid;
+                btn_replay.round = i;
+                btn_replay.gameid = msg.data[i].gameid;
+
                 item.y = this.roundRecordContent.children[0].y - i * (item.height + 5);
                 item.active = true;
 
@@ -267,6 +285,21 @@ cc.Class({
             for(let i = msg.data.length; i < this.roundRecordContent.children.length; ++i){
                 this.roundRecordContent.children[i].active = false;
             }
+        }
+    },
+
+    onClickReplay(event){
+        if (1 === event.target.gameid || 3 === event.target.gameid) {
+            var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
+            req.fromSence = 'club';
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.deskid = event.target.deskid;
+            req.round = event.target.round + 1;
+            req.startid = 1;
+            req.endid = 1;
+            cc.vv.NetManager.send(req);
+        } else {
+            cc.vv.FloatTip.show("该游戏回放暂未实现");
         }
     },
 

@@ -131,7 +131,25 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.EXCHANGE_COIN, this.onRcvExChangeCoin, this);
             cc.vv.NetManager.registerMsg(MsgId.RECHARGE_ROOM_CARD, this.onRcvRechargeRoomCard, this);
+
+            cc.vv.NetManager.registerMsg(MsgId.PLAY_BACK_MSG_LIST, this.onRcvPlayBackMsgList, this);
+
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvPlayBackMsgList(msg){
+            if(msg.code === 200 && 0 < msg.data.length){  
+                if (1 === msg.startid) {
+                    let msgFirstItem =  JSON.parse(msg.data[0].data);
+                    msgFirstItem._isPlayBack = true;
+                    msgFirstItem.fromSence = msg.fromSence;
+                    msgFirstItem.clubid = msg.clubid;
+                    msgFirstItem.deskid = msg.deskid;
+                    this.onRecNetCreateOrJoinRoom({code:200, deskInfo:msgFirstItem});
+                } else {
+                    Global.dispatchEvent(EventId.PLAY_BACK_MSG_LIST, msg);
+                }
+            }
         },
 
         onRcvRechargeRoomCard(msg){

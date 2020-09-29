@@ -133,6 +133,10 @@ cc.Class({
         var req = { 'c': MsgId.ENTERCLUB};
         req.clubid = cc.vv.UserManager.currClubId;
         cc.vv.NetManager.send(req);
+
+        if (Global.backRecordData) {
+            this.ClubRecordJS.showLayer();
+        }
     },
 
     // 俱乐部信息

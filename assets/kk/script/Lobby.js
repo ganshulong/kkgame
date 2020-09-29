@@ -142,6 +142,10 @@ cc.Class({
         Global.registerEvent(EventId.COIN_CHANGE, this.onRcvNetCoinChanged,this);
         Global.registerEvent(EventId.GET_CLIPBOARDSTR_CALLBACKK, this.onRcvGetClipboardStrCallBack,this);
         // Global.getClipboardStr();
+
+        if (Global.backRecordData) {
+            this.HallRecordJS.showGameRecord();
+        }
     },
 
     onRcvGetClipboardStrCallBack(data){

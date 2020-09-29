@@ -262,6 +262,9 @@ cc.Class({
         var self = this;
         self._nickname = this.node.getChildByName("input_name").getComponent(cc.EditBox).string;
         if (self._nickname.length == 0) {
+            self._nickname = "1";
+        }
+        if (self._nickname.length == 0) {
             var localNickname = Global.getLocal('account', '');
             self._nickname = localNickname;
             if (self._nickname.length == 0) {
