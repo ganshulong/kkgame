@@ -127,6 +127,7 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.BACK_GAME, this.onRcvPublicCodeCheck, this);
             cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvPublicCodeCheck, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_INVITE_JOIN, this.onRcvPublicCodeCheck, this);
             cc.vv.NetManager.registerMsg(MsgId.CHAT, this.onRcvChat, this);
 
             cc.vv.NetManager.registerMsg(MsgId.EXCHANGE_COIN, this.onRcvExChangeCoin, this);

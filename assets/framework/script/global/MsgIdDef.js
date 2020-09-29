@@ -283,3 +283,10 @@ GlobalMsgId.CANCEL_TRUSTEE = 1408; 			// 取消托管
 GlobalMsgId.CANCEL_TRUSTEE_NOTIFY = 101409; // 取消托管通知
 
 GlobalMsgId.PLAY_BACK_MSG_LIST = 171; 		// 回放消息列表
+
+GlobalMsgId.CLUB_INVITE_JOIN = 8826; 		// 俱乐部邀请加入
+GlobalMsgId.CLUB_INVITE_AGREE = 8827; 		// 同意加入俱乐部
+GlobalMsgId.CLUB_INVITE_REFUSE = 8828; 		// 拒绝加入俱乐部
+GlobalMsgId.CLUB_INVITE_All_AGREE = 8829; 	// 全部同意加入俱乐部
+GlobalMsgId.CLUB_INVITE_NOTIFY = 8830;  	// 俱乐部邀请通知
+

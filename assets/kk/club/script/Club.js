@@ -77,8 +77,12 @@ cc.Class({
         txt_card_num.getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
         let btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
-        Global.btnClickEvent(btn_invite,this.onClickInviteToWx,this);
         btn_invite.active = (info.createUid == cc.vv.UserManager.uid);
+        if (btn_invite.active) {
+            Global.btnClickEvent(btn_invite,this.onClickInviteJoin,this);
+            this.node.addComponent("ClubInviteJoin");
+            this.ClubInviteJoinJS = this.node.getComponent("ClubInviteJoin");
+        }
 
         this.node.addComponent("ClubExitApplyMessage");
         this.ClubExitApplyMessageJS = this.node.getComponent("ClubExitApplyMessage");
@@ -541,6 +545,10 @@ cc.Class({
     onClickInviteToWx(){
         let des = "我在闲游棋牌的亲友圈ID是" + this._clubInfo.clubid + "，赶快来加入吧"
         Global.onWXShareText(Global.ShareSceneType.WXSceneSession, "俱乐部邀请", des);
+    },
+
+    onClickInviteJoin(){
+        this.ClubInviteJoinJS.showLayer();
     },
 
     onClickMsg(){

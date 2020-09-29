@@ -55,17 +55,31 @@ cc.Class({
         let joinClub = this.node.getChildByName("btn_join");
         Global.btnClickEvent(joinClub,this.onJoinClub,this);
 
-
         let btn_back = this.node.getChildByName("btn_back");
         Global.btnClickEvent(btn_back,this.onBack,this);
         // this._roomManagerNode = this.node.getChildByName("room_manager");
         // this._roomManagerNode.active = false;
+
+        this.node.addComponent("ClubInviteMessage");
 
         this._content = cc.find("club_list/view/content",this.node);
         this._content.active = cc.vv.UserManager.clubs.length>0;
         if(cc.vv.UserManager.clubs.length>0){
             this.initClubList(cc.vv.UserManager.clubs);
         }
+    },
+
+    registerMsg(){
+        Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
+        Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
+        
+        cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvCreatClubResult, this);
+        cc.vv.NetManager.registerMsg(MsgId.JOINCULB, this.onRcvJoinClubResult, this);
+    },
+
+    unregisterMsg(){
+        cc.vv.NetManager.unregisterMsg(MsgId.CREATECULB, this.onRcvCreatClubResult, false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.JOINCULB, this.onRcvJoinClubResult, false,this);
     },
 
     initClubList(list){
@@ -188,19 +202,6 @@ cc.Class({
     // 更新俱乐部列表
     updateClubList(){
         this.initClubList(cc.vv.UserManager.clubs);
-    },
-
-    registerMsg(){
-        Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
-        Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
-        
-        cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvCreatClubResult, this);
-        cc.vv.NetManager.registerMsg(MsgId.JOINCULB, this.onRcvJoinClubResult, this);
-    },
-
-    unregisterMsg(){
-        cc.vv.NetManager.unregisterMsg(MsgId.CREATECULB, this.onRcvCreatClubResult,false,this);
-        cc.vv.NetManager.registerMsg(MsgId.JOINCULB, this.onRcvJoinClubResult, this);
     },
 
     initCreatClub(){

@@ -71,7 +71,7 @@
         "__id__": 174
       },
       {
-        "__id__": 177
+        "__id__": 178
       },
       {
         "__id__": 181
@@ -5650,7 +5650,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_create",
+    "_name": "btn_back",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -5664,10 +5664,13 @@
       },
       {
         "__id__": 176
+      },
+      {
+        "__id__": 177
       }
     ],
     "_prefab": null,
-    "_id": "da3NSP33dNUIkrEbQNY9qg",
+    "_id": "3bj6FMzTVP1bt8E8ttIjam",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -5684,17 +5687,17 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 242,
-      "height": 73
+      "width": 73,
+      "height": 87
     },
     "_rotationX": 0,
     "_rotationY": 0,
-    "_scaleX": 1,
-    "_scaleY": 1,
+    "_scaleX": 1.4,
+    "_scaleY": 1.4,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -291,
-      "y": -312
+      "x": -605.9,
+      "y": 314.1
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -5712,10 +5715,10 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "ebd67fe2-6bd2-4f88-a16c-e557ba45108c"
+      "__uuid__": "4bb89a17-2d09-4124-a3b7-bd01086193ed"
     },
     "_type": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 2,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -5728,6 +5731,32 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_atlas": null
+  },
+  {
+    "__type__": "cc.Widget",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 174
+    },
+    "_enabled": true,
+    "isAlignOnce": true,
+    "_target": null,
+    "_alignFlags": 9,
+    "_left": 10,
+    "_right": 0,
+    "_top": 0,
+    "_bottom": 0,
+    "_verticalCenter": 0,
+    "_horizontalCenter": 0,
+    "_isAbsLeft": true,
+    "_isAbsRight": true,
+    "_isAbsTop": true,
+    "_isAbsBottom": true,
+    "_isAbsHorizontalCenter": true,
+    "_isAbsVerticalCenter": true,
+    "_originalWidth": 0,
+    "_originalHeight": 0
   },
   {
     "__type__": "cc.Button",
@@ -5783,7 +5812,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_back",
+    "_name": "btn_create",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -5793,9 +5822,6 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 178
-      },
-      {
         "__id__": 179
       },
       {
@@ -5803,7 +5829,7 @@
       }
     ],
     "_prefab": null,
-    "_id": "3bj6FMzTVP1bt8E8ttIjam",
+    "_id": "da3NSP33dNUIkrEbQNY9qg",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -5820,17 +5846,17 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 73,
-      "height": 87
+      "width": 242,
+      "height": 73
     },
     "_rotationX": 0,
     "_rotationY": 0,
-    "_scaleX": 1.4,
-    "_scaleY": 1.4,
+    "_scaleX": 1,
+    "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -605.9,
-      "y": 314.1
+      "x": -291,
+      "y": -312
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -5844,14 +5870,14 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 177
+      "__id__": 178
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "4bb89a17-2d09-4124-a3b7-bd01086193ed"
+      "__uuid__": "ebd67fe2-6bd2-4f88-a16c-e557ba45108c"
     },
     "_type": 0,
-    "_sizeMode": 2,
+    "_sizeMode": 1,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -5866,37 +5892,11 @@
     "_atlas": null
   },
   {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 177
-    },
-    "_enabled": true,
-    "isAlignOnce": true,
-    "_target": null,
-    "_alignFlags": 9,
-    "_left": 10,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 0
-  },
-  {
     "__type__": "cc.Button",
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 177
+      "__id__": 178
     },
     "_enabled": true,
     "transition": 1,
@@ -5940,7 +5940,7 @@
     "hoverSprite": null,
     "_N$disabledSprite": null,
     "_N$target": {
-      "__id__": 177
+      "__id__": 178
     }
   },
   {
