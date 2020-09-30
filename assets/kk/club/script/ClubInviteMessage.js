@@ -88,7 +88,7 @@ cc.Class({
             this.inviteList = msg.response.inviteList;
             if(msg.response.inviteList.length>0){
                 if(this._messageNode === null){
-                    cc.loader.loadRes("common/prefab/club_message",cc.Prefab,(error,prefab)=>{
+                    cc.loader.loadRes("common/prefab/club_inviteMessage",cc.Prefab,(error,prefab)=>{
                         if(error === null){
                             this._messageNode = cc.instantiate(prefab);
                             this._messageNode.active = true;
@@ -132,11 +132,11 @@ cc.Class({
             height += (item.width+20);
             item.active = true;
 
-            let name = item.getChildByName("name");
-            name.getComponent(cc.Label).string = list[i].clubname;
+            let club_name = item.getChildByName("club_name");
+            club_name.getComponent(cc.Label).string = list[i].clubname;
 
-            let id = item.getChildByName("id");
-            id.getComponent(cc.Label).string = list[i].clubid;
+            let invite_nama = item.getChildByName("invite_nama");
+            invite_nama.getComponent(cc.Label).string = list[i].invitename;
 
             let time = item.getChildByName("time");
             time.getComponent(cc.Label).string = list[i].invitetime;
@@ -184,7 +184,7 @@ cc.Class({
     onDestroy(){
         this.unregisterMsg();
         if(this._messageNode){
-            cc.loader.releaseRes("common/prefab/club_message",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/club_inviteMessage",cc.Prefab);
         }
     },
     // update (dt) {},

@@ -250,9 +250,8 @@ cc.Class({
                 ++i;
             }
         }
-        let clubCeateUid = cc.vv.UserManager.getCurClubInfo().createUid;
         for (let i = 0; i < showList.length; i++) {
-            if (showList[i].uid == clubCeateUid) {
+            if (showList[i].uid == cc.vv.UserManager.uid) {
                 let clubCeateInfo = showList[i];
                 showList.splice(i, 1);
                 showList.unshift(clubCeateInfo);
@@ -260,6 +259,7 @@ cc.Class({
             }
         }
 
+        let clubCeateUid = cc.vv.UserManager.getCurClubInfo().createUid;
         this.memberListContent.removeAllChildren();
         for (let i = 0; i < showList.length; i++) {
             let item =  cc.instantiate(this.memberItem);
@@ -286,7 +286,7 @@ cc.Class({
 
             let bg_btns = bg_memberItem.getChildByName("bg_btns");
             let btn_operate = bg_memberItem.getChildByName("btn_operate");
-            if (clubCeateUid == showList[i].uid) {
+            if (cc.vv.UserManager.uid == showList[i].uid) {
                 bg_btns.active = false;
                 btn_operate.active = true;
                 Global.btnClickEvent(btn_operate, this.onClickOperate,this);

@@ -236,21 +236,19 @@ cc.Class({
     onRecvDeleteTable(msg){
         if(msg.code === 200){
             let deskId = msg.response.deskId;
-            if (deskId === cc.vv.UserManager.currClubId) {
-                for(let i=0;i<this._content.childrenCount;++i){
-                    let item = this._content.children[i];
-                    if(item._deskId === deskId){
-                        for(let i=0;i<this._tableList.length;++i){
-                            if(this._tableList[i].deskid === deskId){
-                                this._tableList.splice(i,1);
-                                break;
-                            }
+            for(let i=0;i<this._content.childrenCount;++i){
+                let item = this._content.children[i];
+                if(item._deskId === deskId){
+                    for(let i=0;i<this._tableList.length;++i){
+                        if(this._tableList[i].deskid === deskId){
+                            this._tableList.splice(i,1);
+                            break;
                         }
-                        break;
                     }
+                    break;
                 }
-                this.initTables(this._tableList);
             }
+            this.initTables(this._tableList);
         }
     },
 
