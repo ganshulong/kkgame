@@ -134,8 +134,23 @@ cc.Class({
             cc.vv.NetManager.registerMsg(MsgId.RECHARGE_ROOM_CARD, this.onRcvRechargeRoomCard, this);
 
             cc.vv.NetManager.registerMsg(MsgId.PLAY_BACK_MSG_LIST, this.onRcvPlayBackMsgList, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
 
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvSetPartner(msg){
+            if (200 == msg.code) {
+                for (let i = 0; i < cc.vv.UserManager.clubs.length; i++) {
+                    if (msg.clubid === cc.vv.UserManager.clubs[i].clubid) {
+                        if (msg.partneruid === cc.vv.UserManager.uid) {
+                            cc.vv.UserManager.clubs[i].hehuo = (1 == msg.type) ? 1 : 0;
+                        }
+                        Global.dispatchEvent(EventId.CLUB_SET_PARTNER, msg);
+                        break;
+                    }
+                }
+            }
         },
 
         onRcvPlayBackMsgList(msg){

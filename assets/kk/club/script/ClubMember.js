@@ -20,7 +20,8 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.MEMBER_FORBID_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.registerMsg(MsgId.MEMBER_RECOVER_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.registerMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
-        cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
+
+        Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
     },
 
     showLayer(){
@@ -318,15 +319,16 @@ cc.Class({
         this.ClubSetPartnerJS.showLayer();
     },
 
-    onRcvSetPartner(msg){
-        if (200 == msg.code) {
+    onRcvSetPartner(data){
+        data = data.detail;
+        if (200 == data.code && this._layer && this._layer.active && data.clubid === cc.vv.UserManager.currClubId) {
             for (let i = 0; i < this.memberList.length; i++) {
-                if (msg.partneruid === this.memberList[i].uid) {
-                    this.memberList[i].hehuo = 1;
+                if (data.partneruid === this.memberList[i].uid) {
+                    this.memberList[i].hehuo = (1 == data.type) ? 1 : 0;
+                    this.updateMemberList();
                     break;
                 }
             }
-            this.updateMemberList();
         }
     },
 
@@ -403,7 +405,6 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.MEMBER_FORBID_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MEMBER_RECOVER_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.unregisterMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
-        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_member",cc.Prefab);
         }

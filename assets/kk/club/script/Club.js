@@ -76,13 +76,11 @@ cc.Class({
         let txt_card_num = cc.find("Layer/bg/img_card_bg/txt_card_num",this.node);
         txt_card_num.getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
-        let btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
-        btn_invite.active = (info.createUid == cc.vv.UserManager.uid);
-        if (btn_invite.active) {
-            Global.btnClickEvent(btn_invite,this.onClickInviteJoin,this);
-            this.node.addComponent("ClubInviteJoin");
-            this.ClubInviteJoinJS = this.node.getComponent("ClubInviteJoin");
-        }
+        this.btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
+        this.btn_invite.active = (info.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+        Global.btnClickEvent(this.btn_invite,this.onClickInviteJoin,this);
+        this.node.addComponent("ClubInviteJoin");
+        this.ClubInviteJoinJS = this.node.getComponent("ClubInviteJoin");
 
         this.node.addComponent("ClubExitApplyMessage");
         this.ClubExitApplyMessageJS = this.node.getComponent("ClubExitApplyMessage");
@@ -107,9 +105,9 @@ cc.Class({
         this.node.addComponent("ClubMember");
         this.ClubMemberJS = this.node.getComponent("ClubMember");
 
-        let btn_member = cc.find("Layer/img_bottomBg/btn_member",this.node);
-        Global.btnClickEvent(btn_member,this.onClickMember,this);
-        btn_member.active = (info.createUid == cc.vv.UserManager.uid);
+        this.btn_member = cc.find("Layer/img_bottomBg/btn_member",this.node);
+        Global.btnClickEvent(this.btn_member,this.onClickMember,this);
+        this.btn_member.active = (info.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
 
         this.node.addComponent("ClubRecord");
         this.ClubRecordJS = this.node.getComponent("ClubRecord");
@@ -166,6 +164,7 @@ cc.Class({
         Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
         Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
+        Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
     },
 
     unregisterMsg(){
@@ -177,6 +176,17 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, false, this); //退出房间
+    },
+
+    onRcvSetPartner(data){
+        data = data.detail;
+        if (200 == data.code) {
+            if (data.clubid === cc.vv.UserManager.currClubId && data.partneruid === cc.vv.UserManager.uid) {
+                this._clubInfo = cc.vv.UserManager.getCurClubInfo();
+                this.btn_invite.active = (this._clubInfo.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+                this.btn_member.active = (this._clubInfo.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+            }
+        }
     },
 
     onRcvNetRoomcardChanged(){

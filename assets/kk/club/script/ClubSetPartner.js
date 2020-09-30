@@ -33,8 +33,13 @@ cc.Class({
 
         this.input_uid_editBox = this._Layer.getChildByName("input_uid").getComponent(cc.EditBox);
 
-        let btn_confirm = this._Layer.getChildByName("btn_confirm");
-        Global.btnClickEvent(btn_confirm,this.onClickConfirm,this);
+        let btn_cancel = this._Layer.getChildByName("btn_cancel");
+        btn_cancel.type = 2;
+        Global.btnClickEvent(btn_cancel, this.onClickSetPartner, this);
+
+        let btn_authorization = this._Layer.getChildByName("btn_authorization");
+        btn_authorization.type = 1;
+        Global.btnClickEvent(btn_authorization, this.onClickSetPartner, this);
     },
 
     initShow(){
@@ -45,10 +50,11 @@ cc.Class({
         this._Layer.active = false;
     },
 
-    onClickConfirm(){
+    onClickSetPartner(event){
         let uidInt = parseInt(this.input_uid_editBox.string);
         if (uidInt) {
             var req = { 'c': MsgId.CLUB_SET_PARTNER};
+            req.type = event.target.type;
             req.clubid = cc.vv.UserManager.currClubId;
             req.partneruid = uidInt;
             cc.vv.NetManager.send(req);
