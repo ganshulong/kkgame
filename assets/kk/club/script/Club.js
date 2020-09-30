@@ -236,19 +236,21 @@ cc.Class({
     onRecvDeleteTable(msg){
         if(msg.code === 200){
             let deskId = msg.response.deskId;
-            for(let i=0;i<this._content.childrenCount;++i){
-                let item = this._content.children[i];
-                if(item._deskId === deskId){
-                    for(let i=0;i<this._tableList.length;++i){
-                        if(this._tableList[i].deskid === deskId){
-                            this._tableList.splice(i,1);
-                            break;
+            if (deskId === cc.vv.UserManager.currClubId) {
+                for(let i=0;i<this._content.childrenCount;++i){
+                    let item = this._content.children[i];
+                    if(item._deskId === deskId){
+                        for(let i=0;i<this._tableList.length;++i){
+                            if(this._tableList[i].deskid === deskId){
+                                this._tableList.splice(i,1);
+                                break;
+                            }
                         }
+                        break;
                     }
-                    break;
                 }
+                this.initTables(this._tableList);
             }
-            this.initTables(this._tableList);
         }
     },
 
@@ -256,11 +258,13 @@ cc.Class({
     onRecvTableinfo(msg){
         if(msg.code === 200){
             let deskInfo = msg.response.hallDeskInfo;
-            for(let i=0;i<this._tableList.length;++i){
-                if(this._tableList[i].deskid === deskInfo.deskid){
-                    this._tableList[i] = deskInfo;
-                    this.initTables(this._tableList);
-                    break;
+            if (deskInfo.config.clubid === cc.vv.UserManager.currClubId) {
+                for(let i=0;i<this._tableList.length;++i){
+                    if(this._tableList[i].deskid === deskInfo.deskid){
+                        this._tableList[i] = deskInfo;
+                        this.initTables(this._tableList);
+                        break;
+                    }
                 }
             }
 
@@ -340,8 +344,11 @@ cc.Class({
 
     onRcvAddTableMsg(msg){
         if(msg.code === 200){
-            this._tableList.unshift(msg.response.addDeskInfo);
-            this.initTables(this._tableList);
+            let deskInfo = msg.response.addDeskInfo;
+            if (deskInfo.config.clubid === cc.vv.UserManager.currClubId) {
+                this._tableList.unshift(deskInfo);
+                this.initTables(this._tableList);
+            }
         }
     },
 
