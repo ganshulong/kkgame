@@ -35,7 +35,6 @@ cc.Class({
             type:cc.SpriteFrame,
         },
         _startPos:null,
-        _sendSit:false,
         _clubInfo:null,
     },
 
@@ -393,21 +392,12 @@ cc.Class({
     },
 
     sendEnterRoomMsg(deskId){
-        if(!this._sendSit){
-            var req = { 'c': MsgId.BACK_GAME};
-            req.clubid = cc.vv.UserManager.currClubId;
-            cc.vv.NetManager.send(req);
+        var req = { 'c': MsgId.SEATDOWN};
+        req.clubid = cc.vv.UserManager.currClubId;
+        req.deskId = deskId;
+        cc.vv.NetManager.send(req);
 
-            var req = { 'c': MsgId.SEATDOWN};
-            req.clubid = cc.vv.UserManager.currClubId;
-            req.deskId = deskId;
-            cc.vv.NetManager.send(req);
-            // this.scheduleOnce(()=>{
-            //     this._sendSit = true;
-            // },0.2)
-
-            Global.curRoomID = "";
-        }
+        Global.curRoomID = "";
     },
 
     // 更新桌子信息
@@ -594,14 +584,22 @@ cc.Class({
             let sureCall = function () {
                 self.sendExitRoomMsg();
                 this.newDeskId = '';
+                self.sendExitClubMsg();
                 cc.vv.SceneMgr.enterScene("club_lobby");
             }
             let cancelCall = function () {
             }
             cc.vv.AlertView.show("返回大厅将会退出当前桌子", sureCall, cancelCall)
         } else {
+            this.sendExitClubMsg();
             cc.vv.SceneMgr.enterScene("club_lobby");
         }
+    },
+
+    sendExitClubMsg(){
+        var req = { 'c': MsgId.BACK_GAME};
+        req.clubid = cc.vv.UserManager.currClubId;
+        cc.vv.NetManager.send(req);
     },
 
     onDestroy(){
