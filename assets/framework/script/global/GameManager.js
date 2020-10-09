@@ -127,7 +127,7 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.BACK_GAME, this.onRcvPublicCodeCheck, this);
             cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvPublicCodeCheck, this);
-            cc.vv.NetManager.registerMsg(MsgId.CLUB_INVITE_JOIN, this.onRcvPublicCodeCheck, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_INVITE_JOIN, this.onRcvInviteJoin, this);
             cc.vv.NetManager.registerMsg(MsgId.CHAT, this.onRcvChat, this);
 
             cc.vv.NetManager.registerMsg(MsgId.EXCHANGE_COIN, this.onRcvExChangeCoin, this);
@@ -135,8 +135,15 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.PLAY_BACK_MSG_LIST, this.onRcvPlayBackMsgList, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER_RATIO, this.onRcvSetPartnerRatio, this);
 
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvSetPartnerRatio(msg){
+            if (200 == msg.code) {
+                cc.vv.FloatTip.show("设置成功");
+            }
         },
 
         onRcvSetPartner(msg){
@@ -150,6 +157,12 @@ cc.Class({
                         break;
                     }
                 }
+            }
+        },
+
+        onRcvInviteJoin(msg){
+            if (200 == msg.code) {
+                cc.vv.FloatTip.show("邀请成功，等待玩家同意");
             }
         },
 

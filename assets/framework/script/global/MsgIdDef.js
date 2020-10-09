@@ -291,4 +291,5 @@ GlobalMsgId.CLUB_INVITE_All_AGREE = 8829; 	// 全部同意加入俱乐部
 GlobalMsgId.CLUB_INVITE_NOTIFY = 8830;  	// 俱乐部邀请通知
 
 GlobalMsgId.CLUB_SET_PARTNER = 8831;  		// 俱乐部授权合伙人
+GlobalMsgId.CLUB_SET_PARTNER_RATIO = 8832; 	// 设置合伙人抽水比
 

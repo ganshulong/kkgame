@@ -81,6 +81,9 @@ cc.Class({
 
         this._layer.addComponent("ClubSetPartner");
         this.ClubSetPartnerJS = this._layer.getComponent("ClubSetPartner");
+
+        this._layer.addComponent("ClubSetPartnerRatio");
+        this.ClubSetPartnerRatioJS = this._layer.getComponent("ClubSetPartnerRatio");
     },
 
     initShow(){
@@ -266,6 +269,10 @@ cc.Class({
             item.parent = this.memberListContent;
             item.y = - item.height * i;
             item.uid = showList[i].uid;
+            if (cc.vv.UserManager.uid != showList[i].uid && showList[i].hehuo) {
+                item.partneruid = showList[i].uid;
+                Global.btnClickEvent(item, this.onClickSetPartnerRatio,this);
+            }
             
             let bg_memberItem = item.getChildByName("bg_memberItem");
             bg_memberItem.getChildByName("spr_creater").active = (clubCeateUid == showList[i].uid);
@@ -317,6 +324,10 @@ cc.Class({
 
     onClickOperate(){
         this.ClubSetPartnerJS.showLayer();
+    },
+
+    onClickSetPartnerRatio(event){
+        this.ClubSetPartnerRatioJS.showLayer(event.target.partneruid);
     },
 
     onRcvSetPartner(data){
