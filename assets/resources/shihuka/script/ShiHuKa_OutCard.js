@@ -103,13 +103,8 @@ cc.Class({
             endPos.y = height*x;
             endPos.x = -width*y;
         
-        //上
-        } else if(this._UISeat === 2){
-            endPos.x = width*x;
-            endPos.y = -height*y;
-        
         //左
-        } else if(this._UISeat === 3){
+        } else if(this._UISeat === 2){
             endPos.y = height*x;
             endPos.x = width*y;
         }
