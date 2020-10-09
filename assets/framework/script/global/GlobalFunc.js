@@ -1444,7 +1444,7 @@ Global.GetBatteryChange = function (parameterStr) {
 
 Global.getDataStr = function (year,month,day){
     let dataStr = year + '-';
-    if (9 < month) {
+    if (9 <= month) {
         dataStr += (month + 1);         //month比实际小1
     } else {
         dataStr += '0' + (month + 1);   //month比实际小1
