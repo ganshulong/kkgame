@@ -269,7 +269,7 @@ cc.Class({
 
     recvDeskInfoMsg(){
         let deskInfo = cc.vv.gameData.getDeskInfo();
-        if(deskInfo.isReconnect){
+        if(deskInfo.isReconnect || deskInfo._isPlayBack){
             for(let i=0;i<deskInfo.users.length;++i){
                 if(this._seatIndex === deskInfo.users[i].seat){
                     let menziList = deskInfo.users[i].menzi;
