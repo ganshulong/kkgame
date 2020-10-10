@@ -53,6 +53,10 @@ cc.Class({
         else if(index === 2) cardNode = cc.find("scene/playback_handle/top_user",this.node);
         else if(index === 3) cardNode = cc.find("scene/playback_handle/right_user",this.node);
 
+        if (cc.vv.gameData._isPlayBack && 0 < index) {
+            cardNode = cc.find("scene/playback_handle/player"+index,this.node);
+        }
+
         let box = cc.find("scene/cardBox",this.node);
         this._cardBoXPos = box.parent.convertToWorldSpaceAR(box.position);
         this._cardBoXPos.x -= 8;

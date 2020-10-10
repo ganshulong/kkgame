@@ -399,7 +399,8 @@ cc.Class({
     },
 
     onClickReplay(event){
-        if (1 === event.target.gameid || 3 === event.target.gameid) {
+        if (1 === event.target.gameid || 3 === event.target.gameid ||
+            2 === event.target.gameid || 4 === event.target.gameid) {
             var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
             req.fromSence = 'lobby';
             req.clubid = this.curShowRecordType;
