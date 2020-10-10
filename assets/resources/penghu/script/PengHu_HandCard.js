@@ -136,11 +136,8 @@ cc.Class({
             else node.y = node.height*i+node.height*0.5;
             if(this._chairId === 0){
                 node.x = this._handcardNode.parent.parent.width*0.5-len*0.5*node.width+node.width*this._num;
-            }
-            else node.x = node.width*this._num;
-            // 2排
-            if(this._chairId === 3){
-                node.x = -node.width*this._num;
+            } else {
+                node.x = node.width*this._num;
             }
             node.parent = this._handcardNode;
             node.zIndex = 4-i;
@@ -382,9 +379,6 @@ cc.Class({
                         i*this._cardBox[i][j].width,(this._cardBox[i][j].height-22)*j+this._cardBox[i][j].height*0.5-25);
                     if (cc.vv.gameData._isPlayBack && 0 != this._chairId) {
                         endPos.x = this._cardBox[i][j].width*i;
-                        if(this._chairId === 3){
-                            this._cardBox[i][j].x = -this._cardBox[i][j].width*i;
-                        }
                         endPos.y = this._cardBox[i][j].height*j+this._cardBox[i][j].height*0.5;
                     }
                     if(showAction){
