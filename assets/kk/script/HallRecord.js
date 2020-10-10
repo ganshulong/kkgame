@@ -399,19 +399,14 @@ cc.Class({
     },
 
     onClickReplay(event){
-        if (1 === event.target.gameid || 3 === event.target.gameid ||
-            2 === event.target.gameid || 4 === event.target.gameid) {
-            var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
-            req.fromSence = 'lobby';
-            req.clubid = this.curShowRecordType;
-            req.deskid = event.target.deskid;
-            req.round = event.target.round + 1;
-            req.startid = 1;
-            req.endid = 1;
-            cc.vv.NetManager.send(req);
-        } else {
-            cc.vv.FloatTip.show("该游戏回放暂未实现");
-        }
+        var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
+        req.fromSence = 'lobby';
+        req.clubid = this.curShowRecordType;
+        req.deskid = event.target.deskid;
+        req.round = event.target.round + 1;
+        req.startid = 1;
+        req.endid = 1;
+        cc.vv.NetManager.send(req);
     },
 
     updateItemPosX(){
