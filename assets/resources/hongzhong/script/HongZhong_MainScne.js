@@ -74,14 +74,108 @@ cc.Class({
 
         Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
+        Global.registerEvent(EventId.PLAY_BACK_MSG_LIST, this.onRcvPlayBackMsgList, this);
 
         Global.starBatteryReceiver();
 
-        //防玩家同时进入，刷新桌子信息
+        //回放
         let deskInfo = cc.vv.gameData.getDeskInfo();
+        this.deskInfo = deskInfo;
+        if (this.deskInfo._isPlayBack) {
+            btnMsg.active = false;
+            cc.find("scene/operate_btn_view/btn_voice",this.node).active = false;
+
+            this.playBackMsgList = [];
+            this.playBackInterval = 2;
+            this.playBackCountdown = this.playBackInterval;
+            this.playBackMsgNextReqStartid = 2;
+            this.playBackMsgIsCanReques = true;
+            this.playBackMsgIsPause = false;
+        }
+        let panel_playBack = cc.find("scene/panel_playBack", this.node);
+        panel_playBack.active = cc.vv.gameData._isPlayBack;
+        if (panel_playBack.active) {
+            this.btn_start = panel_playBack.getChildByName("btn_start");
+            this.btn_start.active = false;
+            Global.btnClickEvent(this.btn_start,this.onClickPlayBackStart,this);
+            this.btn_pause = panel_playBack.getChildByName("btn_pause");
+            Global.btnClickEvent(this.btn_pause,this.onClickPlayBackPause,this);
+            let btn_next = panel_playBack.getChildByName("btn_next");
+            Global.btnClickEvent(btn_next,this.onClickPlayBackNext,this);
+            let btn_back = panel_playBack.getChildByName("btn_back");
+            Global.btnClickEvent(btn_back,this.onClickPlayBackBack,this);
+        }
+
+        //防玩家同时进入，刷新桌子信息
         if (!deskInfo._isPlayBack) {
             let req = {c: MsgId.UPDATE_TABLE_INFO};
             cc.vv.NetManager.send(req);
+        }
+    },
+
+    onClickPlayBackStart(){
+        this.btn_start.active = false;
+        this.btn_pause.active = true;
+        this.playBackMsgIsPause = false;
+    },
+
+    onClickPlayBackPause(){
+        this.btn_start.active = true;
+        this.btn_pause.active = false;
+        this.playBackMsgIsPause = true;
+    },
+
+    onClickPlayBackNext(){
+        this.playBackCountdown = 0;
+        this.onClickPlayBackStart();
+    },
+
+    onClickPlayBackBack(){
+        cc.vv.UserManager.currClubId = this.deskInfo.conf.clubid;
+        cc.vv.gameData.clear();
+        Global.backRecordData = {};
+        Global.backRecordData.clubid = this.deskInfo.clubid;
+        Global.backRecordData.deskid = this.deskInfo.deskid;
+        cc.vv.SceneMgr.enterScene(this.deskInfo.fromSence);
+    },
+
+    onRcvPlayBackMsgList(data){
+        data = data.detail;
+        this.playBackMsgList = data.data;
+        this.playBackMsgNextReqStartid = data.startid + 10;
+        this.playBackMsgIsCanReques = true;
+    },
+
+    update (dt) {
+        if (this.deskInfo._isPlayBack && !this.playBackMsgIsPause) {
+            this.playBackCountdown -= dt;
+            if (0 < this.playBackMsgList.length) {
+                if (0 > this.playBackCountdown) {
+                    this.playBackCountdown = this.playBackInterval;
+                    let msgItemData = this.playBackMsgList.shift();
+                    let msgItem = JSON.parse(msgItemData.data);
+                    cc.vv.NetManager.handleMsg(msgItem);
+                }
+            } else {
+                if (this.playBackMsgIsCanReques) {
+                    var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
+                    req.fromSence = this.deskInfo.fromSence;
+                    req.clubid = this.deskInfo.clubid;
+                    req.deskid = this.deskInfo.deskid;
+                    req.round = this.deskInfo.round;
+                    req.startid = this.playBackMsgNextReqStartid;
+                    req.endid = this.playBackMsgNextReqStartid + 9;
+                    cc.vv.NetManager.send(req);
+                    this.playBackMsgIsCanReques = false;
+                }
+            }
+        }
+    },
+
+    recvRoundOverNotify(data){
+        if (this.deskInfo._isPlayBack){
+            this.playBackMsgIsCanReques = false;
         }
     },
 
@@ -108,5 +202,4 @@ cc.Class({
     onDestroy(){
         this.txt_date.stopAllActions();
     },
-    // update (dt) {},
 });

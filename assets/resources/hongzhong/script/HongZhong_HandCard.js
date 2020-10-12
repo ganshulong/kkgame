@@ -186,7 +186,7 @@ cc.Class({
     },
 
     removeCardFromHand(card, removeCardNum){
-        if (0 === this._chairId) {
+        if (0 === this._chairId || cc.vv.gameData._isPlayBack) {
             let removeCount = 0;
             for(let i = this._handCards.length-1 ; i >= 0; --i){
                 if (card === this._handCards[i]) {

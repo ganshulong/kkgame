@@ -121,7 +121,7 @@ cc.Class({
     recvDeskInfoMsg(){
         let deskInfo = cc.vv.gameData.getDeskInfo();
         if(deskInfo.isReconnect){
-            if(deskInfo.actionInfo.iswait && 0 < deskInfo.actionInfo.waitList.length){
+            if(deskInfo.actionInfo.iswait && 0 < deskInfo.actionInfo.waitList.length && !cc.vv.gameData._isPlayBack){
                 this.showOperate(deskInfo);
             }
         }
@@ -129,14 +129,14 @@ cc.Class({
 
     recvOutCardNotify(data){
         data = data.detail;
-        if(data.actionInfo.iswait && 0 < data.actionInfo.waitList.length){
+        if(data.actionInfo.iswait && 0 < data.actionInfo.waitList.length && !cc.vv.gameData._isPlayBack){
             this.showOperate(data);
         }
     },
 
     recvMoPaiNotify(data){
         data = data.detail;
-        if(data.actionInfo.iswait && 0 < data.actionInfo.waitList.length){
+        if(data.actionInfo.iswait && 0 < data.actionInfo.waitList.length && !cc.vv.gameData._isPlayBack){
             this.showOperate(data);
         }
         if (data.seat === cc.vv.gameData.getMySeatIndex()) {
