@@ -130,8 +130,8 @@ cc.Class({
             else node.y = node.height*i+node.height*0.5;
             if(this._chairId === 0){
                 node.x = this._handcardNode.parent.parent.width*0.5-len*0.5*node.width+node.width*this._num;
-            } else if(this._chairId === 3){
-                node.x = -node.width*this._num;
+            // } else if(this._chairId === 3){
+            //     node.x = -node.width*this._num;
             } else {
                 node.x = node.width*this._num;
             }
