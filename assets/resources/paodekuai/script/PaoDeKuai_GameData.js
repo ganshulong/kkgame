@@ -7,6 +7,7 @@ cc.Class({
         _seatIndex:-1,
         _playerNum:4,           // 每局玩的人数限制
         _actionTime:0.3,         // 动画时间
+        _isPlayBack:false,
     },
 
     clear(){
@@ -93,6 +94,13 @@ cc.Class({
             if(this._deskInfo.users[i].uid === cc.vv.UserManager.uid){
                 this._seatIndex = this._deskInfo.users[i].seat;
                 break;
+            }
+        }
+
+        this._isPlayBack = this._deskInfo._isPlayBack;
+        if (this._isPlayBack) {
+            if (0 >= this._seatIndex) {
+                this._seatIndex = this._deskInfo.users[this._deskInfo.users.length-1].seat;
             }
         }
     },
@@ -187,7 +195,12 @@ cc.Class({
     onRcvUpdateTableInfo(msg){
         if(msg.code == 200){
             cc.vv.NetManager.unregisterMsg(MsgId.UPDATE_TABLE_INFO, this.onRcvUpdateTableInfo, false, this);
-            this._deskInfo = msg.deskInfo;
+            if (this._deskInfo.isReconnect) {
+                this._deskInfo = msg.deskInfo;
+                this._deskInfo.isReconnect = true;
+            } else {
+                this._deskInfo = msg.deskInfo;
+            }
             // cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
             Global.dispatchEvent(EventId.UPDATE_PLAYER_INFO);
         }

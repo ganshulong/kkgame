@@ -17,13 +17,15 @@ cc.Class({
         _canTouch:true,
     },
 
-    init(index,playerNum){
+    init(index){
         if (0 === index) {
             this._handcardNode = cc.find("scene/handleCardView",this.node);
-            this._handcardNode.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
-            this._handcardNode.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
-            this._handcardNode.on(cc.Node.EventType.TOUCH_END,this.onTouchEnd,this);
-            this._handcardNode.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
+            if (!cc.vv.gameData._isPlayBack) {
+                this._handcardNode.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
+                this._handcardNode.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
+                this._handcardNode.on(cc.Node.EventType.TOUCH_END,this.onTouchEnd,this);
+                this._handcardNode.on(cc.Node.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
+            }
 
             this._chairId = cc.vv.gameData.getLocalSeatByUISeat(0);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
@@ -40,6 +42,12 @@ cc.Class({
 
             this.PaoDeKuai_CardLogicJS = this.node.getComponent("PaoDeKuai_CardLogic");
             this.PaoDeKuai_CardLogicJS.init();
+        }
+
+        if (cc.vv.gameData._isPlayBack && 0 < index) {
+            this._handcardNode = cc.find("scene/playback_handle/player"+index,this.node);
+            this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
+            this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
         }
 
         let box = cc.find("scene/cardBox",this.node);
@@ -77,7 +85,7 @@ cc.Class({
 
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
-        if(data.isReconnect && this._handcardNode) {
+        if((data.isReconnect || cc.vv.gameData._isPlayBack) && this._handcardNode) {
             for(let i=0;i<data.users.length;++i){
                 if(this._seatIndex === data.users[i].seat && data.users[i].handInCards){
                     this.showHandCard(data.users[i].handInCards);
@@ -169,6 +177,9 @@ cc.Class({
     },
 
     showOperateBtn(bShow, hint){
+        if (cc.vv.gameData._isPlayBack || 0 != this._chairId) {
+            return;
+        }
         this._operateNode.active = bShow;
         if (bShow) {
             let cardIsCanOutList = this.getCardIsCanOutList(hint);
@@ -290,7 +301,17 @@ cc.Class({
                     )
                 )
             } else {
-                node.x = endPosX;
+                if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
+                    let cardScale = 0.45;
+                    node.scale = cardScale;
+                    if (1 == this._chairId) {   //右对齐
+                        node.x = - node.width/2*(list.length-1)*cardScale + node.width/2 * i * cardScale;
+                    } else if (2 == this._chairId){ //左对齐
+                        node.x = 0 + node.width/2 * i * cardScale;
+                    }
+                } else {
+                    node.x = endPosX;
+                }
             }
         }
     },
