@@ -46,13 +46,15 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        let users = data.users;
-        for(let i=0;i<users.length;++i){
-            let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
-            let UISeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
-            if(0 < UISeat){
-                let node = cc.find("scene/playback_handle/player"+UISeat,this.node);
-                this.showHandCard(users[i].handInCards, node, chairId);
+        if (!cc.vv.gameData._isPlayBack) {
+            let users = data.users;
+            for(let i=0;i<users.length;++i){
+                let chairId = cc.vv.gameData.getLocalChair(users[i].seat);
+                let UISeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
+                if(0 < UISeat){
+                    let node = cc.find("scene/playback_handle/player"+UISeat,this.node);
+                    this.showHandCard(users[i].handInCards, node, chairId);
+                }
             }
         }
 

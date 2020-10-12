@@ -96,10 +96,12 @@ cc.Class({
         Global.btnClickEvent(this.btn_gps,this.onClickGPS,this);
         this.setGpsBtnColour(1);
 
-        for (let i = 0; i < cc.vv.gameData.RoomSeat; i++) {
-            let head = cc.find("scene/player" + i + "/head",this.node);
-            head.btnID = i;
-            Global.btnClickEvent(head,this.onClickGPS,this);
+        if (!cc.vv.gameData._isPlayBack) {
+            for (let i = 0; i < cc.vv.gameData.RoomSeat; i++) {
+                let head = cc.find("scene/player" + i + "/head",this.node);
+                head.btnID = i;
+                Global.btnClickEvent(head,this.onClickGPS,this);
+            }
         }
 
         this.panel_gps = cc.find("scene/panel_gps",this.node);
@@ -123,6 +125,13 @@ cc.Class({
         let btn_cancelTrustee = cc.find("scene/panel_trustee/btn_cancelTrustee", this.node);
         Global.btnClickEvent(btn_cancelTrustee,this.onClickCancelTrustee,this);
 
+        if (cc.vv.gameData._isPlayBack) {
+            this.readyBtn.active = false;
+            this.btn_gps.active = false;
+            setting.active = false;
+            btn_helper.active = false;
+        }
+
         Global.registerEvent(EventId.CLOSE_ROUNDVIEW,this.recvCloseRoundView,this);
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.READY_NOTIFY,this.onRcvReadyNotice,this);
@@ -136,6 +145,9 @@ cc.Class({
     },
 
     recvRoundOver(){
+        if (cc.vv.gameData._isPlayBack) {
+            this.panel_dismiss.active = false;
+        }
         // this.panel_dismiss.active = false;
         this.readyBtn.active = false;
     },
@@ -603,7 +615,9 @@ cc.Class({
     },
 
     recvCloseRoundView(){
-        this.showReady(true);
+        if (!cc.vv.gameData._isPlayBack) {
+            this.showReady(true);
+        }
     },
 
     onRcvReadyNotice(data){
