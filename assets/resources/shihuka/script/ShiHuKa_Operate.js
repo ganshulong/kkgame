@@ -380,11 +380,12 @@ cc.Class({
 
     recvActionNotify(data){
         data = data.detail;
-        if(data.actionInfo.waitList.length>0){
-            this.showOperate(data);
-        }
-        else{
-            this.onCloseSelectChi();
+        if (!cc.vv.gameData._isPlayBack) {
+            if(data.actionInfo.waitList.length>0){
+                this.showOperate(data);
+            }else{
+                this.onCloseSelectChi();
+            }
         }
     },
 

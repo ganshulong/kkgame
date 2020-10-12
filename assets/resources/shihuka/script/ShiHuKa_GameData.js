@@ -31,6 +31,7 @@ cc.Class({
         _seatIndex:-1,
         _playerNum:4,           // 每局玩的人数限制
         _actionTime:0.3,         // 动画时间
+        _isPlayBack:false,
     },
 
     // onLoad () {},
@@ -101,6 +102,13 @@ cc.Class({
             if(this._deskInfo.users[i].uid === cc.vv.UserManager.uid){
                 this._seatIndex = this._deskInfo.users[i].seat;
                 break;
+            }
+        }
+
+        this._isPlayBack = this._deskInfo._isPlayBack;
+        if (this._isPlayBack) {
+            if (0 >= this._seatIndex) {
+                this._seatIndex = this._deskInfo.users[this._deskInfo.users.length-1].seat;
             }
         }
     },
