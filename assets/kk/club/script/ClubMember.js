@@ -233,10 +233,6 @@ cc.Class({
                 this.sortBtnArr[i].isSmallToBig = true;
             }
             this.memberList = msg.memberList;
-            this.clubTotalScore = 0;
-            for (let i = 0; i < this.memberList.length; i++) {
-                this.clubTotalScore += this.memberList[i].totalScore;
-            }
             this.updateMemberList();
         }
     },
@@ -284,8 +280,10 @@ cc.Class({
             bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = showList[i].uid;
             bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = showList[i].isOnLine ? "在线" : "离线";
             bg_memberItem.getChildByName("text_state").color = showList[i].isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
-            bg_memberItem.getChildByName("text_score1").active = (clubCeateUid == showList[i].uid);
-            bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = (clubCeateUid == showList[i].uid) ? this.clubTotalScore : "";
+            bg_memberItem.getChildByName("text_score1").active = showList[i].hehuo;
+            if (showList[i].hehuo) {
+                bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = showList[i].shuiScore;
+            }
             bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = showList[i].jushu;
             bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
             bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;

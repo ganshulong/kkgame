@@ -54,8 +54,8 @@ cc.Class({
         Global.registerEvent(EventId.GAME_CREATEROOM,this.showCreateRoom,this);
     },
 
-    showCreateRoom(isClubRoo, index){
-        this._isClubRoom = isClubRoo;
+    showCreateRoom(isClubRoom, index){
+        this._isClubRoom = (isClubRoom === false) ? false : true;
         this.curGameIndex = index ? index : 0;
         if(this._createLayer === null){
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
@@ -333,6 +333,19 @@ cc.Class({
         let distance = cc.find("distance/toggle0",layer);
         req.distance = distance.getComponent(cc.Toggle).isChecked ? 1 : 0;
 
+        if (this._isClubRoom) {
+            let chouShuiValue = layer.getChildByName("input_chouShuiValue").getComponent(cc.EditBox).string;
+            chouShuiValue = parseInt(chouShuiValue);
+            let chouShuiCondition = layer.getChildByName("input_chouShuiCondition").getComponent(cc.EditBox).string;
+            chouShuiCondition = parseInt(chouShuiCondition);
+            if (0 <= chouShuiValue && 1000 >= chouShuiValue && chouShuiValue <= chouShuiCondition && 1000 >= chouShuiCondition ) {
+                req.fuwus = chouShuiValue;
+                req.fuwutj = chouShuiCondition;
+            } else {
+                cc.vv.FloatTip.show("请输入有效的扣钻值与扣钻条件!");
+            }
+        }
+
         var data = {};
         data.c = this._isClubRoom ? MsgId.ADDGAME : MsgId.GAME_CREATEROOM;
         data.gameInfo = req;
@@ -368,6 +381,14 @@ cc.Class({
 
         let distance = cc.find("distance/toggle0",layer);
         distance.getComponent(cc.Toggle).isChecked = false;
+
+        layer.getChildByName("label_chouShui").active = this._isClubRoom;
+        layer.getChildByName("input_chouShuiValue").active = this._isClubRoom;
+        layer.getChildByName("input_chouShuiCondition").active = this._isClubRoom;
+        if (this._isClubRoom) {
+            layer.getChildByName("input_chouShuiValue").getComponent(cc.EditBox).string = "6";
+            layer.getChildByName("input_chouShuiCondition").getComponent(cc.EditBox).string = "30";
+        }
     },
 
     onDestroy(){
