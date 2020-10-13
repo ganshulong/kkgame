@@ -194,7 +194,7 @@ cc.Class({
 
     onRcvUpdateTableInfo(msg){
         if(msg.code == 200){
-            cc.vv.NetManager.unregisterMsg(MsgId.UPDATE_TABLE_INFO, this.onRcvUpdateTableInfo, false, this);
+            // cc.vv.NetManager.unregisterMsg(MsgId.UPDATE_TABLE_INFO, this.onRcvUpdateTableInfo, false, this);
             if (this._deskInfo.isReconnect) {
                 this._deskInfo = msg.deskInfo;
                 this._deskInfo.isReconnect = true;
