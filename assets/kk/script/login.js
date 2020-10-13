@@ -72,6 +72,7 @@ cc.Class({
         Global.btnClickEvent(phone_login, this.onClickBindPhone, this);
 
         this.initBindPhoneUI();
+        this.initAudio();
 
         if (Global.isAndroid()) {
             let result = Global.setAppidWithAppsecretForJS(app_id, app_sceret);
@@ -82,15 +83,11 @@ cc.Class({
 
         if (!Global.noAutoLogin && Global.isNative()) {
             let historyOpenid = cc.sys.localStorage.getItem("openid");
-            let pssswd  = cc.sys.localStorage.getItem("passwd");
             if (historyOpenid && historyOpenid.length > 0){
-                if (Global.isWXAppInstalled()) {
-                    Global.onWxAuthorize(this.onWeChatLoginCallBack, this);
-                }
+                //14 表示二次登录，FIX ME. 后续将14 改为常量
+                cc.vv.GameManager.reqLogin(historyOpenid, "", 14, historyOpenid, "", "");
             }
         }
-
-        this.initAudio();
     },
 
     initAudio(){
@@ -246,14 +243,8 @@ cc.Class({
             }
             Global.onWxAuthorize(this.onWeChatLoginCallBack, this);
         }else {
-            //web端模拟，调试用
-            //首次拉起微信的登录，才有这个值
-            let openid = "0";
-            cc.sys.localStorage.setItem("openid", openid);
-            //14 表示二次登录，FIX ME. 后续将14 改为常量
-            cc.vv.GameManager.reqLogin(openid, "", 11, "", "", "");
+            cc.vv.GameManager.reqLogin("0", "", 11, "", "", "");
         }
-
     },
 
 
