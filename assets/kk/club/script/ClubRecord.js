@@ -50,11 +50,13 @@ cc.Class({
         Global.btnClickEvent(btn_refresh,this.onClickRefresh,this);
 
         this.btnContent = cc.find("bg_left/scrollview/view/content",this._layer);
+        Global.btnClickEvent(this.btnContent.children[0], this.onClickDateItem,this);
 
         this.panel_gameRecord = cc.find("bg_right/panel_gameRecord",this._layer);
         let btn_share = cc.find("bg_top/btn_share",this.panel_gameRecord)
         Global.btnClickEvent(btn_share,this.onClickShare,this);
         this.gameRecordContent = cc.find("scrollview/view/content",this.panel_gameRecord);
+        Global.btnClickEvent(this.gameRecordContent.children[0].getChildByName("btn_detail"), this.onClickDetail, this);
 
         this.panel_roundRecord = cc.find("bg_right/panel_roundRecord",this._layer);
         let btn_closeRoundRecord = this.panel_roundRecord.getChildByName("btn_closeRoundRecord");
@@ -73,6 +75,7 @@ cc.Class({
             } else {
                 item = cc.instantiate(this.btnContent.children[0]);
                 item.parent = this.btnContent;
+                Global.btnClickEvent(item,this.onClickDateItem,this);
             }
             item.y = this.btnContent.children[0].y - i * (item.height+5);
             item.getComponent(cc.Button).interactable = (0 == i);
@@ -86,7 +89,6 @@ cc.Class({
             item.getChildByName("text_date").getComponent(cc.Label).string = itemDateStr;
             item.index = i;
             item.dateStr = Global.getDataStr(year,month,day);
-            Global.btnClickEvent(item,this.onClickDateItem,this);
         }
 
         for(let i = 0; i < this.gameRecordContent.children.length; ++i){
@@ -100,13 +102,17 @@ cc.Class({
         this.curRoomID = null;
 
         if (Global.backRecordData) {
+            this.curDateIndex = Global.backRecordDateIndex;
+            for (var i = 0; i < this.btnContent.children.length; i++) {
+                this.btnContent.children[i].getComponent(cc.Button).interactable = (i != this.curDateIndex);
+            }
+
             var req = { 'c': MsgId.ROUND_RECORD};
             req.deskid = Global.backRecordData.deskid;
             cc.vv.NetManager.send(req);
             Global.backRecordData = null;
         } else {
             this.onShowGameRecord();
-            this.onClickRefresh();
         }
     },
 
@@ -125,7 +131,6 @@ cc.Class({
     onClickDateItem(event){
         this.curDateIndex = event.target.index;
         this.onShowGameRecord();
-        this.sendGameRecordReq();
     },
 
     onClickShare(event){
@@ -135,6 +140,7 @@ cc.Class({
     onShowGameRecord(){
         this.panel_gameRecord.active = true;
         this.panel_roundRecord.active = false;
+        this.sendGameRecordReq();
     },
 
     sendGameRecordReq(){
@@ -160,6 +166,8 @@ cc.Class({
 
     onRcvGameRecord(msg){
         if (200 == msg.code && msg.data && 1 < msg.clubid) {
+            this.panel_gameRecord.active = true;
+            this.panel_roundRecord.active = false;
             for (var i = 0; i < msg.data.length; i++) {
                 let item = null;
                 if(i < this.gameRecordContent.children.length) {
@@ -167,6 +175,7 @@ cc.Class({
                 } else {
                     item = cc.instantiate(this.gameRecordContent.children[0]);
                     item.parent = this.gameRecordContent;
+                    Global.btnClickEvent(item.getChildByName("btn_detail"), this.onClickDetail, this);
                 }
                 item.y = this.gameRecordContent.children[0].y - i * (item.height + 5);
                 item.active = true;
@@ -219,9 +228,7 @@ cc.Class({
                 item.getChildByName("text_bigWinerName").getComponent(cc.Label).string = bigWinerName;
                 item.getChildByName("text_bigWinerID").getComponent(cc.Label).string = bigWinerID ? ("ID:" + bigWinerID) : "";
 
-                let btn_detail = item.getChildByName("btn_detail");
-                btn_detail.deskid = msg.data[i].deskid;
-                Global.btnClickEvent(btn_detail,this.onClickDetail,this);
+                item.getChildByName("btn_detail").deskid = msg.data[i].deskid;
             }
             this.gameRecordContent.height = msg.data.length * (this.gameRecordContent.children[0].height + 5);
 
@@ -232,15 +239,13 @@ cc.Class({
             cc.find("bg_right/panel_gameRecord/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = msg.bigWinCnt;
             cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = 0 <= msg.totalScore ? '/' + msg.totalScore : "";
             cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = 0 > msg.totalScore ? '/' + Math.abs(msg.totalScore) : "";
-
-            this.onShowGameRecord();
         }
     },
 
     onRcvRoundRecord(msg){
-        this.panel_gameRecord.active = false;
-        this.panel_roundRecord.active = true;
         if (200 == msg.code && msg.data) {
+            this.panel_gameRecord.active = false;
+            this.panel_roundRecord.active = true;
             for (var i = 0; i < msg.data.length; i++) {
                 let item = null;
                 if(i < this.roundRecordContent.children.length) {
@@ -289,6 +294,7 @@ cc.Class({
     },
 
     onClickReplay(event){
+        Global.backRecordDateIndex = this.curDateIndex;
         var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
         req.fromSence = 'club';
         req.clubid = cc.vv.UserManager.currClubId;

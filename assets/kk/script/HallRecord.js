@@ -92,7 +92,6 @@ cc.Class({
     },
 
     initShow(){
-        this.onClickCloseRoundRecord();
         this.panel_dateSelect.active = false;
 
         let selectData = new Date();
@@ -111,6 +110,11 @@ cc.Class({
                 this.left_list_view.getChildByName("btn_" + i + "_nor").active = (i != this.curShowRecordType);
                 this.left_list_view.getChildByName("btn_" + i + "_dis").active = (i == this.curShowRecordType);
             }
+
+            this.selectData = Global.backRecordSelectData;
+            let dataStr = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);       
+            this.text_data.getComponent(cc.Label).string = dataStr;
+
             var req = { 'c': MsgId.ROUND_RECORD};
             req.deskid = Global.backRecordData.deskid;
             cc.vv.NetManager.send(req);
@@ -214,8 +218,6 @@ cc.Class({
         let dataStr = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
         this.text_data.getComponent(cc.Label).string = dataStr;
 
-        this.onClickCloseRoundRecord();
-        
         var req = { 'c': MsgId.GAME_RECORD};
         req.selectTime = dataStr;
         req.clubid = this.curShowRecordType;
@@ -225,6 +227,11 @@ cc.Class({
     onClickCloseRoundRecord(){
         this.scroll_gameRecord.active = true;
         this.panel_roundRecord.active = false;
+        
+        var req = { 'c': MsgId.GAME_RECORD};
+        req.selectTime = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
+        req.clubid = this.curShowRecordType;
+        cc.vv.NetManager.send(req);
     },
 
     onRcvGameRecord(msg){
@@ -399,6 +406,8 @@ cc.Class({
     },
 
     onClickReplay(event){
+        Global.backRecordSelectData = this.selectData;
+
         var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
         req.fromSence = 'lobby';
         req.clubid = this.curShowRecordType;
