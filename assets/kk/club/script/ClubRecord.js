@@ -18,9 +18,12 @@ cc.Class({
     start () {
         cc.vv.NetManager.registerMsg(MsgId.GAME_RECORD, this.onRcvGameRecord, this);
         cc.vv.NetManager.registerMsg(MsgId.ROUND_RECORD, this.onRcvRoundRecord, this);
+
+        Global.registerEvent(EventId.SHOW_CLUB_RECORD, this.showLayer,this);
     },
 
-    showLayer(){
+    showLayer(data){
+        this.checkUid = data ? data.detail : "";
         if(this._layer === null){
             cc.loader.loadRes("common/prefab/club_record",cc.Prefab,(err,prefab)=>{
                 if(err === null){
@@ -28,7 +31,7 @@ cc.Class({
                     this._layer.scaleX = this.node.width / this._layer.width;
                     this._layer.scaleY = this.node.height / this._layer.height;
                     this._layer.parent = this.node;
-                    this._layer.zIndex = 1;
+                    this._layer.zIndex = 2;
                     this._layer.x = this.node.width/2 - this.node.x;
                     this._layer.y = this.node.height/2 - this.node.y;
 
@@ -150,6 +153,9 @@ cc.Class({
         var req = { 'c': MsgId.GAME_RECORD};
         req.selectTime = this.btnContent.children[this.curDateIndex].dateStr;
         req.clubid = cc.vv.UserManager.currClubId;
+        if (this.checkUid) {
+            req.tarGetUid = this.checkUid;
+        }
         cc.vv.NetManager.send(req);
     },
 

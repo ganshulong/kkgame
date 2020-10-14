@@ -269,6 +269,10 @@ cc.Class({
                 item.partneruid = showList[i].uid;
                 Global.btnClickEvent(item, this.onClickSetPartnerRatio,this);
             }
+            if (!showList[i].hehuo) {
+                item.uid = showList[i].uid;
+                Global.btnClickEvent(item, this.onClickCheckRecord,this);
+            }
             
             let bg_memberItem = item.getChildByName("bg_memberItem");
             bg_memberItem.getChildByName("spr_creater").active = (clubCeateUid == showList[i].uid);
@@ -318,6 +322,10 @@ cc.Class({
             item.active = true;
         }
         this.memberListContent.height = this.memberItem.height * showList.length;
+    },
+
+    onClickCheckRecord(event){
+        Global.dispatchEvent(EventId.SHOW_CLUB_RECORD, event.target.uid);
     },
 
     onClickOperate(){
