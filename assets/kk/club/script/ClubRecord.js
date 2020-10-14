@@ -112,6 +112,9 @@ cc.Class({
 
             var req = { 'c': MsgId.ROUND_RECORD};
             req.deskid = Global.backRecordData.deskid;
+            if (this.checkUid) {
+                req.tarGetUid = this.checkUid;
+            }
             cc.vv.NetManager.send(req);
             Global.backRecordData = null;
         } else {
@@ -121,6 +124,10 @@ cc.Class({
 
     onClose(){
         this._layer.active = false;
+        if (this.checkUid) {
+            Global.dispatchEvent(EventId.SHOW_CLUB_MEMBER);
+        }
+        Global.backRecordCheckUid = "";
     },
 
     onClickRefresh(){
@@ -167,6 +174,9 @@ cc.Class({
     sendRoundRecordReq(){
         var req = { 'c': MsgId.ROUND_RECORD};
         req.deskid = this.curRoomID;
+        if (this.checkUid) {
+            req.tarGetUid = this.checkUid;
+        }
         cc.vv.NetManager.send(req);
     },
 
@@ -301,6 +311,7 @@ cc.Class({
 
     onClickReplay(event){
         Global.backRecordDateIndex = this.curDateIndex;
+        Global.backRecordCheckUid = this.checkUid;
         var req = { 'c': MsgId.PLAY_BACK_MSG_LIST};
         req.fromSence = 'club';
         req.clubid = cc.vv.UserManager.currClubId;

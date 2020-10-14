@@ -22,6 +22,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
 
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
+        Global.registerEvent(EventId.SHOW_CLUB_MEMBER, this.showLayer,this);
     },
 
     showLayer(){

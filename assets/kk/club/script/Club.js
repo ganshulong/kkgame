@@ -136,7 +136,7 @@ cc.Class({
         cc.vv.NetManager.send(req);
 
         if (Global.backRecordData) {
-            this.ClubRecordJS.showLayer();
+            this.ClubRecordJS.showLayer({detail:Global.backRecordCheckUid});
         }
     },
 
