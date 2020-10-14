@@ -596,6 +596,13 @@ cc.Class({
     onRecvNetReconnectDeskinfo(msg){
         if (msg.code === 200) {
             this._deskInfo = msg.deskInfo;
+            //不重建重连，帐号变更，需要更新本人服务器座位号
+            // for(let i=0;i<this._deskInfo.users.length;++i){
+            //     if(this._deskInfo.users[i].uid === cc.vv.UserManager.uid){
+            //         this._seatIndex = this._deskInfo.users[i].seat;
+            //         break;
+            //     }
+            // }
             cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
         }
     },

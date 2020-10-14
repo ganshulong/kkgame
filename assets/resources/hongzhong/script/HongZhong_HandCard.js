@@ -79,12 +79,12 @@ cc.Class({
         Global.registerEvent(EventId.PENG_NOTIFY,this.recvPengNotify,this);
         Global.registerEvent(EventId.GANG_NOTIFY,this.recvGangNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.recvGuoNotify,this);
-        Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
+        Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.recvDeskInfoMsg,this);
 
         // this.recvDeskInfoMsg();
     },
 
-    onRcvUpdatePlayerInfo(){
+    recvDeskInfoMsg(){
         if (0 >= this._seatIndex) {
             let users = cc.vv.gameData.getUsers();
             for(let i=0;i<users.length;++i){
@@ -94,6 +94,34 @@ cc.Class({
                     break;
                 }
             }
+        }
+        let deskInfo = cc.vv.gameData.getDeskInfo();
+        if(-1 < this._seatIndex){
+            for(let i=0; i<deskInfo.users.length; ++i){
+                if(this._seatIndex === deskInfo.users[i].seat){
+                    this._gangCards = deskInfo.users[i].gangpai;
+                    this._pengCards = deskInfo.users[i].pengpai;
+                    this._handCards = deskInfo.users[i].handInCards;
+                    if (this._handCards && 0 < this._handCards.length) {
+                        if (deskInfo.actionInfo.nextaction.seat === this._seatIndex && 
+                            deskInfo.actionInfo.nextaction.type === cc.vv.gameData.OPERATETYPE.MOPAI) {
+                            this.lastIsCurMoCard = true;
+                        }
+                        this.showAllCard();
+                    }
+                }
+            }
+        }
+
+        if( 0 === this._chairId){
+            this._canOutCard = false;
+            if(deskInfo.isReconnect){
+                if(deskInfo.actionInfo.nextaction.seat === cc.vv.gameData.getMySeatIndex() &&
+                   deskInfo.actionInfo.nextaction.type > 1){
+                    this._canOutCard = true;
+                }
+            }
+            this.showOutLine();
         }
     },
 

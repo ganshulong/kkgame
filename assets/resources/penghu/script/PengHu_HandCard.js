@@ -605,6 +605,7 @@ cc.Class({
         // Global.registerEvent(EventId.DEL_HANDCARD_NOTIFY,this.recvDelHandcardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvOverRound,this);
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
+        Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.recvDeskInfoMsg,this);
 
         this.recvDeskInfoMsg();
     },
