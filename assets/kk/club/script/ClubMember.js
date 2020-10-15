@@ -85,6 +85,22 @@ cc.Class({
 
         this._layer.addComponent("ClubSetPartnerRatio");
         this.ClubSetPartnerRatioJS = this._layer.getComponent("ClubSetPartnerRatio");
+
+        // this._layer.addComponent("ClubMemberScoreLimit");
+        // this.ClubMemberScoreLimitJS = this._layer.getComponent("ClubMemberScoreLimit");
+
+        this.panel_memberOperate = cc.find("bg_member/panel_member", this._layer);
+        this.onClickCloseMemberOperate();
+        let btnCloseMemberOperate = this.panel_memberOperate.getChildByName("btnCloseMemberOperate");
+        Global.btnClickEvent(btnCloseMemberOperate, this.onClickCloseMemberOperate, this);
+        this.btn_tickout = this.panel_memberOperate.getChildByName("btn_tickout");
+        Global.btnClickEvent(this.btn_tickout, this.onClickTickout,this);
+        this.btn_forbidPlay = this.panel_memberOperate.getChildByName("btn_forbidPlay");
+        Global.btnClickEvent(this.btn_forbidPlay, this.onClickForbidPlay,this);
+        this.btn_recoverPlay = this.panel_memberOperate.getChildByName("btn_recoverPlay");
+        Global.btnClickEvent(this.btn_recoverPlay, this.onClickRecoverPlay,this); 
+        // this.btn_scoreLimit = this.panel_memberOperate.getChildByName("btn_scoreLimit");
+        // Global.btnClickEvent(this.btn_scoreLimit, this.onClickScoreLimit,this); 
     },
 
     initShow(){
@@ -294,31 +310,12 @@ cc.Class({
             bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;
             bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = showList[i].totalScore;
 
-            let bg_btns = bg_memberItem.getChildByName("bg_btns");
             let btn_operate = bg_memberItem.getChildByName("btn_operate");
             if (cc.vv.UserManager.uid == showList[i].uid) {
-                bg_btns.active = false;
-                btn_operate.active = true;
-                Global.btnClickEvent(btn_operate, this.onClickOperate,this);
+                Global.btnClickEvent(btn_operate, this.onClickSetPartner,this);
             } else {
-                bg_btns.active = true;
-                btn_operate.active = false;
-                let btn_forbidPlay = bg_btns.getChildByName("btn_forbidPlay");
-                btn_forbidPlay.active = (1 == showList[i].state);
-                btn_forbidPlay.uid = showList[i].uid;
-                btn_forbidPlay.playername = showList[i].playername;
-                Global.btnClickEvent(btn_forbidPlay, this.onClickForbidPlay,this);
-
-                let btn_recoverPlay = bg_btns.getChildByName("btn_recoverPlay");
-                btn_recoverPlay.active = (0 == showList[i].state);
-                btn_recoverPlay.uid = showList[i].uid;
-                btn_recoverPlay.playername = showList[i].playername;
-                Global.btnClickEvent(btn_recoverPlay, this.onClickRecoverPlay,this); 
-                
-                let btn_tickout = bg_btns.getChildByName("btn_tickout");
-                btn_tickout.uid = showList[i].uid;
-                btn_tickout.playername = showList[i].playername;
-                Global.btnClickEvent(btn_tickout, this.onClickTickout,this);
+                btn_operate.playerInfo = showList[i];
+                Global.btnClickEvent(btn_operate, this.onClickShowMemberOperate,this);
             }
             item.active = true;
         }
@@ -329,8 +326,30 @@ cc.Class({
         Global.dispatchEvent(EventId.SHOW_CLUB_RECORD, event.target.uid);
     },
 
-    onClickOperate(){
+    onClickSetPartner(){
         this.ClubSetPartnerJS.showLayer();
+    },
+
+    onClickShowMemberOperate(event){
+        this.panel_memberOperate.active = true;
+
+        let playerInfo = event.target.playerInfo;
+        this.panel_memberOperate.getChildByName("text_memberInfo").getComponent(cc.Label).string = "成员:"+playerInfo.playername;
+
+        this.btn_tickout.uid = playerInfo.uid;
+        this.btn_tickout.playername = playerInfo.playername;
+
+        this.btn_forbidPlay.active = (1 == playerInfo.state);
+        this.btn_forbidPlay.uid = playerInfo.uid;
+        this.btn_forbidPlay.playername = playerInfo.playername;
+
+        this.btn_recoverPlay.active = (0 == playerInfo.state);
+        this.btn_recoverPlay.uid = playerInfo.uid;
+        this.btn_recoverPlay.playername = playerInfo.playername;
+    },
+
+    onClickCloseMemberOperate(){
+        this.panel_memberOperate.active = false;
     },
 
     onClickSetPartnerRatio(event){
@@ -392,13 +411,17 @@ cc.Class({
         cc.vv.AlertView.show("确定将" + event.target.playername + "踢出亲友圈吗", sureCall, cancelCall);
     },
 
+    // onClickScoreLimit(event){
+    //     this.ClubMemberScoreLimitJS.showLayer(event.target);
+    // },
+
     onRcvMemberState(msg){
+        this.onClickCloseMemberOperate();
         if (200 == msg.code) {
             for(let i = 0; i < this.memberListContent.children.length; ++i){
                 let childrenItem = this.memberListContent.children[i];
                 if (msg.uid === childrenItem.uid && childrenItem.active) {
-                    cc.find("bg_memberItem/bg_btns/btn_forbidPlay", childrenItem).active = (1 == msg.state);
-                    cc.find("bg_memberItem/bg_btns/btn_recoverPlay", childrenItem).active = (0 == msg.state);
+                    cc.find("bg_memberItem/btn_operate", childrenItem).playerInfo.state = msg.state;
                     break;
                 }
             }
@@ -412,6 +435,7 @@ cc.Class({
     },
 
     onRcvTickoutMember(msg){
+        this.onClickCloseMemberOperate();
         if (200 == msg.code) {
             this.sendMemberListReq();
             cc.vv.FloatTip.show("踢出玩家成功");
