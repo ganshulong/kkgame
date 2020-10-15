@@ -161,6 +161,8 @@ cc.Class({
         if(this._canTouch && event.target.isCanMove){
             this._selectCard = event.target;
             this._selectCard.color = new cc.Color(200,200,200);
+            this._selectCardStartPosX = event.target.x;
+            this._selectCard.zIndex = 5;
         }
     },
 
@@ -227,19 +229,17 @@ cc.Class({
     },
 
     // 插入在前面中间
-    resetBoxInsertFront(index){
+    resetBoxInsertFront(){
         this.clearSelectInCardBox();
         for(let i=this._cardBox.length-1;i>0;--i){
-            if(i>index){
-                for(let j=0;j<4;++j){
-                    this._cardBox[i][j] = this._cardBox[i-1][j];
-                }
+            for(let j=0;j<4;++j){
+                this._cardBox[i][j] = this._cardBox[i-1][j];
             }
         }
-        this._cardBox[index+1][0] = this._selectCard;
-        this._cardBox[index+1][1] = null;
-        this._cardBox[index+1][2] = null;
-        this._cardBox[index+1][3] = null;
+        this._cardBox[0][0] = this._selectCard;
+        this._cardBox[0][1] = null;
+        this._cardBox[0][2] = null;
+        this._cardBox[0][3] = null;
     },
 
 
@@ -251,61 +251,75 @@ cc.Class({
         this.moveCard(x,y);
     },
 
-    // 在顶部添加
-    resetBoxAppendTop(index){
+    // 插入某列
+    resetBoxAppendTop(insertCol, insertRow){
         this.clearSelectInCardBox();
-        for(let j=0;j<4;++j){
-            if(this._cardBox[index][j] === null){
-                this._cardBox[index][j] = this._selectCard;
-                break;
-            }
+        for (let row = 3; row > insertRow; row--) {
+            this._cardBox[insertCol][row] = this._cardBox[insertCol][row-1];
         }
+        this._cardBox[insertCol][insertRow] = this._selectCard;
     },
 
 
     // 检查排的移动
     checkMoveCard(){
-        let insertX = -2;
-        let cardIndex = this._selectCard.cardBoxIndex;
-        let x = parseInt(cardIndex/4);
-        let y = cardIndex%4;
-
-        let bFind = false;
+        let bFindCol = false;
+        let cardWidthHalf = this._selectCard.width*0.5;
         for(let i=0;i<this._cardBox.length;++i){
-            let card = (this._cardBox[i][0] === this._selectCard) ? this._cardBox[i][1] : this._cardBox[i][0];
-            if(card){
-                if(this._selectCard.x>card.x-card.width*0.5 && this._selectCard.x<=card.x+card.width*0.5){
-                    bFind = true;
-                    if(this._cardBox[i][2]===null && this._cardBox[i][3]===null){
-                        insertX  = i;
-                        if(x==0 && y===0 && this._cardBox[x][1] === null) insertX = 0;
-
-                        // 在前面单独一列，而且这一列只有这一个牌
-                        if(this._cardBox[x][1] === null && x<i){
-                            insertX = i-1;
-                        }
-                        this.resetBoxAppendTop(insertX);
+            if (!this._cardBox[i][0] || 1 >= this._handcardNode.childrenCount) {
+                break;
+            }
+            let colPosX = this._cardBox[i][0].x;
+            if (this._selectCard === this._cardBox[i][0]) {
+                colPosX = this._selectCardStartPosX
+            }
+            if (this._selectCard.x > colPosX - cardWidthHalf && 
+                this._selectCard.x <= colPosX + cardWidthHalf){
+                bFindCol = true;
+                let selectCardCol = parseInt(this._selectCard.cardBoxIndex/4);
+                let colCardCount = (i === selectCardCol) ? 0 : 1;
+                for (let row = 0; row < this._cardBox[i].length; row++) {
+                    if (this._cardBox[i][row]) {
+                        colCardCount++;
+                    } else {
                         break;
                     }
-                    else{
-                        insertX = -1;
-                        break;
+                }
+                if(3 >= colCardCount && 1 < colCardCount){
+                    let insertCol = i;
+                    // 在前面单独一列，而且这一列只有这一个牌
+                    if(this._cardBox[selectCardCol][1] === null && selectCardCol < i){
+                        insertCol--;
                     }
+                    let insertRow = colCardCount - 1;
+                    if (this._selectCard.y < insertRow * (this._selectCard.height-22)) {
+                        insertRow = parseInt(this._selectCard.y/(this._selectCard.height-22))
+                    }
+                    this.resetBoxAppendTop(insertCol, insertRow);
+                    break;
                 }
             }
         }
 
-        if(!bFind){
-            let card = this._cardBox[0][0];
-            // 插在最前面
-            if(this._selectCard.x<card.x){
-                if(this._num<10 && !this.greyCardArrCount){
-                    insertX  = -1;
-                    this.resetBoxInsertFront(insertX);
+        //新加一列
+        if(!bFindCol && 10 > this._num){
+            let colPosX = -1;
+            if (this._selectCard === this._cardBox[0][0]) {
+                if (this._cardBox[0][1]) {
+                    colPosX = this._cardBox[0][1].x;
+                } else if (this._cardBox[1][0]) {
+                    colPosX = this._cardBox[1][0].x - this._cardBox[1][0].width;
                 }
+            } else {
+                colPosX = this._cardBox[0][0].x;
             }
-            else{
-                if(this._num<10){
+            if (-1 < colPosX) {
+                if(this._selectCard.x < colPosX){
+                    if (this._cardBox[0][0].isCanMove) {
+                        // 插在最前面
+                        this.resetBoxInsertFront();
+                    }
+                } else {
                     // 插在最后
                     this.clearSelectInCardBox();
                     for(let i=0;i<this._cardBox.length;++i){
@@ -315,7 +329,6 @@ cc.Class({
                         }
                     }
                 }
-
             }
         }
         this.resetCardPos(true);
