@@ -517,7 +517,11 @@ cc.Class({
     initTables(list){
         let width = 0;
         list.sort((obj1, obj2)=>{
-            return (obj2.users.length || 0) - (obj1.users.length || 0);
+            if ((obj2.users.length || 0) == (obj1.users.length || 0)) {
+                return obj1.config.playtype - obj2.config.playtype;   //2.玩法从小到大
+            } else {
+                return (obj2.users.length || 0) - (obj1.users.length || 0);   //1.人数从多到少
+            }
         });
         for(let i=0;i<list.length;++i){
             let config = list[i].config;
