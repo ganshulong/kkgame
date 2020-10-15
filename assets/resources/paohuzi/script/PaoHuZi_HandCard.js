@@ -295,6 +295,9 @@ cc.Class({
                     if (this._selectCard.y < insertRow * (this._selectCard.height-22)) {
                         insertRow = parseInt(this._selectCard.y/(this._selectCard.height-22))
                     }
+                    if (0 > insertRow) {
+                        insertRow = 0;
+                    }
                     this.resetBoxAppendTop(insertCol, insertRow);
                     break;
                 }
