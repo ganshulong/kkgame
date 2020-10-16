@@ -517,10 +517,14 @@ cc.Class({
     initTables(list){
         let width = 0;
         list.sort((obj1, obj2)=>{
-            if ((obj2.users.length || 0) == (obj1.users.length || 0)) {
-                return obj1.config.playtype - obj2.config.playtype;   //2.玩法从小到大
+            if (obj2.state == obj1.state) {
+                if (obj2.config.playtype == obj1.config.playtype) {
+                    return (obj2.users.length || 0) - (obj1.users.length || 0);     //3.人数从多到少
+                } else {
+                    return -(obj2.config.playtype - obj1.config.playtype);          //2.玩法从小到大
+                }
             } else {
-                return (obj2.users.length || 0) - (obj1.users.length || 0);   //1.人数从多到少
+                 return (obj2.state - obj1.state);                                  //1.游戏是否开始
             }
         });
         for(let i=0;i<list.length;++i){
