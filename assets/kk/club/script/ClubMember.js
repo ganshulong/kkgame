@@ -294,6 +294,7 @@ cc.Class({
             let bg_memberItem = item.getChildByName("bg_memberItem");
             bg_memberItem.getChildByName("spr_creater").active = (clubCeateUid == showList[i].uid);
             bg_memberItem.getChildByName("spr_partner").active = (clubCeateUid != showList[i].uid && showList[i].hehuo);
+            bg_memberItem.getChildByName("spr_stopPlay").active = (!showList[i].state);
             let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
             Global.setHead(spr_head, showList[i].usericon);
 
@@ -422,6 +423,7 @@ cc.Class({
                 let childrenItem = this.memberListContent.children[i];
                 if (msg.uid === childrenItem.uid && childrenItem.active) {
                     cc.find("bg_memberItem/btn_operate", childrenItem).playerInfo.state = msg.state;
+                    cc.find("bg_memberItem/spr_stopPlay", childrenItem).active = (!msg.state);
                     break;
                 }
             }
