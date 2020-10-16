@@ -188,31 +188,37 @@ cc.Class({
     // paoHu = 5, --跑胡
     // saoHu = 6, --扫胡
     // pengHu = 7,--碰胡
-    // pengSanHu = 8, --碰三胡
-    // saoSanHu = 9, --扫胡
-    // pengSiHu = 10, --碰四胡
+    // pengSanHu = 8, --碰三胡     三大连胡
+    // saoSanHu = 9, --扫三胡
+    // pengSiHu = 10, --碰四胡     四清连胡
     // saoSiHu = 11, --扫四胡
     // shuangLongHu = 12, --双龙
     // xiaoQiDuiHu = 13, --小七对
     // paoDiHu = 14, --跑地胡
     // pengDiHu = 15, --碰地胡
-    // pengDiHu = 16, --五福
+    // wuHu = 16, --五福
+    // pengSanDiHu = 17, --碰三地胡
+    // pengSiDiHu = 18, --碰四地胡
     showHuType(type,huFlag){
         let sprName = "";
         if(type===1) sprName = "penghu_onwer-table-imgs-huflag_12";
         else if(type===2) sprName = "penghu_onwer-table-imgs-huflag_0";
-        else if(type===3 || type === 14 || type === 15) sprName = "penghu_onwer-table-imgs-huflag_1";
+        else if(type===3) sprName = "penghu_onwer-table-imgs-huflag_1";
         else if(type===4) sprName = "penghu_onwer-table-imgs-huflag_5";
         else if(type===5) sprName = "penghu_onwer-table-imgs-huflag_6";
         else if(type===6) sprName = "penghu_onwer-table-imgs-huflag_13";
         else if(type===7) sprName = "penghu_onwer-table-imgs-huflag_9";
         else if(type===8) sprName = "penghu_onwer-table-imgs-huflag_8";
-        else if(type===9) sprName = "penghu_onwer-table-imgs-huflag_13";
+        else if(type===9) sprName = "penghu_onwer-table-imgs-huflag_10";
         else if(type===10) sprName = "penghu_onwer-table-imgs-huflag_7";
         else if(type===11) sprName = "penghu_onwer-table-imgs-huflag_11";
         else if(type===12) sprName = "penghu_onwer-table-imgs-huflag_3";
         else if(type===13) sprName = "penghu_onwer-table-imgs-huflag_2";
+        else if(type===14) sprName = "penghu_onwer-table-imgs-huflag_1";
+        else if(type===15) sprName = "penghu_onwer-table-imgs-huflag_1";
         else if(type===16) sprName = "penghu_onwer-table-imgs-huflag_4";
+        else if(type===17) sprName = "penghu_onwer-table-imgs-huflag_1";
+        else if(type===18) sprName = "penghu_onwer-table-imgs-huflag_1";
         huFlag.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(sprName);
     },
 
