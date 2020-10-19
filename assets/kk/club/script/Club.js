@@ -519,14 +519,23 @@ cc.Class({
         list.sort((obj1, obj2)=>{
             let obj2UserNum = (obj2.users.length || 0);
             let obj1UserNum = (obj1.users.length || 0);
-            if (obj2UserNum/obj2.config.seat == obj1UserNum/obj1.config.seat) {
+            let obj2SeatRateState = (obj2UserNum == obj2.config.seat) ? 1 : 0;
+            if (0 < obj2UserNum && obj2UserNum < obj2.config.seat) {
+                obj2SeatRateState = 2;
+            }
+            let obj1SeatRateState = (obj1UserNum == obj1.config.seat) ? 1 : 0;
+            if (0 < obj1UserNum && obj1UserNum < obj1.config.seat) {
+                obj1SeatRateState = 2;
+            }
+
+            if (obj2SeatRateState == obj1SeatRateState) {
                 if (obj2UserNum == obj1UserNum) {
                     return -(obj2.config.playtype - obj1.config.playtype);              //3.玩法从小到大
                 } else {
                     return obj2UserNum - obj1UserNum;                                   //2.人数从多到少
                 }
             } else {
-                return obj2UserNum/obj2.config.seat - obj1UserNum/obj1.config.seat;     //1.占座率从大到小
+                return obj2SeatRateState - obj1SeatRateState;                           //1.占座率: 未坐满 > 坐满 > 空
             }
         });
         for(let i=0;i<list.length;++i){

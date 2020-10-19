@@ -60,7 +60,7 @@ cc.Class({
         text_dialogue.runAction(
             cc.repeatForever(
                 cc.sequence(
-                    cc.moveTo(6, cc.v2(-(bg_dialogue.width/2+text_dialogue.width), text_dialogue.y)),
+                    cc.moveTo(bg_dialogue.width/50, cc.v2(-(bg_dialogue.width/2+text_dialogue.width), text_dialogue.y)),
                     cc.callFunc(()=>{
                         text_dialogue.x = bg_dialogue.width/2;
                     })
