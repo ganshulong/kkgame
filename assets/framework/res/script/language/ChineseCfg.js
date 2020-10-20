@@ -619,6 +619,6 @@ Wild只出现在2~5列",
     club_is_haved:"该亲友圈名已存在",
     permission_denied:"权限不足",
     player_not_exits:"该用户不存在",
-    player_not_exits_in_club:"该用户不在本俱乐部",
+    player_not_exits_in_club:"该用户不在本亲友圈",
 };
 
