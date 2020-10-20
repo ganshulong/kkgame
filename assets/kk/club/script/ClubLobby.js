@@ -261,8 +261,10 @@ cc.Class({
         let resetBtn = cc.find("bg/btn_reset",this._joinClubNode);
         Global.btnClickEvent(resetBtn,this.onReset,this);
 
+        this.prefabRes = this._joinClubNode.getChildByName("prefabRes");
+        
         for(let i=0;i<7;++i){
-            let numLabel = cc.find("bg/num"+i,this._joinClubNode).getChildByName("num");
+            let numLabel = cc.find("bg/num_bg/num"+i,this._joinClubNode);
             numLabel.active = false;
             this._numList.push(numLabel);
         }

@@ -91,35 +91,50 @@ cc.Class({
         let btn_back = this._createLayer.getChildByName("btn_back");
         Global.btnClickEvent(btn_back,this.onClose,this);
 
-        //游戏按钮
-        let prefabRes = this._createLayer.getChildByName("prefabRes");
-        this.content_gameBtns = cc.find("scrollview_gameBtns/view/content",this._createLayer);
+        // //游戏按钮
+        // let prefabRes = this._createLayer.getChildByName("prefabRes");
+        // this.content_gameBtns = cc.find("scrollview_gameBtns/view/content",this._createLayer);
+        // this.content_gameBtns.removeAllChildren(true);
+        // let tempItem = cc.find("scrollview_gameBtns/view/item",this._createLayer);
+        // tempItem.active = false;
+        // for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
+        //     let item = cc.instantiate(tempItem);
+        //     let prefabIcon = prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
+        //     item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+        //     item.x = item.width * i;
+        //     item.parent = this.content_gameBtns;
+        //     item.active = true;
+        //     item.id = cc.vv.UserManager.gameList[i].id;
+        //     Global.btnClickEvent(item,this.onClickGameType,this);
+        // }
+        // //更多按钮
+        // let item = cc.instantiate(tempItem);
+        // let prefabIcon = prefabRes.getChildByName("moreIcon");
+        // item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+        // item.getChildByName("gameIcon").scale = 0.8;
+        // item.getChildByName("selected_bg").active = false;
+        // item.x = item.width * cc.vv.UserManager.gameList.length;
+        // item.parent = this.content_gameBtns;
+        // item.active = true;
+        // item.id = "moreIcon";
+        // Global.btnClickEvent(item,this.onClickMoreGame,this);
+
+        // this.content_gameBtns.width = tempItem.width * (cc.vv.UserManager.gameList.length+1);
+
+        this.content_gameBtns = cc.find("left_gameBtns_bg/scrollview_gameBtns/view/content",this._createLayer);
         this.content_gameBtns.removeAllChildren(true);
-        let tempItem = cc.find("scrollview_gameBtns/view/item",this._createLayer);
+        let tempItem = cc.find("left_gameBtns_bg/scrollview_gameBtns/view/item",this._createLayer);
         tempItem.active = false;
         for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
             let item = cc.instantiate(tempItem);
-            let prefabIcon = prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
-            item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
-            item.x = item.width * i;
+            item.getChildByName("label_selectedGame").getComponent(cc.Label).string = cc.vv.UserManager.gameList[i].title;
+            item.y = - (item.height + 5) * i;
             item.parent = this.content_gameBtns;
             item.active = true;
             item.id = cc.vv.UserManager.gameList[i].id;
             Global.btnClickEvent(item,this.onClickGameType,this);
         }
-        //更多按钮
-        let item = cc.instantiate(tempItem);
-        let prefabIcon = prefabRes.getChildByName("moreIcon");
-        item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
-        item.getChildByName("gameIcon").scale = 0.8;
-        item.getChildByName("selected_bg").active = false;
-        item.x = item.width * cc.vv.UserManager.gameList.length;
-        item.parent = this.content_gameBtns;
-        item.active = true;
-        item.id = "moreIcon";
-        Global.btnClickEvent(item,this.onClickMoreGame,this);
-
-        this.content_gameBtns.width = tempItem.width * (cc.vv.UserManager.gameList.length+1);
+        this.content_gameBtns.height = (tempItem.height + 5) * cc.vv.UserManager.gameList.length;
 
         //游戏玩法选项页面
         this.gamePanels = [];
@@ -158,7 +173,7 @@ cc.Class({
             btn_create_room.id = cc.vv.UserManager.gameList[i].id;
             Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
 
-            cc.find("left_bg/btn_selectedGame/label_selectedGame", panel).getComponent(cc.Label).string = cc.vv.UserManager.gameList[i].title;
+            // cc.find("left_bg/btn_selectedGame/label_selectedGame", panel).getComponent(cc.Label).string = cc.vv.UserManager.gameList[i].title;
 
             // this.gamePanels.push(panel);
             this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
@@ -174,10 +189,8 @@ cc.Class({
     },
 
     showGameType(){
-        for (var i = 0; i < this.content_gameBtns.children.length - 1; i++) {
-            let gameBtn = this.content_gameBtns.children[i];
-            gameBtn.getChildByName("selected_bg").active = (this.curGameIndex === gameBtn.id);
-
+        for (var i = 0; i < this.content_gameBtns.children.length; i++) {
+            this.content_gameBtns.children[i].getComponent(cc.Button).interactable = (this.curGameIndex != this.content_gameBtns.children[i].id);
             this.gamePanels[i].active = (this.curGameIndex === this.gamePanels[i].id);
         }
     },
