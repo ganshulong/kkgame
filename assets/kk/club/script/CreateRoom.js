@@ -85,41 +85,12 @@ cc.Class({
             LiuHuQiang:3,
             PaoDeKuai:4,
             HongZhong:5,
-            ShiHuKa:6
+            ShiHuKa:6,
+            TongHua:7
         };
 
         let btn_back = this._createLayer.getChildByName("btn_back");
         Global.btnClickEvent(btn_back,this.onClose,this);
-
-        // //游戏按钮
-        // let prefabRes = this._createLayer.getChildByName("prefabRes");
-        // this.content_gameBtns = cc.find("scrollview_gameBtns/view/content",this._createLayer);
-        // this.content_gameBtns.removeAllChildren(true);
-        // let tempItem = cc.find("scrollview_gameBtns/view/item",this._createLayer);
-        // tempItem.active = false;
-        // for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
-        //     let item = cc.instantiate(tempItem);
-        //     let prefabIcon = prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
-        //     item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
-        //     item.x = item.width * i;
-        //     item.parent = this.content_gameBtns;
-        //     item.active = true;
-        //     item.id = cc.vv.UserManager.gameList[i].id;
-        //     Global.btnClickEvent(item,this.onClickGameType,this);
-        // }
-        // //更多按钮
-        // let item = cc.instantiate(tempItem);
-        // let prefabIcon = prefabRes.getChildByName("moreIcon");
-        // item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
-        // item.getChildByName("gameIcon").scale = 0.8;
-        // item.getChildByName("selected_bg").active = false;
-        // item.x = item.width * cc.vv.UserManager.gameList.length;
-        // item.parent = this.content_gameBtns;
-        // item.active = true;
-        // item.id = "moreIcon";
-        // Global.btnClickEvent(item,this.onClickMoreGame,this);
-
-        // this.content_gameBtns.width = tempItem.width * (cc.vv.UserManager.gameList.length+1);
 
         this.content_gameBtns = cc.find("left_gameBtns_bg/scrollview_gameBtns/view/content",this._createLayer);
         this.content_gameBtns.removeAllChildren(true);
@@ -138,7 +109,7 @@ cc.Class({
 
         //游戏玩法选项页面
         this.gamePanels = [];
-        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka"];
+        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_tonghua"];
         for (let i = 0; i < gamePanelStr.length; i++) {
             cc.find("img_bg/"+gamePanelStr[i],this._createLayer).active = false;
         }
@@ -173,14 +144,12 @@ cc.Class({
             btn_create_room.id = cc.vv.UserManager.gameList[i].id;
             Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
 
-            // cc.find("left_bg/btn_selectedGame/label_selectedGame", panel).getComponent(cc.Label).string = cc.vv.UserManager.gameList[i].title;
-
             // this.gamePanels.push(panel);
             this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
 
             let content = cc.find("right_bg/scrollview/content", panel);
 
-            if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name) {
+            if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name || "panel_tonghua" === panel.name) {
                 this.initGamePanelCommom(content, ["round","player_num","param1","param2","speed"]);
             } else {
                 this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
@@ -275,6 +244,12 @@ cc.Class({
             optionList.push({option:"player_num",       valueList:[2,3]});
             optionList.push({option:"param1",           valueList:[0,1]});
             optionList.push({option:"param2",           valueList:[0,1,2]});
+
+        } else if (this.gameTypeIndex.TongHua == id) {
+            req.gameid = this._isClubRoom ? 15 : 16;
+            optionList.push({option:"player_num",       valueList:[2]});
+            optionList.push({option:"param1",           valueList:[8,9,10,12,13,14]});
+            optionList.push({option:"param2",           valueList:[0,1]});
         }
 
         this.onCreateCommom(layer, optionList, req);
