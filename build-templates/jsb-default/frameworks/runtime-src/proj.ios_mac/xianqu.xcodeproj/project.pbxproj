@@ -189,7 +189,7 @@
 		509D4AE617EBB81800697056 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		509D4AE817EBB82000697056 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		509D4AEA17EBB82600697056 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		A922753D1517C094001B78AA /* 闲游.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "闲游.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A922753D1517C094001B78AA /* 闲乐.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "闲乐.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A92275411517C094001B78AA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A92275431517C094001B78AA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		A92275451517C094001B78AA /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
@@ -353,7 +353,7 @@
 		A922753E1517C094001B78AA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A922753D1517C094001B78AA /* 闲游.app */,
+				A922753D1517C094001B78AA /* 闲乐.app */,
 				509D4AAA17EBB24E00697056 /* xianqu-desktop.app */,
 			);
 			name = Products;
@@ -485,7 +485,7 @@
 			);
 			name = "xianqu-mobile";
 			productName = xianqu;
-			productReference = A922753D1517C094001B78AA /* 闲游.app */;
+			productReference = A922753D1517C094001B78AA /* 闲乐.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -791,7 +791,7 @@
 					"$(SRCROOT)/ios/wx/libWeChatSDK.a",
 					"\"$(SRCROOT)/ios/wx/libWeChatSDK.a\"",
 				);
-				PRODUCT_NAME = "闲游";
+				PRODUCT_NAME = "闲乐";
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -841,7 +841,7 @@
 					"$(SRCROOT)/ios/wx/libWeChatSDK.a",
 					"\"$(SRCROOT)/ios/wx/libWeChatSDK.a\"",
 				);
-				PRODUCT_NAME = "闲游";
+				PRODUCT_NAME = "闲乐";
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
