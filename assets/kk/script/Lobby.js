@@ -328,8 +328,8 @@ cc.Class({
     },
 
     onShareToWx(ShareSceneType){
-        let title = "闲游游戏邀请";
-        let description = "点击进入闲游游戏下载";
+        let title = "闲乐游戏邀请";
+        let description = "点击进入闲乐游戏下载";
         Global.onWXShareLink(ShareSceneType, title, description, Global.iconUrl, Global.shareLink);
     },
 

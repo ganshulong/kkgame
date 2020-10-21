@@ -569,7 +569,7 @@ cc.Class({
     },
 
     onClickInviteToWx(){
-        let title = "闲游房间邀请";
+        let title = "闲乐房间邀请";
         let description = this.getRoomInfoStr();
         Global.onWXShareLink(Global.ShareSceneType.WXSceneSession, title, description, Global.iconUrl, Global.shareLink);
     },
