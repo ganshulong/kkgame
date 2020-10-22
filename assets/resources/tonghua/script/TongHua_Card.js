@@ -36,6 +36,24 @@ cc.Class({
         let resValue = (0x0D < value) ? (value-14) : (value-1);
 
         spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame("card_"+resColor+"_"+resValue);
+
+        let cardNumText = new cc.Node();
+        cardNumText.name = "cardNumText";
+        cardNumText.addComponent(cc.Label);
+        cardNumText.getComponent(cc.Label).string = "";
+        cardNumText.getComponent(cc.Label).fontSize = 32;
+        cardNumText.x = -40;
+        cardNumText.y = -40;
+        cardNumText.parent = spr;
+
+        let cardTypeText = new cc.Node();
+        cardTypeText.name = "cardTypeText";
+        cardTypeText.addComponent(cc.Label);
+        cardTypeText.getComponent(cc.Label).string = "";
+        cardTypeText.getComponent(cc.Label).fontSize = 32;
+        cardTypeText.x = -40;
+        cardTypeText.y = -80;
+        cardTypeText.parent = spr;
         
         spr.cardValue = cardValue;
         spr.isTouchSelect = false;

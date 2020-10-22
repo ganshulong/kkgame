@@ -509,15 +509,15 @@ cc.Class({
         let roomConf = cc.vv.gameData.getRoomConf();
         let users = cc.vv.gameData.getUsers();
 
-        let description = "衡阳同花";
+        let description = "衡山同花";
         description += (",房间号:" + roomConf.deskId);
         if (cc.vv.UserManager.currClubId) {
             description += (",亲友圈ID:" + cc.vv.UserManager.currClubId);
         }
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
-        description += ("," + conf.param1 + "副牌");
-        description += ("," + ["不显示剩余牌 ","显示剩余牌 "][conf.param2]);
+        description += ("," + roomConf.param1 + "副牌");
+        description += ("," + ["不显示剩余牌 ","显示剩余牌 "][roomConf.param2]);
         description += ("," + roomConf.score+ "倍");
         return description;
     },

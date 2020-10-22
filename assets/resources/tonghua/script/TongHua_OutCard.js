@@ -48,54 +48,6 @@ cc.Class({
         this.setShowTimeCount(false);
     },
 
-    getEndPos(cardsNum){
-        let endPos = cc.v2(0,0);
-        let y = parseInt(cardsNum/5);   //竖行
-        let x = cardsNum%5;
-        let width = 37;
-        let height = 36;
-
-        // 下
-        if(this._UISeat === 0){
-            endPos.x = width*x;
-            endPos.y = height*y;
-
-        //右
-        } else if(this._UISeat === 1){
-            endPos.y = height*x;
-            endPos.x = -width*y;
-        
-        //上
-        } else if(this._UISeat === 2){
-            endPos.x = width*x;
-            endPos.y = -height*y;
-        
-        //左
-        } else if(this._UISeat === 3){
-            endPos.y = height*x;
-            endPos.x = width*y;
-        }
-        return endPos;
-    },
-
-    showCard(value,showAction = false){
-        let node = this.node.getComponent("TongHua_Card").createCard(value,showAction?0:2);
-
-        let endPos = this.getEndPos(this._cardsNum);
-
-
-        if(showAction){
-            this.showCardAction(node,cc.v2(this._startPos.x,this._startPos.y),cc.v2(endPos.x,endPos.y));
-        }
-        else{
-            node.position = endPos;
-        }
-        node.parent = this._outCardNode;
-        node.cardValue = value;
-        ++this._cardsNum;
-
-    },
-
     clearDesk(){
         this._outCardValue = null;
         this._cardsNum = 0;
@@ -299,16 +251,9 @@ cc.Class({
     showOutCard(list){
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
-            let cardScale = 0.5;
+            let cardScale = 0.4;
             let cardWidth = cc.vv.gameData.CardWidth * cardScale;
-            let startPosX = 0;
-            if(this._UISeat === 0){         // 下 居中
-                startPosX = cardWidth/2 * i - (cardWidth/2*(list.length-1))/2;
-            } else if(this._UISeat === 1){  //右 右对齐
-                startPosX = - cardWidth/2*(list.length-1);
-            } else if(this._UISeat === 2){  //左 左对齐
-                startPosX = 0;
-            }
+            let startPosX = cardWidth/2 * i - (cardWidth/2*(list.length-1))/2;
             for (let i = 0; i < list.length; i++) {
                 let node = this.node.getComponent("TongHua_Card").createCard(list[i]);
                 node.scale = cardScale;
