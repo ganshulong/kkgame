@@ -79,7 +79,7 @@ cc.Class({
     },
 
     showCard(value,showAction = false){
-        let node = this.node.getComponent("PaoDeKuai_Card").createCard(value,showAction?0:2);
+        let node = this.node.getComponent("TongHua_Card").createCard(value,showAction?0:2);
 
         let endPos = this.getEndPos(this._cardsNum);
 
@@ -310,7 +310,7 @@ cc.Class({
                 startPosX = 0;
             }
             for (let i = 0; i < list.length; i++) {
-                let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i]);
+                let node = this.node.getComponent("TongHua_Card").createCard(list[i]);
                 node.scale = cardScale;
                 node.parent = this._outCardNode;
                 node.x = startPosX + cardWidth/2 * i;
@@ -352,7 +352,7 @@ cc.Class({
         node.opacity = 255;
 
         node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            this.node.getComponent("PaoDeKuai_Card").createCard(node.cardValue,2,node.showBg,node);
+            this.node.getComponent("TongHua_Card").createCard(node.cardValue,2,node.showBg,node);
             node.scale = 1;
             node.rotation = 0;
             node.opacity = 255;

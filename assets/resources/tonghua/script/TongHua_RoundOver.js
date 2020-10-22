@@ -24,7 +24,7 @@ cc.Class({
     recvRoundOver(data){
         data = data.detail;
         if(this._layer === null){
-            cc.loader.loadRes("common/prefab/Paodekuai_round_over_view",(err,prefab)=>{
+            cc.loader.loadRes("tonghua/TongHua_round_over_view",(err,prefab)=>{
                 if(err === null){
                     this._layer = cc.instantiate(prefab);
                     this._layer.parent = this.node.getChildByName("scene");
@@ -74,13 +74,13 @@ cc.Class({
 
             let node_card = player.getChildByName("node_card");
             for (let c = 0; c < data.users[i].putCards.length; c++) {
-                let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.users[i].putCards[c]);
+                let node = this.node.getComponent("TongHua_Card").createCard(data.users[i].putCards[c]);
                 node.scale = 0.33;
                 node.x = node.width * node.scale * 0.8 * c;
                 node.parent = node_card;
             }
             for (let c = 0; c < data.users[i].handInCards.length; c++) {
-                let node = this.node.getComponent("PaoDeKuai_Card").createCard(data.users[i].handInCards[c]);
+                let node = this.node.getComponent("TongHua_Card").createCard(data.users[i].handInCards[c]);
                 node.scale = 0.33;
                 node.color = new cc.Color(100,100,100);
                 node.x = node.width * node.scale * 0.8 * (c + data.users[i].putCards.length);
@@ -110,7 +110,7 @@ cc.Class({
         this._layer.getChildByName("text_noSendCard").active = (0 < card.length);
         let node_noSendCard = cc.find("text_noSendCard/node_noSendCard", this._layer);
         for (let c = 0; c < card.length; c++) {
-            let node = this.node.getComponent("PaoDeKuai_Card").createCard(card[c]);
+            let node = this.node.getComponent("TongHua_Card").createCard(card[c]);
             node.scale = 0.33;
             node.x = node.width * node.scale * 0.8 * c;
             node.parent = node_noSendCard;
@@ -157,7 +157,7 @@ cc.Class({
         let width=0;
         for(let i=0;i<tempList.length;++i){
             for(let j=0;j<tempList[i].length;++j) {
-                let node = this.node.getComponent("PaoDeKuai_Card").createCard(tempList[i][j],1);
+                let node = this.node.getComponent("TongHua_Card").createCard(tempList[i][j],1);
                 node.scale = 0.5;
                 node.y = (node.height-28)*j*node.scale+20;
                 node.x = node.width*i*node.scale+20;
@@ -192,7 +192,7 @@ cc.Class({
             let posX = 0;
             let PosY = 0;
             for(let j=0;j<menzilist.length;++j){
-                let node = this.node.getComponent("PaoDeKuai_Card").createCard(menzilist[j],0);
+                let node = this.node.getComponent("TongHua_Card").createCard(menzilist[j],0);
                 node.scale = 0.45;
                 node.x = width+node.width*node.scale;
                 node.y = 44;
@@ -220,8 +220,8 @@ cc.Class({
         if(card){
             let bgNode = new cc.Node();
             bgNode.addComponent(cc.Sprite);
-            this.node.getComponent("PaoDeKuai_Card").changCardBg(bgNode,source===0);
-            let cardNode = this.node.getComponent("PaoDeKuai_Card").createCard(card,0);
+            this.node.getComponent("TongHua_Card").changCardBg(bgNode,source===0);
+            let cardNode = this.node.getComponent("TongHua_Card").createCard(card,0);
             bgNode.y = 43;
             bgNode.x = width+60;
             bgNode.scale = 0.6;
@@ -242,7 +242,7 @@ cc.Class({
 
     onDestroy(){
         if(this._layer){
-            cc.loader.releaseRes("common/prefab/Paodekuai_round_over_view",cc.Prefab);
+            cc.loader.releaseRes("tonghua/TongHua_round_over_view",cc.Prefab);
         }
     }
     // update (dt) {},

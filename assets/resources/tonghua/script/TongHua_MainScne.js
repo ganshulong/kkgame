@@ -15,29 +15,29 @@ cc.Class({
 
         this.initUI();
 
-        this.node.addComponent("PaoDeKuai_Card").init(this.cardsAtlas);
-        this.node.addComponent("PaoDeKuai_Menu");
+        this.node.addComponent("TongHua_Card").init(this.cardsAtlas);
+        this.node.addComponent("TongHua_Menu");
 
         let conf = cc.vv.gameData.getRoomConf();
         for(let i = 0; i < cc.vv.gameData.RoomSeat; ++i){
-            // this.node.addComponent("PaoDeKuai_ShowCard").init(i,conf.seat);
-            this.node.addComponent("PaoDeKuai_Player").init(i,conf.seat,this.emjoAtlas);
-            this.node.addComponent("PaoDeKuai_OutCard").init(i,conf.seat);
-            // this.node.addComponent("PaoDeKuai_OperatePai").init(i,conf.seat);
-            // this.node.addComponent("PaoDeKuai_HandCard").init(i,conf.seat);
-            this.node.addComponent("PaoDeKuai_HandCard_Operate").init(i);
+            // this.node.addComponent("TongHua_ShowCard").init(i,conf.seat);
+            this.node.addComponent("TongHua_Player").init(i,conf.seat,this.emjoAtlas);
+            this.node.addComponent("TongHua_OutCard").init(i,conf.seat);
+            // this.node.addComponent("TongHua_OperatePai").init(i,conf.seat);
+            // this.node.addComponent("TongHua_HandCard").init(i,conf.seat);
+            this.node.addComponent("TongHua_HandCard_Operate").init(i);
         }
-        // this.node.addComponent("PaoDeKuai_HandCard_Operate").init(0);
-        // this.node.addComponent("PaoDeKuai_Operate");
-        // this.node.addComponent("PaoDeKuai_Tips");
-        // this.node.addComponent("PaoDeKuai_Action");
-        this.node.addComponent("PaoDeKuai_RemainCard");
-        this.node.addComponent("PaoDeKuai_RoundOver");
-        this.node.addComponent("PaoDeKuai_GameOver");
-        this.node.addComponent("PaoDeKuai_Sound");
-        this.node.addComponent("PaoDeKuai_Chat");
-        this.node.addComponent("PaoDeKuai_Setting");
-        // this.node.addComponent("PaoDeKuai_CardLogic").init();
+        // this.node.addComponent("TongHua_HandCard_Operate").init(0);
+        // this.node.addComponent("TongHua_Operate");
+        // this.node.addComponent("TongHua_Tips");
+        // this.node.addComponent("TongHua_Action");
+        this.node.addComponent("TongHua_RemainCard");
+        this.node.addComponent("TongHua_RoundOver");
+        this.node.addComponent("TongHua_GameOver");
+        this.node.addComponent("TongHua_Sound");
+        this.node.addComponent("TongHua_Chat");
+        this.node.addComponent("TongHua_Setting");
+        // this.node.addComponent("TongHua_CardLogic").init();
 
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);

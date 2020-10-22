@@ -13364,7 +13364,7 @@
       }
     ],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 396
@@ -13411,7 +13411,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_tipCard",
+    "_name": "btn_noOut",
     "_objFlags": 0,
     "_parent": {
       "__id__": 367
@@ -13456,7 +13456,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -110,
+      "x": 0,
       "y": -18.5
     },
     "_skewX": 0,
@@ -13527,7 +13527,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "f4bff523-44b4-4a06-a50e-289dfbf2a9b9"
+      "__uuid__": "57c51790-73ec-4ebb-acc8-961b687fe642"
     },
     "_type": 0,
     "_sizeMode": 2,
@@ -13600,7 +13600,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 110,
+      "x": 0,
       "y": -18.5
     },
     "_skewX": 0,
