@@ -136,8 +136,10 @@ cc.Class({
 
             let bg_score = cc.find("right_bg/scrollview/content/bg_score", panel);
             let btn_deduction = bg_score.getChildByName("btn_deduction");
+            btn_deduction.isTongHua = ("panel_tonghua" === panel.name);
             Global.btnClickEvent(btn_deduction,this.onClickScoreDedution,this);
             let btn_add = bg_score.getChildByName("btn_add");
+            btn_add.isTongHua = ("panel_tonghua" === panel.name);
             Global.btnClickEvent(btn_add,this.onClickScoreAdd,this);
 
             let btn_create_room = cc.find("right_bg/btn_create_room", panel);
@@ -148,6 +150,7 @@ cc.Class({
             this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
 
             let content = cc.find("right_bg/scrollview/content", panel);
+            content.isTongHua = ("panel_tonghua" === panel.name);
 
             if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name || "panel_tonghua" === panel.name) {
                 this.initGamePanelCommom(content, ["round","player_num","param1","param2","speed"]);
@@ -173,20 +176,24 @@ cc.Class({
         cc.vv.AlertView.showTips("正在努力开发中喔");
     },
 
-    onClickScoreDedution(){
+    onClickScoreDedution(event){
         let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
-        let score = parseInt(text_score.getComponent(cc.Label).string);
-        if (1 < score) {
-            --score;
+        let score = Number(text_score.getComponent(cc.Label).string);
+        let changeValue = event.target.isTongHua ? 0.1 : 1;
+        if (changeValue < score) {
+            score -= changeValue;
+            score = Math.round(score* 10) / 10;
             text_score.getComponent(cc.Label).string = score;
         }
     },
 
-    onClickScoreAdd(){
+    onClickScoreAdd(event){
         let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
-        let score = parseInt(text_score.getComponent(cc.Label).string);
-        if (10 > score) {
-            ++score;
+        let score = Number(text_score.getComponent(cc.Label).string);
+        let changeValue = event.target.isTongHua ? 0.1 : 1;
+        if (changeValue * 10 > score) {
+            score += changeValue;
+            score = Math.round(score* 10) / 10;
             text_score.getComponent(cc.Label).string = score;
         }
     },
@@ -299,7 +306,7 @@ cc.Class({
 
         // 算分倍数
         let text_score = cc.find("bg_score/text_score",layer);
-        req.score = parseInt(text_score.getComponent(cc.Label).string);
+        req.score = Number(text_score.getComponent(cc.Label).string);
 
         // 速度
         let speed = cc.find("speed/toggle0",layer);
@@ -353,7 +360,7 @@ cc.Class({
 
         //算分倍数
         let text_score = cc.find("bg_score/text_score",layer);
-        text_score.getComponent(cc.Label).string = 1;
+        text_score.getComponent(cc.Label).string = layer.isTongHua ? 0.1 : 1;
 
         let trusteeship = cc.find("trusteeship/toggle0",layer);
         trusteeship.getComponent(cc.Toggle).isChecked = false;
