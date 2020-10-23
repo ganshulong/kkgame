@@ -43,6 +43,8 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.PLAY_BACK_MSG_LIST, this.onRcvPlayBackMsgList, this);
+        Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
+        Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
         
         Global.starBatteryReceiver();
 
@@ -79,6 +81,35 @@ cc.Class({
             let req = {c: MsgId.UPDATE_TABLE_INFO};
             cc.vv.NetManager.send(req);
         }
+    },
+
+    setABZhuaFen(scoreList){
+        cc.find("scene/bg_sore/text_a",this.node).getComponent(cc.Label).string = "";
+        cc.find("scene/bg_sore/text_b",this.node).getComponent(cc.Label).string = "";
+        let myServerSeat = cc.vv.gameData.getMySeatIndex();
+        for (let i = 0; i < scoreList.length; i++) {
+            if (myServerSeat == scoreList[i].seat) {
+                cc.find("scene/bg_sore/text_a",this.node).getComponent(cc.Label).string = scoreList[i].roundZhuaFen;
+            } else {
+                cc.find("scene/bg_sore/text_b",this.node).getComponent(cc.Label).string = scoreList[i].roundZhuaFen;
+            }
+        }
+    },
+
+    setTableScore(scoreTable = ""){
+        cc.find("scene/bg_sore/text_scoreTable",this.node).getComponent(cc.Label).string = scoreTable;
+    },
+
+    onRcvOutCardNotify(data){
+        data = data.detail;
+        this.setABZhuaFen(data.ZhuaFenList);
+        this.setTableScore(data.actionInfo.curaction.deskScore);
+    },
+
+    onRcvGuoCardNotify(data){
+        data = data.detail;
+        this.setABZhuaFen(data.ZhuaFenList);
+        this.setTableScore(data.actionInfo.curaction.deskScore);
     },
 
     onClickPlayBackStart(){
@@ -189,6 +220,13 @@ cc.Class({
         let round = cc.find("scene/room_info/txt_round_num",this.node);
         round.getComponent(cc.Label).string = "("+count+"/"+this._gameCount+"局)";
         cc.vv.gameData.setCurRound(count);
+
+        cc.find("scene/bg_sore",this.node).active = (0 < count);
+        if (0 < count) {        
+            let deskInfo = cc.vv.gameData.getDeskInfo();
+            this.setABZhuaFen(deskInfo.ZhuaFenList);
+            this.setTableScore(deskInfo.actionInfo.curaction.deskScore)
+        }
     },
 
     recvRoundOver(){

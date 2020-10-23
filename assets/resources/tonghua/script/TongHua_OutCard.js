@@ -88,13 +88,11 @@ cc.Class({
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
         if(data.isReconnect && this._outCardNode){
-            let putCardsList = data.actionInfo.curaction.putCardsList;
-            for (let i = 0; i < putCardsList.length; i++) {
-                if (putCardsList[i].seat === this._seatIndex) {
-                    if (!(data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type)) {    //非当前出牌玩家才显示出牌情况
-                        this.showNoOutCard(putCardsList[i].isPass);
-                        this.showOutCard(putCardsList[i].outCards);
-                    }
+            let outCards = data.actionInfo.curaction.outCards;;
+            if (data.actionInfo.curaction.seat === this._seatIndex) {
+                if (!(data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type)) {    //非当前出牌玩家才显示出牌情况
+                    this.showNoOutCard(0 == outCards.length);
+                    this.showOutCard(outCards);
                 }
             }
             for(let i=0;i<data.users.length;++i){

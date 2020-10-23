@@ -13,6 +13,9 @@ cc.Class({
             this._handCardNodeList.push(node);
         }
         this._handCardNodeList.push(cc.find("scene/playback_handle/public",this.node));
+
+        this.TongHua_CardLogicJS = this.node.getComponent("TongHua_CardLogic");
+
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
     },
@@ -33,28 +36,33 @@ cc.Class({
     },
 
     showHandCard(list,parent,UISeat){
-        let cardScale = 0.5;
-        let cardWidth = cc.vv.gameData.CardWidth * cardScale;
-        let startPosX = 0;
-        if(UISeat === 1){  //右 右对齐
-            startPosX = - cardWidth/2*(list.length-1);
-            if (9 < list.length) {
-                startPosX = - cardWidth/2*(9-1);
-            }
-        } else if(UISeat === 2){  //左 左对齐
-            startPosX = 0;
+        if (0 == list.length) {
+            return;
         }
-        for (let i = 0; i < list.length; i++) {
-            let node = this.node.getComponent("TongHua_Card").createCard(list[i]);
-            node.scale = cardScale;
-            node.parent = parent;
-            if (i < 9) {
-                node.x = startPosX + cardWidth/2 * i;
-            } else {
-                node.x = startPosX + cardWidth/2 * (i - 9);
-                node.y = -node.height * cardScale * 0.6;
+        let cardGroupsInfo = this.TongHua_CardLogicJS.GetCardGroupsInfo(list);
+        let cardGroups = cardGroupsInfo.card2DListEx;
+        let cardScale = 0.4;
+        for (let i = 0; i < cardGroups.length; i++) {
+            for (let j = 0; j < cardGroups[i].length; j++) {
+                let node = this.node.getComponent("TongHua_Card").createCard(cardGroups[i][j]);
+                node.scale = cardScale;
+                node.parent = parent;
+                node.x = node.width*cardScale/2 * i - (node.width*cardScale/2*(cardGroups.length-1))/2;
+                node.y = node.height*cardScale/2 + node.height*cardScale/9* (cardGroups[i].length-1-j);
+                node.isTongHua = (i < cardGroupsInfo.tongHuaNum);
+                if (node.isTongHua) {
+                    node.color = new cc.Color(255,220,220);
+                }
+                if ((4 <= cardGroups[i].length && j == (cardGroups[i].length-1))) {
+                    node.getChildByName("cardNumText").getComponent(cc.Label).string = cardGroups[i].length;
+                    node.getChildByName("cardTypeText").getComponent(cc.Label).string = node.isTongHua ? "同花" : "炸弹";
+                    node.getChildByName("cardNumText").color = node.isTongHua ? (new cc.Color(255,0,0)) : (new cc.Color(0,0,255));
+                    node.getChildByName("cardTypeText").color = node.isTongHua ? (new cc.Color(255,0,0)) : (new cc.Color(0,0,255));
+                } else {
+                    node.getChildByName("cardNumText").getComponent(cc.Label).string = "";
+                    node.getChildByName("cardTypeText").getComponent(cc.Label).string = "";
+                }
             }
-            
         }
     },
 

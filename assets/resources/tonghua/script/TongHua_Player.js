@@ -71,6 +71,18 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.recvSendCard,this);
         Global.registerEvent(EventId.SCORE_UPDATE_NOTIFY,this.onRcvScoreUpdateNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
+        Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
+    },
+
+    onRcvOutCardNotify(data){
+        data = data.detail;
+        if (0 < data.xiFenData.addXiFen) {
+            for (var i = 0; i < data.xiFenData.xiFenList.length; i++) {
+                if (data.xiFenData.xiFenList[i].seat === this._seatIndex) {
+                    this.setXiScore(data.xiFenData.xiFenList[i].xiFen);
+                }
+            }
+        }
     },
 
     onRcvUpdatePlayerInfo(){
@@ -304,11 +316,22 @@ cc.Class({
             this._playerNode.active = true;
             this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
             this.showReady(user.state === 1);
+            if (user.roundInfo) {
+                this.setXiScore(user.roundInfo.roundXiFen);
+            } else {
+                this.setXiScore(0);
+            }
         }
     },
 
     showOffline(bShow){
         if(this._playerNode) this._playerNode.getChildByName("img_off_line").active = bShow;
+    },
+
+    setXiScore(score){
+        if (typeof score != 'undefined' && this._playerNode) {
+            cc.find("bg_xifen/txt_xifen",this._playerNode).getComponent(cc.Label).string = score;
+        }   
     },
 
     // 总分

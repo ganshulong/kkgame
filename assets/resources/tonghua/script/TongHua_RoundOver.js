@@ -37,7 +37,6 @@ cc.Class({
 
                     this.initRoomInfo();
                     this.initPlayerInfo(data);
-                    this.showNoSendCard(data.diPaiCards);
 
                     let self = this;
                     this.scheduleOnce(()=>{
@@ -59,64 +58,6 @@ cc.Class({
         })))
     },
 
-    initPlayerInfo(data){
-        for(let i = 0; i < data.users.length; ++i){
-            let player = this._layer.getChildByName("player" + i);
-
-            let spr_head = cc.find("head/radio_mask/spr_head",player);
-            Global.setHead(spr_head, data.users[i].usericon);
-
-            player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
-            player.getChildByName("text_id").getComponent(cc.Label).string = "ID:"+data.users[i].uid;
-
-            player.getChildByName("text_surplusCardNum").getComponent(cc.Label).string = "剩牌:"+data.users[i].handInCards.length;
-            player.getChildByName("text_bombNum").getComponent(cc.Label).string = "炸弹:"+data.users[i].roundzhadan;
-
-            let node_card = player.getChildByName("node_card");
-            for (let c = 0; c < data.users[i].putCards.length; c++) {
-                let node = this.node.getComponent("TongHua_Card").createCard(data.users[i].putCards[c]);
-                node.scale = 0.33;
-                node.x = node.width * node.scale * 0.8 * c;
-                node.parent = node_card;
-            }
-            for (let c = 0; c < data.users[i].handInCards.length; c++) {
-                let node = this.node.getComponent("TongHua_Card").createCard(data.users[i].handInCards[c]);
-                node.scale = 0.33;
-                node.color = new cc.Color(100,100,100);
-                node.x = node.width * node.scale * 0.8 * (c + data.users[i].putCards.length);
-                node.parent = node_card;
-            }
-
-            if (0 <= data.users[i].roundScore) {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
-            } else {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
-            }
-
-            if (data.users[i].uid == cc.vv.UserManager.uid) {
-                this._layer.getChildByName("spr_title_win").active = (0 <= data.users[i].roundScore);
-                this._layer.getChildByName("spr_title_lose").active = (0 > data.users[i].roundScore);
-            }
-        }
-        for (let i = data.users.length; i < cc.vv.gameData.RoomSeat; i++) {
-            this._layer.getChildByName("player" + i).active = false;
-        }
-
-    },
-
-    showNoSendCard(card){
-        this._layer.getChildByName("text_noSendCard").active = (0 < card.length);
-        let node_noSendCard = cc.find("text_noSendCard/node_noSendCard", this._layer);
-        for (let c = 0; c < card.length; c++) {
-            let node = this.node.getComponent("TongHua_Card").createCard(card[c]);
-            node.scale = 0.33;
-            node.x = node.width * node.scale * 0.8 * c;
-            node.parent = node_noSendCard;
-        }
-    },
-
     initRoomInfo(){
         let conf = cc.vv.gameData.getRoomConf();
         let roomId = cc.find("roomInfoNode/txt_room_id",this._layer);
@@ -135,6 +76,38 @@ cc.Class({
 
         let okBtn = this._layer.getChildByName("btn_comfirm");
         Global.btnClickEvent(okBtn,this.onClose,this);
+    },
+
+    initPlayerInfo(data){
+        let createUid = cc.vv.gameData.getRoomConf().createUserInfo.uid;
+        for(let i = 0; i < data.users.length; ++i){
+            let player = this._layer.getChildByName("player" + i);
+
+            let spr_head = cc.find("head/radio_mask/spr_head",player);
+            Global.setHead(spr_head, data.users[i].usericon);
+
+            player.getChildByName("mask_master").active = (data.users[i].uid == createUid);
+
+            player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
+            player.getChildByName("text_id").getComponent(cc.Label).string = "ID:"+data.users[i].uid;
+
+            player.getChildByName("mask_shangYou").active = (1 == data.users[i].roundYiYou);
+            player.getChildByName("mask_xiaYou").active = (1 == data.users[i].roundErYou);
+
+            player.getChildByName("text_burnScore").getComponent(cc.Label).string = data.users[i].roundShaoFen;
+            player.getChildByName("text_burnScore").color = data.users[i].roundShaoFen > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
+            player.getChildByName("text_rankScore").getComponent(cc.Label).string = data.users[i].roundTopFen;
+            player.getChildByName("text_rankScore").color = data.users[i].roundTopFen > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
+            player.getChildByName("text_gameScore").getComponent(cc.Label).string = data.users[i].roundZhuaFen;
+            player.getChildByName("text_gameScore").color = data.users[i].roundZhuaFen > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
+            player.getChildByName("text_xiScore").getComponent(cc.Label).string = data.users[i].roundXiFen;
+            player.getChildByName("text_xiScore").color = data.users[i].roundXiFen > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
+            player.getChildByName("text_roundScore").getComponent(cc.Label).string = data.users[i].roundScore;
+            player.getChildByName("text_roundScore").color = data.users[i].roundScore > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
+        }
+        for (let i = data.users.length; i < cc.vv.gameData.RoomSeat; i++) {
+            this._layer.getChildByName("player" + i).active = false;
+        }
     },
 
     onClose(){

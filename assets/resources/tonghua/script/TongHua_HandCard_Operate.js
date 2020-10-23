@@ -34,7 +34,6 @@ cc.Class({
             Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
 
             this.TongHua_CardLogicJS = this.node.getComponent("TongHua_CardLogic");
-            this.TongHua_CardLogicJS.init();
         }
 
         if (cc.vv.gameData._isPlayBack && 0 < index) {
@@ -258,14 +257,17 @@ cc.Class({
     // },
 
     showHandCard(list, bShowMoveAni = false){
-        let cardGroupsInfo = this.TongHua_CardLogicJS.GetCardGroupsInfo(list);
-        let cardGroups = cardGroupsInfo.card2DListEx;
         this._handCards = list;
         this._handcardNode.removeAllChildren();
         this.handcardNodeSortList = [];
+        if (0 == list.length) {
+            return;
+        }
+
+        let cardGroupsInfo = this.TongHua_CardLogicJS.GetCardGroupsInfo(list);
+        let cardGroups = cardGroupsInfo.card2DListEx;
         let self = this;
         let cardScale = 0.75;
-        let startPosX
         for (let i = 0; i < cardGroups.length; i++) {
             for (let j = 0; j < cardGroups[i].length; j++) {
                 let node = this.node.getComponent("TongHua_Card").createCard(cardGroups[i][j]);
@@ -274,7 +276,7 @@ cc.Class({
                 node.col = i;
                 node.zIndex = this.handcardNodeSortList.length;
                 let endPosX = node.width*cardScale/2 * i - (node.width*cardScale/2*(cardGroups.length-1))/2;
-                let endPosY = node.height*cardScale/2 + node.height*cardScale/10* (cardGroups[i].length-1-j);
+                let endPosY = node.height*cardScale/2 + node.height*cardScale/9* (cardGroups[i].length-1-j);
                 node.posX = endPosX;
                 node.posY = endPosY;
                 node.isTongHua = (i < cardGroupsInfo.tongHuaNum);
@@ -322,8 +324,6 @@ cc.Class({
                         node.scale = cardScale*0.45;
                         if (1 == this._chairId) {   //右对齐
                             node.x = - node.width/2*(cardGroups.length-1)*node.scale + node.width/2 * i * node.scale;
-                        } else if (2 == this._chairId){ //左对齐
-                            node.x = 0 + node.width/2 * i * node.scale;
                         }
                     } else {
                         node.x = endPosX;
