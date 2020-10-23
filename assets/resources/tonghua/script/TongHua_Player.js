@@ -126,7 +126,7 @@ cc.Class({
         data = data.detail;
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){          
-                this.setTotalScore(data.users[i].score);
+                this.setTotalScore(data.users[i].totalScore);
                 break;
             }
         }
@@ -311,7 +311,6 @@ cc.Class({
             let spr_head = cc.find("head/radio_mask/spr_head",this._playerNode);
             Global.setHead(spr_head,user.usericon);
             cc.find("txt_name",this._playerNode).getComponent(cc.Label).string = user.playername;
-            this.setTotalScore(user.score);
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
             this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
@@ -320,6 +319,11 @@ cc.Class({
                 this.setXiScore(user.roundInfo.roundXiFen);
             } else {
                 this.setXiScore(0);
+            }
+            if (user.bigInfo) {
+                this.setTotalScore(user.bigInfo.score);
+            } else {
+                this.setTotalScore(0);
             }
         }
     },
@@ -348,6 +352,7 @@ cc.Class({
 
     recvSendCard(){
         this.showReady(false);
+        this.setXiScore(0);
     },
 
     start () {

@@ -84,8 +84,8 @@ cc.Class({
     },
 
     setABZhuaFen(scoreList){
-        cc.find("scene/bg_sore/text_a",this.node).getComponent(cc.Label).string = "";
-        cc.find("scene/bg_sore/text_b",this.node).getComponent(cc.Label).string = "";
+        cc.find("scene/bg_sore/text_a",this.node).getComponent(cc.Label).string = 0;
+        cc.find("scene/bg_sore/text_b",this.node).getComponent(cc.Label).string = 0;
         let myServerSeat = cc.vv.gameData.getMySeatIndex();
         for (let i = 0; i < scoreList.length; i++) {
             if (myServerSeat == scoreList[i].seat) {
