@@ -1,4 +1,4 @@
-package com.kk.happygame.util;
+package com.kk.happygamehengshan.util;
 
 import android.os.Build;
 

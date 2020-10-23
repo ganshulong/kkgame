@@ -34,8 +34,8 @@ import android.view.WindowManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.kk.happygame.wxapi.WXEntryActivity;
-import com.kk.happygame.util.Util;
+import com.kk.happygamehengshan.wxapi.WXEntryActivity;
+import com.kk.happygamehengshan.util.Util;
 
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;

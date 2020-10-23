@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kk.happygame"
+    package="com.kk.happygamehengshan"
     android:installLocation="auto">
 
     <uses-feature android:glEsVersion="0x00020000" />
@@ -58,7 +58,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:taskAffinity="com.kk.happygame"
+            android:taskAffinity="com.kk.happygamehengshan"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
 
     </application>

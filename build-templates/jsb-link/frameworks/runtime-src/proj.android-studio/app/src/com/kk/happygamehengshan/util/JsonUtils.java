@@ -3,7 +3,7 @@
  * @charset UTF-8
  * @author xiongxunxiang
  */
-package com.kk.happygame.util;
+package com.kk.happygamehengshan.util;
 
 import android.util.Log;
 
@@ -47,7 +47,7 @@ public class JsonUtils {
 
 		SchemeRegistry registry = new SchemeRegistry();
 		registry.register(new Scheme("http", PlainSocketFactory .getSocketFactory(), 80));
-		registry.register(new Scheme("https", com.kk.happygame.util.TrustAllSSLSocketFactory.getDefault(), 443));
+		registry.register(new Scheme("https", com.kk.happygamehengshan.util.TrustAllSSLSocketFactory.getDefault(), 443));
 		ClientConnectionManager manager = new ThreadSafeClientConnManager( param, registry);
 		DefaultHttpClient client = new DefaultHttpClient(manager, param);
 

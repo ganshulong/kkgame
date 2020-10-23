@@ -1,4 +1,4 @@
-package com.kk.happygame.wxapi;
+package com.kk.happygamehengshan.wxapi;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.kk.happygame.util.JsonUtils;
+import com.kk.happygamehengshan.util.JsonUtils;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
