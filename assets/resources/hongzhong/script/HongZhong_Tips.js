@@ -26,20 +26,19 @@ cc.Class({
         Global.registerEvent(EventId.OUTCARD_NOTIFY,this.recvOutCardNotify,this);
         Global.registerEvent(EventId.MOPAI_NOTIFY,this.recvMoPaiNotify,this);
         // Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.recvDeskInfoMsg,this);
         this.recvDeskInfoMsg();
     },
 
     recvDeskInfoMsg(){
        let deskInfo = cc.vv.gameData.getDeskInfo();
-       if(deskInfo.isReconnect ){
-           if(deskInfo.smallState === 1){
-               this.showDir((deskInfo.actionInfo.iswait===1 && deskInfo.actionInfo.curaction.seat>0)? deskInfo.actionInfo.curaction.seat:deskInfo.actionInfo.nextaction.seat);
-               this._cardBox.active = true;
-               this.updateRemainCards(deskInfo.pulicCardsCnt);
-           }
-           else{
-               this.clearDesk();
-           }
+       if(deskInfo.smallState === 1){
+           this.showDir((deskInfo.actionInfo.iswait===1 && deskInfo.actionInfo.curaction.seat>0)? deskInfo.actionInfo.curaction.seat:deskInfo.actionInfo.nextaction.seat);
+           this._cardBox.active = true;
+           this.updateRemainCards(deskInfo.pulicCardsCnt);
+       }
+       else{
+           this.clearDesk();
        }
     },
 
