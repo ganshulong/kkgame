@@ -187,9 +187,12 @@ cc.Class({
     },
 
     showCardNum(cardNum){
-        this.bg_cardNum.active = (0 < cardNum);
-        this.bg_cardNum.getChildByName("text_cardNum").getComponent(cc.Label).string = cardNum;
-        this.ani_warn.active = (1 == cardNum);
+        let isShowCardNum = cc.vv.gameData.getRoomConf().param2;
+        if (isShowCardNum) {
+            this.bg_cardNum.active = (0 < cardNum);
+            this.bg_cardNum.getChildByName("text_cardNum").getComponent(cc.Label).string = cardNum;
+            this.ani_warn.active = (1 == cardNum);
+        }
     },
 
     showOutCard(list, cardType){

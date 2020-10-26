@@ -86,7 +86,7 @@ cc.Class({
     },
 
     onRcvOutCardFaild(){
-        if (0 === this._chairId && this.handcardNodeSortList) {
+        if (0 === this._chairId) {
             this.onClickBgResetCardState();
         }
     },
@@ -172,6 +172,12 @@ cc.Class({
         let cardGroups = cardGroupsInfo.card2DListEx;
         let self = this;
         let cardScale = 0.75;
+        let cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2;
+        let allCardWidth = cardOffsetX * (cardGroups.length + 1);
+        if (this._handcardNode.width < allCardWidth) {
+            cardOffsetX = this._handcardNode.width / (cardGroups.length + 1);
+        }
+        let cardOffsetY = 20;
         for (let i = 0; i < cardGroups.length; i++) {
             for (let j = 0; j < cardGroups[i].length; j++) {
                 let node = this.node.getComponent("TongHua_Card").createCard(cardGroups[i][j]);
@@ -179,8 +185,8 @@ cc.Class({
                 this.handcardNodeSortList.push(node);
                 node.col = i;
                 node.zIndex = this.handcardNodeSortList.length;
-                let endPosX = node.width*cardScale/2 * i - (node.width*cardScale/2*(cardGroups.length-1))/2;
-                let endPosY = node.height*cardScale/2 + node.height*cardScale/9* (cardGroups[i].length-1-j);
+                let endPosX = cardOffsetX * i - (cardOffsetX * (cardGroups.length-1))/2;
+                let endPosY = node.height*cardScale/2 + cardOffsetY * (cardGroups[i].length-1-j);
                 node.posX = endPosX;
                 node.posY = endPosY;
                 node.isTongHua = (i < cardGroupsInfo.tongHuaNum);
@@ -328,16 +334,18 @@ cc.Class({
     },
 
     onClickBgResetCardState(){
-        for (var i = 0; i < this.handcardNodeSortList.length; i++) {
-            let card = this.handcardNodeSortList[i];
-            if (card.isSelected) {
-                card.isSelected = false;
-                if (card.isTongHua) {
-                    card.color = new cc.Color(255,220,220);
-                } else {
-                    card.color = new cc.Color(255,255,255);
-                }
-            } 
+        if (this.handcardNodeSortList) {
+            for (var i = 0; i < this.handcardNodeSortList.length; i++) {
+                let card = this.handcardNodeSortList[i];
+                if (card.isSelected) {
+                    card.isSelected = false;
+                    if (card.isTongHua) {
+                        card.color = new cc.Color(255,220,220);
+                    } else {
+                        card.color = new cc.Color(255,255,255);
+                    }
+                } 
+            }
         }
     },
 

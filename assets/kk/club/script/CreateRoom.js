@@ -255,7 +255,7 @@ cc.Class({
         } else if (this.gameTypeIndex.TongHua == id) {
             req.gameid = this._isClubRoom ? 15 : 16;
             optionList.push({option:"player_num",       valueList:[2]});
-            optionList.push({option:"param1",           valueList:[8,9,10,12,13,14]});
+            optionList.push({option:"param1",           valueList:[8,9,10,12,13,14,15,16]});
             optionList.push({option:"param2",           valueList:[0,1]});
         }
 
@@ -302,6 +302,12 @@ cc.Class({
                     break;
                 }
             }
+        }
+
+        // 包含8  同花
+        let contain8 = cc.find("contain8/toggle0",layer);
+        if (contain8) {
+            req.isContain8 = contain8.getComponent(cc.Toggle).isChecked ? 1 : 0;
         }
 
         // 算分倍数
