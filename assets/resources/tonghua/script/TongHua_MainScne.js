@@ -38,7 +38,6 @@ cc.Class({
         this.node.addComponent("TongHua_Sound");
         this.node.addComponent("TongHua_Chat");
         this.node.addComponent("TongHua_Setting");
-        // this.node.addComponent("TongHua_CardLogic").init();
 
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);

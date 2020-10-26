@@ -38,46 +38,17 @@ cc.Class({
         switch(cardType) {
             case cc.vv.gameData.CARDTYPE.ERROR_CARDS:
                 break;
-            case cc.vv.gameData.CARDTYPE.SINGLE_CARD:
-                soundName = "singe" + cardValue;
-                break;
-            case cc.vv.gameData.CARDTYPE.DOUBLE_CARD:
-                soundName = "double" + cardValue;
-                break;
-            case cc.vv.gameData.CARDTYPE.THREE_CARD:
-                soundName = "sanzhang";
-                break;
-            case cc.vv.gameData.CARDTYPE.THREE_ONE_CARD:
-                soundName = "sandaiyi";
-                break;
-            case cc.vv.gameData.CARDTYPE.THREE_TWO_CARD:
-                soundName = "sandaier";
-                break;
-            case cc.vv.gameData.CARDTYPE.BOMB_ONE_CARD:
-                soundName = "sidaiyi";
-                break;
-            case cc.vv.gameData.CARDTYPE.BOMB_TWO_CARD:
-                soundName = "sidaier";
-                break;
-            case cc.vv.gameData.CARDTYPE.BOMB_THREE_CARD:
-                soundName = "sidaisan";
-                break;
-            case cc.vv.gameData.CARDTYPE.CONNECT_CARD:
-                soundName = "shunzi0";
-                break;
-            case cc.vv.gameData.CARDTYPE.COMPANY_CARD:
-                soundName = "liandui";
-                break;
-            case cc.vv.gameData.CARDTYPE.AIRCRAFT:
-                soundName = "feiji";
-                break;
+            case cc.vv.gameData.CARDTYPE.SMALL_CARD:
             case cc.vv.gameData.CARDTYPE.BOMB_CARD:
-                soundName = "zhadan";
+                soundName = "zhangshu_" + outCards.length;
+                break;
+            case cc.vv.gameData.CARDTYPE.TONGHUA_CARD:
+                soundName = "tonghua_" + outCards.length;
                 break;
         }
         if(0 < soundName.length){
-            let path = "card/"+this.getLanguage()+this.getSex(seat)+soundName;
-            cc.vv.AudioManager.playEff("paodekuai/", path,true);
+            let path = "card/"+soundName;
+            cc.vv.AudioManager.playEff("tonghua/", path,true);
         }
     },
 

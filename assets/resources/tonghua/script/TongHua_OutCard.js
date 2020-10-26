@@ -116,9 +116,6 @@ cc.Class({
             this.showNoOutCard(0 == outCards.length);
             this.showOutCard(outCards, data.actionInfo.curaction.cardType);
             this.setShowTimeCount(false);
-            if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
-                this.playCardAni(data.actionInfo.curaction.cardType);
-            }
             this.showCardNum(data.cardsCnt);
             if (1 == data.cardsCnt) {
                 cc.vv.AudioManager.playEff("paodekuai/", "alarm",true);
@@ -195,57 +192,6 @@ cc.Class({
         this.ani_warn.active = (1 == cardNum);
     },
 
-    playCardAni(cardType){
-        if (cardType) {
-            let cardAniNode = null;
-            if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD || 
-                cardType == cc.vv.gameData.CARDTYPE.COMPANY_CARD ||
-                cardType == cc.vv.gameData.CARDTYPE.CHUN_TIAN) {
-                if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD) {
-                    cardAniNode = this.card_ani.getChildByName("connect_ani");
-                } else if (cardType == cc.vv.gameData.CARDTYPE.COMPANY_CARD) {
-                    cardAniNode = this.card_ani.getChildByName("company_ani");
-                } else {
-                    cardAniNode = this.card_ani.getChildByName("chuntian_ani");
-                }
-                cardAniNode.stopAllActions();
-                cardAniNode.active = true;
-                cardAniNode.scale = 0;
-                cardAniNode.runAction(
-                    cc.sequence(
-                        cc.scaleTo(0.3, 1.2, 1.2),
-                        cc.scaleTo(0.1, 0.8, 0.8),
-                        cc.scaleTo(0.1, 1.1, 1.1),
-                        cc.scaleTo(0.1, 1, 1),
-                        cc.delayTime(0.2),
-                        cc.callFunc(()=>{
-                            cardAniNode.active = false;
-                        })
-                    )
-                )
-
-            } else if (cardType == cc.vv.gameData.CARDTYPE.AIRCRAFT) {
-                this.aircraft_ani.stopAllActions();
-                this.aircraft_ani.position = this.aircraft_ani_Pos;
-                this.aircraft_ani.runAction(cc.moveTo(1, cc.v2(-this.aircraft_ani_Pos.x, -this.aircraft_ani_Pos.y)));
-
-            } else if (cardType == cc.vv.gameData.CARDTYPE.BOMB_CARD) {
-                cardAniNode = this.card_ani.getChildByName("bomb_ani");
-                cardAniNode.stopAllActions();
-                cardAniNode.active = true;
-                cardAniNode.getComponent(cc.Animation).play("show");
-                cardAniNode.runAction(
-                    cc.sequence(
-                        cc.delayTime(0.85),
-                        cc.callFunc(()=>{
-                            cardAniNode.active = false;
-                        })
-                    )
-                )
-            }
-        }
-    },
-
     showOutCard(list, cardType){
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
@@ -277,10 +223,6 @@ cc.Class({
             if(data.users[i].seat === this._seatIndex){    
                 this.setShowTimeCount(false);
                 this.ani_warn.active = false;     
-                if (data.users[i].isChunTian) {
-                    this.playCardAni(cc.vv.gameData.CARDTYPE.CHUN_TIAN);
-                    break;
-                }
             }
         }
     },

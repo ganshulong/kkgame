@@ -67,20 +67,9 @@ cc.Class({
         },
         this.CARDTYPE = {
             ERROR_CARDS     : 0,    //错误牌型
-            SINGLE_CARD     : 1,    //单牌
-            DOUBLE_CARD     : 2,    //对子
-            THREE_CARD      : 3,    //3带0
-            THREE_ONE_CARD  : 4,    //3带1
-            THREE_TWO_CARD  : 5,    //3带2
-            BOMB_ONE_CARD   : 6,    //四个带1张单牌
-            BOMB_TWO_CARD   : 7,    //四个带2张单牌
-            BOMB_THREE_CARD : 8,    //四个带3张单牌
-            CONNECT_CARD    : 9,    //连牌
-            COMPANY_CARD    : 10,   //连队
-            AIRCRAFT        : 11,   //飞机
-            BOMB_CARD       : 12,   //炸弹
-            KINGBOMB_CARD   : 13,   //王炸
-            CHUN_TIAN       : 14,   //春天
+            SMALL_CARD      : 1,    //单牌,对子，三张
+            BOMB_CARD       : 2,    //炸弹
+            TONGHUA_CARD    : 3,    //同花
         };
 
         this.registerMsg();
