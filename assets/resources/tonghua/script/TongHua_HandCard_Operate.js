@@ -260,9 +260,18 @@ cc.Class({
     },
 
     setCardSelectState(col){
+        let cardNum = cc.vv.gameData.getRoomConf().param1;
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             let card = this._handcardNode.children[i];
-            card.isSelected = (card.col == col && !card.isSelected) ? true : false;
+            if (card.col == col) {
+                card.isSelected = !card.isSelected;
+            } else {
+                if (card.isSelected && 15 <= cardNum) {    //15,16副，只能单出一列
+                    card.isSelected = false;
+                } else {
+                    continue;;
+                }
+            }
             if (card.isSelected) {
                 card.color = new cc.Color(100,100,100);
             } else {
