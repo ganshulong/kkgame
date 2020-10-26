@@ -95,5 +95,7 @@ EventId.PLAY_BACK_MSG_LIST = "PLAY_BACK_MSG_LIST";  	  // 回放消息列表
 EventId.CLUB_SET_PARTNER = "CLUB_SET_PARTNER";  	  	  // 俱乐部设置合伙人
 EventId.SHOW_CLUB_RECORD = "SHOW_CLUB_RECORD";			  // 显示俱乐部战绩
 EventId.SHOW_CLUB_MEMBER = "SHOW_CLUB_MEMBER";			  // 显示俱乐部成员
+EventId.OUT_CARD_FAILD = "OUT_CARD_FAILD";			  	  // 出牌失败
+
 
 EventId.TEST_EVENT = "TEST_EVENT";  					  // 测试

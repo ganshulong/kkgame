@@ -221,6 +221,8 @@ cc.Class({
     onRcvOutCard(msg){
         if(msg.code == 200){
             Global.dispatchEvent(EventId.OUT_CARD,msg)
+        } else {
+            Global.dispatchEvent(EventId.OUT_CARD_FAILD, msg)
         }
     },
 

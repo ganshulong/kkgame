@@ -19,6 +19,9 @@ cc.Class({
 
     init(index){
         if (0 === index) {
+            let bg_view = cc.find("scene/bg_view",this.node);
+            Global.btnClickEvent(bg_view,this.onClickBgResetCardState,this);
+
             this._handcardNode = cc.find("scene/handleCardView",this.node);
 
             this._chairId = cc.vv.gameData.getLocalSeatByUISeat(0);
@@ -64,6 +67,7 @@ cc.Class({
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.OUT_CARD_FAILD,this.onRcvOutCardFaild,this);
 
         this.recvDeskInfoMsg();
     },
@@ -85,6 +89,12 @@ cc.Class({
                     }
                 }
             }
+        }
+    },
+
+    onRcvOutCardFaild(){
+        if (0 === this._chairId && this.handcardNodeSortList) {
+            this.onClickBgResetCardState();
         }
     },
 
@@ -398,16 +408,14 @@ cc.Class({
     setCardSelectState(col){
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             let card = this._handcardNode.children[i];
-            if (card.col == col) {
-                card.isSelected = !card.isSelected;
-                if (card.isSelected) {
-                    card.color = new cc.Color(100,100,100);
+            card.isSelected = (card.col == col && !card.isSelected) ? true : false;
+            if (card.isSelected) {
+                card.color = new cc.Color(100,100,100);
+            } else {
+                if (card.isTongHua) {
+                    card.color = new cc.Color(255,220,220);
                 } else {
-                    if (card.isTongHua) {
-                        card.color = new cc.Color(255,220,220);
-                    } else {
-                        card.color = new cc.Color(255,255,255);
-                    }
+                    card.color = new cc.Color(255,255,255);
                 }
             }
         }
@@ -502,6 +510,20 @@ cc.Class({
                 card.runAction(cc.moveTo(0.1, pos));
                 card.getChildByName("cardNumText").active = true;
                 card.getChildByName("cardTypeText").active = true;
+            } 
+        }
+    },
+
+    onClickBgResetCardState(){
+        for (var i = 0; i < this.handcardNodeSortList.length; i++) {
+            let card = this.handcardNodeSortList[i];
+            if (card.isSelected) {
+                card.isSelected = false;
+                if (card.isTongHua) {
+                    card.color = new cc.Color(255,220,220);
+                } else {
+                    card.color = new cc.Color(255,255,255);
+                }
             } 
         }
     },

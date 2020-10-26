@@ -6,10 +6,12 @@ cc.Class({
         
         _value:0,
         _atlas:null,
+        _font:null,
     },
 
-    init(atlas){
+    init(atlas, cardTypeFont){
         this._atlas = atlas;
+        this._font = cardTypeFont;
     },
 
     // --扑克数据 45张(除掉大小王，红桃2,梅花2,方块2, 红桃A,梅花A,方块A, 方块K,每人15张)
@@ -41,7 +43,8 @@ cc.Class({
         cardNumText.name = "cardNumText";
         cardNumText.addComponent(cc.Label);
         cardNumText.getComponent(cc.Label).string = "";
-        cardNumText.getComponent(cc.Label).fontSize = 32;
+        cardNumText.getComponent(cc.Label).fontSize = 36;
+        cardNumText.getComponent(cc.Label).font = this._font;
         cardNumText.x = -40;
         cardNumText.y = -40;
         cardNumText.parent = spr;
@@ -50,7 +53,8 @@ cc.Class({
         cardTypeText.name = "cardTypeText";
         cardTypeText.addComponent(cc.Label);
         cardTypeText.getComponent(cc.Label).string = "";
-        cardTypeText.getComponent(cc.Label).fontSize = 32;
+        cardTypeText.getComponent(cc.Label).fontSize = 36;
+        cardTypeText.getComponent(cc.Label).font = this._font;
         cardTypeText.x = -40;
         cardTypeText.y = -80;
         cardTypeText.parent = spr;

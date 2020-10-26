@@ -80,7 +80,43 @@ cc.Class({
             for (var i = 0; i < data.xiFenData.xiFenList.length; i++) {
                 if (data.xiFenData.xiFenList[i].seat === this._seatIndex) {
                     this.setXiScore(data.xiFenData.xiFenList[i].xiFen);
+                    if (this._seatIndex != data.xiFenData.seat) {   
+                        //该玩家输了，金币飞向其他人
+                        this.showFlyIcon(data.xiFenData.seat, data.xiFenData.addXiFen/10);
+                    }
                 }
+            }
+        }
+    },
+
+    showFlyIcon(toServerSeat, iconNum){
+        if (0 < toServerSeat && 0 < iconNum) {
+            let toLocalSeat = cc.vv.gameData.getLocalChair(toServerSeat);
+            let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
+            let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
+            let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
+            let intervalTime = 0.08;
+            if (60 < iconNum) {
+                intervalTime = intervalTime * 60 / iconNum;
+            }
+            for (var j = 0; j < iconNum; j++) {
+                let icon = cc.instantiate(this._playerNode.getChildByName("icon_gold"));
+                icon.parent = this._playerNode.parent.getChildByName("ndoe_fly_icon");
+                icon.position = this._playerNode.position;
+                icon.active = true;
+                icon.runAction(
+                    cc.sequence(
+                        cc.delayTime(j * intervalTime), 
+                        cc.moveBy(0.5, moveByPos),
+                        cc.callFunc(()=>{
+                            Global.playEff(Global.SOUNDS.fly_icon);
+                        }),
+                        cc.delayTime(0.2), 
+                        cc.callFunc(()=>{
+                            icon.removeFromParent();
+                        })
+                    )
+                )
             }
         }
     },

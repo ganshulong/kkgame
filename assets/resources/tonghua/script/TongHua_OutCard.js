@@ -88,11 +88,11 @@ cc.Class({
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
         if(data.isReconnect && this._outCardNode){
-            let outCards = data.actionInfo.curaction.outCards;;
+            let outCards = data.actionInfo.curaction.outCards;
             if (data.actionInfo.curaction.seat === this._seatIndex) {
                 if (!(data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type)) {    //非当前出牌玩家才显示出牌情况
                     this.showNoOutCard(0 == outCards.length);
-                    this.showOutCard(outCards);
+                    this.showOutCard(outCards, data.actionInfo.curaction.cardType);
                 }
             }
             for(let i=0;i<data.users.length;++i){
@@ -114,7 +114,7 @@ cc.Class({
         if (data.actionInfo.curaction.seat === this._seatIndex) {
             let outCards = data.actionInfo.curaction.outCards;
             this.showNoOutCard(0 == outCards.length);
-            this.showOutCard(outCards);
+            this.showOutCard(outCards, data.actionInfo.curaction.cardType);
             this.setShowTimeCount(false);
             if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
                 this.playCardAni(data.actionInfo.curaction.cardType);
@@ -246,7 +246,7 @@ cc.Class({
         }
     },
 
-    showOutCard(list){
+    showOutCard(list, cardType){
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
             let cardScale = 0.4;
@@ -257,6 +257,12 @@ cc.Class({
                 node.scale = cardScale;
                 node.parent = this._outCardNode;
                 node.x = startPosX + cardWidth/2 * i;
+                if (list.length-1 == i && 1 < cardType) {
+                    node.getChildByName("cardNumText").getComponent(cc.Label).string = list.length;
+                    node.getChildByName("cardTypeText").getComponent(cc.Label).string = (3 == cardType) ? "同花" : "炸弹";
+                    node.getChildByName("cardNumText").color = (3 == cardType) ? (new cc.Color(255,0,0)) : (new cc.Color(0,0,255));
+                    node.getChildByName("cardTypeText").color = (3 == cardType) ? (new cc.Color(255,0,0)) : (new cc.Color(0,0,255));
+                }
             }
         }
     },
