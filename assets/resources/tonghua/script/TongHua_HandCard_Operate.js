@@ -256,6 +256,12 @@ cc.Class({
     onTouchStart(event){
         if(this._canTouch){
             this.setCardSelectState(event.target.col);
+            this.moveCards = [];
+            for (let i = this.handcardNodeSortList.length-1; i >= 0; i--) {
+                if (this.handcardNodeSortList[i].isSelected) {
+                    this.moveCards.push(this.handcardNodeSortList[i]);
+                }
+            }
         }
     },
 
@@ -294,15 +300,14 @@ cc.Class({
     },
 
     setCardMoveState(){
-        let moveCardCount = 0;
-        for (let i = this.handcardNodeSortList.length-1; i >= 0; i--) {
-            let card = this.handcardNodeSortList[i];
-            if (card.isSelected) {
-                card.x = this.touchCurPos.x;
-                card.y = this.touchCurPos.y + card.height/10 * card.scale * moveCardCount++;
-                card.getChildByName("cardNumText").active = false;
-                card.getChildByName("cardTypeText").active = false;
-            }
+        if (0 < this.moveCards.length) {
+            this.moveCards[0].getChildByName("cardNumText").active = false;
+            this.moveCards[0].getChildByName("cardTypeText").active = false;
+        }
+        let cardOffsetY = 20;
+        for (let i = 0; i < this.moveCards.length; i++) {
+            this.moveCards[i].x = this.touchCurPos.x;
+            this.moveCards[i].y = this.touchCurPos.y + cardOffsetY * i;
         }
     },
 

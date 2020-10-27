@@ -253,19 +253,12 @@ cc.Class({
                 this._gameRecordItemList[i].parent = this.gameRecordContent;
 
                 let roomInfo = this._gameRecordItemList[i].getChildByName("roomInfo");
-
-                let gameIcon = roomInfo.getChildByName("gameIcon");
-                let gameIconStr = ["","penghu","paohuzi","penghu","paohuzi","hongheihu","hongheihu","liuhuqiang","liuhuqiang","paodekuai","paodekuai","hongzhong","hongzhong","shihuka","shihuka","tonghua","tonghua"];
-                let gameIconPrefabRes= cc.find("prefabRes/" + gameIconStr[msg.data[i].gameid], this._gameRecordLayer);
-                gameIcon.getComponent(cc.Sprite).spriteFrame  = gameIconPrefabRes.getComponent(cc.Sprite).spriteFrame;
-
+                roomInfo.getChildByName("text_gameName").getComponent(cc.Label).string = Global.getGameName(msg.data[i].gameid);
                 roomInfo.getChildByName("text_begin_time").getComponent(cc.Label).string = msg.data[i].beginTime;
                 roomInfo.getChildByName("text_end_time").getComponent(cc.Label).string = msg.data[i].endTime;
 
                 let text_roomInfo = roomInfo.getChildByName("text_roomInfo");
                 text_roomInfo.getChildByName("text_roomID").getComponent(cc.Label).string = "房间号：" + msg.data[i].deskid;
-                let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快","红中","红中","十胡卡","十胡卡"];
-                text_roomInfo.getChildByName("text_game_name").getComponent(cc.Label).string = gameNameStr[msg.data[i].gameid];
                 text_roomInfo.getChildByName("text_game_jushu").getComponent(cc.Label).string = msg.data[i].gameNum + "局";
                 text_roomInfo.getChildByName("text_people_num").getComponent(cc.Label).string = msg.data[i].presonNum;
 
