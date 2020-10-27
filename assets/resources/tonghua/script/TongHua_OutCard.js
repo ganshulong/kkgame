@@ -27,6 +27,8 @@ cc.Class({
         this._outCardNode = cc.find("scene/out_cards/out_card"+index,this.node);
         this.mask_onOut = cc.find("scene/out_cards/mask_onOut"+index,this.node);
         this.mask_onOut.active = false;
+        this.mask_shangYou = cc.find("scene/out_cards/mask_shangYou"+index,this.node);
+        this.showShangYou(false);
 
         if(this._outCardNode){
             let pos = showCardNode.parent.convertToWorldSpaceAR(showCardNode.position);
@@ -55,6 +57,7 @@ cc.Class({
             this._outCardNode.removeAllChildren();
         }
         this.showNoOutCard(false);
+        this.showShangYou(false);
         this.showOutCard();
     },
 
@@ -119,6 +122,9 @@ cc.Class({
             this.showCardNum(data.cardsCnt);
             if (1 == data.cardsCnt) {
                 cc.vv.AudioManager.playEff("paodekuai/", "alarm",true);
+            }
+            if (1 == data.isYiYou) {
+                this.showShangYou(true);
             }
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
@@ -218,6 +224,10 @@ cc.Class({
 
     showNoOutCard(bShow){
         this.mask_onOut.active = bShow;
+    },
+
+    showShangYou(bShow){
+        this.mask_shangYou.active = bShow;
     },
 
     recvRoundOver(data){

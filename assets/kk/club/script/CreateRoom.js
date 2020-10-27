@@ -182,7 +182,9 @@ cc.Class({
         let changeValue = event.target.isTongHua ? 0.1 : 1;
         if (changeValue < score) {
             score -= changeValue;
-            score = Math.round(score* 10) / 10;
+            if (event.target.isTongHua) {
+                score = score.toFixed(1);
+            }
             text_score.getComponent(cc.Label).string = score;
         }
     },
@@ -193,7 +195,9 @@ cc.Class({
         let changeValue = event.target.isTongHua ? 0.1 : 1;
         if (changeValue * 10 > score) {
             score += changeValue;
-            score = Math.round(score* 10) / 10;
+            if (event.target.isTongHua) {
+                score = score.toFixed(1);
+            }
             text_score.getComponent(cc.Label).string = score;
         }
     },
@@ -366,7 +370,7 @@ cc.Class({
 
         //算分倍数
         let text_score = cc.find("bg_score/text_score",layer);
-        text_score.getComponent(cc.Label).string = layer.isTongHua ? 0.1 : 1;
+        text_score.getComponent(cc.Label).string = layer.isTongHua ? (0.1).toFixed(1) : 1;
 
         let trusteeship = cc.find("trusteeship/toggle0",layer);
         trusteeship.getComponent(cc.Toggle).isChecked = false;
