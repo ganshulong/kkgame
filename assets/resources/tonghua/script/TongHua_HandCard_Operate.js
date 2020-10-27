@@ -35,9 +35,9 @@ cc.Class({
             // 出
             this.btn_outCard = this._operateNode.getChildByName("btn_outCard");
             Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
-
-            this.TongHua_CardLogicJS = this.node.getComponent("TongHua_CardLogic");
         }
+
+        this.TongHua_CardLogicJS = this.node.getComponent("TongHua_CardLogic");
 
         if (cc.vv.gameData._isPlayBack && 0 < index) {
             this._handcardNode = cc.find("scene/playback_handle/player"+index,this.node);
@@ -171,13 +171,17 @@ cc.Class({
         let cardGroupsInfo = this.TongHua_CardLogicJS.GetCardGroupsInfo(list);
         let cardGroups = cardGroupsInfo.card2DListEx;
         let self = this;
+        let cardOffsetY = 20;
         let cardScale = 0.75;
+        if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
+            cardOffsetY = 15;
+            cardScale = 0.4;
+        }
         let cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2;
         let allCardWidth = cardOffsetX * (cardGroups.length + 1);
         if (this._handcardNode.width < allCardWidth) {
             cardOffsetX = this._handcardNode.width / (cardGroups.length + 1);
         }
-        let cardOffsetY = 20;
         for (let i = 0; i < cardGroups.length; i++) {
             for (let j = 0; j < cardGroups[i].length; j++) {
                 let node = this.node.getComponent("TongHua_Card").createCard(cardGroups[i][j]);
@@ -230,16 +234,9 @@ cc.Class({
                         )
                     )
                 } else {
-                    if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
-                        node.scale = cardScale*0.45;
-                        if (1 == this._chairId) {   //右对齐
-                            node.x = - node.width/2*(cardGroups.length-1)*node.scale + node.width/2 * i * node.scale;
-                        }
-                    } else {
-                        node.x = endPosX;
-                        node.scale = cardScale;
-                    }
+                    node.x = endPosX;
                     node.y = endPosY;
+                    node.scale = cardScale;
                 }
 
                 if (0 === this._chairId && !cc.vv.gameData._isPlayBack) {
