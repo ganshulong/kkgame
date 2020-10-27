@@ -206,7 +206,7 @@ cc.Class({
         if (list && 0 < list.length) {
             let cardScale = 0.4;
             let cardWidth = cc.vv.gameData.CardWidth * cardScale;
-            let startPosX = cardWidth/2 * i - (cardWidth/2*(list.length-1))/2;
+            let startPosX = - (cardWidth/2*(list.length-1))/2;
             for (let i = 0; i < list.length; i++) {
                 let node = this.node.getComponent("TongHua_Card").createCard(list[i]);
                 node.scale = cardScale;
