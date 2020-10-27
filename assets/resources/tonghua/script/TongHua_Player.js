@@ -95,7 +95,7 @@ cc.Class({
             let toUISeat = cc.vv.gameData.getUISeatBylocalSeat(toLocalSeat);
             let toUIPlayerPos = this._playerNode.parent.getChildByName("player"+toUISeat).position;
             let moveByPos = cc.v2(toUIPlayerPos.x - this._playerNode.x, toUIPlayerPos.y - this._playerNode.y);
-            let intervalTime = 0.08;
+            let intervalTime = 0.05;
             if (60 < iconNum) {
                 intervalTime = intervalTime * 60 / iconNum;
             }

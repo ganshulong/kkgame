@@ -353,6 +353,8 @@ cc.Class({
                     } else {
                         card.color = new cc.Color(255,255,255);
                     }
+                    let pos = cc.v2(card.posX, card.posY);
+                    card.runAction(cc.moveTo(0.1, pos));
                 } 
             }
         }
