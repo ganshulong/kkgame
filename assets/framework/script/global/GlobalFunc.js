@@ -1460,6 +1460,11 @@ Global.getDataStr = function (year,month,day){
     return dataStr;
 }
 
+Global.getGameName = function (gameid){
+    let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快","红中","红中","十胡卡","十胡卡","同花","同花"];
+    return gameNameStr[gameid];
+}
+
 GlobalFunc.initRecord = function (){
     if (GlobalFunc.isAndroid()) {
         cc.vv.FloatTip.show("initRecord isAndroid");
