@@ -303,7 +303,7 @@ cc.Class({
             let cardWidth = cc.vv.gameData.CardWidth * cardScale;
             let startPosX = 0;
             if(this._UISeat === 0){         // 下 居中
-                startPosX = cardWidth/2 * i - (cardWidth/2*(list.length-1))/2;
+                startPosX = - (cardWidth/2*(list.length-1))/2;
             } else if(this._UISeat === 1){  //右 右对齐
                 startPosX = - cardWidth/2*(list.length-1);
             } else if(this._UISeat === 2){  //左 左对齐
