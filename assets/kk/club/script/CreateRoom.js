@@ -54,9 +54,14 @@ cc.Class({
         Global.registerEvent(EventId.GAME_CREATEROOM,this.showCreateRoom,this);
     },
 
-    showCreateRoom(isClubRoom, index){
+    showCreateRoom(isClubRoom, showGameID){
         this._isClubRoom = (isClubRoom === false) ? false : true;
-        this.curGameIndex = index ? index : 0;
+        this.curGameIndex = 0;
+        if (undefined != showGameID) {
+            this.curGameIndex = showGameID;
+        } else if (0 < cc.vv.UserManager.gameList.length) {
+            this.curGameIndex = cc.vv.UserManager.gameList[0].id;
+        }
         if(this._createLayer === null){
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
                 if(err === null){
