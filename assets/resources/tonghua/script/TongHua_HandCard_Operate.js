@@ -239,7 +239,7 @@ cc.Class({
                     node.scale = cardScale;
                 }
 
-                if (0 === this._chairId && !cc.vv.gameData._isPlayBack) {
+                if ((cardGroups[i].length-1) == j && 0 === this._chairId && !cc.vv.gameData._isPlayBack) {
                     node.addComponent(cc.Button);
                     node.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
                     node.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
@@ -272,7 +272,7 @@ cc.Class({
                 if (card.isSelected && 15 <= cardNum) {    //15,16副，只能单出一列
                     card.isSelected = false;
                 } else {
-                    continue;;
+                    continue;
                 }
             }
             if (card.isSelected) {
@@ -297,10 +297,6 @@ cc.Class({
     },
 
     setCardMoveState(){
-        if (0 < this.moveCards.length) {
-            this.moveCards[0].getChildByName("cardNumText").active = false;
-            this.moveCards[0].getChildByName("cardTypeText").active = false;
-        }
         let cardOffsetY = 20;
         for (let i = 0; i < this.moveCards.length; i++) {
             this.moveCards[i].x = this.touchCurPos.x;
@@ -315,12 +311,16 @@ cc.Class({
     },
 
     onTouchEnd(event){
-        if (this._operateNode.active) {
+        if (this.handcardNodeSortList) {
             for (let i = this.handcardNodeSortList.length-1; i >= 0; i--) {
                 let card = this.handcardNodeSortList[i];
                 if (card.isSelected) {
                     if (100 < (card.y - card.posY)) {
-                        this.onClickOutCard();  
+                        if (this._operateNode.active) {
+                            this.onClickOutCard();
+                        } else {
+                            this.onClickBgResetCardState();
+                        }  
                         return;
                     } else {
                         break;
@@ -338,8 +338,6 @@ cc.Class({
             if (card.isSelected) {
                 let pos = cc.v2(card.posX, card.posY);
                 card.runAction(cc.moveTo(0.1, pos));
-                card.getChildByName("cardNumText").active = true;
-                card.getChildByName("cardTypeText").active = true;
             } 
         }
     },

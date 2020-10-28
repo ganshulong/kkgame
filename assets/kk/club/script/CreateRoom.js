@@ -54,9 +54,9 @@ cc.Class({
         Global.registerEvent(EventId.GAME_CREATEROOM,this.showCreateRoom,this);
     },
 
-    showCreateRoom(isClubRoom, index){
+    showCreateRoom(isClubRoom){
         this._isClubRoom = (isClubRoom === false) ? false : true;
-        this.curGameIndex = index ? index : 0;
+        this.curGameIndex = 0;
         if(this._createLayer === null){
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
                 if(err === null){
@@ -102,7 +102,7 @@ cc.Class({
             item.y = - (item.height + 5) * i;
             item.parent = this.content_gameBtns;
             item.active = true;
-            item.id = cc.vv.UserManager.gameList[i].id;
+            item.index = i;
             Global.btnClickEvent(item,this.onClickGameType,this);
         }
         this.content_gameBtns.height = (tempItem.height + 5) * cc.vv.UserManager.gameList.length;
@@ -146,8 +146,8 @@ cc.Class({
             btn_create_room.id = cc.vv.UserManager.gameList[i].id;
             Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
 
-            // this.gamePanels.push(panel);
-            this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
+            this.gamePanels.push(panel);
+            // this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
 
             let content = cc.find("right_bg/scrollview/content", panel);
             content.isTongHua = ("panel_tonghua" === panel.name);
@@ -162,13 +162,13 @@ cc.Class({
 
     showGameType(){
         for (var i = 0; i < this.content_gameBtns.children.length; i++) {
-            this.content_gameBtns.children[i].getComponent(cc.Button).interactable = (this.curGameIndex != this.content_gameBtns.children[i].id);
-            this.gamePanels[i].active = (this.curGameIndex === this.gamePanels[i].id);
+            this.content_gameBtns.children[i].getComponent(cc.Button).interactable = (this.curGameIndex != i);
+            this.gamePanels[i].active = (this.curGameIndex == i);
         }
     },
 
     onClickGameType(event){
-        this.curGameIndex = event.target.id;
+        this.curGameIndex = event.target.index;
         this.showGameType();
     },
 
@@ -214,8 +214,8 @@ cc.Class({
     },
 
     onCreateGame(event){
+        let layer = cc.find("right_bg/scrollview/content",this.gamePanels[this.curGameIndex]);
         let id = event.target.id;
-        let layer = cc.find("right_bg/scrollview/content",this.gamePanels[id]);
 
         let req = {};
         let optionList = [];

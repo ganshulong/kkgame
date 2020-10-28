@@ -43,6 +43,9 @@ cc.Class({
 
                 let btn_share = this._layer.getChildByName("btn_share");
                 Global.btnClickEvent(btn_share,this.onShare,this);
+                
+                this._winBgSpr = cc.find("game_end_bg/player0/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
+                this._loseBgSpr = cc.find("game_end_bg/player1/img_bg",this._layer).getComponent(cc.Sprite).spriteFrame;
 
                 let scoreList = data.users.slice(0);
                 scoreList.sort((a,b)=>{
@@ -73,6 +76,9 @@ cc.Class({
 
     initPlayer(player,user,dayingjiaID){
         if(player){
+            let img_bg = player.getChildByName("img_bg");
+            img_bg.getComponent(cc.Sprite).spriteFrame = user.score >= 0 ? this._winBgSpr : this._loseBgSpr;
+            
             let spr_head = cc.find("head/radio_mask/spr_head", player);
             Global.setHead(spr_head, user.usericon);
 
