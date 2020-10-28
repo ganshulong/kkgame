@@ -136,6 +136,8 @@ cc.Class({
                     this._seatIndex = users[i].seat;
                     this.initPlayerInfo(users[i]);
                 }
+                let deskInfo = cc.vv.gameData.getDeskInfo();
+                this.showZhuang(deskInfo.bankerInfo.seat === this._seatIndex, deskInfo.bankerInfo.count);
             }
         }
         if (!bHavePlayer && this._playerNode.active) {
