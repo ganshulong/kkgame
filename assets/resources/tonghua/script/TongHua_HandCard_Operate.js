@@ -173,14 +173,18 @@ cc.Class({
         let self = this;
         let cardOffsetY = 20;
         let cardScale = 0.75;
-        if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
-            cardOffsetY = 15;
-            cardScale = 0.4;
-        }
         let cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2;
+        let cardStartPosX = -(cardOffsetX * (cardGroups.length-1))/2;
         let allCardWidth = cardOffsetX * (cardGroups.length + 1);
         if (this._handcardNode.width < allCardWidth) {
             cardOffsetX = this._handcardNode.width / (cardGroups.length + 1);
+            cardStartPosX = -(cardOffsetX * (cardGroups.length-1))/2;
+        }
+        if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
+            cardOffsetY = 15;
+            cardScale = 0.4;
+            cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2;
+            cardStartPosX = -(cardOffsetX * (cardGroups.length-1))/2 + 380;
         }
         for (let i = 0; i < cardGroups.length; i++) {
             for (let j = 0; j < cardGroups[i].length; j++) {
@@ -189,7 +193,7 @@ cc.Class({
                 this.handcardNodeSortList.push(node);
                 node.col = i;
                 node.zIndex = this.handcardNodeSortList.length;
-                let endPosX = cardOffsetX * i - (cardOffsetX * (cardGroups.length-1))/2;
+                let endPosX = cardStartPosX + cardOffsetX * i;
                 let endPosY = node.height*cardScale/2 + cardOffsetY * (cardGroups[i].length-1-j);
                 node.posX = endPosX;
                 node.posY = endPosY;
