@@ -20,6 +20,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.MEMBER_FORBID_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.registerMsg(MsgId.MEMBER_RECOVER_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.registerMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
 
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
         Global.registerEvent(EventId.SHOW_CLUB_MEMBER, this.showLayer,this);
@@ -70,7 +71,7 @@ cc.Class({
 
         this.sortBtnArr = [];
         let node_topInfo = cc.find("bg_member/panel_list/node_topInfo",this._layer);
-        let sortBtnStrArr = ["btn_IDSort", "btn_stateSort", "btn_roundNumSort", "btn_bigWinerNumSort", "btn_speedSort", "btn_score2Sort"]
+        let sortBtnStrArr = ["btn_IDSort", "btn_stateSort", "btn_roundNumSort", "btn_bigWinerNumSort", "btn_speedSort", "btn_scoreSort", "btn_powerSort"];
         for (let i = 0; i < sortBtnStrArr.length; i++) {
             this.sortBtnArr.push(node_topInfo.getChildByName(sortBtnStrArr[i]));
             Global.btnClickEvent(this.sortBtnArr[i],this.onClickSort,this);
@@ -86,8 +87,8 @@ cc.Class({
         this._layer.addComponent("ClubSetPartnerRatio");
         this.ClubSetPartnerRatioJS = this._layer.getComponent("ClubSetPartnerRatio");
 
-        // this._layer.addComponent("ClubMemberScoreLimit");
-        // this.ClubMemberScoreLimitJS = this._layer.getComponent("ClubMemberScoreLimit");
+        this._layer.addComponent("ClubSetPower");
+        this.ClubSetPowerJS = this._layer.getComponent("ClubSetPower");
 
         this.panel_memberOperate = cc.find("bg_member/panel_member", this._layer);
         this.onClickCloseMemberOperate();
@@ -99,8 +100,8 @@ cc.Class({
         Global.btnClickEvent(this.btn_forbidPlay, this.onClickForbidPlay,this);
         this.btn_recoverPlay = this.panel_memberOperate.getChildByName("btn_recoverPlay");
         Global.btnClickEvent(this.btn_recoverPlay, this.onClickRecoverPlay,this); 
-        // this.btn_scoreLimit = this.panel_memberOperate.getChildByName("btn_scoreLimit");
-        // Global.btnClickEvent(this.btn_scoreLimit, this.onClickScoreLimit,this); 
+        this.btn_setPower = this.panel_memberOperate.getChildByName("btn_setPower");
+        Global.btnClickEvent(this.btn_setPower, this.onClickSetPower,this); 
     },
 
     initShow(){
@@ -224,7 +225,6 @@ cc.Class({
     onClickSort(event){
         let seq = event.target.isSmallToBig ? 1 : -1;
         event.target.isSmallToBig = !event.target.isSmallToBig;
-        ["btn_IDSort", "btn_stateSort", "btn_roundNumSort", "btn_bigWinerNumSort", "btn_speedSort", "btn_score2Sort"]
         this.memberList.sort((obj1, obj2)=>{
             if ("btn_IDSort" == event.target.name) {
                 return seq * (obj1.uid - obj2.uid);
@@ -236,8 +236,10 @@ cc.Class({
                 return seq * (obj1.bigWinCnt - obj2.bigWinCnt);
             } else if ("btn_speedSort" == event.target.name) {
                 return seq * (obj1.cost - obj2.cost);
-            } else if ("btn_score2Sort" == event.target.name) {
+            } else if ("btn_scoreSort" == event.target.name) {
                 return seq * (obj1.totalScore - obj2.totalScore);
+            } else if ("btn_powerSort" == event.target.name) {
+                return seq * (obj1.power - obj2.power);
             }
             return false;
         });
@@ -309,7 +311,8 @@ cc.Class({
             bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = showList[i].jushu;
             bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
             bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;
-            bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = showList[i].totalScore;
+            bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore;
+            bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power;
 
             let btn_operate = bg_memberItem.getChildByName("btn_operate");
             if (cc.vv.UserManager.uid == showList[i].uid) {
@@ -347,6 +350,8 @@ cc.Class({
         this.btn_recoverPlay.active = (0 == playerInfo.state);
         this.btn_recoverPlay.uid = playerInfo.uid;
         this.btn_recoverPlay.playername = playerInfo.playername;
+
+        this.btn_setPower.uid = playerInfo.uid;
     },
 
     onClickCloseMemberOperate(){
@@ -412,9 +417,9 @@ cc.Class({
         cc.vv.AlertView.show("确定将" + event.target.playername + "踢出亲友圈吗", sureCall, cancelCall);
     },
 
-    // onClickScoreLimit(event){
-    //     this.ClubMemberScoreLimitJS.showLayer(event.target);
-    // },
+    onClickSetPower(event){
+        this.ClubSetPowerJS.showLayer(event.target.uid);
+    },
 
     onRcvMemberState(msg){
         this.onClickCloseMemberOperate();
@@ -444,11 +449,26 @@ cc.Class({
         }
     },
 
+    onRcvSetPower(msg){
+        this.onClickCloseMemberOperate();
+        if (200 == msg.code) {
+            for(let i = 0; i < this.memberListContent.children.length; ++i){
+                let childrenItem = this.memberListContent.children[i];
+                if (msg.memberuid === childrenItem.uid && childrenItem.active) {
+                    this.memberList[i].power = msg.power;
+                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.power;
+                    break;
+                }
+            }
+        }
+    },
+
     onDestroy(){
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_MEMBER_LIST, this.onRcvMemberList, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MEMBER_FORBID_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MEMBER_RECOVER_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.unregisterMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_member",cc.Prefab);
         }

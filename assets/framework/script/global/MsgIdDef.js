@@ -292,4 +292,6 @@ GlobalMsgId.CLUB_INVITE_NOTIFY = 8830;  	// 俱乐部邀请通知
 
 GlobalMsgId.CLUB_SET_PARTNER = 8831;  		// 俱乐部授权合伙人
 GlobalMsgId.CLUB_SET_PARTNER_RATIO = 8832; 	// 设置合伙人抽水比
+GlobalMsgId.CLUB_SET_POWER = 8833; 			// 设置疲劳
+GlobalMsgId.CLUB_POWER_NOTIFY = 18817; 		// 疲劳通知
 

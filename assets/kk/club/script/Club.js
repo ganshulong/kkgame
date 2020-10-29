@@ -145,6 +145,7 @@ cc.Class({
         if(msg.code == 200){
             this._tableList = msg.response.deskList;
             this.initTables(this._tableList);
+            this.setPower(msg.response.pscore);
         }
     },
 
@@ -157,6 +158,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, this);
         cc.vv.NetManager.registerMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, this); //退出房间
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
@@ -175,6 +177,15 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SWITCH_GAME, this.onEnterDeskResult, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.SUCCESS_DISMISS_NOTIFY, this.onRcvDismissNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, false, this); //退出房间
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, false, this);
+    },
+
+    onRcvPowerNotify(msg){
+        if (200 == msg.code) {
+            if (msg.clubid === cc.vv.UserManager.currClubId && msg.memberuid === cc.vv.UserManager.uid) {
+                this.setPower(msg.power)
+            }
+        }
     },
 
     onRcvSetPartner(data){
@@ -573,6 +584,10 @@ cc.Class({
         }
         this._content.active = list.length>0;
         this._content.width = width+50;
+    },
+
+    setPower(power){
+        cc.find("Layer/bg/power_bg/text_power", this.node).getComponent(cc.Label).string = power;
     },
 
     onClickInviteToWx(){
