@@ -518,7 +518,7 @@ cc.Class({
         description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
         description += ("," + roomConf.param1 + "副牌");
         description += ("," + ["不显示剩余牌 ","显示剩余牌 "][roomConf.param2]);
-        description += ("," + ["不包含8 ","包含8 "][roomConf.isContain8]);
+        // description += ("," + ["不包含8 ","包含8 "][roomConf.isContain8]);
         description += ("," + roomConf.score+ "倍");
         return description;
     },

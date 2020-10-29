@@ -19,7 +19,7 @@ cc.Class({
     GetCardGroupsInfo(cards){
         cards.sort((a,b)=>{
             if ((a%0x10) == (b%0x10)) {
-                return a - b;
+                return - (a - b);       //0x0?黑桃  0x1?红桃  0x2?梅花  0x3?方块  
             } else {
                 return (a%0x10) - (b%0x10);
             }

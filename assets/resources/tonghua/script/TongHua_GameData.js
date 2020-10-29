@@ -273,7 +273,7 @@ cc.Class({
         list.push(conf.seat+ "人 ");
         list.push(conf.param1 + "副牌 ");
         list.push(["不显示剩余牌 ","显示剩余牌 "][conf.param2]);
-        list.push(["不包含8 ","包含8 "][conf.isContain8]);
+        // list.push(["不包含8 ","包含8 "][conf.isContain8]);
         list.push(conf.score+ "倍 ");
         if(conf.speed === 1){
             list.push("快速 ");

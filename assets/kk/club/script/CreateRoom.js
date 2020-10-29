@@ -308,12 +308,6 @@ cc.Class({
             }
         }
 
-        // 包含8  同花
-        let contain8 = cc.find("contain8/toggle0",layer);
-        if (contain8) {
-            req.isContain8 = contain8.getComponent(cc.Toggle).isChecked ? 1 : 0;
-        }
-
         // 算分倍数
         let text_score = cc.find("bg_score/text_score",layer);
         req.score = Number(text_score.getComponent(cc.Label).string);

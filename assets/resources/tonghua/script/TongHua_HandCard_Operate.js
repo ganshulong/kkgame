@@ -171,7 +171,7 @@ cc.Class({
         let cardGroupsInfo = this.TongHua_CardLogicJS.GetCardGroupsInfo(list);
         let cardGroups = cardGroupsInfo.card2DListEx;
         let self = this;
-        let cardOffsetY = 20;
+        let cardOffsetY = 15;
         let cardScale = 0.75;
         let cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2;
         let cardStartPosX = -(cardOffsetX * (cardGroups.length-1))/2;
@@ -181,7 +181,7 @@ cc.Class({
             cardStartPosX = -(cardOffsetX * (cardGroups.length-1))/2;
         }
         if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
-            cardOffsetY = 15;
+            cardOffsetY = 10;
             cardScale = 0.4;
             cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2;
             cardStartPosX = -(cardOffsetX * (cardGroups.length-1))/2 + 380;
