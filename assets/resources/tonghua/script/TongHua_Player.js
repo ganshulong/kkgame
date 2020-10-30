@@ -72,6 +72,28 @@ cc.Class({
         Global.registerEvent(EventId.SCORE_UPDATE_NOTIFY,this.onRcvScoreUpdateNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
+        Global.registerEvent(EventId.TRUSTEE_NOTIFY,this.onRcvTrusteeNotify,this);
+        Global.registerEvent(EventId.CANCEL_TRUSTEE_NOTIFY,this.onRcvCancelTrusteeNotify,this);
+    },
+
+    onRcvCancelTrusteeNotify(data){
+        data = data.detail;
+        if(data.seat === this._seatIndex){
+            this._playerNode.getChildByName("mask_trustee").active = false;
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = false;
+            }
+        }
+    },
+
+    onRcvTrusteeNotify(data){
+        data = data.detail;
+        if(data.seat === this._seatIndex){
+            this._playerNode.getChildByName("mask_trustee").active = true;
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = true;
+            }
+        }
     },
 
     onRcvOutCardNotify(data){
@@ -360,6 +382,10 @@ cc.Class({
                 this.setTotalScore(user.bigInfo.score);
             } else {
                 this.setTotalScore(0);
+            }
+            this._playerNode.getChildByName("mask_trustee").active = (0 < user.autoc);
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = (0 < user.autoc);
             }
         }
     },
