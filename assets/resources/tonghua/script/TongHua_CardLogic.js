@@ -5,17 +5,6 @@ cc.Class({
     properties: {
     },
 
-    arrangeCard(cards){
-        let card2DList = [];
-        for (let i = 0; i < 0x10; i++) {
-            card2DList.push([]);
-        }
-        for (let i = 0; i < cards.length; i++) {
-            card2DList[cards[i]%0x10].push(cards[i]);
-        }
-        return card2DList;
-    }, 
-
     GetCardGroupsInfo(cards){
         cards.sort((a,b)=>{
             if ((a%0x10) == (b%0x10)) {
@@ -24,6 +13,8 @@ cc.Class({
                 return (a%0x10) - (b%0x10);
             }
         });
+
+        //同花
         let card2DList = [];
         let curCardList = [cards[0]];
         for (let i = 1; i < cards.length; i++) {
@@ -37,36 +28,46 @@ cc.Class({
         if (0 < curCardList.length) {
             card2DList.push(curCardList);
         }
-
-        //同花
         let conf = cc.vv.gameData.getRoomConf();
         let tongHuaMinCardNum = (8 < conf.param1) ? 5 : 4;
-        let card2DListEx = [];
+        let card2DListTongHua = [];
         let otherCards = [];
         for (let i = 0; i < card2DList.length; i++) {
             if (tongHuaMinCardNum <= card2DList[i].length) {
-                card2DListEx.push(card2DList[i]);
+                card2DListTongHua.push(card2DList[i]);
             } else {
                 for (let j = 0; j < card2DList[i].length; j++) {
                     otherCards.push(card2DList[i][j]);
                 }
             }
         }
-        card2DListEx.sort((a,b)=>{
+        card2DListTongHua.sort((a,b)=>{
             return a.length - b.length;
         });
-        let tongHuaNum = card2DListEx.length;
+        let tongHuaNum = card2DListTongHua.length;
 
-        let arrangeCard = this.arrangeCard(otherCards);
-        arrangeCard.sort((a,b)=>{
-            return a.length - b.length;
-        });
-        for (let i = 0; i < arrangeCard.length; i++) {
-            if (0 < arrangeCard[i].length) {
-                card2DListEx.push(arrangeCard[i]);
+        //其他(炸弹)
+        let card2DListOther = [];
+        curCardList = [otherCards[0]];
+        for (let i = 1; i < otherCards.length; i++) {
+            if ((otherCards[i]%0x10) === (curCardList[0]%0x10)) {
+                curCardList.push(otherCards[i]);
+            } else {
+                card2DListOther.push(curCardList);
+                curCardList = [otherCards[i]];
             }
         }
+        if (0 < curCardList.length) {
+            card2DListOther.push(curCardList);
+        }
+        card2DListOther.sort((a,b)=>{
+            return a.length - b.length;
+        });
 
-        return {card2DListEx:card2DListEx, tongHuaNum:tongHuaNum};
+        for (let i = 0; i < card2DListOther.length; i++) {
+            card2DListTongHua.push(card2DListOther[i]);
+        }
+
+        return {card2DListEx:card2DListTongHua, tongHuaNum:tongHuaNum};
     },
 });

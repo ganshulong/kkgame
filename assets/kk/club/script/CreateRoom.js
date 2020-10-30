@@ -125,9 +125,13 @@ cc.Class({
                 toggle.round = roundItemData[0];
                 toggle.getChildByName("txt_inning_eight").getComponent(cc.Label).string = roundItemData[0] + "局";
                 toggle.getChildByName("txt_dou1").getComponent(cc.Label).string = "(房卡x"+ roundItemData[1] +")";
+                if (9 < roundItemData[0]) {
+                    // toggle.getChildByName("txt_inning_eight").x += 8;
+                    toggle.getChildByName("txt_dou1").x += 8;
+                }
                 toggle.active = true;
             }
-            for (let j = roundData.length; j < 3; j++) {
+            for (let j = roundData.length; j < 4; j++) {
                 let toggle = round.getChildByName("toggle" + j);
                 if (toggle) {
                     toggle.active = false;
