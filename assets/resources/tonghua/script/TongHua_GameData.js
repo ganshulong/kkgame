@@ -44,7 +44,7 @@ cc.Class({
     },
 
     init(data){
-        this.CardWidth = 161;
+        this.CardWidth = 151;
         this.RoomSeat = 2;
         this.OPERATETYPE={
             GU0:1,  // 过

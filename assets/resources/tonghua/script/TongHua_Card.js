@@ -35,9 +35,9 @@ cc.Class({
         let color = parseInt(cardValue / 0x10);
         let resColor = [3,2,1,0][color];
         let value = cardValue % 0x10;
-        let resValue = (0x0D < value) ? (value-14) : (value-1);
+        let resValue = (0x0D < value) ? (value-13) : (value);
 
-        spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame("card_"+resColor+"_"+resValue);
+        spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(resColor+"-"+resValue);
 
         let cardNumText = new cc.Node();
         cardNumText.name = "cardNumText";
@@ -46,17 +46,17 @@ cc.Class({
         cardNumText.getComponent(cc.Label).fontSize = 36;
         cardNumText.getComponent(cc.Label).font = this._font;
         cardNumText.x = -40;
-        cardNumText.y = -40;
+        cardNumText.y = -30;
         cardNumText.parent = spr;
 
         let cardTypeText = new cc.Node();
         cardTypeText.name = "cardTypeText";
         cardTypeText.addComponent(cc.Label);
         cardTypeText.getComponent(cc.Label).string = "";
-        cardTypeText.getComponent(cc.Label).fontSize = 36;
+        cardTypeText.getComponent(cc.Label).fontSize = 30;
         cardTypeText.getComponent(cc.Label).font = this._font;
         cardTypeText.x = -40;
-        cardTypeText.y = -80;
+        cardTypeText.y = -70;
         cardTypeText.parent = spr;
         
         spr.cardValue = cardValue;
