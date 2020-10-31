@@ -27,7 +27,7 @@ cc.Class({
 
     onRcvGuoCardNotify(data){
         data = data.detail;
-        let path = "card/"+this.getLanguage()+this.getSex(data.seat)+ "pass" + Global.random(0,3);
+        let path = "card/"+this.getLanguage()+this.getSex(data.seat)+ "pass0";
         cc.vv.AudioManager.playEff("paodekuai/", path,true);
     },
 
