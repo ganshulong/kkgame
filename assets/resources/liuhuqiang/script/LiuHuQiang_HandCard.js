@@ -220,8 +220,7 @@ cc.Class({
 
         if((data.actionInfo.curaction.source === this._seatIndex && 0 === this._chairId) ||
            (cc.vv.gameData._isPlayBack && data.actionInfo.curaction.source === this._seatIndex)){
-
-            if (this._selectCard) {
+            if (this._selectCard && this._selectCard.cardValue == data.actionInfo.curaction.card) {
                 this._selectCard.removeFromParent();
                 this.clearSelectInCardBox();
                 this._selectCard = null;
@@ -417,7 +416,7 @@ cc.Class({
     delHandCard(card){
         let x = -1;
         let y = -1;
-        for(let i=0;i<this._handcardNode.childrenCount;++i){
+        for(let i = this._handcardNode.childrenCount - 1; i >= 0; --i){
             let node = this._handcardNode.children[i];
             if(node.cardValue === card){
                 let cardIndex = node.cardBoxIndex;
