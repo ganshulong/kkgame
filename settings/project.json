@@ -8,35 +8,16 @@
   },
   "collision-matrix": [
     [
-      false
-    ],
-    [
-      false,
-      false,
       true
-    ],
-    [
-      false,
-      true,
-      false
     ]
   ],
   "design-resolution-height": 720,
   "design-resolution-width": 1280,
-  "excluded-modules": [
-    "TiledMap",
-    "VideoPlayer",
-    "MotionStreak",
-    "Physics",
-    "StudioComponent",
-    "Chipmunk"
-  ],
+  "excluded-modules": [],
   "fit-height": true,
   "fit-width": false,
   "group-list": [
-    "default",
-    "Fish",
-    "Bullet"
+    "default"
   ],
   "simulator-orientation": false,
   "simulator-resolution": {
