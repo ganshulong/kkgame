@@ -127,11 +127,10 @@ cc.Class({
                 this.showShangYou(true);
             }
         }
+        //同花只有2人场 不是出牌玩家就是下轮出牌玩家
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
-            if (0 == this._UISeat || 2 != data.actionInfo.nextaction.type) {
-                this.showNoOutCard(false);
-                this.showOutCard();
-            }
+            this.showNoOutCard(false);
+            this.showOutCard();
             if (0 < data.actionInfo.nextaction.type) {
                 this.setShowTimeCount(true, data.actionInfo.nextaction.time);
             }
@@ -145,11 +144,10 @@ cc.Class({
             this.showOutCard();
             this.setShowTimeCount(false);
         }
+        //同花只有2人场 不是出牌玩家就是下轮出牌玩家
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
-            if (0 == this._UISeat || 2 != data.actionInfo.nextaction.type) {
-                this.showNoOutCard(false);
-                this.showOutCard();
-            }
+            this.showNoOutCard(false);
+            this.showOutCard();
             if (0 < data.actionInfo.nextaction.type) {
                 this.setShowTimeCount(true, data.actionInfo.nextaction.time);
             }
