@@ -93,7 +93,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     [WXApi registerApp:@"wx82256d3bda922e13" universalLink:@"https://tjgosd.xinstall.top/tolink/"];
     
     //注册高德地图定位
-    [AMapServices sharedServices].apiKey = @"c9e271f2f4216a766fb65e3570948733";
+    [AMapServices sharedServices].apiKey = @"e8b9a63d71777b88b45dcc21ee1f65ab";
     
     self.locationManager = [[AMapLocationManager alloc] init];
     self.locationManager.delegate = self;
