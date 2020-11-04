@@ -298,6 +298,7 @@ cc.Class({
         // list.push(["不包含8 ","包含8 "][conf.isContain8]);
         list.push("沉死分给对手\n");
         list.push(conf.score+ "倍 ");
+        list.push("最低入场" + conf.tiredsill + "分 ");
         if(conf.speed === 1){
             list.push("快速 ");
         }

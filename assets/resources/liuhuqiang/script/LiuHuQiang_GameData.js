@@ -291,6 +291,7 @@ cc.Class({
         list.push(["一胡一分 ","三胡一分 "][conf.param1]);
         list.push(["不带醒 ","翻醒 ","随醒 "][conf.param2]);
         list.push(conf.score+ "倍 ");
+        list.push("最低入场" + conf.tiredsill + "分 ");
         if(conf.speed === 1){
             list.push("快速 ");
         }

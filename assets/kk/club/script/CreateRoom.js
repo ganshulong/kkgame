@@ -337,16 +337,24 @@ cc.Class({
         req.distance = distance.getComponent(cc.Toggle).isChecked ? 1 : 0;
 
         if (this._isClubRoom) {
-            let chouShuiValue = layer.getChildByName("input_chouShuiValue").getComponent(cc.EditBox).string;
-            chouShuiValue = parseInt(chouShuiValue);
-            let chouShuiCondition = layer.getChildByName("input_chouShuiCondition").getComponent(cc.EditBox).string;
-            chouShuiCondition = parseInt(chouShuiCondition);
-            if (0 <= chouShuiValue && 1000 >= chouShuiValue && chouShuiValue <= chouShuiCondition && 1000 >= chouShuiCondition ) {
-                req.fuwus = chouShuiValue;
-                req.fuwutj = chouShuiCondition;
-            } else {
-                cc.vv.FloatTip.show("请输入有效的扣钻值与扣钻条件!");
+            req.shrink = [];
+            for (let i = 0; i < 3; i++) {
+                let chouShuiValue = layer.getChildByName("input_chouShuiValue"+i).getComponent(cc.EditBox).string;
+                chouShuiValue = parseInt(chouShuiValue) || 0;
+                let chouShuiRangeMin = layer.getChildByName("input_chouShuiRangeMin"+i).getComponent(cc.EditBox).string;
+                chouShuiRangeMin = parseInt(chouShuiRangeMin) || 0;
+                let chouShuiRangeMax = layer.getChildByName("input_chouShuiRangeMax"+i).getComponent(cc.EditBox).string;
+                chouShuiRangeMax = parseInt(chouShuiRangeMax) || 0;
+                if (chouShuiValue <= chouShuiRangeMin && chouShuiRangeMin <= chouShuiRangeMax) {
+                    req.shrink[i] = [chouShuiValue,chouShuiRangeMin,chouShuiRangeMax];
+                } else {
+                    cc.vv.FloatTip.show("请输入有效的扣钻值与扣钻区间!");
+                    return;
+                }
             }
+            let minEnterValue = layer.getChildByName("input_minEnterValue").getComponent(cc.EditBox).string;
+            minEnterValue = parseInt(minEnterValue) || 0;
+            req.tiredsill = minEnterValue;
         }
 
         var data = {};
@@ -376,7 +384,7 @@ cc.Class({
         let dismiss = cc.find("dismiss/toggle0",layer);
         dismiss.getComponent(cc.Toggle).isChecked = true;
 
-        layer.getChildByName("input_roomName").getComponent(cc.EditBox).string = "";
+        // layer.getChildByName("input_roomName").getComponent(cc.EditBox).string = "";
         layer.getChildByName("input_roomName").active = this._isClubRoom;
         
         let sameIP = cc.find("sameIP/toggle0",layer);
@@ -386,11 +394,27 @@ cc.Class({
         distance.getComponent(cc.Toggle).isChecked = false;
 
         layer.getChildByName("label_chouShui").active = this._isClubRoom;
-        layer.getChildByName("input_chouShuiValue").active = this._isClubRoom;
-        layer.getChildByName("input_chouShuiCondition").active = this._isClubRoom;
+        for (let i = 0; i < 3; i++) {
+            layer.getChildByName("input_chouShuiValue"+i).active = this._isClubRoom;
+            layer.getChildByName("input_chouShuiRangeMin"+i).active = this._isClubRoom;
+            layer.getChildByName("input_chouShuiRangeMax"+i).active = this._isClubRoom;
+            if (this._isClubRoom) {
+                layer.getChildByName("input_chouShuiValue"+i).getComponent(cc.EditBox).string = "";
+                layer.getChildByName("input_chouShuiRangeMin"+i).getComponent(cc.EditBox).string = "";
+                layer.getChildByName("input_chouShuiRangeMax"+i).getComponent(cc.EditBox).string = "";
+            }
+        }
+        layer.getChildByName("label_minEnter").active = this._isClubRoom;
+        layer.getChildByName("input_minEnterValue").active = this._isClubRoom;
         if (this._isClubRoom) {
-            layer.getChildByName("input_chouShuiValue").getComponent(cc.EditBox).string = "6";
-            layer.getChildByName("input_chouShuiCondition").getComponent(cc.EditBox).string = "30";
+            layer.getChildByName("input_minEnterValue").getComponent(cc.EditBox).string = "0";
+        }
+
+        if (!this._isClubRoom) {
+            cc.find("label_other", layer).y += 280;
+            sameIP.y += 280;
+            distance.y += 280;
+            layer.height -= 280;
         }
     },
 
