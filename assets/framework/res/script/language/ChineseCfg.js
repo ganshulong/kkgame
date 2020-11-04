@@ -620,5 +620,6 @@ Wild只出现在2~5列",
     permission_denied:"权限不足",
     player_not_exits:"该用户不存在",
     player_not_exits_in_club:"该用户不在本亲友圈",
+    score_power:"疲劳值不足",
 };
 

@@ -100,8 +100,6 @@ cc.Class({
         Global.btnClickEvent(this.btn_forbidPlay, this.onClickForbidPlay,this);
         this.btn_recoverPlay = this.panel_memberOperate.getChildByName("btn_recoverPlay");
         Global.btnClickEvent(this.btn_recoverPlay, this.onClickRecoverPlay,this); 
-        this.btn_setPower = this.panel_memberOperate.getChildByName("btn_setPower");
-        Global.btnClickEvent(this.btn_setPower, this.onClickSetPower,this); 
     },
 
     initShow(){
@@ -314,6 +312,12 @@ cc.Class({
             bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore;
             bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power;
 
+            if (clubCeateUid == showList[i].uid || cc.vv.UserManager.uid != showList[i].uid) {
+                let btn_setPower = cc.find("text_power/btn_setPower", bg_memberItem);
+                btn_setPower.uid = showList[i].uid;
+                Global.btnClickEvent(btn_setPower, this.onClickSetPower,this); 
+            }
+
             let btn_operate = bg_memberItem.getChildByName("btn_operate");
             if (cc.vv.UserManager.uid == showList[i].uid) {
                 Global.btnClickEvent(btn_operate, this.onClickSetPartner,this);
@@ -350,8 +354,6 @@ cc.Class({
         this.btn_recoverPlay.active = (0 == playerInfo.state);
         this.btn_recoverPlay.uid = playerInfo.uid;
         this.btn_recoverPlay.playername = playerInfo.playername;
-
-        this.btn_setPower.uid = playerInfo.uid;
     },
 
     onClickCloseMemberOperate(){
@@ -454,10 +456,13 @@ cc.Class({
         if (200 == msg.code) {
             for(let i = 0; i < this.memberListContent.children.length; ++i){
                 let childrenItem = this.memberListContent.children[i];
+                if (cc.vv.UserManager.uid === childrenItem.uid && childrenItem.active) {
+                    this.memberList[i].power = msg.myPower;
+                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.myPower;
+                }
                 if (msg.memberuid === childrenItem.uid && childrenItem.active) {
-                    this.memberList[i].power = msg.power;
-                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.power;
-                    break;
+                    this.memberList[i].power = msg.memPower;
+                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.memPower;
                 }
             }
         }
