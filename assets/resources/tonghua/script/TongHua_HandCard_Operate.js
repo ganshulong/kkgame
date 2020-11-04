@@ -171,8 +171,8 @@ cc.Class({
         let cardGroupsInfo = this.TongHua_CardLogicJS.GetCardGroupsInfo(list);
         let cardGroups = cardGroupsInfo.card2DListEx;
         let self = this;
-        let cardOffsetY = 16;
-        let cardScale = 0.8;
+        let cardOffsetY = 18;
+        let cardScale = 0.9;
         let cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2;
         let cardStartPosX = -(cardOffsetX * (cardGroups.length-1))/2;
         let allCardWidth = cardOffsetX * (cardGroups.length + 1);
