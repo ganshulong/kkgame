@@ -588,7 +588,7 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0,
+      "x": 0.5,
       "y": 0.5
     },
     "_contentSize": {
@@ -602,8 +602,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 15,
-      "y": 10
+      "x": 0,
+      "y": -20
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -642,12 +642,12 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 1,
+      "x": 0.5,
       "y": 0.5
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 300,
+      "width": 600,
       "height": 30
     },
     "_rotationX": 0,
@@ -657,7 +657,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 2.5399
+      "y": 50
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -679,11 +679,13 @@
     "_fontSize": 30,
     "_lineHeight": 32,
     "_enableWrapText": true,
-    "_N$file": null,
-    "_isSystemFontUsed": true,
+    "_N$file": {
+      "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
-    "_N$string": "输入疲劳值增加量: ",
-    "_N$horizontalAlign": 2,
+    "_N$string": "请输入增加(正数)或减少(负数)的疲劳值",
+    "_N$horizontalAlign": 1,
     "_N$verticalAlign": 0,
     "_N$fontFamily": "Arial",
     "_N$overflow": 1

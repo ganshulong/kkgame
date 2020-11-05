@@ -256,7 +256,9 @@ cc.Class({
         list.push(conf.seat+ "人 ");
         list.push(["不抓鸟 ","抓2鸟 ","抓4鸟 ","抓6鸟 "][conf.param1/2]);
         list.push(conf.score+ "倍 ");
-        list.push("最低入场" + conf.tiredsill + "分 ");
+        if (cc.vv.UserManager.currClubId) {
+            list.push("最低入场" + conf.tiredsill + "分 ");
+        }
         if(conf.speed === 1){
             list.push("快速 ");
         }
