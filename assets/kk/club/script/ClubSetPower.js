@@ -31,27 +31,41 @@ cc.Class({
         let btnClose = this._Layer.getChildByName("btnClose");
         Global.btnClickEvent(btnClose,this.onClose,this);
 
-        this.input_uid_editBox = this._Layer.getChildByName("input_uid").getComponent(cc.EditBox);
+        this.input_addPower_editBox = this._Layer.getChildByName("input_addPower").getComponent(cc.EditBox);
 
-        let btn_confirm = this._Layer.getChildByName("btn_confirm");
-        Global.btnClickEvent(btn_confirm,this.onClickConfirm,this);
+        let btn_confirmAdd = this._Layer.getChildByName("btn_confirmAdd");
+        btn_confirmAdd.mul = 1;
+        Global.btnClickEvent(btn_confirmAdd,this.onClickConfirm,this);
+
+        this.input_deductionPower_editBox = this._Layer.getChildByName("input_deductionPower").getComponent(cc.EditBox);
+
+        let btn_confirmDeduction = this._Layer.getChildByName("btn_confirmDeduction");
+        btn_confirmDeduction.mul = -1;
+        Global.btnClickEvent(btn_confirmDeduction,this.onClickConfirm,this);
     },
 
     initShow(){
-        this.input_uid_editBox.string = "";
+        this.input_addPower_editBox.string = "";
+        this.input_deductionPower_editBox.string = "";
     },
 
     onClose(){
         this._Layer.active = false;
     },
 
-    onClickConfirm(){
-        let uidInt = parseInt(this.input_uid_editBox.string);
-        if (uidInt || 0 == uidInt) {
+    onClickConfirm(event){
+        let mul = parseInt(event.target.mul);
+        let uidInt = 0;
+        if (1 == mul) {
+            uidInt = parseInt(this.input_addPower_editBox.string);
+        } else {
+            uidInt = parseInt(this.input_deductionPower_editBox.string);
+        }
+        if (uidInt) {
             var req = { 'c': MsgId.CLUB_SET_POWER};
             req.clubid = cc.vv.UserManager.currClubId;
             req.memberuid = this.memberuid;
-            req.power = uidInt;
+            req.power = uidInt*mul;
             cc.vv.NetManager.send(req);
             this.onClose();
         } else {
