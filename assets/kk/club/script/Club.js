@@ -70,6 +70,12 @@ cc.Class({
         let clubName = cc.find("Layer/bg/img_club_name_bg/txt_clubName",this.node);
         clubName.getComponent(cc.Label).string = info?info.name:"";
 
+        this.node.addComponent("ClubPowerRecord");
+        this.ClubPowerRecordJS = this.node.getComponent("ClubPowerRecord");
+
+        let power_bg = cc.find("Layer/bg/power_bg",this.node);
+        Global.btnClickEvent(power_bg,this.onClickPowerRecord,this);
+
         cc.find("Layer/bg/img_card_bg",this.node).active = (info.createUid == cc.vv.UserManager.uid);
 
         let txt_card_num = cc.find("Layer/bg/img_card_bg/txt_card_num",this.node);
@@ -603,6 +609,10 @@ cc.Class({
     onClickInviteToWx(){
         let des = "我在闲乐棋牌的亲友圈ID是" + this._clubInfo.clubid + "，赶快来加入吧"
         Global.onWXShareText(Global.ShareSceneType.WXSceneSession, "亲友圈邀请", des);
+    },
+
+    onClickPowerRecord(){
+        this.ClubPowerRecordJS.showLayer();
     },
 
     onClickInviteJoin(){
