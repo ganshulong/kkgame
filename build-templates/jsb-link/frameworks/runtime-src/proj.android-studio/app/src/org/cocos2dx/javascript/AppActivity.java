@@ -83,8 +83,8 @@ public class AppActivity extends Cocos2dxActivity {
     static long startRecorderTime;//开始时间
     static long stopRecorderTime;//停止时间
     private static AppActivity sContext;//从微信官方后台获取到的
-    public static String APP_ID = "";       //"wx82256d3bda922e13";
-    public static String APP_SECRET = "";   //"b87d6ec883757e530cdf55794df03e92";
+    public static String APP_ID = "";       //"wx4d9bcf52dd61f4bf";
+    public static String APP_SECRET = "";   //"5304f82d5c43689e42c85fa3057eed0f";
     // IWXAPI 是第三方app和微信通信的openapi接口
     private static IWXAPI api;
     // 是否安装微信客户端并且支持微信API

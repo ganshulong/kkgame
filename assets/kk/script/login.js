@@ -9,8 +9,8 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
 //安卓版本的微信登录相关值
-let app_id = "wx82256d3bda922e13";
-let app_sceret = "b87d6ec883757e530cdf55794df03e92";
+let app_id = "wx4d9bcf52dd61f4bf";
+let app_sceret = "5304f82d5c43689e42c85fa3057eed0f";
 
 cc.Class({
     extends: cc.Component,
