@@ -56,7 +56,7 @@ cc.Class({
         if (0 < cc.vv.UserManager.noityList.length) {
             text_dialogue.getComponent(cc.Label).string = cc.vv.UserManager.noityList[0].noity;
         }
-        text_dialogue.x = bg_dialogue.width/2;
+        text_dialogue.x = bg_dialogue.width/2 + 100;
         let moveTime = bg_dialogue.width/80;
         if (moveTime < text_dialogue.width/80) {
             moveTime = text_dialogue.width/80;
@@ -66,7 +66,7 @@ cc.Class({
                 cc.sequence(
                     cc.moveTo(moveTime, cc.v2(-(bg_dialogue.width/2+text_dialogue.width), text_dialogue.y)),
                     cc.callFunc(()=>{
-                        text_dialogue.x = bg_dialogue.width/2;
+                        text_dialogue.x = bg_dialogue.width/2 + 100;
                     })
                 )
             )
@@ -128,6 +128,7 @@ cc.Class({
         this.initJoinGame();
 
         this.CreateRoomJS = this.node.getComponent("CreateRoom");
+        this.CreateRoomJS.preLoadPrefab();
         
         this.node.addComponent("HallRecord");
         this.HallRecordJS = this.node.getComponent("HallRecord");

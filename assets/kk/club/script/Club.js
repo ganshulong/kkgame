@@ -101,6 +101,9 @@ cc.Class({
         Global.btnClickEvent(createRoomBtn,this.onCreateRoom,this);
         createRoomBtn.active = (info.createUid == cc.vv.UserManager.uid);
 
+        this.CreateRoomJS = this.node.getComponent("CreateRoom");
+        this.CreateRoomJS.preLoadPrefab();
+
         this.node.addComponent("ClubMember");
         this.ClubMemberJS = this.node.getComponent("ClubMember");
 
@@ -586,7 +589,7 @@ cc.Class({
     },
 
     onCreateRoom(){
-        Global.dispatchEvent(EventId.GAME_CREATEROOM);
+        this.CreateRoomJS.showCreateRoom(true);
     },
 
     onClickMember(){
