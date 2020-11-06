@@ -71,7 +71,7 @@ cc.Class({
 
         this.sortBtnArr = [];
         let node_topInfo = cc.find("bg_member/panel_list/node_topInfo",this._layer);
-        let sortBtnStrArr = ["btn_IDSort", "btn_stateSort", "btn_roundNumSort", "btn_bigWinerNumSort", "btn_speedSort", "btn_scoreSort", "btn_powerSort"];
+        let sortBtnStrArr = ["btn_IDSort", "btn_stateSort", "btn_roundNumSort", "btn_bigWinerNumSort", "btn_waterProSort", "btn_scoreSort", "btn_powerSort"];
         for (let i = 0; i < sortBtnStrArr.length; i++) {
             this.sortBtnArr.push(node_topInfo.getChildByName(sortBtnStrArr[i]));
             Global.btnClickEvent(this.sortBtnArr[i],this.onClickSort,this);
@@ -232,7 +232,7 @@ cc.Class({
                 return seq * (obj1.jushu - obj2.jushu);
             } else if ("btn_bigWinerNumSort" == event.target.name) {
                 return seq * (obj1.bigWinCnt - obj2.bigWinCnt);
-            } else if ("btn_speedSort" == event.target.name) {
+            } else if ("btn_waterProSort" == event.target.name) {
                 return seq * (obj1.cost - obj2.cost);
             } else if ("btn_scoreSort" == event.target.name) {
                 return seq * (obj1.totalScore - obj2.totalScore);
@@ -308,7 +308,11 @@ cc.Class({
             }
             bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = showList[i].jushu;
             bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
-            bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;
+            if (-1 < showList[i].waterPro) {
+                bg_memberItem.getChildByName("text_waterPro").getComponent(cc.Label).string = showList[i].waterPro + "%";
+            } else {
+                bg_memberItem.getChildByName("text_waterPro").getComponent(cc.Label).string = "--";
+            }
             bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore;
             bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power;
 

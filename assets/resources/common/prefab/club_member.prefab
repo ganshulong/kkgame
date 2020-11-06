@@ -2973,8 +2973,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 84,
-      "height": 30
+      "width": 78,
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -3183,9 +3183,9 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_actualFontSize": 28,
-    "_fontSize": 28,
-    "_lineHeight": 30,
+    "_actualFontSize": 26,
+    "_fontSize": 26,
+    "_lineHeight": 28,
     "_enableWrapText": true,
     "_N$file": {
       "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
@@ -3306,7 +3306,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_speedSort",
+    "_name": "btn_waterProSort",
     "_objFlags": 0,
     "_parent": {
       "__id__": 41
@@ -3346,7 +3346,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 88,
+      "width": 105,
       "height": 42
     },
     "_rotationX": 0,
@@ -3407,8 +3407,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 56,
-      "height": 30
+      "width": 78,
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -3416,7 +3416,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -11,
+      "x": -9,
       "y": 0
     },
     "_skewX": 0,
@@ -3470,7 +3470,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 33.5,
+      "x": 45.1,
       "y": 0
     },
     "_skewX": 0,
@@ -3514,7 +3514,7 @@
     "asset": {
       "__uuid__": "045ab80f-d6e0-4719-8a0c-91e6db789ddd"
     },
-    "fileId": "157+bCMvRDP4Obn4QMzJ2C",
+    "fileId": "62Rd6DFSxHnL5wFchbHKSD",
     "sync": false
   },
   {
@@ -3561,7 +3561,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 44.5,
+      "x": 55,
       "y": 0
     },
     "_skewX": 0,
@@ -3605,7 +3605,7 @@
     "asset": {
       "__uuid__": "045ab80f-d6e0-4719-8a0c-91e6db789ddd"
     },
-    "fileId": "933RQrFvBL2Y22aLtHBXMZ",
+    "fileId": "4fH374Iv9I6rcv82uCJYZp",
     "sync": false
   },
   {
@@ -3617,16 +3617,16 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_actualFontSize": 28,
-    "_fontSize": 28,
-    "_lineHeight": 30,
+    "_actualFontSize": 26,
+    "_fontSize": 26,
+    "_lineHeight": 28,
     "_enableWrapText": true,
     "_N$file": {
       "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
-    "_N$string": "消耗",
+    "_N$string": "水线值",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -3640,7 +3640,7 @@
     "asset": {
       "__uuid__": "045ab80f-d6e0-4719-8a0c-91e6db789ddd"
     },
-    "fileId": "54PBcHu/hMFrqjLyRTYvCs",
+    "fileId": "40Zu000kJJW6A90KtviOaf",
     "sync": false
   },
   {
@@ -3735,7 +3735,7 @@
     "asset": {
       "__uuid__": "045ab80f-d6e0-4719-8a0c-91e6db789ddd"
     },
-    "fileId": "14guiTKHpLi7mamxiw95HZ",
+    "fileId": "d1S9wMWsFCNL7n2y7bBkAW",
     "sync": false
   },
   {
@@ -6108,7 +6108,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "text_speed",
+    "_name": "text_waterPro",
     "_objFlags": 0,
     "_parent": {
       "__id__": 140
