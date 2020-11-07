@@ -128,7 +128,7 @@ cc.Class({
         this.initJoinGame();
 
         this.CreateRoomJS = this.node.getComponent("CreateRoom");
-        this.CreateRoomJS.preLoadPrefab();
+        this.CreateRoomJS.preLoadPrefab(false);
         
         this.node.addComponent("HallRecord");
         this.HallRecordJS = this.node.getComponent("HallRecord");
@@ -200,7 +200,7 @@ cc.Class({
     },
 
     onClickCreateRoom(event){
-        this.CreateRoomJS.showCreateRoom(false, event.target.id);
+        this.CreateRoomJS.showCreateRoom(event.target.id);
     },
 
     onClickSet(){
