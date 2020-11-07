@@ -42,7 +42,6 @@ EventId.REGISTER_ACCOUNT = "register_account"  ;          // 注册事件
 EventId.ENTER_FRONT = "enter_front"  ;                    // 切换到前台
 EventId.SHOW_SHOP = "show_shop"  ;                        // 显示商城
 EventId.UPDATE_CLUBS = "update_clubs" ;                   // 更新俱乐部列表
-EventId.GAME_CREATEROOM = "game_createroom" ;             // 创建房间
 EventId.CLEARDESK = "clear_desk";                         // 清理桌面
 EventId.HANDCARD = "handcard";                            // 手牌
 EventId.OUTCARD = "outcard";                              // 自己出牌

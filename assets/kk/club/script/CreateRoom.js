@@ -50,11 +50,10 @@ cc.Class({
 
     start () {
         cc.vv.NetManager.registerMsg(MsgId.ADDGAME, this.onRcvAddGameResult, this);
-
-        // Global.registerEvent(EventId.GAME_CREATEROOM,this.showCreateRoom,this);
     },
 
-    preLoadPrefab(){
+    preLoadPrefab(isClubRoom){
+        this._isClubRoom = (isClubRoom === false) ? false : true;
         if(this._createLayer === null){
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
                 if(err === null){
@@ -72,8 +71,7 @@ cc.Class({
         }
     },
 
-    showCreateRoom(isClubRoom){
-        this._isClubRoom = (isClubRoom === false) ? false : true;
+    showCreateRoom(){
         this.curGameIndex = 0;
         if(this._createLayer === null){
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
