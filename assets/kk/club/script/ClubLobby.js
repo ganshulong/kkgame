@@ -83,6 +83,7 @@ cc.Class({
     },
 
     initClubList(list){
+        this.node.getChildByName("girl").active = (0 == list.length);
         let width = 0;
         for(let i=0;i<list.length;++i){
             let item = null;
