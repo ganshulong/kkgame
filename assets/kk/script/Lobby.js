@@ -200,7 +200,7 @@ cc.Class({
     },
 
     onClickCreateRoom(event){
-        this.CreateRoomJS.showCreateRoom(event.target.id);
+        this.CreateRoomJS.showCreateRoom(false, event.target.id);
     },
 
     onClickSet(){

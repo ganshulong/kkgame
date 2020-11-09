@@ -71,7 +71,8 @@ cc.Class({
         }
     },
 
-    showCreateRoom(showGameID){
+    showCreateRoom(isClubRoom, showGameID){
+        this._isClubRoom = (isClubRoom === false) ? false : true;
         this.curGameIndex = 0;
         if (undefined != showGameID) {
             this.curGameIndex = showGameID;
