@@ -71,7 +71,8 @@ cc.Class({
         }
     },
 
-    showCreateRoom(){
+    showCreateRoom(isClubRoom){
+        this._isClubRoom = (isClubRoom === false) ? false : true;
         this.curGameIndex = 0;
         if(this._createLayer === null){
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{

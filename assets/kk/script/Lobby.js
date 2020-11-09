@@ -203,7 +203,7 @@ cc.Class({
     },
 
     onClickCreateRoom(){
-        this.CreateRoomJS.showCreateRoom();
+        this.CreateRoomJS.showCreateRoom(false);
     },
 
     onClickSet(){
