@@ -94,8 +94,7 @@ cc.Class({
 
         let btn_helper = cc.find("scene/btn_helper",this.node);
         btn_helper.active = cc.vv.UserManager.currClubId;
-        btn_helper.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
-        btn_helper.on(cc.Node.EventType.TOUCH_END,this.onClickSwitchToClub,this);
+        Global.btnClickEvent(btn_helper, this.onClickSwitchToClub,this);
 
         let btn_cancelTrustee = cc.find("scene/panel_trustee/btn_cancelTrustee", this.node);
         Global.btnClickEvent(btn_cancelTrustee,this.onClickCancelTrustee,this);
@@ -132,16 +131,8 @@ cc.Class({
     },
 
     onClickSwitchToClub(event){
-        if (!this.bMoving) {
-            let req = {c: MsgId.GAME_SWITCH_CLUB};
-            cc.vv.NetManager.send(req);
-        }
-        this.bMoving = false;
-    },
-
-    onTouchMove(event){
-        this.bMoving = true;
-        event.target.y += event.getDelta().y;
+        let req = {c: MsgId.GAME_SWITCH_CLUB};
+        cc.vv.NetManager.send(req);
     },
 
     onRcvDismissNotify(data){
