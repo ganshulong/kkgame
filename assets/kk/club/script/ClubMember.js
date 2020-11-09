@@ -469,6 +469,7 @@ cc.Class({
                     cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.memPower;
                 }
             }
+            cc.vv.FloatTip.show("操作成功");
         }
     },
 
