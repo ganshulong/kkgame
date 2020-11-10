@@ -214,7 +214,7 @@ cc.Class({
         let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
         let score = Number(text_score.getComponent(cc.Label).string);
         let changeValue = event.target.isTongHua ? 0.1 : 1;
-        if (changeValue * 10 > score) {
+        if (10 > score) {
             score += changeValue;
             if (event.target.isTongHua) {
                 score = score.toFixed(1);
