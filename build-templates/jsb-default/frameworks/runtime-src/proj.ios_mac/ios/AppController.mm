@@ -90,7 +90,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     cocos2d::Director::getInstance()->setOpenGLView(glview);
 
     //向微信注册
-    [WXApi registerApp:@"wx4d9bcf52dd61f4bf" universalLink:@"https://tjgosd.xinstall.top/tolink/"];
+    [WXApi registerApp:@"wx4d9bcf52dd61f4bf" universalLink:@"https://m39zdf.xinstall.top/tolink/"];
     
     //注册高德地图定位
     [AMapServices sharedServices].apiKey = @"e8b9a63d71777b88b45dcc21ee1f65ab";
