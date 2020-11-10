@@ -757,6 +757,7 @@
 				CODE_SIGN_ENTITLEMENTS = "xianqu-mobile.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
+				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = RB5HXK2N4U;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -785,6 +786,7 @@
 					"$(SRCROOT)/ios/anysdk",
 					"$(PROJECT_DIR)/ios/wx",
 				);
+				MARKETING_VERSION = 1.2.12;
 				OTHER_LDFLAGS = (
 					"-Objc",
 					"-force_load",
@@ -808,6 +810,7 @@
 				CODE_SIGN_ENTITLEMENTS = "xianqu-mobile.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
+				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = RB5HXK2N4U;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -835,6 +838,7 @@
 					"$(SRCROOT)/ios/anysdk",
 					"$(PROJECT_DIR)/ios/wx",
 				);
+				MARKETING_VERSION = 1.2.12;
 				OTHER_LDFLAGS = (
 					"-Objc",
 					"-force_load",
