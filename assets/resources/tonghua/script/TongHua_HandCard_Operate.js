@@ -198,6 +198,7 @@ cc.Class({
                 node.posX = endPosX;
                 node.posY = endPosY;
                 node.isTongHua = (i < cardGroupsInfo.tongHuaNum);
+                let isPlayEff = (cardGroups[i].length - 1 == j);
                 if (node.isTongHua) {
                     node.color = new cc.Color(255,220,220);
                 }
@@ -222,7 +223,9 @@ cc.Class({
                             }), 
                             cc.delayTime(i * 0.05), 
                             cc.callFunc(()=>{
-                                cc.vv.AudioManager.playEff("paodekuai/", "fapai",true);
+                                if (isPlayEff) {
+                                    cc.vv.AudioManager.playEff("paodekuai/", "fapai",true);
+                                }
                             }), 
                             cc.spawn(
                                 cc.scaleTo(0.2, 1*cardScale), 
