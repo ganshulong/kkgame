@@ -49,6 +49,8 @@ cc.Class({
         this._cardBoXPos = box.parent.convertToWorldSpaceAR(box.position);
         this._cardBoXPos.x -= 8;
         this._cardBoXPos.y += 24;
+
+        this.tongHuaColor = new cc.Color(255,200,200);
     },
 
     start () {
@@ -173,7 +175,7 @@ cc.Class({
         let self = this;
         let cardOffsetY = 18;
         let cardScale = 0.9;
-        let cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2;
+        let cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 1.7;
         let cardStartPosX = -(cardOffsetX * (cardGroups.length-1))/2;
         let allCardWidth = cardOffsetX * (cardGroups.length + 1);
         if (this._handcardNode.width < allCardWidth) {
@@ -200,7 +202,7 @@ cc.Class({
                 node.isTongHua = (i < cardGroupsInfo.tongHuaNum);
                 let isPlayEff = (cardGroups[i].length - 1 == j);
                 if (node.isTongHua) {
-                    node.color = new cc.Color(255,220,220);
+                    node.color = this.tongHuaColor;
                 }
                 if ((4 <= cardGroups[i].length && j == (cardGroups[i].length-1))) {
                     node.getChildByName("cardNumText").getComponent(cc.Label).string = cardGroups[i].length;
@@ -286,7 +288,7 @@ cc.Class({
                 card.color = new cc.Color(100,100,100);
             } else {
                 if (card.isTongHua) {
-                    card.color = new cc.Color(255,220,220);
+                    card.color = this.tongHuaColor;
                 } else {
                     card.color = new cc.Color(255,255,255);
                 }
@@ -356,7 +358,7 @@ cc.Class({
                 if (card.isSelected) {
                     card.isSelected = false;
                     if (card.isTongHua) {
-                        card.color = new cc.Color(255,220,220);
+                        card.color = this.tongHuaColor;
                     } else {
                         card.color = new cc.Color(255,255,255);
                     }
