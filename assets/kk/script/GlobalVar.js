@@ -14,7 +14,7 @@ var GlobalVar = cc.Class({
         //开发106.12.7.114:7180  www.zonzu.net
         //hs正式 8.131.94.204
         loginServerAddress:"8.131.94.204:7180",
-        resVersion:"1.2.12",
+        resVersion:"1.2.13",
         
         //非常用的配置
         localVersion:true,
