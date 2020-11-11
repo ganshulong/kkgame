@@ -245,15 +245,9 @@ cc.Class({
                                 list=[typeData.card,typeData.card,typeData.card,typeData.card];
                             }
                             else if(typeData.type === cc.vv.gameData.OPERATETYPE.PENG){
-                                if(typeData.source === 0){
-                                    list=[typeData.card,typeData.card,typeData.card];
-                                }
-                                else{
-                                    list=[typeData.card,typeData.card];
-                                }
+                                list=[typeData.card,typeData.card,typeData.card];
                                 source = typeData.source;
                             }
-
                             else {
                                 list = typeData.data;
                             }
@@ -341,11 +335,7 @@ cc.Class({
         data = data.detail;
         if(data.actionInfo.curaction.seat === this._seatIndex){
             let card = data.actionInfo.curaction.card;
-            if(data.actionInfo.curaction.source == 0){
-                this.showCard([card,card,card],data.actionInfo.curaction.type,0,true);      //扫显示三张
-            }else {
-                this.showCard([card,card],data.actionInfo.curaction.type,0,true);           //碰显示2张
-            }
+            this.showCard([card,card,card],data.actionInfo.curaction.type,0,true);      //扫碰 都显示三张  不同
         }
     },
 
