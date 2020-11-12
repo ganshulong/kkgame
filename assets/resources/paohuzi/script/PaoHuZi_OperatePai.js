@@ -199,6 +199,7 @@ cc.Class({
                 }
             }
         }
+        this.recvDeskInfoMsg();
     },
 
     recvOverRound(data){

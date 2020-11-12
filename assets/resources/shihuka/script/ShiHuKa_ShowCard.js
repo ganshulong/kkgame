@@ -177,6 +177,7 @@ cc.Class({
                 }
             }
         }
+        this.recvDeskInfoMsg();
     },
 
     recvDeskInfoMsg(){
