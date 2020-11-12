@@ -191,8 +191,6 @@ cc.Class({
     },
 
     onRcvDismissNotify(data){
-        this.panel_dismiss.active = true;
-
         if (MsgId.APPLY_DISMISS_NOTIFY == data.detail.c || MsgId.AGREE_DISMISS_NOTIFY == data.detail.c) {
             let dissolveInfo = data.detail.dissolveInfo;
             if (!dissolveInfo) {
@@ -274,6 +272,7 @@ cc.Class({
             this.dismiss_small_bg.getChildByName("btn_define").active = false;
             this.dismiss_small_bg.getChildByName("btn_close_dismiss").active = true;
         }
+        this.panel_dismiss.active = true;
     },
 
     onClickDismiss(){
