@@ -166,6 +166,7 @@ cc.Class({
                 }
             }
         }
+        this.recvDeskInfoMsg();
     },
 
     onRecvHandCard(data){

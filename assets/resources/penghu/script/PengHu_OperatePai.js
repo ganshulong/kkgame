@@ -215,6 +215,7 @@ cc.Class({
                 }
             }
         }
+        this.recvDeskInfoMsg();
     },
 
     // 小局结束
