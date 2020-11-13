@@ -50,8 +50,10 @@ cc.Class({
     },
 
     initUI(){
+        let btn_back = cc.find("bg_member/btn_back",this._layer);
+        Global.btnClickEvent(btn_back,this.onClickBack,this);
         let btn_close = cc.find("bg_member/btn_close",this._layer);
-        Global.btnClickEvent(btn_close,this.onClose,this);
+        Global.btnClickEvent(btn_close,this.onClickClose,this);
 
         this.input_nameID = cc.find("bg_member/bg_input/input_nameID",this._layer);
         this.input_nameID.on('editing-did-ended',this.onClickSearch,this);
@@ -115,11 +117,18 @@ cc.Class({
         this.curData.month = selectData.getMonth();     //比实际小1
         this.curData.day = selectData.getDate();
         this.selectData = JSON.parse(JSON.stringify(this.curData));
-
+        
         this.sendMemberListReq();
     },
 
-    onClose(){
+    onClickBack(){
+        if (0 < Global.checkPartnerList.length) {
+            Global.checkPartnerList.pop();
+            this.sendMemberListReq();
+        }
+    },
+
+    onClickClose(){
         this._layer.active = false;
     },
 
@@ -130,6 +139,9 @@ cc.Class({
         let req = { 'c': MsgId.CLUB_MEMBER_LIST};
         req.selectTime = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
         req.clubid = cc.vv.UserManager.currClubId;
+        if (0 < Global.checkPartnerList.length) {
+            req.tarUid = Global.checkPartnerList[Global.checkPartnerList.length-1];
+        }
         cc.vv.NetManager.send(req);
     },
 
@@ -274,6 +286,16 @@ cc.Class({
                 break;
             }
         }
+        if (0 < Global.checkPartnerList.length) {
+            for (let i = 0; i < showList.length; i++) {
+                if (showList[i].uid == Global.checkPartnerList[Global.checkPartnerList.length-1]) {
+                    let clubCeateInfo = showList[i];
+                    showList.splice(i, 1);
+                    showList.unshift(clubCeateInfo);
+                    break;
+                }
+            }
+        }
 
         let clubCeateUid = cc.vv.UserManager.getCurClubInfo().createUid;
         this.memberListContent.removeAllChildren();
@@ -283,8 +305,16 @@ cc.Class({
             item.y = - item.height * i;
             item.uid = showList[i].uid;
             if (cc.vv.UserManager.uid != showList[i].uid && showList[i].hehuo) {
-                item.partneruid = showList[i].uid;
-                Global.btnClickEvent(item, this.onClickSetPartnerRatio,this);
+                if (0 === Global.checkPartnerList.length) {
+                    item.partneruid = showList[i].uid;
+                    Global.btnClickEvent(item, this.onClickSetPartnerRatio,this);
+                }
+
+                if ( ! (0 < Global.checkPartnerList.length && showList[i].uid == Global.checkPartnerList[Global.checkPartnerList.length-1])) {
+                    let userHead = cc.find("bg_memberItem/UserHead", item);
+                    userHead.partneruid = showList[i].uid;
+                    Global.btnClickEvent(userHead, this.onClickCheckPartnerMember,this);
+                }
             }
             if (!showList[i].hehuo) {
                 item.uid = showList[i].uid;
@@ -316,18 +346,19 @@ cc.Class({
             bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore;
             bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power;
 
-            if (clubCeateUid == showList[i].uid || cc.vv.UserManager.uid != showList[i].uid) {
-                let btn_setPower = cc.find("text_power/btn_setPower", bg_memberItem);
-                btn_setPower.uid = showList[i].uid;
-                Global.btnClickEvent(btn_setPower, this.onClickSetPower,this); 
-            }
-
-            let btn_operate = bg_memberItem.getChildByName("btn_operate");
-            if (cc.vv.UserManager.uid == showList[i].uid) {
-                Global.btnClickEvent(btn_operate, this.onClickSetPartner,this);
-            } else {
-                btn_operate.playerInfo = showList[i];
-                Global.btnClickEvent(btn_operate, this.onClickShowMemberOperate,this);
+            if (0 === Global.checkPartnerList.length) {
+                if (clubCeateUid == showList[i].uid || cc.vv.UserManager.uid != showList[i].uid) {
+                    let btn_setPower = cc.find("text_power/btn_setPower", bg_memberItem);
+                    btn_setPower.uid = showList[i].uid;
+                    Global.btnClickEvent(btn_setPower, this.onClickSetPower,this); 
+                }
+                let btn_operate = bg_memberItem.getChildByName("btn_operate");
+                if (cc.vv.UserManager.uid == showList[i].uid) {
+                    Global.btnClickEvent(btn_operate, this.onClickSetPartner,this);
+                } else {
+                    btn_operate.playerInfo = showList[i];
+                    Global.btnClickEvent(btn_operate, this.onClickShowMemberOperate,this);
+                }
             }
             item.active = true;
         }
@@ -366,6 +397,11 @@ cc.Class({
 
     onClickSetPartnerRatio(event){
         this.ClubSetPartnerRatioJS.showLayer(event.target.partneruid);
+    },
+
+    onClickCheckPartnerMember(event){
+        Global.checkPartnerList.push(event.target.partneruid);
+        this.sendMemberListReq();
     },
 
     onRcvSetPartner(data){

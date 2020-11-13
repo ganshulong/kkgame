@@ -637,6 +637,7 @@ cc.Class({
     },
 
     onClickMember(){
+        Global.checkPartnerList = [];
         this.ClubMemberJS.showLayer();
     },
 
