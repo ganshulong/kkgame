@@ -203,7 +203,7 @@ cc.Class({
     showOutCard(list, cardType){
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
-            let cardScale = 0.72;
+            let cardScale = 0.65;
             let cardWidth = cc.vv.gameData.CardWidth * cardScale;
             let startPosX = - (cardWidth/2*(list.length-1))/2;
             for (let i = 0; i < list.length; i++) {
