@@ -128,20 +128,6 @@ cc.Class({
         var self = this;
         var node = cc.find('Canvas');
         Global.centerPos = cc.v2(node.width/2,node.height/2);
-
-        if (Global.isNative()) {
-            cc.vv.SceneMgr.preloadScene('lobby');
-            cc.vv.SceneMgr.preloadScene('club');
-            cc.vv.SceneMgr.preloadScene('club_lobby');
-            cc.vv.SceneMgr.preloadScene('penghu');
-            cc.vv.SceneMgr.preloadScene('paohuzi');
-            cc.vv.SceneMgr.preloadScene('hongheihu');
-            cc.vv.SceneMgr.preloadScene('liuhuqiang');
-            cc.vv.SceneMgr.preloadScene('paodekuai');
-            cc.vv.SceneMgr.preloadScene('hongzhong');
-            cc.vv.SceneMgr.preloadScene('shihuka');
-            cc.vv.SceneMgr.preloadScene('tonghua');
-        }
         
     	if(Global.isAndroid()){
             //安卓启动太慢，所以先起了一个闪屏，待游戏启动再关闭
