@@ -344,7 +344,7 @@ cc.Class({
                 bg_memberItem.getChildByName("text_waterPro").getComponent(cc.Label).string = "--";
             }
             bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore;
-            bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power;
+            bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power.toFixed(1);
 
             if (0 === Global.checkPartnerList.length) {
                 if (clubCeateUid == showList[i].uid || cc.vv.UserManager.uid != showList[i].uid) {

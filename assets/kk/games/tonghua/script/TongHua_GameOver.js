@@ -22,7 +22,7 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        cc.loader.loadRes("tonghua/TongHua_game_over_view",(err,prefab)=>{
+        cc.loader.loadRes("common/prefab/TongHua_game_over_view",(err,prefab)=>{
             if(err === null){
                 this._layer = cc.instantiate(prefab);
                 this._layer.parent = this.node.getChildByName("scene");
@@ -92,13 +92,13 @@ cc.Class({
             player.getChildByName("text_tongHuaNum").getComponent(cc.Label).string = user.tonghuaCnt;
             player.getChildByName("text_shangYouNum").getComponent(cc.Label).string = user.YiCnt;
             player.getChildByName("text_xiaYouNum").getComponent(cc.Label).string = user.ErCnt;
-            player.getChildByName("text_gameScore").getComponent(cc.Label).string = user.score;
+            player.getChildByName("text_gameScore").getComponent(cc.Label).string = user.score.toFixed(1);
             player.getChildByName("text_gameScore").color = user.score > 0 ? (new cc.Color(200,17,36)) : (new cc.Color(133,200,255));
         }
     },
 
     onDestroy(){
-        if(this._layer) cc.loader.releaseRes("tonghua/TongHua_game_over_view",cc.Prefab);
+        if(this._layer) cc.loader.releaseRes("common/prefab/TongHua_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });
