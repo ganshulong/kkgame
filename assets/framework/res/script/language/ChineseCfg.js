@@ -621,5 +621,6 @@ Wild只出现在2~5列",
     player_not_exits:"该用户不存在",
     player_not_exits_in_club:"该用户不在本亲友圈",
     score_power:"疲劳值不足",
+    water_line_less:"水线值不能低于当前值",
 };
 

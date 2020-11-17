@@ -204,13 +204,13 @@ cc.Class({
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
             let cardScale = 0.65;
-            let cardWidth = cc.vv.gameData.CardWidth * cardScale;
-            let startPosX = - (cardWidth/2*(list.length-1))/2;
+            let cardOffsetX = cc.vv.gameData.CardWidth * cardScale / 2.2;
+            let startPosX = - (cardOffsetX * (list.length-1))/2;
             for (let i = 0; i < list.length; i++) {
                 let node = this.node.getComponent("TongHua_Card").createCard(list[i]);
                 node.scale = cardScale;
                 node.parent = this._outCardNode;
-                node.x = startPosX + cardWidth/2 * i;
+                node.x = startPosX + cardOffsetX * i;
                 if (list.length-1 == i && 1 < cardType) {
                     node.getChildByName("cardNumText").getComponent(cc.Label).string = list.length;
                     node.getChildByName("cardTypeText").getComponent(cc.Label).string = (3 == cardType) ? "同花" : "炸弹";
