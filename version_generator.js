@@ -7,7 +7,7 @@ var manifest = {
     packageUrl: 'http://8.131.94.204/remote-assets/',
     remoteManifestUrl: 'http://8.131.94.204/remote-assets/project.manifest',
     remoteVersionUrl: 'http://8.131.94.204/remote-assets/version.manifest',
-    version: '1.2.16',
+    version: '1.2.17',
     assets: {},
     searchPaths: []
 };
