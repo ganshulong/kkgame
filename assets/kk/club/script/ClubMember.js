@@ -334,7 +334,7 @@ cc.Class({
             bg_memberItem.getChildByName("text_state").color = showList[i].isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
             bg_memberItem.getChildByName("text_score1").active = showList[i].hehuo;
             if (showList[i].hehuo) {
-                bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = showList[i].shuiScore;
+                bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = showList[i].shuiScore.toFixed(1);
             }
             bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = showList[i].jushu;
             bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
@@ -498,11 +498,11 @@ cc.Class({
                 let childrenItem = this.memberListContent.children[i];
                 if (cc.vv.UserManager.uid === childrenItem.uid && childrenItem.active) {
                     this.memberList[i].power = msg.myPower;
-                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.myPower;
+                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.myPower.toFixed(1);
                 }
                 if (msg.memberuid === childrenItem.uid && childrenItem.active) {
                     this.memberList[i].power = msg.memPower;
-                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.memPower;
+                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.memPower.toFixed(1);
                 }
             }
             cc.vv.FloatTip.show("操作成功");

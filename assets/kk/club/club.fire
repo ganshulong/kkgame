@@ -1601,12 +1601,12 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0.5
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 179,
+      "width": 200,
       "height": 55
     },
     "_rotationX": 0,
@@ -1615,7 +1615,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -262.5,
+      "x": -350,
       "y": 690
     },
     "_skewX": 0,
@@ -1660,7 +1660,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 0,
+      "width": 15,
       "height": 30
     },
     "_rotationX": 0,
@@ -1669,8 +1669,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -40,
-      "y": -1
+      "x": 45,
+      "y": 0
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1697,7 +1697,7 @@
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
-    "_N$string": "",
+    "_N$string": "0",
     "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1725,8 +1725,8 @@
     "_spriteFrame": {
       "__uuid__": "3472d56b-f33e-4ce5-8182-bcac84c43ad1"
     },
-    "_type": 0,
-    "_sizeMode": 2,
+    "_type": 1,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -1751,7 +1751,7 @@
     "isAlignOnce": true,
     "_target": null,
     "_alignFlags": 9,
-    "_left": 315,
+    "_left": 317,
     "_right": 0,
     "_top": -126.5,
     "_bottom": 0,
@@ -1886,8 +1886,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -54.5,
-      "y": 690
+      "x": -30,
+      "y": 692
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -2035,7 +2035,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": -55,
-      "y": 0
+      "y": -1
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -2057,7 +2057,7 @@
     "_alignFlags": 9,
     "_left": 52.5,
     "_right": 0,
-    "_top": 6,
+    "_top": 7,
     "_bottom": 0.09544999999999998,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
@@ -2231,9 +2231,9 @@
     "isAlignOnce": true,
     "_target": null,
     "_alignFlags": 9,
-    "_left": 505,
+    "_left": 529.5,
     "_right": 0,
-    "_top": -121,
+    "_top": -123,
     "_bottom": 0,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
