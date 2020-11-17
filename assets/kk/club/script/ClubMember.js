@@ -50,8 +50,8 @@ cc.Class({
     },
 
     initUI(){
-        let btn_back = cc.find("bg_member/btn_back",this._layer);
-        Global.btnClickEvent(btn_back,this.onClickBack,this);
+        this.btn_back = cc.find("bg_member/btn_back",this._layer);
+        Global.btnClickEvent(this.btn_back,this.onClickBack,this);
         let btn_close = cc.find("bg_member/btn_close",this._layer);
         Global.btnClickEvent(btn_close,this.onClickClose,this);
 
@@ -82,6 +82,13 @@ cc.Class({
         this.memberListContent = cc.find("bg_member/panel_list/scrollView/content",this._layer);
         this.memberItem = cc.find("bg_member/panel_list/scrollView/memberItem",this._layer);
         this.memberItem.active = false;
+
+        this.pagePlayerNum = 4;
+        this.btn_prePage = cc.find("bg_member/panel_list/node_bottom/btn_prePage",this._layer);
+        Global.btnClickEvent(this.btn_prePage, this.onClickPrePage,this);
+        this.btn_nextPage = cc.find("bg_member/panel_list/node_bottom/btn_nextPage",this._layer);
+        Global.btnClickEvent(this.btn_nextPage, this.onClickNextPage,this); 
+        this.text_page = cc.find("bg_member/panel_list/node_bottom/text_page",this._layer);
 
         this._layer.addComponent("ClubSetPartner");
         this.ClubSetPartnerJS = this._layer.getComponent("ClubSetPartner");
@@ -118,12 +125,20 @@ cc.Class({
         this.curData.day = selectData.getDate();
         this.selectData = JSON.parse(JSON.stringify(this.curData));
         
+        this.btn_back.active = (0 < Global.checkPartnerList.length);
+        
+        this.text_page.getComponent(cc.Label).string = "1/1";
+        this.curStartIndex = Global.curStartIndex ? Global.curStartIndex : 0;
+
         this.sendMemberListReq();
     },
 
     onClickBack(){
         if (0 < Global.checkPartnerList.length) {
             Global.checkPartnerList.pop();
+            this.curStartIndex = Global.checkPartnerListCurStartIndex[Global.checkPartnerListCurStartIndex.length-1];
+            Global.checkPartnerListCurStartIndex.pop();
+            this.btn_back.active = (0 < Global.checkPartnerList.length);
             this.sendMemberListReq();
         }
     },
@@ -142,6 +157,8 @@ cc.Class({
         if (0 < Global.checkPartnerList.length) {
             req.tarUid = Global.checkPartnerList[Global.checkPartnerList.length-1];
         }
+        req.starty = this.curStartIndex;
+        req.endy = 4;
         cc.vv.NetManager.send(req);
     },
 
@@ -156,6 +173,16 @@ cc.Class({
             }
             this.updateMemberList(searchList);
         }
+    },
+
+    onClickPrePage(){
+        this.curStartIndex -= this.pagePlayerNum;
+        this.sendMemberListReq();
+    },
+
+    onClickNextPage(){
+        this.curStartIndex += this.pagePlayerNum;
+        this.sendMemberListReq();
     },
 
     onClickSelectData(event){
@@ -258,6 +285,11 @@ cc.Class({
 
     onRcvMemberList(msg){
         if (200 == msg.code && msg.memberList) {
+            let curPage = (this.curStartIndex/this.pagePlayerNum + 1);
+            this.btn_prePage.getComponent(cc.Button).interactable = 1 < curPage;
+            this.btn_nextPage.getComponent(cc.Button).interactable = curPage < msg.pagCnt;
+            this.text_page.getComponent(cc.Label).string = curPage + "/" + msg.pagCnt;
+
             for (let i = 0; i < this.sortBtnArr.length; i++) {
                 this.sortBtnArr[i].isSmallToBig = true;
             }
@@ -367,6 +399,7 @@ cc.Class({
 
     onClickCheckRecord(event){
         Global.dispatchEvent(EventId.SHOW_CLUB_RECORD, event.target.uid);
+        Global.curStartIndex = this.curStartIndex;
     },
 
     onClickSetPartner(){
@@ -401,6 +434,9 @@ cc.Class({
 
     onClickCheckPartnerMember(event){
         Global.checkPartnerList.push(event.target.partneruid);
+        Global.checkPartnerListCurStartIndex.push(this.curStartIndex);
+        this.btn_back.active = (0 < Global.checkPartnerList.length);
+        this.curStartIndex = 0;
         this.sendMemberListReq();
     },
 

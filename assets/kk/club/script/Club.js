@@ -642,6 +642,8 @@ cc.Class({
 
     onClickMember(){
         Global.checkPartnerList = [];
+        Global.checkPartnerListCurStartIndex = [];
+        Global.curStartIndex = 0;
         this.ClubMemberJS.showLayer();
     },
 
