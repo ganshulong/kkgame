@@ -291,10 +291,6 @@ cc.Class({
 
     recvPengNotify(data){
         data = data.detail;
-        if(data.actionInfo.curaction.source === this._seatIndex){
-            this.putOutCard(data.actionInfo.curaction.card);
-            this.showOutCard();
-        }
         this.checkShowTimeCount(data);
     },
 

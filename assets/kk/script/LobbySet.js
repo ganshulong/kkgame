@@ -199,6 +199,7 @@ cc.Class({
         cc.vv.NetManager.send({c:MsgId.LOGIN_OUT});
         cc.vv.NetManager.close();
         Global.noAutoLogin = true;
+        cc.vv.GameManager.setInGameServer(false);
         cc.vv.SceneMgr.enterScene("login");
     },
 
