@@ -104,6 +104,11 @@ cc.Class({
             player.getChildByName("text_xiScore").color = data.users[i].roundXiFen > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
             player.getChildByName("text_roundScore").getComponent(cc.Label).string = data.users[i].roundScore;
             player.getChildByName("text_roundScore").color = data.users[i].roundScore > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
+
+            if (data.users[i].uid == cc.vv.UserManager.uid) {
+                this._layer.getChildByName("spr_title_lose").active = (0 >= data.users[i].roundScore);
+                this._layer.getChildByName("spr_title_win").active = (0 < data.users[i].roundScore);
+            }
         }
         for (let i = data.users.length; i < cc.vv.gameData.RoomSeat; i++) {
             this._layer.getChildByName("player" + i).active = false;
