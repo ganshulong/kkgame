@@ -183,7 +183,8 @@ cc.Class({
     recvRoundOver(data){
         data = data.detail;
         for(let i=0;i<data.users.length;++i){
-            if(data.users[i].seat === this._seatIndex){          
+            if(data.users[i].seat === this._seatIndex){      
+                this.setCoinScore(data.users[i].power);    
                 this.setTotalScore(data.users[i].totalScore);
                 break;
             }
@@ -380,8 +381,10 @@ cc.Class({
             }
             if (user.bigInfo) {
                 this.setTotalScore(user.bigInfo.score);
+                this.setCoinScore(user.bigInfo.power);
             } else {
                 this.setTotalScore(0);
+                this.setCoinScore(0);
             }
             this._playerNode.getChildByName("mask_trustee").active = (0 < user.autoc);
             if (0 == this._chairId) {
@@ -392,6 +395,12 @@ cc.Class({
 
     showOffline(bShow){
         if(this._playerNode) this._playerNode.getChildByName("img_off_line").active = bShow;
+    },
+
+    setCoinScore(score){
+        if (typeof score != 'undefined' && this._playerNode) {
+            cc.find("bg_coin/txt_coin",this._playerNode).getComponent(cc.Label).string = score;
+        }   
     },
 
     setXiScore(score){
