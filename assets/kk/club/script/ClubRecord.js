@@ -215,7 +215,7 @@ cc.Class({
                     if (0 <= userData[j].score) {
                         if (0 == userData[j].score) {
                             bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score;
-                        } else if (0 == userData[j].score){
+                        } else {
                             bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = "+" + userData[j].score.toFixed(1);
                         }
                         bg_score.getChildByName("text_score"+j).color = new cc.Color(189,57,53);
