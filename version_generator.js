@@ -4,9 +4,9 @@ var crypto = require('crypto');
 
 var manifest = {
     //服务器上资源文件存放路径（src，res的路径）
-    packageUrl: 'http://8.131.94.204/remote-assets/',
-    remoteManifestUrl: 'http://8.131.94.204/remote-assets/project.manifest',
-    remoteVersionUrl: 'http://8.131.94.204/remote-assets/version.manifest',
+    packageUrl: 'http://www.kayuxin.com/remote-assets/',
+    remoteManifestUrl: 'http://www.kayuxin.com/remote-assets/project.manifest',
+    remoteVersionUrl: 'http://www.kayuxin.com/remote-assets/version.manifest',
     version: '1.2.18',
     assets: {},
     searchPaths: []

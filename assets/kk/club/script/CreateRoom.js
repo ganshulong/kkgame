@@ -155,12 +155,18 @@ cc.Class({
                 }
             }
 
+            let mult = JSON.parse(cc.vv.UserManager.gameList[i].mult);
             let bg_score = cc.find("right_bg/scrollview/content/bg_score", panel);
+            bg_score.getChildByName("text_score").getComponent(cc.Label).string = mult[0];
+
             let btn_deduction = bg_score.getChildByName("btn_deduction");
-            btn_deduction.isTongHua = ("panel_tonghua" === panel.name);
+            btn_deduction.mult = mult;
+            btn_deduction.curIndex = 0;
             Global.btnClickEvent(btn_deduction,this.onClickScoreDedution,this);
+
             let btn_add = bg_score.getChildByName("btn_add");
-            btn_add.isTongHua = ("panel_tonghua" === panel.name);
+            btn_add.mult = mult;
+            btn_add.curIndex = 0;
             Global.btnClickEvent(btn_add,this.onClickScoreAdd,this);
 
             let btn_create_room = cc.find("right_bg/btn_create_room", panel);
@@ -198,28 +204,22 @@ cc.Class({
     },
 
     onClickScoreDedution(event){
-        let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
-        let score = Number(text_score.getComponent(cc.Label).string);
-        let changeValue = event.target.isTongHua ? 0.1 : 1;
-        if (changeValue < score) {
-            score -= changeValue;
-            if (event.target.isTongHua) {
-                score = score.toFixed(1);
-            }
-            text_score.getComponent(cc.Label).string = score;
+        if (0 < event.target.curIndex) {
+            --event.target.curIndex;
+            --event.target.parent.getChildByName("btn_add").curIndex;
+
+            let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
+            text_score.getComponent(cc.Label).string = event.target.mult[event.target.curIndex];
         }
     },
 
     onClickScoreAdd(event){
-        let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
-        let score = Number(text_score.getComponent(cc.Label).string);
-        let changeValue = event.target.isTongHua ? 0.1 : 1;
-        if (50 > score) {
-            score += changeValue;
-            if (event.target.isTongHua) {
-                score = score.toFixed(1);
-            }
-            text_score.getComponent(cc.Label).string = score;
+        if (event.target.mult.length - 1 > event.target.curIndex) {
+            ++event.target.curIndex;
+            ++event.target.parent.getChildByName("btn_deduction").curIndex;
+
+            let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
+            text_score.getComponent(cc.Label).string = event.target.mult[event.target.curIndex];
         }
     },
 
@@ -390,10 +390,6 @@ cc.Class({
                 break;
             }
         }
-
-        //算分倍数
-        let text_score = cc.find("bg_score/text_score",layer);
-        text_score.getComponent(cc.Label).string = layer.isTongHua ? (0.1).toFixed(1) : 1;
 
         let trusteeship = cc.find("trusteeship/toggle0",layer);
         trusteeship.getComponent(cc.Toggle).isChecked = false;
