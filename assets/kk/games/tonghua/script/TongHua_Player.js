@@ -399,7 +399,7 @@ cc.Class({
 
     setCoinScore(score){
         if (typeof score != 'undefined' && this._playerNode) {
-            cc.find("bg_coin/txt_coin",this._playerNode).getComponent(cc.Label).string = score;
+            cc.find("bg_coin/txt_coin",this._playerNode).getComponent(cc.Label).string = score.toFixed(1);
         }   
     },
 
