@@ -13,7 +13,7 @@ var GlobalVar = cc.Class({
   		// 登录游戏服地址
         //hs正式 8.131.94.204  www.kayuxin.com
         loginServerAddress:"www.kayuxin.com:7180",
-        resVersion:"1.2.21",
+        resVersion:"1.2.22",
         
         //非常用的配置
         localVersion:true,
