@@ -155,17 +155,25 @@ cc.Class({
                 }
             }
 
-            let mult = JSON.parse(cc.vv.UserManager.gameList[i].mult);
             let bg_score = cc.find("right_bg/scrollview/content/bg_score", panel);
-            bg_score.getChildByName("text_score").getComponent(cc.Label).string = mult[0];
+
+            let multList = JSON.parse(cc.vv.UserManager.gameList[i].mult);
+            let text_score = bg_score.getChildByName("text_score");
+            if (0.1 > multList[0]) {
+                text_score.getComponent(cc.Label).string = multList[0].toFixed(2);
+            } else if (1 > multList[0]) {
+                text_score.getComponent(cc.Label).string = multList[0].toFixed(1);
+            } else {
+                text_score.getComponent(cc.Label).string = multList[0].toFixed(0);
+            }
 
             let btn_deduction = bg_score.getChildByName("btn_deduction");
-            btn_deduction.mult = mult;
+            btn_deduction.multList = multList;
             btn_deduction.curIndex = 0;
             Global.btnClickEvent(btn_deduction,this.onClickScoreDedution,this);
 
             let btn_add = bg_score.getChildByName("btn_add");
-            btn_add.mult = mult;
+            btn_add.multList = multList;
             btn_add.curIndex = 0;
             Global.btnClickEvent(btn_add,this.onClickScoreAdd,this);
 
@@ -208,18 +216,32 @@ cc.Class({
             --event.target.curIndex;
             --event.target.parent.getChildByName("btn_add").curIndex;
 
+            let mult = event.target.multList[event.target.curIndex];
             let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
-            text_score.getComponent(cc.Label).string = event.target.mult[event.target.curIndex];
+            if (0.1 > mult) {
+                text_score.getComponent(cc.Label).string = mult.toFixed(2);
+            } else if (1 > mult) {
+                text_score.getComponent(cc.Label).string = mult.toFixed(1);
+            } else {
+                text_score.getComponent(cc.Label).string = mult.toFixed(0);
+            }
         }
     },
 
     onClickScoreAdd(event){
-        if (event.target.mult.length - 1 > event.target.curIndex) {
+        if (event.target.multList.length - 1 > event.target.curIndex) {
             ++event.target.curIndex;
             ++event.target.parent.getChildByName("btn_deduction").curIndex;
 
+            let mult = event.target.multList[event.target.curIndex];
             let text_score = cc.find("right_bg/scrollview/content/bg_score/text_score",this.gamePanels[this.curGameIndex]);
-            text_score.getComponent(cc.Label).string = event.target.mult[event.target.curIndex];
+            if (0.1 > mult) {
+                text_score.getComponent(cc.Label).string = mult.toFixed(2);
+            } else if (1 > mult) {
+                text_score.getComponent(cc.Label).string = mult.toFixed(1);
+            } else {
+                text_score.getComponent(cc.Label).string = mult.toFixed(0);
+            }
         }
     },
 
