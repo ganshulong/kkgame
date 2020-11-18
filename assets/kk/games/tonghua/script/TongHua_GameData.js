@@ -297,7 +297,9 @@ cc.Class({
         list.push(["不显示剩余牌 ","显示剩余牌 "][conf.param2]);
         // list.push(["不包含8 ","包含8 "][conf.isContain8]);
         list.push("沉死分给对手\n");
-        list.push("不可废同 ");
+        if (15 <= conf.param1) {
+            list.push("不可废同 ");
+        }
         list.push(conf.score+ "倍 ");
         if (cc.vv.UserManager.currClubId) {
             list.push("最低入场" + conf.tiredsill + "分 ");

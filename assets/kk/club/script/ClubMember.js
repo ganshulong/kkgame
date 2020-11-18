@@ -366,7 +366,9 @@ cc.Class({
             bg_memberItem.getChildByName("text_state").color = showList[i].isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
             bg_memberItem.getChildByName("text_score1").active = showList[i].hehuo;
             if (showList[i].hehuo) {
-                bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = showList[i].shuiScore.toFixed(1);
+                if (0 != showList[i].shuiScore) {
+                    bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = showList[i].shuiScore.toFixed(1);
+                }
             }
             bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = showList[i].jushu;
             bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
@@ -375,9 +377,13 @@ cc.Class({
             } else {
                 bg_memberItem.getChildByName("text_waterPro").getComponent(cc.Label).string = "--";
             }
-            bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore;
-            bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power.toFixed(1);
-
+            if (0 != showList[i].totalScore) {
+                bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore.toFixed(1);
+            }
+            if (0 != showList[i].power) {
+                bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power.toFixed(1);
+            }
+            
             if (0 === Global.checkPartnerList.length) {
                 if (clubCeateUid == showList[i].uid || cc.vv.UserManager.uid != showList[i].uid) {
                     let btn_setPower = cc.find("text_power/btn_setPower", bg_memberItem);

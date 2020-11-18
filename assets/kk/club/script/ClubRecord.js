@@ -213,14 +213,14 @@ cc.Class({
                     bg_score.getChildByName("text_score"+j).active = true;
                     bg_score.getChildByName("text_name"+j).getComponent(cc.Label).string = userData[j].playername;
                     if (0 <= userData[j].score) {
-                        if (0 < userData[j].score) {
-                            bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = "+" + userData[j].score;
-                        } else if (0 == userData[j].score){
+                        if (0 == userData[j].score) {
                             bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score;
+                        } else if (0 == userData[j].score){
+                            bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = "+" + userData[j].score.toFixed(1);
                         }
                         bg_score.getChildByName("text_score"+j).color = new cc.Color(189,57,53);
                     } else {
-                        bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score;
+                        bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score.toFixed(1);
                         bg_score.getChildByName("text_score"+j).color = new cc.Color(79,102,143);
                     }
                     if (maxScore < userData[j].score) {
@@ -257,8 +257,17 @@ cc.Class({
             }
             cc.find("bg_right/panel_gameRecord/bg_top/text_roundNum",this._layer).getComponent(cc.Label).string = msg.data.length;
             cc.find("bg_right/panel_gameRecord/bg_top/text_bigWinweNum",this._layer).getComponent(cc.Label).string = msg.bigWinCnt;
-            cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = 0 <= msg.totalScore ? '/' + msg.totalScore : "";
-            cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = 0 > msg.totalScore ? '/' + Math.abs(msg.totalScore) : "";
+            if (0 <= msg.totalScore) {
+                if (0 == msg.totalScore) {
+                    cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = msg.totalScore;
+                } else {
+                    cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = msg.totalScore.toFixed(1);
+                }
+                cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = "";
+            } else {
+                cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = "";
+                cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = '/' + Math.abs(msg.totalScore.toFixed(1));
+            }
         }
     },
 

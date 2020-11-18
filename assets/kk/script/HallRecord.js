@@ -304,12 +304,16 @@ cc.Class({
                     playerInfoItem.getChildByName("text_player_id").getComponent(cc.Label).string = playerData[j].uid;
                     playerInfoItem.getChildByName("img_big_winner").active = (playerData[j].score >= maxScore && maxScore > 0);
 
-                    playerInfoItem.getChildByName("text_score_win").active = (0 < playerData[j].score);
-                    playerInfoItem.getChildByName("text_score_lose").active = (0 >= playerData[j].score);
-                    if (0 < playerData[j].score) {
-                        playerInfoItem.getChildByName("text_score_win").getComponent(cc.Label).string = playerData[j].score;
+                    if (0 <= playerData[j].score) {
+                        if (0 == playerData[j].score) {
+                            playerInfoItem.getChildByName("text_score_win").getComponent(cc.Label).string = playerData[j].score;
+                        } else {
+                            playerInfoItem.getChildByName("text_score_win").getComponent(cc.Label).string = playerData[j].score.toFixed(1);
+                        }
+                        playerInfoItem.getChildByName("text_score_lose").getComponent(cc.Label).string = "";
                     } else {
-                        playerInfoItem.getChildByName("text_score_lose").getComponent(cc.Label).string = '/' + Math.abs(playerData[j].score);
+                        playerInfoItem.getChildByName("text_score_win").getComponent(cc.Label).string = "";
+                        playerInfoItem.getChildByName("text_score_lose").getComponent(cc.Label).string = '/' + Math.abs(playerData[j].score.toFixed(1));
                     }
                     playerInfoItem.active = true;
                 }
