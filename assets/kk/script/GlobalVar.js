@@ -11,8 +11,8 @@ var GlobalVar = cc.Class({
 
     statics: {
   		// 登录游戏服地址
-        //开发106.12.7.114:7180  www.zonzu.net
-        //正式123.57.94.118:7180  www.jhtao.com.cn
+        //开发测试 106.12.7.114:9180
+        //正式 123.57.94.118:7180
         loginServerAddress:"123.57.94.118:7180",
         resVersion:"1.2.14",
         
