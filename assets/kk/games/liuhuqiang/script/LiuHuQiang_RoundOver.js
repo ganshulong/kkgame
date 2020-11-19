@@ -224,9 +224,12 @@ cc.Class({
             panel_CardInfo.getChildByName("text_tun_fan").getComponent(cc.Label).string = tunFanStr;
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
+        let rowCardNum = 30;
         for (let i = 0; i < data.diPai.length; i++) {
             let node = this.node.getComponent("LiuHuQiang_Card").createCard(data.diPai[i],2);
-            node.x = (node.width + 5) * i;
+            node.scale = 0.75;
+            node.x = (node.width * node.scale + 3) * (i % rowCardNum);
+            node.y = -(node.width * node.scale + 3) * parseInt(i / rowCardNum);
             node.parent = surplusCard;
         }
     },

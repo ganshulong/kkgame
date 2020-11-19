@@ -197,9 +197,11 @@ cc.Class({
             panel_CardInfo.getChildByName("text_huxi").getComponent(cc.Label).string = ("硬息： " + data.huxi);
         }
         let surplusCard = this._layer.getChildByName("surplusCard");
+        let rowCardNum = 29;
         for (let i = 0; i < data.diPai.length; i++) {
             let node = this.node.getComponent("PaoHuZi_Card").createCard(data.diPai[i],2);
-            node.x = (node.width + 5) * i;
+            node.scale = 0.78;
+            node.x = (node.width * node.scale + 3) * (i % rowCardNum);
             node.parent = surplusCard;
         }
     },
