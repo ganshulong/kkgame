@@ -14,7 +14,7 @@ var GlobalVar = cc.Class({
         //开发测试 106.12.7.114:9180
         //正式 123.57.94.118:7180
         loginServerAddress:"123.57.94.118:7180",
-        resVersion:"1.2.14",
+        resVersion:"1.2.15",
         
         //非常用的配置
         localVersion:true,
