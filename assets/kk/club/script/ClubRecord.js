@@ -232,9 +232,16 @@ cc.Class({
                         bigWinerName = userData[j].playername;
                         bigWinerID = userData[j].uid;
                     }
-                    if(cc.vv.UserManager.uid == userData[j].uid){
-                        item.getChildByName("mask_win").active = (0 <= userData[j].score);
-                        item.getChildByName("mask_lose").active = (0 > userData[j].score);
+                    if (this.checkUid) {
+                        if(this.checkUid == userData[j].uid){
+                            item.getChildByName("mask_win").active = (0 <= userData[j].score);
+                            item.getChildByName("mask_lose").active = (0 > userData[j].score);
+                        }
+                    } else {
+                        if(cc.vv.UserManager.uid == userData[j].uid){
+                            item.getChildByName("mask_win").active = (0 <= userData[j].score);
+                            item.getChildByName("mask_lose").active = (0 > userData[j].score);
+                        }
                     }
                 }
                 for (var j = userData.length; j < 4; j++) {

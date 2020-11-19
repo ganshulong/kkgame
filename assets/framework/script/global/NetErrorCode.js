@@ -192,4 +192,7 @@ codeCfg.code = {
     '9934':"permission_denied",
     '405':"player_not_exits",
     '438':"player_not_exits_in_club",
+    '446':"score_power",
+    '445':"water_line_less",
+    '447':"no_can_create_club",
 }
