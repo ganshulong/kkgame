@@ -119,6 +119,8 @@ cc.Class({
 
         this.panel_ruleSelect = cc.find("Layer/panel_ruleSelect",this.node);
         this.setRuleSelectShow(false);
+        let btn_mask = cc.find("Layer/panel_ruleSelect/btn_mask",this.node);
+        Global.btnClickEvent(btn_mask,this.onClickHideRuleSelect,this);
         let btn_allSelectGame = cc.find("Layer/panel_ruleSelect/item_allRuleSelect/btn_allSelectGame",this.node);
         Global.btnClickEvent(btn_allSelectGame,this.onClickAllRuleSelect,this);
         this.ruleSelectContent = cc.find("Layer/panel_ruleSelect/list/view/content",this.node);
@@ -607,6 +609,10 @@ cc.Class({
         this.ClubRecordJS.showLayer();
     },
 
+    onClickHideRuleSelect(){
+        this.setRuleSelectShow(false);
+    },
+
     onClickAllRuleSelect(){
         this.initTables(this._tableList);
         this.setRuleSelectShow(false);
@@ -625,17 +631,18 @@ cc.Class({
                 let j = 0;
                 for (j = 0; j < tableTypeList.length; j++) {
                     if (this._tableList[i].config.gameid == tableTypeList[j].config.gameid &&
-                        this._tableList[i].users.length == tableTypeList[j].users.length &&
                         this._tableList[i].config.gamenum == tableTypeList[j].config.gamenum &&
                         this._tableList[i].config.seat == tableTypeList[j].config.seat &&
                         this._tableList[i].config.score == tableTypeList[j].config.score &&
                         this._tableList[i].config.param1 == tableTypeList[j].config.param1 &&
                         this._tableList[i].config.param2 == tableTypeList[j].config.param2) {
+                        tableTypeList[j].onlineNum += this._tableList[i].users.length || 0;
                         break;
                     }
                 }
                 if (j == tableTypeList.length) {
                     tableTypeList.push(this._tableList[i]);
+                    tableTypeList[tableTypeList.length-1].onlineNum = this._tableList[i].users.length || 0;
                 }
             }
             for (let i = 0; i < tableTypeList.length; i++) {
@@ -644,7 +651,7 @@ cc.Class({
                 item.y = - item.height * i;
                 item.getChildByName("text_index").getComponent(cc.Label).string = i + 1;
                 item.getChildByName("text_gameName").getComponent(cc.Label).string = Global.getGameName(tableTypeList[i].config.gameid);
-                item.getChildByName("text_onlineNum").getComponent(cc.Label).string = tableTypeList[i].users.length + "人在线";
+                item.getChildByName("text_onlineNum").getComponent(cc.Label).string = tableTypeList[i].onlineNum + "人在线";
                 item.getChildByName("text_round").getComponent(cc.Label).string = tableTypeList[i].config.gamenum + "局";
                 item.getChildByName("text_playerNum").getComponent(cc.Label).string = tableTypeList[i].config.seat + "人";
                 let ruleStr = (tableTypeList[i].config.score + "倍 ");
@@ -690,7 +697,6 @@ cc.Class({
         let showTableList = [];
         for (let i = 0; i < this._tableList.length; i++) {
             if (this._tableList[i].config.gameid == tableInfo.config.gameid &&
-                this._tableList[i].users.length == tableInfo.users.length &&
                 this._tableList[i].config.gamenum == tableInfo.config.gamenum &&
                 this._tableList[i].config.seat == tableInfo.config.seat &&
                 this._tableList[i].config.score == tableInfo.config.score &&
