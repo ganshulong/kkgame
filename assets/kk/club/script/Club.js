@@ -117,6 +117,7 @@ cc.Class({
         let btn_record = cc.find("Layer/img_bottomBg/btn_record",this.node);
         Global.btnClickEvent(btn_record,this.onClickRecord,this);
 
+        this.showRuleInfo = null;
         this.panel_ruleSelect = cc.find("Layer/panel_ruleSelect",this.node);
         this.setRuleSelectShow(false);
         let btn_mask = cc.find("Layer/panel_ruleSelect/btn_mask",this.node);
@@ -524,7 +525,21 @@ cc.Class({
     },
 
     initTables(list){
-        let width = 0;
+        if (this.showRuleInfo) {
+            let showTableList = [];
+            for (let i = 0; i < list.length; i++) {
+                if (list[i].config.gameid == this.showRuleInfo.config.gameid &&
+                    list[i].config.gamenum == this.showRuleInfo.config.gamenum &&
+                    list[i].config.seat == this.showRuleInfo.config.seat &&
+                    list[i].config.score == this.showRuleInfo.config.score &&
+                    list[i].config.param1 == this.showRuleInfo.config.param1 &&
+                    list[i].config.param2 == this.showRuleInfo.config.param2) {
+                    showTableList.push(list[i]);
+                }
+            }
+            list = showTableList;
+        }
+
         list.sort((obj1, obj2)=>{
             let obj2UserNum = (obj2.users.length || 0);
             let obj1UserNum = (obj1.users.length || 0);
@@ -547,6 +562,8 @@ cc.Class({
                 return obj2SeatRateState - obj1SeatRateState;                           //1.占座率: 未坐满 > 坐满 > 空
             }
         });
+
+        let width = 0;
         for(let i=0;i<list.length;++i){
             let config = list[i].config;
             let item = null;
@@ -614,6 +631,7 @@ cc.Class({
     },
 
     onClickAllRuleSelect(){
+        this.showRuleInfo = null;
         this.initTables(this._tableList);
         this.setRuleSelectShow(false);
     },
@@ -693,19 +711,8 @@ cc.Class({
     },
 
     onClickSelectGame(event){
-        let tableInfo = event.target.tableInfo;
-        let showTableList = [];
-        for (let i = 0; i < this._tableList.length; i++) {
-            if (this._tableList[i].config.gameid == tableInfo.config.gameid &&
-                this._tableList[i].config.gamenum == tableInfo.config.gamenum &&
-                this._tableList[i].config.seat == tableInfo.config.seat &&
-                this._tableList[i].config.score == tableInfo.config.score &&
-                this._tableList[i].config.param1 == tableInfo.config.param1 &&
-                this._tableList[i].config.param2 == tableInfo.config.param2) {
-                showTableList.push(this._tableList[i]);
-            }
-        }
-        this.initTables(showTableList);
+        this.showRuleInfo = event.target.tableInfo;
+        this.initTables(this._tableList);
         this.setRuleSelectShow(false);
     },
 
