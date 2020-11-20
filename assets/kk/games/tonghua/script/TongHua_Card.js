@@ -9,8 +9,9 @@ cc.Class({
         _font:null,
     },
 
-    init(atlas, cardTypeFont){
+    init(atlas, atlasNew, cardTypeFont){
         this._atlas = atlas;
+        this._atlasNew = atlasNew;
         this._font = cardTypeFont;
     },
 
@@ -37,7 +38,14 @@ cc.Class({
         let value = cardValue % 0x10;
         let resValue = (0x0D < value) ? (value-13) : (value);
 
-        spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(resColor+"-"+resValue);
+        if (Global.isShowNewCardSprite) {
+            spr.getComponent(cc.Sprite).spriteFrame = this._atlasNew.getSpriteFrame("p"+resColor+"_"+resValue);
+            spr.getComponent(cc.Sprite).sizeMode = cc.Sprite.SizeMode.CUSTOM;
+            spr.width = cc.vv.gameData.CardWidth;
+            spr.height = cc.vv.gameData.CardHeight;
+        } else {
+            spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(resColor+"-"+resValue);
+        }
 
         let cardNumText = new cc.Node();
         cardNumText.name = "cardNumText";

@@ -72,7 +72,7 @@ cc.Class({
         Global.btnClickEvent(phone_login, this.onClickBindPhone, this);
 
         this.initBindPhoneUI();
-        this.initAudio();
+        this.initLocalStorage();
 
         if (Global.isAndroid()) {
             let result = Global.setAppidWithAppsecretForJS(app_id, app_sceret);
@@ -90,7 +90,7 @@ cc.Class({
         }
     },
 
-    initAudio(){
+    initLocalStorage(){
         let _audioVolue = cc.sys.localStorage.getItem("_audioVolue");
         if(_audioVolue === null) {
             _audioVolue = 1;
@@ -113,6 +113,13 @@ cc.Class({
         }
         _musicIsOpen = parseInt(_musicIsOpen);
         cc.vv.AudioManager.setBgmVolume(_musicIsOpen==1?_audioVolue:0);
+
+        let isShowNewCardSprite = cc.sys.localStorage.getItem("isShowNewCardSprite");
+        if(isShowNewCardSprite === null) {
+            isShowNewCardSprite = 0;
+            cc.sys.localStorage.setItem("isShowNewCardSprite", isShowNewCardSprite);
+        }
+        Global.isShowNewCardSprite = parseInt(isShowNewCardSprite);
     },
 
     initBindPhoneUI() {

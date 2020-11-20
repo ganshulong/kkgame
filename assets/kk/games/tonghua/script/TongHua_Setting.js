@@ -12,7 +12,7 @@ cc.Class({
 
     showSetting(){
         if(this._settingNode === null){
-            cc.loader.loadRes("common/prefab/game_set",cc.Prefab,(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/game_set_tonghua",cc.Prefab,(err,prefab)=>{
                 if(err === null){
                     this._settingNode = cc.instantiate(prefab);
                     this._settingNode.parent = this.node;
@@ -36,12 +36,31 @@ cc.Class({
                     cc.find("language/toggle1",this._settingNode).getComponent(cc.Toggle).isChecked = Global.language == 0;
                     cc.find("language/toggle2",this._settingNode).getComponent(cc.Toggle).isChecked = Global.language == 1;
 
+                    this.btn_oldSprite = cc.find("cardSprite/btn_oldSprite",this._settingNode);
+                    Global.btnClickEvent(this.btn_oldSprite, this.onClickCardSprite,this);
+                    this.btn_newSprite = cc.find("cardSprite/btn_newSprite",this._settingNode);
+                    Global.btnClickEvent(this.btn_newSprite, this.onClickCardSprite,this);
+
                     this.showSettingAction();
                 }
             });
         }else{
             this.showSettingAction();
         }
+    },
+
+    onClickCardSprite(event){
+        if (Global.isShowNewCardSprite && "btn_oldSprite" == event.target.name) {
+            Global.isShowNewCardSprite = 0;
+        } else if (!Global.isShowNewCardSprite && "btn_newSprite" == event.target.name) {
+            Global.isShowNewCardSprite = 1;
+        } else {
+            return;
+        }
+        this.btn_oldSprite.getChildByName("checkmark").active = !Global.isShowNewCardSprite;
+        this.btn_newSprite.getChildByName("checkmark").active = Global.isShowNewCardSprite;
+        cc.sys.localStorage.setItem("isShowNewCardSprite", Global.isShowNewCardSprite);
+        Global.dispatchEvent(EventId.UPDATE_CARD_SPRITE);
     },
 
     // 设置音乐
@@ -80,6 +99,9 @@ cc.Class({
         this._musicIsOpen = parseInt(cc.sys.localStorage.getItem("_musicIsOpen"));
         this.setOperate(this._musicIsOpen,this.btn_music_mask);
 
+        this.btn_oldSprite.getChildByName("checkmark").active = !Global.isShowNewCardSprite;
+        this.btn_newSprite.getChildByName("checkmark").active = Global.isShowNewCardSprite;
+
         this._settingNode.active = true;
         this._settingNode.scale = 0;
         this._settingNode.runAction(cc.scaleTo(0.2,1).easing(cc.easeBackOut()));
@@ -87,7 +109,7 @@ cc.Class({
 
     onDestroy(){
         if(this._settingNode){
-            cc.loader.releaseRes("common/prefab/game_set",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/game_set_tonghua",cc.Prefab);
         }
     }
 });

@@ -64,8 +64,15 @@ cc.Class({
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.OUT_CARD_FAILD,this.onRcvOutCardFaild,this);
+        Global.registerEvent(EventId.UPDATE_CARD_SPRITE,this.onRcvUpdateCardSprite,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onRcvUpdateCardSprite(){
+        if (-1 < this._seatIndex && this._handCards.length) {
+            this.showHandCard(this._handCards);
+        }
     },
 
     recvDeskInfoMsg(){

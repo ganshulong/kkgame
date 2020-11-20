@@ -71,8 +71,15 @@ cc.Class({
         Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
+        Global.registerEvent(EventId.UPDATE_CARD_SPRITE,this.onRcvUpdateCardSprite,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onRcvUpdateCardSprite(){
+        if (-1 < this._seatIndex && this.curOutCardList && this.curOutCardList.length) {
+            this.showOutCard(this.curOutCardList, this.curOutCardType);
+        }
     },
 
     onRcvUpdatePlayerInfo(){
@@ -200,7 +207,9 @@ cc.Class({
         }
     },
 
-    showOutCard(list, cardType){
+    showOutCard(list = [], cardType = 0){
+        this.curOutCardList = list;
+        this.curOutCardType = cardType;
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
             let cardScale = 0.65;
@@ -245,21 +254,6 @@ cc.Class({
         if(chairId === this._chairId){
             this._seatIndex = data.seat;
         }
-    },
-
-    showCardAction(node,startPos,endPos){
-        node.position = startPos;
-        node.scale = 1;
-
-        let time = cc.vv.gameData.getActionTime();
-        node.opacity = 255;
-
-        node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            this.node.getComponent("TongHua_Card").createCard(node.cardValue,2,node.showBg,node);
-            node.scale = 1;
-            node.rotation = 0;
-            node.opacity = 255;
-        })))
     },
 
     recvPlayerExit(data){

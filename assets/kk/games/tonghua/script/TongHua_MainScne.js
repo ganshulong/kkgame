@@ -5,6 +5,7 @@ cc.Class({
     properties: {
         
         cardsAtlas:cc.SpriteAtlas,
+        cardsAtlasNew:cc.SpriteAtlas,
         emjoAtlas:cc.SpriteAtlas,
         cardTypeFont:cc.Font,
         _gameCount:0,
@@ -16,7 +17,7 @@ cc.Class({
 
         this.initUI();
 
-        this.node.addComponent("TongHua_Card").init(this.cardsAtlas, this.cardTypeFont);
+        this.node.addComponent("TongHua_Card").init(this.cardsAtlas, this.cardsAtlasNew, this.cardTypeFont);
         this.node.addComponent("TongHua_Menu");
 
         let conf = cc.vv.gameData.getRoomConf();
