@@ -14,7 +14,7 @@ var GlobalVar = cc.Class({
         //开发测试 106.12.7.114:7180
         //正式 8.131.94.204:7180  www.kayuxin.com
         loginServerAddress:"www.kayuxin.com:7180",
-        resVersion:"1.2.22",
+        resVersion:"1.2.23",
         
         //非常用的配置
         localVersion:true,
