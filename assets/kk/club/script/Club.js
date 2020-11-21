@@ -122,8 +122,8 @@ cc.Class({
         this.setRuleSelectShow(false);
         let btn_mask = cc.find("Layer/panel_ruleSelect/btn_mask",this.node);
         Global.btnClickEvent(btn_mask,this.onClickHideRuleSelect,this);
-        let btn_allSelectGame = cc.find("Layer/panel_ruleSelect/item_allRuleSelect/btn_allSelectGame",this.node);
-        Global.btnClickEvent(btn_allSelectGame,this.onClickAllRuleSelect,this);
+        let item_allRuleSelect = cc.find("Layer/panel_ruleSelect/item_allRuleSelect",this.node);
+        Global.btnClickEvent(item_allRuleSelect,this.onClickAllRuleSelect,this);
         this.ruleSelectContent = cc.find("Layer/panel_ruleSelect/list/view/content",this.node);
         this.ruleSelectItem = cc.find("Layer/panel_ruleSelect/list/view/item_ruleSelect",this.node);
         this.ruleSelectItem.active = false;
@@ -701,9 +701,8 @@ cc.Class({
                         break;
                 }
                 item.getChildByName("text_rule").getComponent(cc.Label).string = ruleStr;
-                let btn_selectGame = item.getChildByName("btn_selectGame");
-                btn_selectGame.tableInfo = tableTypeList[i];
-                Global.btnClickEvent(btn_selectGame, this.onClickSelectGame,this);
+                item.tableInfo = tableTypeList[i];
+                Global.btnClickEvent(item, this.onClickSelectGame,this);
                 item.active = true;
             }
             this.ruleSelectContent.height = this.ruleSelectItem.height * tableTypeList.length;
