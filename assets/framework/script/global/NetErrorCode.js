@@ -195,4 +195,5 @@ codeCfg.code = {
     '446':"score_power",
     '445':"water_line_less",
     '447':"no_can_create_club",
+    '448':"no_junior_member",
 }
