@@ -296,4 +296,5 @@ GlobalMsgId.CLUB_SET_POWER = 8833; 			// 设置疲劳
 GlobalMsgId.CLUB_POWER_NOTIFY = 18817; 		// 疲劳通知
 
 GlobalMsgId.CLUB_POWER_RECORD = 8834; 		// 疲劳记录
+GlobalMsgId.SEARCH_CLUB_MEMBER = 8835;      // 搜索亲友圈成员
 

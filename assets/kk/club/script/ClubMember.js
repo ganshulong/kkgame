@@ -21,6 +21,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.MEMBER_RECOVER_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.registerMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
+        cc.vv.NetManager.registerMsg(MsgId.SEARCH_CLUB_MEMBER, this.onRcvSearchClubMember, this);
 
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
         Global.registerEvent(EventId.SHOW_CLUB_MEMBER, this.showLayer,this);
@@ -112,6 +113,7 @@ cc.Class({
     },
 
     initShow(){
+        this.isShowSearchMember = false;
         this.input_nameID.getComponent(cc.EditBox).string = "";
         for (let i = 0; i < this.sortBtnArr.length; i++) {
             this.sortBtnArr[i].isSmallToBig = true;
@@ -134,7 +136,11 @@ cc.Class({
     },
 
     onClickBack(){
-        if (0 < Global.checkPartnerList.length) {
+        if (this.isShowSearchMember) {
+            this.isShowSearchMember = false;
+            this.btn_back.active = (0 < Global.checkPartnerList.length);
+            this.sendMemberListReq();
+        } else if (0 < Global.checkPartnerList.length) {
             Global.checkPartnerList.pop();
             this.curStartIndex = Global.checkPartnerListCurStartIndex[Global.checkPartnerListCurStartIndex.length-1];
             Global.checkPartnerListCurStartIndex.pop();
@@ -164,14 +170,12 @@ cc.Class({
 
     onClickSearch(event){
         let inputStr = this.input_nameID.getComponent(cc.EditBox).string;
-        if (inputStr && 0 < inputStr.length) {
-            let searchList = [];
-            for (let i = 0; i < this.memberList.length; i++) {
-                if (0 <= this.memberList[i].uid.toString().indexOf(inputStr) || 0 <= this.memberList[i].playername.indexOf(inputStr)) {
-                    searchList.push(this.memberList[i]);
-                }
-            }
-            this.updateMemberList(searchList);
+        if (inputStr && 6 == inputStr.length) {
+            let req = { 'c': MsgId.SEARCH_CLUB_MEMBER};
+            req.selectTime = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.selectUid = inputStr;
+            cc.vv.NetManager.send(req);
         }
     },
 
@@ -293,8 +297,22 @@ cc.Class({
             for (let i = 0; i < this.sortBtnArr.length; i++) {
                 this.sortBtnArr[i].isSmallToBig = true;
             }
+            this.isShowSearchMember = false;
             this.memberList = msg.memberList;
             this.updateMemberList();
+        }
+    },
+
+    onRcvSearchClubMember(msg){
+        if (200 == msg.code){
+            this.btn_prePage.getComponent(cc.Button).interactable = false
+            this.btn_nextPage.getComponent(cc.Button).interactable = false;
+            this.text_page.getComponent(cc.Label).string = "1/1";
+
+            this.isShowSearchMember = true;
+            this.btn_back.active = true;
+            this.memberList = [msg.memberInfo];
+            this.updateMemberList()
         }
     },
 
@@ -557,6 +575,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.MEMBER_RECOVER_PLAY, this.onRcvMemberState, this);
         cc.vv.NetManager.unregisterMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.SEARCH_CLUB_MEMBER, this.onRcvSearchClubMember, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_member",cc.Prefab);
         }
