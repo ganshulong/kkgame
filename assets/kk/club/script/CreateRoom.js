@@ -107,7 +107,8 @@ cc.Class({
             LiuHuQiang:3,
             PaoDeKuai:4,
             HongZhong:5,
-            ShiHuKa:6
+            ShiHuKa:6,
+            ErQiGui:7
         };
 
         let btn_back = this._createLayer.getChildByName("btn_back");
@@ -145,7 +146,7 @@ cc.Class({
 
         //游戏玩法选项页面
         this.gamePanels = [];
-        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka"];
+        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_erqigui"];
         for (let i = 0; i < gamePanelStr.length; i++) {
             cc.find("img_bg/"+gamePanelStr[i],this._createLayer).active = false;
         }
@@ -284,6 +285,11 @@ cc.Class({
             optionList.push({option:"player_num",       valueList:[2,3]});
             optionList.push({option:"param1",           valueList:[0,1]});
             optionList.push({option:"param2",           valueList:[0,1,2]});
+
+        } else if (this.gameTypeIndex.ErQiGui == id) {
+            req.gameid = this._isClubRoom ? 17 : 18;
+            optionList.push({option:"player_num",       valueList:[4]});
+            optionList.push({option:"param1",           valueList:[20,40,60]});
         }
 
         this.onCreateCommom(layer, optionList, req);
@@ -395,7 +401,7 @@ cc.Class({
         let dismiss = cc.find("dismiss/toggle0",layer);
         dismiss.getComponent(cc.Toggle).isChecked = true;
 
-        layer.getChildByName("input_roomName").getComponent(cc.EditBox).string = "";
+        // layer.getChildByName("input_roomName").getComponent(cc.EditBox).string = "";
         layer.getChildByName("input_roomName").active = this._isClubRoom;
         
         let sameIP = cc.find("sameIP/toggle0",layer);

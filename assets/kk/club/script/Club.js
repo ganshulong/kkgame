@@ -345,6 +345,13 @@ cc.Class({
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("shihuka");
                 }
+            } else if(msg.response.deskInfo.conf.gameid === 17 || msg.response.deskInfo.conf.gameid === 18){
+                if(cc.vv.gameData === null){
+                    let data = require("ErQiGui_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("erqigui");
+                }
             }
         }
     },
@@ -458,6 +465,8 @@ cc.Class({
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[8];
         } else if (13 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[9];
+        } else if (17 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[10];
         }
             
         tableChar.active = true;

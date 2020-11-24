@@ -518,6 +518,13 @@ cc.Class({
                         cc.vv.gameData.init(msgDic.deskInfo);
                         cc.vv.SceneMgr.enterScene("shihuka");
                     }
+                } else if(msgDic.deskInfo.conf.gameid === 17 || msgDic.deskInfo.conf.gameid === 18){
+                    if(cc.vv.gameData === null){
+                        let data = require("ErQiGui_GameData");
+                        cc.vv.gameData = new data();
+                        cc.vv.gameData.init(msgDic.deskInfo);
+                        cc.vv.SceneMgr.enterScene("erqigui");
+                    }
                 }
             }
 

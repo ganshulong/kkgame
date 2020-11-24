@@ -142,6 +142,8 @@ cc.Class({
                     str += "红中 ";
                 } else if(gameList[i].gameid === 13 && -1 === str.indexOf("十胡卡")) {
                     str += "十胡卡 ";
+                } else if(gameList[i].gameid === 13 && -1 === str.indexOf("二七鬼")) {
+                    str += "二七鬼 ";
                 }
             }
             // 游戏列表

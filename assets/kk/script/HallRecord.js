@@ -255,7 +255,8 @@ cc.Class({
                 let roomInfo = this._gameRecordItemList[i].getChildByName("roomInfo");
 
                 let gameIcon = roomInfo.getChildByName("gameIcon");
-                let gameIconStr = ["","penghu","paohuzi","penghu","paohuzi","hongheihu","hongheihu","liuhuqiang","liuhuqiang","paodekuai","paodekuai","hongzhong","hongzhong","shihuka","shihuka"];
+                let gameIconStr = ["","penghu","paohuzi","penghu","paohuzi","hongheihu","hongheihu","liuhuqiang","liuhuqiang","paodekuai","paodekuai",
+                                    "hongzhong","hongzhong","shihuka","shihuka","","","erqigui","erqigui"];
                 let gameIconPrefabRes= cc.find("prefabRes/" + gameIconStr[msg.data[i].gameid], this._gameRecordLayer);
                 gameIcon.getComponent(cc.Sprite).spriteFrame  = gameIconPrefabRes.getComponent(cc.Sprite).spriteFrame;
 
