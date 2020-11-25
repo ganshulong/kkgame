@@ -293,4 +293,7 @@ GlobalMsgId.CLUB_INVITE_NOTIFY = 8830;  	// 俱乐部邀请通知
 GlobalMsgId.CLUB_SET_PARTNER = 8831;  		// 俱乐部授权合伙人
 GlobalMsgId.CLUB_SET_PARTNER_RATIO = 8832; 	// 设置合伙人抽水比
 
-GlobalMsgId.ERQIGUI_JIAO_SCORE = 9901; 		// 二七鬼叫分
+GlobalMsgId.ERQIGUI_JIAO_SCORE = 9901; 				// 二七鬼叫分
+GlobalMsgId.ERQIGUI_JIAO_SCORE_NOTIFY = 18901; 		// 二七鬼叫分通知
+GlobalMsgId.ERQIGUI_SELECT_COLOR_NOTIFY = 18902;	// 二七鬼选主通知
+GlobalMsgId.ERQIGUI_MAI_CARD_NOTIFY = 18903; 		// 二七鬼埋底牌通知

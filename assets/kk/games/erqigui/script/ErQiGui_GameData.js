@@ -149,6 +149,8 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.OUT_CARD, this.onRcvOutCard, this);
         cc.vv.NetManager.registerMsg(MsgId.SCORE_UPDATE_NOTIFY, this.onRcvScoreUpdateNotify,this);
+
+        cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify,this);
     },
 
     unregisterMsg() {
@@ -190,6 +192,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.OUT_CARD, this.onRcvOutCard, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.SCORE_UPDATE_NOTIFY, this.onRcvScoreUpdateNotify, false,this);
 
+        cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, false, this);
     },
 
     onRcvUpdateTableInfo(msg){
@@ -203,6 +206,12 @@ cc.Class({
             }
             // cc.vv.SceneMgr.enterScene(cc.director.getScene().name);
             Global.dispatchEvent(EventId.UPDATE_PLAYER_INFO);
+        }
+    },
+
+    onRcvJiaoScoreNotify(msg){
+        if(msg.code == 200){
+             Global.dispatchEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,msg)           
         }
     },
 

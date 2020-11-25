@@ -97,6 +97,7 @@ cc.Class({
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.recvDeskInfoMsg,this);
+        Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
 
         this.recvDeskInfoMsg();
     },
@@ -110,12 +111,22 @@ cc.Class({
 
                     if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
                         this.curaction = data.actionInfo.curaction;
-                        this.showOperateBtn(true, data.actionInfo.nextaction);
+                        this.showOperateBtn(true, data.actionInfo);
                     } else {
                         this.showOperateBtn(false);
                     }
                 }
             }
+        }
+    },
+
+    onRcvJiaoScoreNotify(data){
+        data = data.detail;
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+            this.curaction = data.actionInfo.curaction;
+            this.showOperateBtn(true, data.actionInfo);
+        } else {
+            this.showOperateBtn(false);
         }
     },
 
@@ -175,7 +186,7 @@ cc.Class({
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex && 4 == data.actionInfo.nextaction.type) {
             this.curaction = data.actionInfo.curaction;
-            this.showOperateBtn(true, data.actionInfo.nextaction);
+            this.showOperateBtn(true, data.actionInfo);
         } else {
             this.showOperateBtn(false);
         }
@@ -220,7 +231,7 @@ cc.Class({
         cc.vv.FloatTip.show("无效出牌");
     },
 
-    showOperateBtn(bShow, nextaction){
+    showOperateBtn(bShow, actionInfo){
         if (cc.vv.gameData._isPlayBack || 0 != this._chairId) {
             return;
         }
@@ -231,38 +242,43 @@ cc.Class({
             this.panel_selectColor45.active = false;
             this.panel_maidi.active = false;
             this.btn_outCard.active = false;
-
-            if (1 == nextaction.type) {
+ 
+            let type = actionInfo.nextaction.type;
+            if (1 == type) {
                 this.panel_jiaoScore.active = true;
                 this.curSelectScore = 0;
-                for (let i = 0; i < nextaction.canJiaoFen.length; i++) {
-                    let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + nextaction.canJiaoFen[i].fen);
-                    btn_score.interactable = (0 == nextaction.canJiaoFen[i].isJiao);
+                let curMaxJiaoScore = 0;
+                if (0 < actionInfo.curaction.jiaoFen.length) {
+                   curMaxJiaoScore = actionInfo.curaction.jiaoFen[0].fen;
+                }
+                for (let i = 0; i < this.jiaoScoreList.length; i++) {
+                    let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + this.jiaoScoreList[i]);
+                    btn_score.getComponent(cc.Button).interactable = (curMaxJiaoScore < this.jiaoScoreList[i]);
                     btn_score.getChildByName("mask").active = false;
                 }
 
-            } else if (2 == nextaction.type) {
+            } else if (2 == type) {
                 if (true) {
                     this.panel_selectColor.active = true;
                 } else {
                     this.panel_selectColor45.active = true;
                 }
 
-            } else if (3 == nextaction.type) {
+            } else if (3 == type) {
                 this.panel_maidi.active = true;
                 this.text_curSelectNum = 0;
                 this.text_curSelectNum.getComponent(cc.Label).string = this.text_curSelectNum;
 
-            } else if (4 == nextaction.type) {
+            } else if (4 == type) {
                 this.btn_outCard.active = true;
 
-                let cardIsCanOutList = this.getCardIsCanOutList(nextaction.hint);
-                if (this.getIsInitCardSelectState(cardIsCanOutList)) {
-                    this.initCardSelectState();
-                }
-                this.setCardHintState(cardIsCanOutList);
-                this.hintList = nextaction.hint;
-                this.hintIndex = -1;
+                // let cardIsCanOutList = this.getCardIsCanOutList(nextaction.hint);
+                // if (this.getIsInitCardSelectState(cardIsCanOutList)) {
+                //     this.initCardSelectState();
+                // }
+                // this.setCardHintState(cardIsCanOutList);
+                // this.hintList = nextaction.hint;
+                // this.hintIndex = -1;
             }
         } else {
             this.curaction = null;
@@ -515,7 +531,7 @@ cc.Class({
 
             if (this._seatIndex == data.actionInfo.nextaction.seat && 1 == data.actionInfo.nextaction.type) {
                 this.curaction = data.actionInfo.curaction;
-                this.showOperateBtn(true, data.actionInfo.nextaction);
+                this.showOperateBtn(true, data.actionInfo);
             } else {
                 this.showOperateBtn(false);
             }

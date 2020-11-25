@@ -71,6 +71,7 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.recvSendCard,this);
         Global.registerEvent(EventId.SCORE_UPDATE_NOTIFY,this.onRcvScoreUpdateNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
+        Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
     },
 
     onRcvUpdatePlayerInfo(){
@@ -90,6 +91,10 @@ cc.Class({
             this._seatIndex = -1;
             this._playerNode.active = false;
         }
+    },
+
+    onRcvJiaoScoreNotify(data){
+        data = data.detail;
     },
 
     onRcvScoreUpdateNotify(data){

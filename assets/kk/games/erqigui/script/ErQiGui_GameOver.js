@@ -40,35 +40,35 @@ cc.Class({
                 Global.btnClickEvent(btnBtn,this.onBack,this);
 
                 // 创建者
-                let creator = cc.find("game_end_bg/creator",this._layer);
-                let icon = cc.find("radio_mask/spr_head",creator);
-                Global.setHead(icon,data.createUser.usericon);
+                // let creator = cc.find("game_end_bg/creator",this._layer);
+                // let icon = cc.find("radio_mask/spr_head",creator);
+                // Global.setHead(icon,data.createUser.usericon);
 
-                creator.getChildByName("name").getComponent(cc.Label).string = data.createUser.playername;
-                creator.getChildByName("id").getComponent(cc.Label).string = "ID:"+data.createUser.uid;
+                // creator.getChildByName("name").getComponent(cc.Label).string = data.createUser.playername;
+                // creator.getChildByName("id").getComponent(cc.Label).string = "ID:"+data.createUser.uid;
 
-                this._layer.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
-                this._layer.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
+                // this._layer.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
+                // this._layer.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
 
-                let btn_share = this._layer.getChildByName("btn_share");
-                Global.btnClickEvent(btn_share,this.onShare,this);
+                // let btn_share = this._layer.getChildByName("btn_share");
+                // Global.btnClickEvent(btn_share,this.onShare,this);
 
-                let scoreList = data.users.slice(0);
-                scoreList.sort((a,b)=>{
-                    return b.score - a.score;
-                });
+                // let scoreList = data.users.slice(0);
+                // scoreList.sort((a,b)=>{
+                //     return b.score - a.score;
+                // });
 
-                let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-385,0,385],[-420,-130,160,450]];
-                let bigWinerId = scoreList[0].uid;
-                for(let i = 0; i < data.users.length; ++i){
-                    let player = cc.find("game_end_bg/player"+i,this._layer);
-                    this.initPlayer(player, data.users[i], bigWinerId, data.createUser.uid);
-                    player.x = posArr[data.users.length][i];
-                    player.active = true;
-                }
-                for(let i = data.users.length; i < cc.vv.gameData.RoomSeat; ++i){
-                    cc.find("game_end_bg/player"+i,this._layer).active = false;
-                }
+                // let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-385,0,385],[-420,-130,160,450]];
+                // let bigWinerId = scoreList[0].uid;
+                // for(let i = 0; i < data.users.length; ++i){
+                //     let player = cc.find("game_end_bg/player"+i,this._layer);
+                //     this.initPlayer(player, data.users[i], bigWinerId, data.createUser.uid);
+                //     player.x = posArr[data.users.length][i];
+                //     player.active = true;
+                // }
+                // for(let i = data.users.length; i < cc.vv.gameData.RoomSeat; ++i){
+                //     cc.find("game_end_bg/player"+i,this._layer).active = false;
+                // }
             }
         })
     },

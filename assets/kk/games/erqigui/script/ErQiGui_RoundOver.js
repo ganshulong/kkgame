@@ -36,8 +36,8 @@ cc.Class({
                     this._layer.y = this.node.height/2;
 
                     this.initRoomInfo();
-                    this.initPlayerInfo(data);
-                    this.showNoSendCard(data.diPaiCards);
+                    // this.initPlayerInfo(data);
+                    // this.showNoSendCard(data.diPaiCards);
 
                     let self = this;
                     this.scheduleOnce(()=>{
@@ -118,20 +118,20 @@ cc.Class({
     },
 
     initRoomInfo(){
-        let conf = cc.vv.gameData.getRoomConf();
-        let roomId = cc.find("roomInfoNode/txt_room_id",this._layer);
-        roomId.getComponent(cc.Label).string = "游戏号:" + conf.deskId;
+        // let conf = cc.vv.gameData.getRoomConf();
+        // let roomId = cc.find("roomInfoNode/txt_room_id",this._layer);
+        // roomId.getComponent(cc.Label).string = "游戏号:" + conf.deskId;
 
-        let roundNum = cc.find("roomInfoNode/txt_round_num",this._layer);
-        roundNum.getComponent(cc.Label).string = "(" + cc.vv.gameData.getDeskInfo().round + "/" + conf.gamenum + "局)";
+        // let roundNum = cc.find("roomInfoNode/txt_round_num",this._layer);
+        // roundNum.getComponent(cc.Label).string = "(" + cc.vv.gameData.getDeskInfo().round + "/" + conf.gamenum + "局)";
 
-        let desc = cc.find("roomInfoNode/txt_game_desc",this._layer);
-        let str = "";
-        let list = cc.vv.gameData.getWanFa();
-        for(let i=0;i<list.length;++i){
-            str += list[i];
-        }
-        desc.getComponent(cc.Label).string = str;
+        // let desc = cc.find("roomInfoNode/txt_game_desc",this._layer);
+        // let str = "";
+        // let list = cc.vv.gameData.getWanFa();
+        // for(let i=0;i<list.length;++i){
+        //     str += list[i];
+        // }
+        // desc.getComponent(cc.Label).string = str;
 
         let okBtn = this._layer.getChildByName("btn_comfirm");
         Global.btnClickEvent(okBtn,this.onClose,this);
