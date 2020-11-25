@@ -97,6 +97,10 @@ cc.Class({
         let btn_cancelTrustee = cc.find("scene/panel_trustee/btn_cancelTrustee", this.node);
         Global.btnClickEvent(btn_cancelTrustee,this.onClickCancelTrustee,this);
 
+        this.panel_rule = cc.find("scene/panel_rule", this.node);
+        let btn_rule = cc.find("scene/operate_btn_view/btn_rule", this.node);
+        Global.btnClickEvent(btn_rule,this.onClickRule,this);
+
         if (cc.vv.gameData._isPlayBack) {
             this.readyBtn.active = false;
             this.btn_gps.active = false;
@@ -513,7 +517,7 @@ cc.Class({
         }
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
-        description += ("," + ["筷子20分","筷子40分","筷子60分"][roomConf.param1]);
+        description += ("," + "筷子" + roomConf.param1 + "分");
         description += ("," + roomConf.score+ "倍");
         return description;
     },
@@ -563,6 +567,7 @@ cc.Class({
         if (user) {
             this.showReady(user.state === 0);
             this.showInviteWxCopyRoomId(user.state != 2 && 0 === deskInfo.round);
+            this.panel_rule.active = (user.state != 2 && 0 === deskInfo.round);
         }
 
         //解散重连处理
@@ -607,7 +612,14 @@ cc.Class({
     },
 
     onRcvReadyResult(msg){
-        if(msg.code === 200) this.showReady(false);
+        if(msg.code === 200){
+            this.showReady(false);
+            this.panel_rule.active = false;
+        }
+    },
+
+    onClickRule(event){
+        this.panel_rule.active = !this.panel_rule.active;
     },
 
     registerMsg(){

@@ -9,17 +9,12 @@ cc.Class({
         _seatIndex:-1,
         _UISeat:-1,
         _playerNum:0,
-        _startPos:null,
         _angle:0,
         _cardsNum:0,
         _outCardValue:null,
     },
 
     init(index,playerNum){
-        let outCardNode
-
-        let showCardNode = cc.find("scene/out_cards/show_card"+index,this.node);
-
         this._playerNum = playerNum;
 
         this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
@@ -29,8 +24,6 @@ cc.Class({
         this.mask_onOut.active = false;
 
         if(this._outCardNode){
-            let pos = showCardNode.parent.convertToWorldSpaceAR(showCardNode.position);
-            this._startPos = this._outCardNode.convertToNodeSpaceAR(pos);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
         }
 
@@ -40,10 +33,6 @@ cc.Class({
         // this.aircraft_ani_Pos = cc.v2(this.node.width/2+this.aircraft_ani.width/2, 150);
         // this.aircraft_ani.position = this.aircraft_ani_Pos;
 
-        // this.bg_cardNum = cc.find("scene/out_cards/bg_cardNum" + index, this.node);
-        // this.bg_cardNum.active = false;
-        // this.ani_warn = cc.find("scene/out_cards/ani_warn" + index, this.node);
-        // this.ani_warn.active = false;
         this.ani_clock = cc.find("scene/out_cards/ani_clock" + index, this.node);
         this.setShowTimeCount(false);
     },
@@ -78,24 +67,6 @@ cc.Class({
         return endPos;
     },
 
-    showCard(value,showAction = false){
-        let node = this.node.getComponent("PaoDeKuai_Card").createCard(value,showAction?0:2);
-
-        let endPos = this.getEndPos(this._cardsNum);
-
-
-        if(showAction){
-            this.showCardAction(node,cc.v2(this._startPos.x,this._startPos.y),cc.v2(endPos.x,endPos.y));
-        }
-        else{
-            node.position = endPos;
-        }
-        node.parent = this._outCardNode;
-        node.cardValue = value;
-        ++this._cardsNum;
-
-    },
-
     clearDesk(){
         this._outCardValue = null;
         this._cardsNum = 0;
@@ -113,7 +84,6 @@ cc.Class({
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
-        Global.registerEvent(EventId.GUO_NOTIFY,this.onRcvGuoCardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
 
@@ -146,11 +116,6 @@ cc.Class({
                     }
                 }
             }
-            // for(let i=0;i<data.users.length;++i){
-            //     if(this._seatIndex === data.users[i].seat){
-            //         this.showCardNum(data.users[i].cardsCnt);
-            //     }
-            // }
             if (data.actionInfo.nextaction.seat === this._seatIndex) {
                 if (0 < data.actionInfo.nextaction.type) {
                     this.setShowTimeCount(true, data.actionInfo.nextaction.time);
@@ -186,29 +151,8 @@ cc.Class({
         }
     },
 
-    onRcvGuoCardNotify(data){
-        data = data.detail;
-        if (data.seat === this._seatIndex) {
-            this.showNoOutCard(true);
-            this.showOutCard();
-            this.setShowTimeCount(false);
-        }
-        if (data.actionInfo.nextaction.seat === this._seatIndex) {
-            if (0 == this._UISeat || 2 != data.actionInfo.nextaction.type) {
-                this.showNoOutCard(false);
-                this.showOutCard();
-            }
-            if (0 < data.actionInfo.nextaction.type) {
-                this.setShowTimeCount(true, data.actionInfo.nextaction.time);
-            }
-        }
-    },
-
     onRecvHandCard(data){
         data = data.detail;
-        // if(this._seatIndex === data.seat){
-        //     this.showCardNum(data.cardsCnt);
-        // }
         if (this._seatIndex == data.actionInfo.nextaction.seat) {
             if (0 < data.actionInfo.nextaction.type) {
                 this.setShowTimeCount(true, data.actionInfo.nextaction.time);
@@ -239,12 +183,6 @@ cc.Class({
             }
         }
     },
-
-    // showCardNum(cardNum){
-    //     this.bg_cardNum.active = (0 < cardNum);
-    //     this.bg_cardNum.getChildByName("text_cardNum").getComponent(cc.Label).string = cardNum;
-    //     this.ani_warn.active = (1 == cardNum);
-    // },
 
     playCardAni(cardType){
         if (cardType) {
@@ -300,21 +238,21 @@ cc.Class({
     showOutCard(list){
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
-            let cardScale = 0.5;
-            let cardWidth = cc.vv.gameData.CardWidth * cardScale;
+            let cardScale = 0.4;
+            let cardOffset = cc.vv.gameData.CardWidth/2 * cardScale;
             let startPosX = 0;
-            if(this._UISeat === 0){         // 下 居中
-                startPosX = - (cardWidth/2*(list.length-1))/2;
+            if(0 == this._UISeat || 2 == this._UISeat){         // 上下 居中
+                startPosX = - (cardOffset * (list.length-1))/2;
             } else if(this._UISeat === 1){  //右 右对齐
-                startPosX = - cardWidth/2*(list.length-1);
+                startPosX = - cardOffsetX * (list.length-1);
             } else if(this._UISeat === 2){  //左 左对齐
                 startPosX = 0;
             }
             for (let i = 0; i < list.length; i++) {
-                let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i]);
+                let node = this.node.getComponent("ErQiGui_Card").createCard(list[i]);
                 node.scale = cardScale;
                 node.parent = this._outCardNode;
-                node.x = startPosX + cardWidth/2 * i;
+                node.x = startPosX + cardOffsetX * i;
             }
         }
     },
@@ -343,21 +281,6 @@ cc.Class({
         if(chairId === this._chairId){
             this._seatIndex = data.seat;
         }
-    },
-
-    showCardAction(node,startPos,endPos){
-        node.position = startPos;
-        node.scale = 1;
-
-        let time = cc.vv.gameData.getActionTime();
-        node.opacity = 255;
-
-        node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-            this.node.getComponent("PaoDeKuai_Card").createCard(node.cardValue,2,node.showBg,node);
-            node.scale = 1;
-            node.rotation = 0;
-            node.opacity = 255;
-        })))
     },
 
     recvPlayerExit(data){

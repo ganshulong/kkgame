@@ -15,29 +15,29 @@ cc.Class({
 
         this.initUI();
 
-        this.node.addComponent("PaoDeKuai_Card").init(this.cardsAtlas);
-        this.node.addComponent("PaoDeKuai_Menu");
+        this.node.addComponent("ErQiGui_Card").init(this.cardsAtlas);
+        this.node.addComponent("ErQiGui_Menu");
 
         let conf = cc.vv.gameData.getRoomConf();
         for(let i = 0; i < cc.vv.gameData.RoomSeat; ++i){
-            // this.node.addComponent("PaoDeKuai_ShowCard").init(i,conf.seat);
-            this.node.addComponent("PaoDeKuai_Player").init(i,conf.seat,this.emjoAtlas);
-            this.node.addComponent("PaoDeKuai_OutCard").init(i,conf.seat);
-            // this.node.addComponent("PaoDeKuai_OperatePai").init(i,conf.seat);
-            // this.node.addComponent("PaoDeKuai_HandCard").init(i,conf.seat);
-            this.node.addComponent("PaoDeKuai_HandCard_Operate").init(i);
+            // this.node.addComponent("ErQiGui_ShowCard").init(i,conf.seat);
+            this.node.addComponent("ErQiGui_Player").init(i,conf.seat,this.emjoAtlas);
+            this.node.addComponent("ErQiGui_OutCard").init(i,conf.seat);
+            // this.node.addComponent("ErQiGui_OperatePai").init(i,conf.seat);
+            // this.node.addComponent("ErQiGui_HandCard").init(i,conf.seat);
+            this.node.addComponent("ErQiGui_HandCard_Operate").init(i);
         }
-        // this.node.addComponent("PaoDeKuai_HandCard_Operate").init(0);
-        // this.node.addComponent("PaoDeKuai_Operate");
-        // this.node.addComponent("PaoDeKuai_Tips");
-        // this.node.addComponent("PaoDeKuai_Action");
-        this.node.addComponent("PaoDeKuai_RemainCard");
-        this.node.addComponent("PaoDeKuai_RoundOver");
-        this.node.addComponent("PaoDeKuai_GameOver");
-        this.node.addComponent("PaoDeKuai_Sound");
-        this.node.addComponent("PaoDeKuai_Chat");
-        this.node.addComponent("PaoDeKuai_Setting");
-        // this.node.addComponent("PaoDeKuai_CardLogic").init();
+        // this.node.addComponent("ErQiGui_HandCard_Operate").init(0);
+        // this.node.addComponent("ErQiGui_Operate");
+        // this.node.addComponent("ErQiGui_Tips");
+        // this.node.addComponent("ErQiGui_Action");
+        this.node.addComponent("ErQiGui_RemainCard");
+        this.node.addComponent("ErQiGui_RoundOver");
+        this.node.addComponent("ErQiGui_GameOver");
+        this.node.addComponent("ErQiGui_Sound");
+        this.node.addComponent("ErQiGui_Chat");
+        this.node.addComponent("ErQiGui_Setting");
+        // this.node.addComponent("ErQiGui_CardLogic").init();
 
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
@@ -158,15 +158,15 @@ cc.Class({
 
         let conf = cc.vv.gameData.getRoomConf();
         let roomId = cc.find("scene/bg_left_top/txt_room_id",this.node);
-        roomId.getComponent(cc.Label).string = "房号:"+conf.deskId;
+        roomId.getComponent(cc.Label).string = "房号: "+conf.deskId;
 
-        // let str = "";
-        // let list = cc.vv.gameData.getWanFa();
-        // for(let i=0;i<list.length;++i){
-        //     str += list[i];
-        // }
-        // let desc = cc.find("scene/bg_left_top/txt_game_desc",this.node);
-        // desc.getComponent(cc.Label).string = str;
+        let str = "";
+        let list = cc.vv.gameData.getWanFa();
+        for(let i=0;i<list.length;++i){
+            str += list[i];
+        }
+        let text_rule = cc.find("scene/panel_rule/text_rule",this.node);
+        text_rule.getComponent(cc.Label).string = str;
 
         this._gameCount = conf.gamenum;
         this.updateCount(cc.vv.gameData.getDeskInfo().round);
@@ -187,7 +187,7 @@ cc.Class({
 
     updateCount(count){
         let round = cc.find("scene/bg_left_top/txt_round_num",this.node);
-        round.getComponent(cc.Label).string = "("+count+"/"+this._gameCount+"局)";
+        round.getComponent(cc.Label).string = "局数: "+count+"/"+this._gameCount+"";
         cc.vv.gameData.setCurRound(count);
     },
 

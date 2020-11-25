@@ -45,7 +45,7 @@ cc.Class({
             startPosX = 0;
         }
         for (let i = 0; i < list.length; i++) {
-            let node = this.node.getComponent("PaoDeKuai_Card").createCard(list[i]);
+            let node = this.node.getComponent("ErQiGui_Card").createCard(list[i]);
             node.scale = cardScale;
             node.parent = parent;
             if (i < 9) {
