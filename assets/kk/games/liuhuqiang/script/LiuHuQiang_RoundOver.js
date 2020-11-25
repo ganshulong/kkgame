@@ -193,7 +193,7 @@ cc.Class({
                     }
                 }
             }
-            cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore
+            cc.find("bg_score/text_score",panel_CardInfo).getComponent(cc.Label).string = data.roundScore.toFixed(1);
 
             let huXiWakeStr = "胡息： " + data.huxi;
             if (data.xingnum) {
@@ -249,12 +249,15 @@ cc.Class({
 
             player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
             player.getChildByName("text_id").getComponent(cc.Label).string = "ID:"+data.users[i].uid;
-            if (0 <= data.users[i].roundScore) {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+            if (0 > data.users[i].roundScore) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore).toFixed(1));
+            } else if (0 == data.users[i].roundScore) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = (Math.abs(data.users[i].roundScore));
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore).toFixed(1));
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             }
             if (bigWinerScore < data.users[i].roundScore) {
                 bigWinerScore = data.users[i].roundScore;
