@@ -140,10 +140,17 @@ cc.Class({
             img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
             img_bg.getChildByName("zhongzhuang_num").getComponent(cc.Label).string = user.zhongZhangCount;
             img_bg.getChildByName("dianpao_num").getComponent(cc.Label).string = user.dianPaoCount;
-            let score = user.score + "";
-            if(score<0) score = "/"+ (-score);
-            img_bg.getChildByName("score").getComponent(cc.Label).string = score;
-            player.active = true;
+
+            if (0 > user.score) {
+                img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(user.score).toFixed(1));
+            } else if (0 == user.score) {
+                img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = (Math.abs(user.score));
+                img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
+            } else {
+                img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(user.score).toFixed(1));
+                img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
+            }
 
             player.getChildByName("flag_dianpao").active = user.uid === dianPaoWangId;
             player.getChildByName("flag_dayingjia").active = user.uid === dayingjiaID;
