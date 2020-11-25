@@ -92,8 +92,12 @@ cc.Class({
             player.getChildByName("text_tongHuaNum").getComponent(cc.Label).string = user.tonghuaCnt;
             player.getChildByName("text_shangYouNum").getComponent(cc.Label).string = user.YiCnt;
             player.getChildByName("text_xiaYouNum").getComponent(cc.Label).string = user.ErCnt;
-            player.getChildByName("text_gameScore").getComponent(cc.Label).string = user.score.toFixed(1);
-            player.getChildByName("text_gameScore").color = user.score > 0 ? (new cc.Color(200,17,36)) : (new cc.Color(133,200,255));
+            if (0 == user.score) {
+                player.getChildByName("text_gameScore").getComponent(cc.Label).string = user.score;
+            } else {
+                player.getChildByName("text_gameScore").getComponent(cc.Label).string = user.score.toFixed(1);
+            }
+            player.getChildByName("text_gameScore").color = (0 <= user.score) ? (new cc.Color(200,17,36)) : (new cc.Color(133,200,255));
         }
     },
 
