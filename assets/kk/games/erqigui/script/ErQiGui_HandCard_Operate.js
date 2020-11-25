@@ -33,6 +33,39 @@ cc.Class({
             // 提示+出
             this._operateNode = cc.find("scene/play_action_view",this.node);
             this.showOperateBtn(false);
+
+            this.panel_jiaoScore = this._operateNode.getChildByName("panel_jiaoScore");
+            this.jiaoScoreList = [170,180,190,200,210];
+            for (let i = 0; i < this.jiaoScoreList.length; i++) {
+                let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + this.jiaoScoreList[i]);
+                btn_score.score = this.jiaoScoreList[i];
+                Global.btnClickEvent(btn_score,this.onClickJiaoScore,this);
+            }
+            let btn_cancel = this.panel_jiaoScore.getChildByName("btn_cancel");
+            Global.btnClickEvent(btn_cancel,this.onClickJiaoScoreCancel,this);
+            let btn_sure = this.panel_jiaoScore.getChildByName("btn_sure");
+            Global.btnClickEvent(btn_sure,this.onClickJiaoScoreSure,this);
+
+            this.panel_selectColor = this._operateNode.getChildByName("panel_selectColor");
+            for (let i = 0; i < 4; i++) {
+                let btn_color = this.panel_selectColor.getChildByName("btn_color" + i);
+                btn_color.cardColor = i;
+                Global.btnClickEvent(btn_color,this.onClickColor,this);
+            }
+            this.panel_selectColor45 = this._operateNode.getChildByName("panel_selectColor45");
+            for (let i = 0; i < 6; i++) {
+                let btn_color = this.panel_selectColor45.getChildByName("btn_color" + i);
+                btn_color.cardColor = i;
+                Global.btnClickEvent(btn_color,this.onClickColor,this);
+            }
+
+            this.panel_maidi = this._operateNode.getChildByName("panel_maidi");
+            this.text_curSelectNum = this.panel_maidi.getChildByName("text_curSelectNum");
+            let btn_surrender = this.panel_maidi.getChildByName("btn_surrender");
+            Global.btnClickEvent(btn_surrender,this.onClickSurrender,this);
+            let btn_maidi = this.panel_maidi.getChildByName("btn_maidi");
+            Global.btnClickEvent(btn_maidi,this.onClickMaiDi,this);
+
             // 提示
             // this.btn_tipCard = this._operateNode.getChildByName("btn_tipCard");
             // Global.btnClickEvent(this.btn_tipCard,this.onClickTipCard,this);
@@ -86,6 +119,42 @@ cc.Class({
         }
     },
 
+    onClickJiaoScore(event){
+        this.curSelectScore = event.target.score;
+        for (let i = 0; i < this.jiaoScoreList.length; i++) {
+            let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + this.jiaoScoreList[i]);
+            btn_score.getChildByName("mask").active = (this.curSelectScore == this.jiaoScoreList[i]);
+        }
+    },
+
+    onClickJiaoScoreCancel(){
+        let req = {c: MsgId.ERQIGUI_JIAO_SCORE};
+        req.jiaoFen = -1;
+        cc.vv.NetManager.send(req);
+    },
+
+    onClickJiaoScoreSure(){
+        if (0 < this.curSelectScore) {
+            let req = {c: MsgId.ERQIGUI_JIAO_SCORE};
+            req.jiaoFen = this.curSelectScore;
+            cc.vv.NetManager.send(req);
+        }
+    },
+
+    onClickColor(event){
+        event.target.cardColor;
+    },
+
+    onClickSurrender(){
+
+    },
+
+    onClickMaiDi(event){
+        if (8 == this.text_curSelectNum) {
+
+        }
+    },
+
     onRcvOutCardNotify(data){
         data = data.detail;
         if (data.actionInfo.curaction.seat === this._seatIndex) {
@@ -104,7 +173,7 @@ cc.Class({
                 this.showHandCard(handCards);
             }
         }
-        if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 4 == data.actionInfo.nextaction.type) {
             this.curaction = data.actionInfo.curaction;
             this.showOperateBtn(true, data.actionInfo.nextaction);
         } else {
@@ -157,13 +226,44 @@ cc.Class({
         }
         this._operateNode.active = bShow;
         if (bShow) {
-            let cardIsCanOutList = this.getCardIsCanOutList(nextaction.hint);
-            if (this.getIsInitCardSelectState(cardIsCanOutList)) {
-                this.initCardSelectState();
+            this.panel_jiaoScore.active = false;
+            this.panel_selectColor.active = false;
+            this.panel_selectColor45.active = false;
+            this.panel_maidi.active = false;
+            this.btn_outCard.active = false;
+
+            if (1 == nextaction.type) {
+                this.panel_jiaoScore.active = true;
+                this.curSelectScore = 0;
+                for (let i = 0; i < nextaction.canJiaoFen.length; i++) {
+                    let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + nextaction.canJiaoFen[i].fen);
+                    btn_score.interactable = (0 == nextaction.canJiaoFen[i].isJiao);
+                    btn_score.getChildByName("mask").active = false;
+                }
+
+            } else if (2 == nextaction.type) {
+                if (true) {
+                    this.panel_selectColor.active = true;
+                } else {
+                    this.panel_selectColor45.active = true;
+                }
+
+            } else if (3 == nextaction.type) {
+                this.panel_maidi.active = true;
+                this.text_curSelectNum = 0;
+                this.text_curSelectNum.getComponent(cc.Label).string = this.text_curSelectNum;
+
+            } else if (4 == nextaction.type) {
+                this.btn_outCard.active = true;
+
+                let cardIsCanOutList = this.getCardIsCanOutList(nextaction.hint);
+                if (this.getIsInitCardSelectState(cardIsCanOutList)) {
+                    this.initCardSelectState();
+                }
+                this.setCardHintState(cardIsCanOutList);
+                this.hintList = nextaction.hint;
+                this.hintIndex = -1;
             }
-            this.setCardHintState(cardIsCanOutList);
-            this.hintList = nextaction.hint;
-            this.hintIndex = -1;
         } else {
             this.curaction = null;
         }
@@ -413,7 +513,7 @@ cc.Class({
             this.clearDesk();
             this.showHandCard(data.handInCards, true)
 
-            if (this._seatIndex == data.actionInfo.nextaction.seat && 0 < data.actionInfo.nextaction.type) {
+            if (this._seatIndex == data.actionInfo.nextaction.seat && 1 == data.actionInfo.nextaction.type) {
                 this.curaction = data.actionInfo.curaction;
                 this.showOperateBtn(true, data.actionInfo.nextaction);
             } else {
@@ -442,5 +542,6 @@ cc.Class({
             this._seatIndex = -1;
         }
     }
+
     // update (dt) {},
 });

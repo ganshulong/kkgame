@@ -518,6 +518,9 @@ cc.Class({
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
         description += ("," + "筷子" + roomConf.param1 + "分");
+        if (roomConf.param2) {
+            description += (",五色四色");
+        }
         description += ("," + roomConf.score+ "倍");
         return description;
     },

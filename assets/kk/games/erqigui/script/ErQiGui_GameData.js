@@ -32,13 +32,13 @@ cc.Class({
 
     //下0 右1 左2
     getUISeatBylocalSeat(localSeat){
-        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,2,3]];
+        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,-1,-1],[-1,-1,-1,-1],[0,1,2,3]];
         let maxSeat = cc.vv.gameData.getRoomConf().seat;
         return localSeatToUISeatArr[maxSeat][localSeat];
     },
 
     getLocalSeatByUISeat(UISeat){
-        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,2,3]];
+        let localSeatToUISeatArr = [[-1,-1,-1,-1],[-1,-1,-1,-1],[0,1,-1,-1],[-1,-1,-1,-1],[0,1,2,3]];
         let maxSeat = cc.vv.gameData.getRoomConf().seat;
         return localSeatToUISeatArr[maxSeat][UISeat];
     },
@@ -281,6 +281,9 @@ cc.Class({
         list.push(conf.gamenum+"局 ");
         list.push(conf.seat+ "人 ");
         list.push("筷子" + conf.param1 + "分 ");
+        if (conf.param2) {
+            list.push("五色四色 ");
+        }
         list.push(conf.score+ "倍 ");
         if(conf.speed === 1){
             list.push("快速 ");
