@@ -144,11 +144,16 @@ cc.Class({
             img_bg.getChildByName("hu_num").getComponent(cc.Label).string = user.huPaiCount;
             img_bg.getChildByName("yinxi_num").getComponent(cc.Label).string = user.totalHuXi;
 
-            let score = user.score + "";
-            if(score < 0) {
-                score = "/"+ (-score);
+            if (0 > user.score) {
+                img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(user.score).toFixed(1));
+            } else if (0 == user.score) {
+                img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = (Math.abs(user.score));
+                img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
+            } else {
+                img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(user.score).toFixed(1));
+                img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             }
-            img_bg.getChildByName("score").getComponent(cc.Label).string = score;
 
             if(cc.vv.UserManager.uid === user.uid){
                 cc.find("game_end_bg/win_title",this._layer).active = user.score >= 0;
