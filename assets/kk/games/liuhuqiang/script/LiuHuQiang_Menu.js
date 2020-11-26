@@ -540,7 +540,7 @@ cc.Class({
         }
         description += ("," + roomConf.gamenum + "局");
         description += ("," + roomConf.seat + "缺" + (roomConf.seat-users.length));
-        description += ("," + ["一胡一分","三胡一分"][roomConf.param1]);
+        description += ("," + ["一胡一分","三胡一分","一胡一分"][roomConf.param1]);
         description += ("," + ["不带醒","翻醒","随醒"][roomConf.param2]);
         description += ("," + roomConf.score+ "倍");
         return description;

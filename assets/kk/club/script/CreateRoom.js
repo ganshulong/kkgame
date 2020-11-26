@@ -280,7 +280,7 @@ cc.Class({
         } else if (this.gameTypeIndex.LiuHuQiang == id) {
             req.gameid = this._isClubRoom ? 7 : 8;
             optionList.push({option:"player_num",       valueList:[2,3,4]});
-            optionList.push({option:"param1",           valueList:[0,1]});
+            optionList.push({option:"param1",           valueList:[0,1,2]});
             optionList.push({option:"param2",           valueList:[0,1,2]});
 
         } else if (this.gameTypeIndex.PaoDeKuai == id) {
