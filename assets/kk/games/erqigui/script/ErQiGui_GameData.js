@@ -103,6 +103,8 @@ cc.Class({
                 this._seatIndex = this._deskInfo.users[this._deskInfo.users.length-1].seat;
             }
         }
+
+        this.zhuColor = -1;
     },
 
     getPlayerNum(){
@@ -150,7 +152,9 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.OUT_CARD, this.onRcvOutCard, this);
         cc.vv.NetManager.registerMsg(MsgId.SCORE_UPDATE_NOTIFY, this.onRcvScoreUpdateNotify,this);
 
-        cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify,this);
+        cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_SELECT_COLOR_NOTIFY, this.onRcvSelectColorNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_MAI_CARD_NOTIFY, this.onRcvMaiCardNotify, this);
     },
 
     unregisterMsg() {
@@ -193,6 +197,8 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.SCORE_UPDATE_NOTIFY, this.onRcvScoreUpdateNotify, false,this);
 
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_SELECT_COLOR_NOTIFY, this.onRcvSelectColorNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_MAI_CARD_NOTIFY, this.onRcvMaiCardNotify, false, this);
     },
 
     onRcvUpdateTableInfo(msg){
@@ -212,6 +218,18 @@ cc.Class({
     onRcvJiaoScoreNotify(msg){
         if(msg.code == 200){
              Global.dispatchEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,msg)           
+        }
+    },
+
+    onRcvSelectColorNotify(msg){
+        if(msg.code == 200){
+             Global.dispatchEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,msg)           
+        }
+    },
+
+    onRcvMaiCardNotify(msg){
+        if(msg.code == 200){
+             Global.dispatchEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,msg)           
         }
     },
 
@@ -331,20 +349,6 @@ cc.Class({
         }
         return greyCardArrCount;
     },
-
-    // 手牌排序
-    sortCard(cards){
-        let tempList1 = cards.slice(0);
-        tempList1.sort((a,b)=>{
-            if ((a%0x10) == (b%0x10)) {
-                return -(a - b);
-            } else {
-                return -((a%0x10) - (b%0x10));
-            }
-        });
-        return tempList1;
-    },
-
 
     // 胡牌通知
     onRcvHuNotfiy(msg){
@@ -554,6 +558,18 @@ cc.Class({
 
     start () {
 
+    },
+
+    // 手牌排序
+    sortCard(cardlist){
+        cardlist.sort((a,b)=>{
+            return -(a - b);    //从大到小
+        });
+        return cardlist;
+    },
+
+    getIsZhuCar(cardValue){
+        return true;
     },
 
 /*

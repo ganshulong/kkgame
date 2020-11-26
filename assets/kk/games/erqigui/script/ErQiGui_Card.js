@@ -8,18 +8,15 @@ cc.Class({
         _atlas:null,
     },
 
-    init(atlas){
+    init(atlas, star){
         this._atlas = atlas;
+        this._star = star;
     },
 
-    // --扑克数据 45张(除掉大小王，红桃2,梅花2,方块2, 红桃A,梅花A,方块A, 方块K,每人15张)
-    // local CardData45=
-    // {
-    //     0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x1E,0x0F, --黑 3 - 2(15)
-    //     0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D, --红
-    //     0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2A,0x2B,0x2C,0x2D, --梅
-    //     0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3A,0x3B,0x3C,      --方
-    // }
+    // 0x32-0x35-0x3D : 黑桃2-黑桃5-黑桃k
+    // 0x22-0x25-0x2D : 红桃2-红桃5-红桃k
+    // 0x12-0x15-0x1D : 梅花2-梅花5-梅花k
+    // 0x02-0x05-0x0D : 方块2-方块5-方块k
 
     createCard(cardValue, node = null){
         let spr = null;
@@ -30,18 +27,32 @@ cc.Class({
             spr.addComponent(cc.Sprite);
         }
 
-        let color = parseInt(cardValue / 0x10);
-        let resColor = [3,2,1,0][color];
-        let value = cardValue % 0x10;
-        let resValue = (0x0D < value) ? (value-14) : (value-1);
-
+        let resColor = parseInt(cardValue / 0x10);
+        let resValue = (cardValue % 0x10 - 1);
         spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame("card_"+resColor+"_"+resValue);
+
+        if (cc.vv.gameData.getIsZhuCar(cardValue)) {
+            this.showZhuStar(spr);
+        } else {
+            spr.isZhuCard = false;
+        }
         
         spr.cardValue = cardValue;
         spr.isTouchSelect = false;
         spr.isSelect = false;
 
         return spr;
+    },
+
+    showZhuStar(node){
+        let starSpr = new cc.Node();
+        starSpr.name = "starSpr";
+        starSpr.addComponent(cc.Sprite);
+        starSpr.getComponent(cc.Sprite).spriteFrame = this._star;
+        starSpr.x = -40;
+        starSpr.y = -60;
+        starSpr.parent = node;
+        node.isZhuCard = true;
     },
     
     changCardBg(node,isMoPai){

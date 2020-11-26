@@ -97,7 +97,10 @@ cc.Class({
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.recvDeskInfoMsg,this);
+
         Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
+        Global.registerEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,this.onRcvSelectColorNotify,this);
+        Global.registerEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,this.onRcvMaiCardNotify,this);
 
         this.recvDeskInfoMsg();
     },
@@ -130,6 +133,22 @@ cc.Class({
         }
     },
 
+    onRcvSelectColorNotify(data){
+        data = data.detail;
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 3 == data.actionInfo.nextaction.type) {
+            this.curaction = data.actionInfo.curaction;
+            this.showOperateBtn(true, data.actionInfo);
+        }
+    },
+
+    onRcvMaiCardNotify(data){
+        data = data.detail;
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 4 == data.actionInfo.nextaction.type) {
+            this.curaction = data.actionInfo.curaction;
+            this.showOperateBtn(true, data.actionInfo);
+        }
+    },
+
     onClickJiaoScore(event){
         this.curSelectScore = event.target.score;
         for (let i = 0; i < this.jiaoScoreList.length; i++) {
@@ -153,16 +172,24 @@ cc.Class({
     },
 
     onClickColor(event){
-        event.target.cardColor;
+        let req = {c: MsgId.ERQIGUI_SELECT_COLOR};
+        req.jiaoZhu = event.target.cardColor;
+        cc.vv.NetManager.send(req);
     },
 
     onClickSurrender(){
-
+        let req = {c: MsgId.ERQIGUI_SURRENDER};
+        cc.vv.NetManager.send(req);
     },
 
     onClickMaiDi(event){
-        if (8 == this.text_curSelectNum) {
-
+        let cards = this.getSelectedCards();
+        if (8 == cards.length) {
+            let req = {c: MsgId.ERQIGUI_MAI_CARD};
+            req.cards = cards;
+            cc.vv.NetManager.send(req);
+        } else {
+            cc.vv.FloatTip.show("必须埋牌8张");
         }
     },
 
@@ -245,32 +272,29 @@ cc.Class({
  
             let type = actionInfo.nextaction.type;
             if (1 == type) {
-                this.panel_jiaoScore.active = true;
                 this.curSelectScore = 0;
-                let curMaxJiaoScore = 0;
-                if (0 < actionInfo.curaction.jiaoFen.length) {
-                   curMaxJiaoScore = actionInfo.curaction.jiaoFen[0].fen;
-                }
                 for (let i = 0; i < this.jiaoScoreList.length; i++) {
                     let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + this.jiaoScoreList[i]);
-                    btn_score.getComponent(cc.Button).interactable = (curMaxJiaoScore < this.jiaoScoreList[i]);
+                    btn_score.getComponent(cc.Button).interactable = (actionInfo.curaction.jiaoFen.maxJiaoFen < this.jiaoScoreList[i]);
                     btn_score.getChildByName("mask").active = false;
                 }
+                this.panel_jiaoScore.active = true;
 
             } else if (2 == type) {
-                if (true) {
-                    this.panel_selectColor.active = true;
-                } else {
+                if (cc.vv.gameData.getRoomConf().param2) {
                     this.panel_selectColor45.active = true;
+                } else {
+                    this.panel_selectColor.active = true;
                 }
 
             } else if (3 == type) {
+                this.initCardSelectState();
+                this.updateCardSelectNum();
                 this.panel_maidi.active = true;
-                this.text_curSelectNum = 0;
-                this.text_curSelectNum.getComponent(cc.Label).string = this.text_curSelectNum;
 
             } else if (4 == type) {
                 this.btn_outCard.active = true;
+
 
                 // let cardIsCanOutList = this.getCardIsCanOutList(nextaction.hint);
                 // if (this.getIsInitCardSelectState(cardIsCanOutList)) {
@@ -283,6 +307,11 @@ cc.Class({
         } else {
             this.curaction = null;
         }
+    },
+
+    updateCardSelectNum(){
+        let cards = this.getSelectedCards();
+        this.text_curSelectNum.getComponent(cc.Label).string = cards.length;
     },
 
     getCardIsCanOutList(hint){
@@ -357,10 +386,9 @@ cc.Class({
     },
 
     showHandCard(list, bShowMoveAni = false){
-        this._handCards = list;
+        this._handCards = cc.vv.gameData.sortCard(list);
         this._handcardNode.removeAllChildren();
         let self = this;
-
         let cardScale = 0.8;
         let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
         let cardStartPosX = - (cardOffsetX * (list.length-1))/2;
@@ -369,8 +397,8 @@ cc.Class({
             cardOffsetX /= 2;
             cardStartPosX /= 2;
         }
-        for(let i = 0; i < list.length; ++i){
-            let node = this.node.getComponent("ErQiGui_Card").createCard(list[i]);
+        for(let i = 0; i < this._handCards.length; ++i){
+            let node = this.node.getComponent("ErQiGui_Card").createCard(this._handCards[i]);
             node.parent = this._handcardNode;
             let endPosX = cardStartPosX + cardOffsetX * i;
             if (bShowMoveAni) {
@@ -404,7 +432,7 @@ cc.Class({
                 node.scale = cardScale;
                 if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
                     if (1 == this._chairId) {   //右对齐
-                        node.x = - cardOffsetX * (list.length-1) + cardOffsetX * i;
+                        node.x = - cardOffsetX * (this._handCards.length-1) + cardOffsetX * i;
                     } else if (2 == this._chairId){ //中对齐
                         node.x = cardStartPosX + cardOffsetX * i;
                     } else if (3 == this._chairId){ //左对齐
@@ -464,15 +492,6 @@ cc.Class({
     onTouchEnd(event){
         this.touchStartPosX = null;
         this.touchCurPosX = null;
-        let bFilter = (!this.curaction || cc.vv.gameData.CARDTYPE.ERROR_CARDS == this.curaction.cardType);
-        if (bFilter) {
-            for (let i = 0; i < this._handcardNode.children.length; i++) {
-                if (this._handcardNode.children[i].isSelect) {
-                    bFilter = false;
-                    break;
-                }
-            }
-        }
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             let card = this._handcardNode.children[i];
             if (card.isTouchSelect) {
@@ -483,33 +502,8 @@ cc.Class({
                 card.y = card.isSelect ? 50 : 0;
             }
         }
-        if (bFilter) {
-            let cards = this.getSelectedCards();
-            if (5 < cards.length) {
-                this.curaction = {};
-                this.curaction.cardType = cc.vv.gameData.CARDTYPE.ERROR_CARDS;
-                this.curaction.outCards = [];
-                let typeCards = this.ErQiGui_CardLogicJS.checkCardIsCanOut(cards, this._handCards.length, this.curaction);
-                if (0 == typeCards.length) {
-                    let filterCards = this.ErQiGui_CardLogicJS.filterConnect(cards);
-                    if (0 < filterCards.length) {
-                        this.setFilterCardState(filterCards);
-                    }
-                }
-            }
-        }
-    },
-
-    setFilterCardState(cards){
-        for (let i = 0; i < this._handcardNode.children.length; i++) {
-            let j = 0;
-            for (j = 0; j < cards.length; j++) {
-                if (this._handcardNode.children[i].cardValue == cards[j]) {
-                    break;
-                }
-            }
-            this._handcardNode.children[i].isSelect = (j < cards.length);
-            this._handcardNode.children[i].y = (j < cards.length) ? 50 : 0;
+        if (this.panel_maidi.active) {
+            this.updateCardSelectNum();
         }
     },
 

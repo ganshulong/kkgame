@@ -6,6 +6,7 @@ cc.Class({
         
         cardsAtlas:cc.SpriteAtlas,
         emjoAtlas:cc.SpriteAtlas,
+        star:cc.SpriteFrame,
         _gameCount:0,
 
     },
@@ -15,7 +16,7 @@ cc.Class({
 
         this.initUI();
 
-        this.node.addComponent("ErQiGui_Card").init(this.cardsAtlas);
+        this.node.addComponent("ErQiGui_Card").init(this.cardsAtlas, this.star);
         this.node.addComponent("ErQiGui_Menu");
 
         let conf = cc.vv.gameData.getRoomConf();

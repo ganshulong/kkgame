@@ -88,7 +88,7 @@ cc.Class({
             let icon = cc.find("radio_mask/spr_head",head);
             Global.setHead(icon,user.usericon);
 
-            player.getChildByName("mask_master").active = (user.uid == createID);
+            // player.getChildByName("mask_master").active = (user.uid == createID);
 
             player.getChildByName("txt_name").getComponent(cc.Label).string = user.playername;
             player.getChildByName("txt_id").getComponent(cc.Label).string = "ID:"+user.uid;

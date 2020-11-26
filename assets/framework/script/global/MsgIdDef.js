@@ -295,5 +295,11 @@ GlobalMsgId.CLUB_SET_PARTNER_RATIO = 8832; 	// 设置合伙人抽水比
 
 GlobalMsgId.ERQIGUI_JIAO_SCORE = 9901; 				// 二七鬼叫分
 GlobalMsgId.ERQIGUI_JIAO_SCORE_NOTIFY = 18901; 		// 二七鬼叫分通知
+GlobalMsgId.ERQIGUI_SELECT_COLOR = 9902; 			// 二七鬼叫主
 GlobalMsgId.ERQIGUI_SELECT_COLOR_NOTIFY = 18902;	// 二七鬼选主通知
+GlobalMsgId.ERQIGUI_MAI_CARD = 9903; 				// 二七鬼埋底
 GlobalMsgId.ERQIGUI_MAI_CARD_NOTIFY = 18903; 		// 二七鬼埋底牌通知
+GlobalMsgId.ERQIGUI_SURRENDER = 9904; 				// 二七鬼投降
+
+GlobalMsgId.ERQIGUI_KUAI_NUM_NOTIFY = 18904; 		// 二七鬼筷子数通知
+

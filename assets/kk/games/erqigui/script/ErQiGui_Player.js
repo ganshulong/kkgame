@@ -307,7 +307,7 @@ cc.Class({
             this.setTotalScore(user.score);
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
-            this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
+            // this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
             this.showReady(user.state === 1);
         }
     },
@@ -324,9 +324,9 @@ cc.Class({
     },
 
     // 显示房主
-    showMaster(bShow){
-        this._playerNode.getChildByName("mask_master").active = bShow;
-    },
+    // showMaster(bShow){
+    //     this._playerNode.getChildByName("mask_master").active = bShow;
+    // },
 
     recvSendCard(){
         this.showReady(false);
