@@ -74,7 +74,7 @@ cc.Class({
 
         this.sortBtnArr = [];
         let node_topInfo = cc.find("bg_member/panel_list/node_topInfo",this._layer);
-        let sortBtnStrArr = ["btn_IDSort", "btn_stateSort", "btn_roundNumSort", "btn_bigWinerNumSort", "btn_waterProSort", "btn_scoreSort", "btn_powerSort"];
+        let sortBtnStrArr = ["btn_IDSort","btn_stateSort","btn_roundNumSort","btn_bigWinerNumSort","btn_waterProSort","btn_scoreSort","btn_powerSort","btn_totalPowerSort"];
         for (let i = 0; i < sortBtnStrArr.length; i++) {
             this.sortBtnArr.push(node_topInfo.getChildByName(sortBtnStrArr[i]));
             Global.btnClickEvent(this.sortBtnArr[i],this.onClickSort,this);
@@ -281,6 +281,8 @@ cc.Class({
                 return seq * (obj1.totalScore - obj2.totalScore);
             } else if ("btn_powerSort" == event.target.name) {
                 return seq * (obj1.power - obj2.power);
+            } else if ("btn_totalPowerSort" == event.target.name) {
+                return seq * (obj1.totalPower - obj2.totalPower);
             }
             return false;
         });
@@ -400,6 +402,9 @@ cc.Class({
             }
             if (0 != showList[i].power) {
                 bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power.toFixed(1);
+            }
+            if (0 != showList[i].totalPower) {
+                bg_memberItem.getChildByName("text_totalPower").getComponent(cc.Label).string = showList[i].totalPower.toFixed(1);
             }
             
             if (0 === Global.checkPartnerList.length) {
