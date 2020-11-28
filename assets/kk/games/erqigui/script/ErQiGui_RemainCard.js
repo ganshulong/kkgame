@@ -26,7 +26,7 @@ cc.Class({
                 let UISeat = cc.vv.gameData.getUISeatBylocalSeat(chairId);
                 if(0 < UISeat){
                     let node = cc.find("scene/playback_handle/player"+UISeat,this.node);
-                    this.showHandCard(users[i].handInCards, node, UISeat);
+                    this.showHandCard(users[i].handInCards || [], node, UISeat);
                 }
             }
         }

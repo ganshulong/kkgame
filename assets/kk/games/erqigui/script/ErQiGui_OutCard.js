@@ -239,10 +239,10 @@ cc.Class({
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
             let cardScale = 0.4;
-            let cardOffset = cc.vv.gameData.CardWidth/2 * cardScale;
+            let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
             let startPosX = 0;
             if(0 == this._UISeat || 2 == this._UISeat){         // 上下 居中
-                startPosX = - (cardOffset * (list.length-1))/2;
+                startPosX = - (cardOffsetX * (list.length-1))/2;
             } else if(this._UISeat === 1){  //右 右对齐
                 startPosX = - cardOffsetX * (list.length-1);
             } else if(this._UISeat === 2){  //左 左对齐

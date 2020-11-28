@@ -45,6 +45,7 @@ cc.Class({
 
     init(data){
         this.CardWidth = 161;
+        this.CardScale = 0.8;
         this.RoomSeat = 4;
         this.OPERATETYPE={
             GU0:1,  // 过
@@ -154,6 +155,7 @@ cc.Class({
 
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_SELECT_COLOR_NOTIFY, this.onRcvSelectColorNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_MAI_CARD, this.onRcvMaiCard, this);
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_MAI_CARD_NOTIFY, this.onRcvMaiCardNotify, this);
     },
 
@@ -198,6 +200,7 @@ cc.Class({
 
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_SELECT_COLOR_NOTIFY, this.onRcvSelectColorNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_MAI_CARD, this.onRcvMaiCard, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_MAI_CARD_NOTIFY, this.onRcvMaiCardNotify, false, this);
     },
 
@@ -224,6 +227,12 @@ cc.Class({
     onRcvSelectColorNotify(msg){
         if(msg.code == 200){
              Global.dispatchEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,msg)           
+        }
+    },
+
+    onRcvMaiCard(msg){
+        if(msg.code == 200){
+             Global.dispatchEvent(EventId.ERQIGUI_MAI_CARD,msg)           
         }
     },
 
@@ -560,8 +569,11 @@ cc.Class({
 
     },
 
-    // 手牌排序
+    // 手牌排序  红桃7 > 7 > 红桃2 > 2 > 红桃 > 其他
     sortCard(cardlist){
+        // let tempList1 = cards.slice(0);
+
+
         cardlist.sort((a,b)=>{
             return -(a - b);    //从大到小
         });
@@ -866,6 +878,16 @@ cc.Class({
 
 // GlobalMsgId.CLUB_SET_PARTNER = 8831;        // 俱乐部授权合伙人
 // GlobalMsgId.CLUB_SET_PARTNER_RATIO = 8832;  // 设置合伙人抽水比
+
+// GlobalMsgId.ERQIGUI_JIAO_SCORE = 9901;              // 二七鬼叫分
+// GlobalMsgId.ERQIGUI_JIAO_SCORE_NOTIFY = 18901;      // 二七鬼叫分通知
+// GlobalMsgId.ERQIGUI_SELECT_COLOR = 9902;            // 二七鬼叫主
+// GlobalMsgId.ERQIGUI_SELECT_COLOR_NOTIFY = 18902;    // 二七鬼选主通知
+// GlobalMsgId.ERQIGUI_MAI_CARD = 9903;                // 二七鬼埋底
+// GlobalMsgId.ERQIGUI_MAI_CARD_NOTIFY = 18903;        // 二七鬼埋底牌通知
+// GlobalMsgId.ERQIGUI_SURRENDER = 9904;               // 二七鬼投降
+
+// GlobalMsgId.ERQIGUI_KUAI_NUM_NOTIFY = 18904;        // 二七鬼筷子数通知
 
 
 });

@@ -297,7 +297,7 @@ GlobalMsgId.ERQIGUI_JIAO_SCORE = 9901; 				// 二七鬼叫分
 GlobalMsgId.ERQIGUI_JIAO_SCORE_NOTIFY = 18901; 		// 二七鬼叫分通知
 GlobalMsgId.ERQIGUI_SELECT_COLOR = 9902; 			// 二七鬼叫主
 GlobalMsgId.ERQIGUI_SELECT_COLOR_NOTIFY = 18902;	// 二七鬼选主通知
-GlobalMsgId.ERQIGUI_MAI_CARD = 9903; 				// 二七鬼埋底
+GlobalMsgId.ERQIGUI_MAI_CARD = 9903; 				// 二七鬼埋底牌
 GlobalMsgId.ERQIGUI_MAI_CARD_NOTIFY = 18903; 		// 二七鬼埋底牌通知
 GlobalMsgId.ERQIGUI_SURRENDER = 9904; 				// 二七鬼投降
 

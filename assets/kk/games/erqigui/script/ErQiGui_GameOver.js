@@ -22,7 +22,7 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        cc.loader.loadRes("common/prefab/Paodekuai_game_over_view",(err,prefab)=>{
+        cc.loader.loadRes("common/prefab/ErQiGui_game_over_view",(err,prefab)=>{
             if(err === null){
                 this._layer = cc.instantiate(prefab);
                 this._layer.parent = this.node.getChildByName("scene");
@@ -32,9 +32,6 @@ cc.Class({
                 this._layer.zIndex = 3;
                 this._layer.x = this.node.width/2;
                 this._layer.y = this.node.height/2;
-
-                this.bg_bar_win = cc.find("game_end_bg/bg_bar_win",this._layer).getComponent(cc.Sprite).spriteFrame;
-                this.bg_bar_lose = cc.find("game_end_bg/bg_bar_lose",this._layer).getComponent(cc.Sprite).spriteFrame;
 
                 let btnBtn = this._layer.getChildByName("btn_back");
                 Global.btnClickEvent(btnBtn,this.onBack,this);
@@ -114,7 +111,7 @@ cc.Class({
     },
 
     onDestroy(){
-        if(this._layer) cc.loader.releaseRes("common/prefab/Paodekuai_game_over_view",cc.Prefab);
+        if(this._layer) cc.loader.releaseRes("common/prefab/ErQiGui_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });

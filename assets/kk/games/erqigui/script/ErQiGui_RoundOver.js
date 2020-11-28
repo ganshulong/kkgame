@@ -24,7 +24,7 @@ cc.Class({
     recvRoundOver(data){
         data = data.detail;
         if(this._layer === null){
-            cc.loader.loadRes("common/prefab/Paodekuai_round_over_view",(err,prefab)=>{
+            cc.loader.loadRes("common/prefab/ErQiGui_round_over_view",(err,prefab)=>{
                 if(err === null){
                     this._layer = cc.instantiate(prefab);
                     this._layer.parent = this.node.getChildByName("scene");
@@ -163,7 +163,7 @@ cc.Class({
 
     onDestroy(){
         if(this._layer){
-            cc.loader.releaseRes("common/prefab/Paodekuai_round_over_view",cc.Prefab);
+            cc.loader.releaseRes("common/prefab/ErQiGui_round_over_view",cc.Prefab);
         }
     }
     // update (dt) {},

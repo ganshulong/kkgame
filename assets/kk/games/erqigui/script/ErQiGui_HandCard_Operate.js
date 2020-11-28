@@ -61,10 +61,10 @@ cc.Class({
 
             this.panel_maidi = this._operateNode.getChildByName("panel_maidi");
             this.text_curSelectNum = this.panel_maidi.getChildByName("text_curSelectNum");
-            let btn_surrender = this.panel_maidi.getChildByName("btn_surrender");
-            Global.btnClickEvent(btn_surrender,this.onClickSurrender,this);
-            let btn_maidi = this.panel_maidi.getChildByName("btn_maidi");
-            Global.btnClickEvent(btn_maidi,this.onClickMaiDi,this);
+            this.btn_surrender = this.panel_maidi.getChildByName("btn_surrender");
+            Global.btnClickEvent(this.btn_surrender,this.onClickSurrender,this);
+            this.btn_maidi = this.panel_maidi.getChildByName("btn_maidi");
+            Global.btnClickEvent(this.btn_maidi,this.onClickMaiDi,this);
 
             // 提示
             // this.btn_tipCard = this._operateNode.getChildByName("btn_tipCard");
@@ -100,7 +100,9 @@ cc.Class({
 
         Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
         Global.registerEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,this.onRcvSelectColorNotify,this);
+        Global.registerEvent(EventId.ERQIGUI_MAI_CARD,this.onRcvMaiCard,this);
         Global.registerEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,this.onRcvMaiCardNotify,this);
+        Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
 
         this.recvDeskInfoMsg();
     },
@@ -123,6 +125,10 @@ cc.Class({
         }
     },
 
+    recvRoundOver(){
+        this.showOperateBtn(false);
+    },
+
     onRcvJiaoScoreNotify(data){
         data = data.detail;
         if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
@@ -138,6 +144,25 @@ cc.Class({
         if (data.actionInfo.nextaction.seat === this._seatIndex && 3 == data.actionInfo.nextaction.type) {
             this.curaction = data.actionInfo.curaction;
             this.showOperateBtn(true, data.actionInfo);
+            for (let i = 0; i < data.diPai.length; i++) {
+                this._handCards.push(data.diPai[i]);
+            }
+            this.showHandCard(this._handCards);
+        }
+    },
+
+    onRcvMaiCard(data){
+        if (0 == this._chairId) {
+            data = data.detail;
+            for (let i = 0; i < data.cards.length; i++) {
+                for (let j = 0; i < this._handCards.length; j++) {
+                    if (data.cards[i] == this._handCards[j]) {
+                        this._handCards.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+            this.showHandCard(this._handCards);
         }
     },
 
@@ -247,13 +272,13 @@ cc.Class({
     onClickOutCard(){
         let cards = this.getSelectedCards();
         if (0 < cards.length) {
-            let typeCards = this.ErQiGui_CardLogicJS.checkCardIsCanOut(cards, this._handCards.length, this.curaction);
-            if (0 < typeCards.length) {
+            // let typeCards = this.ErQiGui_CardLogicJS.checkCardIsCanOut(cards, this._handCards.length, this.curaction);
+            // if (0 < cards.length) {
                 let req = {c: MsgId.OUT_CARD};
-                req.cards = typeCards;
+                req.cards = cards;
                 cc.vv.NetManager.send(req);
                 return;
-            }
+            // }
         }
         cc.vv.FloatTip.show("无效出牌");
     },
@@ -290,6 +315,12 @@ cc.Class({
             } else if (3 == type) {
                 this.initCardSelectState();
                 this.updateCardSelectNum();
+                this.btn_surrender.active = (210 > actionInfo.curaction.jiaoFen.maxJiaoFen);
+                if (this.btn_surrender.active) {
+                    this.btn_maidi.x = 170;
+                } else {
+                    this.btn_maidi.x = 0;
+                }
                 this.panel_maidi.active = true;
 
             } else if (4 == type) {
@@ -389,9 +420,14 @@ cc.Class({
         this._handCards = cc.vv.gameData.sortCard(list);
         this._handcardNode.removeAllChildren();
         let self = this;
-        let cardScale = 0.8;
+        let cardScale = cc.vv.gameData.CardScale;
         let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
-        let cardStartPosX = - (cardOffsetX * (list.length-1))/2;
+        let cardStartPosX = -(cardOffsetX * (this._handCards.length-1))/2;
+        let allCardWidth = cardOffsetX * (this._handCards.length + 1);
+        if (this._handcardNode.width < allCardWidth) {
+            cardOffsetX = this._handcardNode.width / (this._handCards.length + 1);
+            cardStartPosX = -(cardOffsetX * (this._handCards.length-1))/2;
+        }
         if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
             cardScale /= 2;
             cardOffsetX /= 2;
@@ -400,6 +436,7 @@ cc.Class({
         for(let i = 0; i < this._handCards.length; ++i){
             let node = this.node.getComponent("ErQiGui_Card").createCard(this._handCards[i]);
             node.parent = this._handcardNode;
+            node.cardOffsetX = cardOffsetX;
             let endPosX = cardStartPosX + cardOffsetX * i;
             if (bShowMoveAni) {
                 node.scale = 0;
@@ -468,8 +505,11 @@ cc.Class({
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             let card = this._handcardNode.children[i];
             if (!card.isNoCanOut) {
-                let cardLeftPosX = card.x - card.width/2;
-                let cardRightPosX = (i < this._handcardNode.children.length - 1) ? card.x : (card.x + card.width/2);
+                let cardLeftPosX = card.x - card.width/2 * cc.vv.gameData.CardScale;
+                let cardRightPosX = cardLeftPosX + card.cardOffsetX;
+                if (i == this._handcardNode.children.length - 1) {  //最后一张
+                    cardRightPosX = card.x + card.width/2 * cc.vv.gameData.CardScale;
+                }
                 if((touchLeftPosX < cardLeftPosX && touchRightPosX > cardLeftPosX) ||
                    (touchLeftPosX < cardRightPosX && touchRightPosX > cardRightPosX) ||
                    (cardLeftPosX < touchLeftPosX && cardRightPosX > touchLeftPosX)){
