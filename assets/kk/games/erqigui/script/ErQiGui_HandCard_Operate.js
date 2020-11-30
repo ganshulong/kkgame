@@ -74,14 +74,17 @@ cc.Class({
             Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
 
             this.panel_checkDiCard = cc.find("scene/panel_checkDiCard",this.node);
+            this.panel_checkDiCard.active = false;
             let panel_checkDiCard_mask = this.panel_checkDiCard.getChildByName("mask");
             Global.btnClickEvent(panel_checkDiCard_mask, this.onClickCheckDiCard,this);
 
             this.panel_checkCard = cc.find("scene/panel_checkCard",this.node);
+            this.panel_checkCard.active = false;
             let panel_checkCard_mask = this.panel_checkCard.getChildByName("mask");
             Global.btnClickEvent(panel_checkCard_mask, this.onClickCheckCard,this);
 
             this.panel_checkScore = cc.find("scene/panel_checkScore",this.node);
+            this.panel_checkScore.active = false;
             let panel_checkScore_mask = this.panel_checkScore.getChildByName("mask");
             Global.btnClickEvent(panel_checkScore_mask, this.onClickCheckScore,this);
 
@@ -336,6 +339,25 @@ cc.Class({
 
     onRcvCheckCard(msg){
         if (200 == msg.code) {
+            let cardScale = 0.25;
+            let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
+            for (let i = 0; i < msg.chaPai.length; i++) {
+                let playername = cc.vv.gameData.getUserInfo(msg.chaPai[i].seat).playername;
+                cc.find("bg_player" + i + "/txt_name", this.panel_checkCard).getComponent(cc.Label).string = playername;
+
+                let outCards = this.panel_checkCard.getChildByName("outCards"+i);
+                outCards.removeAllChildren();
+                let cardOffsetIndexX = 0;
+                for (let j = 0; j < msg.chaPai[i].outCards.length; j++) {
+                    for (let k = 0; k < msg.chaPai[i].outCards[j].length; k++) {
+                        let node = this.node.getComponent("ErQiGui_Card").createCard(msg.chaPai[i].outCards[j][k]);
+                        node.parent = outCards;
+                        node.scale = cardScale;
+                        node.x = cardOffsetX * cardOffsetIndexX++;
+                    }
+                    cardOffsetIndexX += 2;
+                }
+            }
             this.panel_checkCard.active = true;
         }
     },
