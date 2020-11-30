@@ -300,6 +300,8 @@ GlobalMsgId.ERQIGUI_SELECT_COLOR_NOTIFY = 18902;	// 二七鬼选主通知
 GlobalMsgId.ERQIGUI_MAI_CARD = 9903; 				// 二七鬼埋底牌
 GlobalMsgId.ERQIGUI_MAI_CARD_NOTIFY = 18903; 		// 二七鬼埋底牌通知
 GlobalMsgId.ERQIGUI_SURRENDER = 9904; 				// 二七鬼投降
-
 GlobalMsgId.ERQIGUI_KUAI_NUM_NOTIFY = 18904; 		// 二七鬼筷子数通知
+GlobalMsgId.ERQIGUI_CHECK_SCORE = 9905; 			// 二七鬼查分
+GlobalMsgId.ERQIGUI_CHECK_CARD = 9906; 				// 二七鬼查牌
+GlobalMsgId.ERQIGUI_CHECK_DI_CARD = 9907; 			// 二七鬼查看底牌
 

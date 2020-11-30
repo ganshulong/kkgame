@@ -73,9 +73,9 @@ cc.Class({
             this.btn_outCard = this._operateNode.getChildByName("btn_outCard");
             Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
 
-            this.panel_diCard = cc.find("scene/panel_diCard",this.node);
-            let panel_diCard_mask = this.panel_diCard.getChildByName("mask");
-            Global.btnClickEvent(panel_diCard_mask, this.onClickDiCard,this);
+            this.panel_checkDiCard = cc.find("scene/panel_checkDiCard",this.node);
+            let panel_checkDiCard_mask = this.panel_checkDiCard.getChildByName("mask");
+            Global.btnClickEvent(panel_checkDiCard_mask, this.onClickCheckDiCard,this);
 
             this.panel_checkCard = cc.find("scene/panel_checkCard",this.node);
             let panel_checkCard_mask = this.panel_checkCard.getChildByName("mask");
@@ -86,7 +86,7 @@ cc.Class({
             Global.btnClickEvent(panel_checkScore_mask, this.onClickCheckScore,this);
 
             this.btn_diCard = cc.find("scene/operate_btn_view/btn_diCard",this.node);
-            Global.btnClickEvent(this.btn_diCard,this.onClickDiCard,this);
+            Global.btnClickEvent(this.btn_diCard,this.onClickCheckDiCard,this);
             this.btn_diCard.active = false;
             this.btn_checkCard = cc.find("scene/operate_btn_view/btn_checkCard",this.node);
             Global.btnClickEvent(this.btn_checkCard,this.onClickCheckCard,this);
@@ -121,6 +121,11 @@ cc.Class({
     },
 
     start () {
+        if (this._handcardNode) {
+            cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_CHECK_SCORE, this.onRcvCheckScore, this);
+            cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_CHECK_CARD, this.onRcvCheckCard, this);
+            cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_CHECK_DI_CARD, this.onRcvCheckDiCard, this);
+        }
         Global.registerEvent(EventId.CLEARDESK,this.clearDesk,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.PLAYER_ENTER,this.recvPlayerEnter,this);
@@ -284,16 +289,49 @@ cc.Class({
         }
     },
 
-    onClickDiCard(){
-        this.panel_diCard.active = !this.panel_diCard.active;
+    onClickCheckDiCard(){
+        if (this.panel_checkDiCard.active) {
+            this.panel_checkDiCard.active = false;
+        } else {
+            let req = {c: MsgId.ERQIGUI_CHECK_DI_CARD};
+            cc.vv.NetManager.send(req);
+        }
     },
 
     onClickCheckCard(){
-        this.panel_checkCard.active = !this.panel_checkCard.active;
+        if (this.panel_checkCard.active) {
+            this.panel_checkCard.active = false;
+        } else {
+            let req = {c: MsgId.ERQIGUI_CHECK_CARD};
+            cc.vv.NetManager.send(req);
+        }
     },
 
     onClickCheckScore(){
-        this.panel_checkScore.active = !this.panel_checkScore.active;
+        if (this.panel_checkScore.active) {
+            this.panel_checkScore.active = false;
+        } else {
+            let req = {c: MsgId.ERQIGUI_CHECK_SCORE};
+            cc.vv.NetManager.send(req);
+        }
+    },
+
+    onRcvCheckDiCard(msg){
+        if (200 == msg.code) {
+            this.panel_checkDiCard.active = true;
+        }
+    },
+
+    onRcvCheckCard(msg){
+        if (200 == msg.code) {
+            this.panel_checkCard.active = true;
+        }
+    },
+
+    onRcvCheckScore(msg){
+        if (200 == msg.code) {
+            this.panel_checkScore.active = true;
+        }
     },
 
     setTableJiaoZhu(showType = -1){
@@ -708,6 +746,14 @@ cc.Class({
         data = data.detail;
         if(data === this._seatIndex){
             this._seatIndex = -1;
+        }
+    },
+
+    onDestroy(){
+        if (this._handcardNode) {
+            cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_CHECK_SCORE, this.onRcvCheckScore,false,this);
+            cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_CHECK_CARD, this.onRcvCheckCard,false,this);
+            cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_CHECK_DI_CARD, this.onRcvCheckDiCard,false,this);
         }
     }
 
