@@ -71,7 +71,10 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.recvSendCard,this);
         Global.registerEvent(EventId.SCORE_UPDATE_NOTIFY,this.onRcvScoreUpdateNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
+
         Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
+        Global.registerEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,this.onRcvSelectColorNotify,this);
+        Global.registerEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,this.onRcvMaiCardNotify,this);
     },
 
     onRcvUpdatePlayerInfo(){
@@ -95,6 +98,23 @@ cc.Class({
 
     onRcvJiaoScoreNotify(data){
         data = data.detail;
+        if (data.actionInfo.curaction.jiaoFen.curJiaoSeat === this._seatIndex) {
+            this.setJiaoScore(data.actionInfo.curaction.jiaoFen.curJiaoFen);
+        }
+    },
+
+    setJiaoScore(score = 0){
+        cc.find("mask_noJiaoScore", this._playerNode).active = (-1 == score);
+        cc.find("text_jiaoScore", this._playerNode).getComponent(cc.Label).string = (0 < score && score < 210) ? score : "";
+        cc.find("mask_jiaoZhao", this._playerNode).active = (210 == score);
+    },
+
+    onRcvSelectColorNotify(data){
+        this.setJiaoScore();
+    },
+
+    onRcvMaiCardNotify(data){
+        
     },
 
     onRcvScoreUpdateNotify(data){
@@ -309,6 +329,17 @@ cc.Class({
             this._playerNode.active = true;
             // this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
             this.showReady(user.state === 1);
+
+            this.setJiaoScore();
+            let deskInfo = cc.vv.gameData.getDeskInfo();
+            if (3 > deskInfo.actionInfo.nextaction.type) {
+                for (let i = 0; i < deskInfo.jiaoFenRecord.length; i++) {
+                    if (deskInfo.jiaoFenRecord[i].seat == this._seatIndex) {
+                        this.setJiaoScore(deskInfo.jiaoFenRecord[i].fen);
+                        break;
+                    }
+                }
+            }
         }
     },
 

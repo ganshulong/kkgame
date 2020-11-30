@@ -96,10 +96,13 @@ cc.Class({
             this.btn_checkScore.active = false;
 
             this.bg_right_top = cc.find("scene/bg_right_top",this.node);
-            this.setJiaoZhu(-1);
-            this.setJiaoScore(-1);
-            this.setZhuaScore(-1);
-            this.setYuScore(-1);
+            this.setTableJiaoZhu(-1);
+            this.setTableJiaoScore(-1);
+            this.setTableZhuaScore(-1);
+            this.setTableYuScore(-1);
+
+            this.setCurTableScore(0);
+            this.showBankerOperateTips(0);
 
             this.ErQiGui_CardLogicJS = this.node.getComponent("ErQiGui_CardLogic");
             this.ErQiGui_CardLogicJS.init();
@@ -147,22 +150,32 @@ cc.Class({
                             this.showOperateBtn(true, data.actionInfo);
                         } else {
                             this.showOperateBtn(false);
-                        } 
+                        }
+                        if (0 === this._chairId && data.actionInfo.nextaction.seat != this._seatIndex) {
+                            this.showBankerOperateTips(data.actionInfo.nextaction.type);
+                        }
                     }
 
-                    this.setJiaoZhu(data.jiaoZhu);
-                    this.setJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
+                    this.btn_checkCard.active = (4 == data.actionInfo.nextaction.type);
+                    this.btn_checkScore.active = (4 == data.actionInfo.nextaction.type);
+                    this.btn_diCard.active = (4 == data.actionInfo.nextaction.type && this._seatIndex == data.actionInfo.curaction.jiaoFen.maxJiaoSeat);
+
+                    this.setTableJiaoZhu(data.jiaoZhu);
+                    this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
+                    this.setTableZhuaScore(data.actionInfo.zhuafen);
+                    this.setTableYuScore(data.actionInfo.yufen);
                 }
             }
         }
     },
 
     recvRoundOver(){
-        this.showOperateBtn(false);
         if (0 === this._chairId) { 
             this.btn_diCard.active = false;
             this.btn_checkCard.active = false;
             this.btn_checkScore.active = false;
+            this.showOperateBtn(false);
+            this.showBankerOperateTips(0);
         }
     },
 
@@ -174,8 +187,11 @@ cc.Class({
         } else {
             this.showOperateBtn(false);
         }
+        if (0 === this._chairId && data.actionInfo.nextaction.seat != this._seatIndex && 2 == data.actionInfo.nextaction.type) {
+            this.showBankerOperateTips(2);
+        }
         if (0 == this._chairId) {
-            this.setJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
+            this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
         }
     },
 
@@ -189,8 +205,11 @@ cc.Class({
             }
             this.showHandCard(this._handCards);
         }
+        if (0 === this._chairId && data.actionInfo.nextaction.seat != this._seatIndex) {
+            this.showBankerOperateTips(data.actionInfo.nextaction.type);
+        }
         if (0 == this._chairId) {
-            this.setJiaoZhu(data.jiaoZhu);
+            this.setTableJiaoZhu(data.jiaoZhu);
         }
     },
 
@@ -215,6 +234,9 @@ cc.Class({
         if (0 == this._chairId) {
             this.btn_checkCard.active = true;
             this.btn_checkScore.active = true;
+        }
+        if (0 === this._chairId && data.actionInfo.nextaction.seat != this._seatIndex) {
+            this.showBankerOperateTips(data.actionInfo.nextaction.type);
         }
     },
 
@@ -274,26 +296,40 @@ cc.Class({
         this.panel_checkScore.active = !this.panel_checkScore.active;
     },
 
-    setJiaoZhu(showType = -1){
+    setTableJiaoZhu(showType = -1){
         for (let i = 0; i <= 5; i++) {
             this.bg_right_top.getChildByName("spr_cardType"+i).active = (showType == i);
         }
     },
 
-    setJiaoScore(score = -1){
+    setTableJiaoScore(score = -1){
+        this.bg_right_top.getChildByName("text_jiaoScore").getComponent(cc.Label).string = (0 < score && score < 210) ? score : "";
+        this.bg_right_top.getChildByName("spr_jiaoZhao").active = (210 == score);
+    },
+
+    setTableZhuaScore(score = -1){
         if (0 > score) {
-            this.bg_right_top.getChildByName("text_jiaoScore").getComponent(cc.Label).string = "";
+            this.bg_right_top.getChildByName("text_zhuaScore").getComponent(cc.Label).string = "";
         } else {
-            this.bg_right_top.getChildByName("text_jiaoScore").getComponent(cc.Label).string = score;
+            this.bg_right_top.getChildByName("text_zhuaScore").getComponent(cc.Label).string = score;
         }
     },
 
-    setZhuaScore(score = -1){
-
+    setTableYuScore(score = -1){
+        if (0 > score) {
+            this.bg_right_top.getChildByName("text_yuScore").getComponent(cc.Label).string = "";
+        } else {
+            this.bg_right_top.getChildByName("text_yuScore").getComponent(cc.Label).string = score;
+        }
     },
 
-    setYuScore(score = -1){
+    setCurTableScore(score){
+        cc.find("scene/curTableScore",this.node).getComponent(cc.Label).string = (0 < score) ? score : "";;
+    },
 
+    showBankerOperateTips(curOperateType = 0){
+        cc.find("scene/curOperateType2",this.node).active = (2 == curOperateType);        
+        cc.find("scene/curOperateType3",this.node).active = (3 == curOperateType);
     },
 
     onRcvOutCardNotify(data){
@@ -653,8 +689,10 @@ cc.Class({
     clearDesk(){
         if(this._handcardNode) {
             this._handcardNode.removeAllChildren(true);
-            this.setJiaoZhu(-1);
-            this.setJiaoScore(-1);
+            this.setTableJiaoZhu(-1);
+            this.setTableJiaoScore(-1);
+            this.setTableZhuaScore(-1);
+            this.setTableYuScore(-1);
         }
     },
 
