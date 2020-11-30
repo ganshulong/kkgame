@@ -31,7 +31,7 @@ cc.Class({
         let resValue = (cardValue % 0x10 - 1);
         spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame("card_"+resColor+"_"+resValue);
 
-        if (cc.vv.gameData.getIsZhuCar(cardValue)) {
+        if (cc.vv.gameData.getIsZhuCard(cardValue)) {
             this.showZhuStar(spr);
         } else {
             spr.isZhuCard = false;

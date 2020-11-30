@@ -208,13 +208,13 @@ cc.Class({
             for (let i = 0; i < data.diPai.length; i++) {
                 this._handCards.push(data.diPai[i]);
             }
-            this.showHandCard(this._handCards);
         }
         if (0 === this._chairId && data.actionInfo.nextaction.seat != this._seatIndex) {
             this.showBankerOperateTips(data.actionInfo.nextaction.type);
         }
         if (0 == this._chairId) {
             this.setTableJiaoZhu(data.jiaoZhu);
+            this.showHandCard(this._handCards);
         }
     },
 

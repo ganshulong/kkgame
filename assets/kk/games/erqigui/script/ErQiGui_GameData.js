@@ -218,19 +218,20 @@ cc.Class({
 
     onRcvJiaoScoreNotify(msg){
         if(msg.code == 200){
-             Global.dispatchEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,msg)           
+            Global.dispatchEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,msg)           
         }
     },
 
     onRcvSelectColorNotify(msg){
         if(msg.code == 200){
-             Global.dispatchEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,msg)           
+            this._deskInfo.jiaoZhu = msg.jiaoZhu
+            Global.dispatchEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,msg)           
         }
     },
 
     onRcvMaiCardNotify(msg){
         if(msg.code == 200){
-             Global.dispatchEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,msg)           
+            Global.dispatchEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,msg)           
         }
     },
 
@@ -427,6 +428,7 @@ cc.Class({
 
     onRcvHandCard(msg){
         if(msg.code === 200){
+            this._deskInfo.jiaoZhu = -1;
             Global.dispatchEvent(EventId.HANDCARD,msg);
         }
     },
@@ -563,17 +565,44 @@ cc.Class({
 
     // 手牌排序  红桃7 > 7 > 红桃2 > 2 > 红桃 > 其他
     sortCard(cardlist){
-        // let tempList1 = cards.slice(0);
-
-
-        cardlist.sort((a,b)=>{
+        let tempList = cardlist.slice(0);
+        for (let i = 0; i < tempList.length; i++) {
+            if (this.getIsZhuCard(tempList[i])) {
+                let resColor = parseInt(tempList[i]/0x10);
+                let resValue = (tempList[i]%0x10);
+                if (!(this._deskInfo.conf.param2 && (4 == this._deskInfo.jiaoZhu || -1 == this._deskInfo.jiaoZhu))) {
+                    if (2 == resValue) {
+                        tempList[i] += 0x200;
+                    } else if (7 == resValue) {
+                        tempList[i] += 0x700;
+                    }
+                }
+                if (resColor == this._deskInfo.jiaoZhu) {
+                    tempList[i] += 0x100;
+                }
+            }
+        }
+        tempList.sort((a,b)=>{
             return -(a - b);    //从大到小
         });
-        return cardlist;
+        for (let i = 0; i < tempList.length; i++) {
+            tempList[i] %= 0x100;
+        }
+        return tempList;
     },
 
-    getIsZhuCar(cardValue){
-        return true;
+    getIsZhuCard(cardValue){
+        let resColor = parseInt(cardValue/0x10);
+        let resValue = (cardValue%0x10);
+        if (2 == resValue || 7 == resValue) {
+            if (this._deskInfo.conf.param2 && (4 == this._deskInfo.jiaoZhu || -1 == this._deskInfo.jiaoZhu)) {    //四五色玩法
+                return false;
+            } else {
+                return true
+            }
+        } else {
+            return (resColor == this._deskInfo.jiaoZhu);
+        }
     },
 
 /*
