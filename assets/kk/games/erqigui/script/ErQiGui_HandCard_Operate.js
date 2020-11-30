@@ -318,6 +318,18 @@ cc.Class({
 
     onRcvCheckDiCard(msg){
         if (200 == msg.code) {
+            let diPai = cc.vv.gameData.sortCard(msg.diPai)
+            let node_dicards = this.panel_checkDiCard.getChildByName("node_dicards");
+            node_dicards.removeAllChildren();
+            let cardScale = cc.vv.gameData.CardScale;
+            let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale * 1.5;
+            let cardStartPosX = -(cardOffsetX * (diPai.length-1))/2;
+            for(let i = 0; i < diPai.length; ++i){
+                let node = this.node.getComponent("ErQiGui_Card").createCard(diPai[i]);
+                node.parent = node_dicards;
+                node.scale = cardScale;
+                node.x = cardStartPosX + cardOffsetX * i;
+            }
             this.panel_checkDiCard.active = true;
         }
     },
