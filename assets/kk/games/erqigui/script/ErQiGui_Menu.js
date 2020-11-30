@@ -611,7 +611,6 @@ cc.Class({
 
     onReady(){
         cc.vv.NetManager.send({ 'c': MsgId.READY});
-        Global.dispatchEvent(EventId.CLEARDESK);
     },
 
     onRcvReadyResult(msg){

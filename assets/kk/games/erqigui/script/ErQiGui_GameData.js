@@ -155,7 +155,6 @@ cc.Class({
 
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_SELECT_COLOR_NOTIFY, this.onRcvSelectColorNotify, this);
-        cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_MAI_CARD, this.onRcvMaiCard, this);
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_MAI_CARD_NOTIFY, this.onRcvMaiCardNotify, this);
     },
 
@@ -200,7 +199,6 @@ cc.Class({
 
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_SELECT_COLOR_NOTIFY, this.onRcvSelectColorNotify, false, this);
-        cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_MAI_CARD, this.onRcvMaiCard, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_MAI_CARD_NOTIFY, this.onRcvMaiCardNotify, false, this);
     },
 
@@ -227,12 +225,6 @@ cc.Class({
     onRcvSelectColorNotify(msg){
         if(msg.code == 200){
              Global.dispatchEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,msg)           
-        }
-    },
-
-    onRcvMaiCard(msg){
-        if(msg.code == 200){
-             Global.dispatchEvent(EventId.ERQIGUI_MAI_CARD,msg)           
         }
     },
 

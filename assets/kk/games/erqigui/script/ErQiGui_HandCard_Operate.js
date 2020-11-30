@@ -34,36 +34,36 @@ cc.Class({
             this._operateNode = cc.find("scene/play_action_view",this.node);
             this.showOperateBtn(false);
 
-            this.panel_jiaoScore = this._operateNode.getChildByName("panel_jiaoScore");
+            this.panel_jiaoScore_btns = this._operateNode.getChildByName("panel_jiaoScore_btns");
             this.jiaoScoreList = [170,180,190,200,210];
             for (let i = 0; i < this.jiaoScoreList.length; i++) {
-                let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + this.jiaoScoreList[i]);
+                let btn_score = this.panel_jiaoScore_btns.getChildByName("btn_score" + this.jiaoScoreList[i]);
                 btn_score.score = this.jiaoScoreList[i];
                 Global.btnClickEvent(btn_score,this.onClickJiaoScore,this);
             }
-            let btn_cancel = this.panel_jiaoScore.getChildByName("btn_cancel");
+            let btn_cancel = this.panel_jiaoScore_btns.getChildByName("btn_cancel");
             Global.btnClickEvent(btn_cancel,this.onClickJiaoScoreCancel,this);
-            let btn_sure = this.panel_jiaoScore.getChildByName("btn_sure");
+            let btn_sure = this.panel_jiaoScore_btns.getChildByName("btn_sure");
             Global.btnClickEvent(btn_sure,this.onClickJiaoScoreSure,this);
 
-            this.panel_selectColor = this._operateNode.getChildByName("panel_selectColor");
+            this.panel_selectColor_btns = this._operateNode.getChildByName("panel_selectColor_btns");
             for (let i = 0; i < 4; i++) {
-                let btn_color = this.panel_selectColor.getChildByName("btn_color" + i);
+                let btn_color = this.panel_selectColor_btns.getChildByName("btn_color" + i);
                 btn_color.cardColor = i;
                 Global.btnClickEvent(btn_color,this.onClickColor,this);
             }
-            this.panel_selectColor45 = this._operateNode.getChildByName("panel_selectColor45");
+            this.panel_selectColor45_btns = this._operateNode.getChildByName("panel_selectColor45_btns");
             for (let i = 0; i < 6; i++) {
-                let btn_color = this.panel_selectColor45.getChildByName("btn_color" + i);
+                let btn_color = this.panel_selectColor45_btns.getChildByName("btn_color" + i);
                 btn_color.cardColor = i;
                 Global.btnClickEvent(btn_color,this.onClickColor,this);
             }
 
-            this.panel_maidi = this._operateNode.getChildByName("panel_maidi");
-            this.text_curSelectNum = this.panel_maidi.getChildByName("text_curSelectNum");
-            this.btn_surrender = this.panel_maidi.getChildByName("btn_surrender");
+            this.panel_maidi_btns = this._operateNode.getChildByName("panel_maidi_btns");
+            this.text_curSelectNum = this.panel_maidi_btns.getChildByName("text_curSelectNum");
+            this.btn_surrender = this.panel_maidi_btns.getChildByName("btn_surrender");
             Global.btnClickEvent(this.btn_surrender,this.onClickSurrender,this);
-            this.btn_maidi = this.panel_maidi.getChildByName("btn_maidi");
+            this.btn_maidi = this.panel_maidi_btns.getChildByName("btn_maidi");
             Global.btnClickEvent(this.btn_maidi,this.onClickMaiDi,this);
 
             // 提示
@@ -72,6 +72,34 @@ cc.Class({
             // 出
             this.btn_outCard = this._operateNode.getChildByName("btn_outCard");
             Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
+
+            this.panel_diCard = cc.find("scene/panel_diCard",this.node);
+            let panel_diCard_mask = this.panel_diCard.getChildByName("mask");
+            Global.btnClickEvent(panel_diCard_mask, this.onClickDiCard,this);
+
+            this.panel_checkCard = cc.find("scene/panel_checkCard",this.node);
+            let panel_checkCard_mask = this.panel_checkCard.getChildByName("mask");
+            Global.btnClickEvent(panel_checkCard_mask, this.onClickCheckCard,this);
+
+            this.panel_checkScore = cc.find("scene/panel_checkScore",this.node);
+            let panel_checkScore_mask = this.panel_checkScore.getChildByName("mask");
+            Global.btnClickEvent(panel_checkScore_mask, this.onClickCheckScore,this);
+
+            this.btn_diCard = cc.find("scene/operate_btn_view/btn_diCard",this.node);
+            Global.btnClickEvent(this.btn_diCard,this.onClickDiCard,this);
+            this.btn_diCard.active = false;
+            this.btn_checkCard = cc.find("scene/operate_btn_view/btn_checkCard",this.node);
+            Global.btnClickEvent(this.btn_checkCard,this.onClickCheckCard,this);
+            this.btn_checkCard.active = false;
+            this.btn_checkScore = cc.find("scene/operate_btn_view/btn_checkScore",this.node);
+            Global.btnClickEvent(this.btn_checkScore,this.onClickCheckScore,this);
+            this.btn_checkScore.active = false;
+
+            this.bg_right_top = cc.find("scene/bg_right_top",this.node);
+            this.setJiaoZhu(-1);
+            this.setJiaoScore(-1);
+            this.setZhuaScore(-1);
+            this.setYuScore(-1);
 
             this.ErQiGui_CardLogicJS = this.node.getComponent("ErQiGui_CardLogic");
             this.ErQiGui_CardLogicJS.init();
@@ -100,7 +128,6 @@ cc.Class({
 
         Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
         Global.registerEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,this.onRcvSelectColorNotify,this);
-        Global.registerEvent(EventId.ERQIGUI_MAI_CARD,this.onRcvMaiCard,this);
         Global.registerEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,this.onRcvMaiCardNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
 
@@ -111,15 +138,20 @@ cc.Class({
         let data = cc.vv.gameData.getDeskInfo();
         if((data.isReconnect || cc.vv.gameData._isPlayBack) && this._handcardNode) {
             for(let i=0;i<data.users.length;++i){
-                if(this._seatIndex === data.users[i].seat && data.users[i].handInCards){
-                    this.showHandCard(data.users[i].handInCards);
+                if(this._seatIndex === data.users[i].seat){
+                    if (data.users[i].handInCards) {
+                        this.showHandCard(data.users[i].handInCards);
 
-                    if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
-                        this.curaction = data.actionInfo.curaction;
-                        this.showOperateBtn(true, data.actionInfo);
-                    } else {
-                        this.showOperateBtn(false);
+                        if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+                            this.curaction = data.actionInfo.curaction;
+                            this.showOperateBtn(true, data.actionInfo);
+                        } else {
+                            this.showOperateBtn(false);
+                        } 
                     }
+
+                    this.setJiaoZhu(data.jiaoZhu);
+                    this.setJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
                 }
             }
         }
@@ -127,6 +159,11 @@ cc.Class({
 
     recvRoundOver(){
         this.showOperateBtn(false);
+        if (0 === this._chairId) { 
+            this.btn_diCard.active = false;
+            this.btn_checkCard.active = false;
+            this.btn_checkScore.active = false;
+        }
     },
 
     onRcvJiaoScoreNotify(data){
@@ -136,6 +173,9 @@ cc.Class({
             this.showOperateBtn(true, data.actionInfo);
         } else {
             this.showOperateBtn(false);
+        }
+        if (0 == this._chairId) {
+            this.setJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
         }
     },
 
@@ -149,20 +189,8 @@ cc.Class({
             }
             this.showHandCard(this._handCards);
         }
-    },
-
-    onRcvMaiCard(data){
         if (0 == this._chairId) {
-            data = data.detail;
-            for (let i = 0; i < data.cards.length; i++) {
-                for (let j = 0; i < this._handCards.length; j++) {
-                    if (data.cards[i] == this._handCards[j]) {
-                        this._handCards.splice(j, 1);
-                        break;
-                    }
-                }
-            }
-            this.showHandCard(this._handCards);
+            this.setJiaoZhu(data.jiaoZhu);
         }
     },
 
@@ -171,13 +199,29 @@ cc.Class({
         if (data.actionInfo.nextaction.seat === this._seatIndex && 4 == data.actionInfo.nextaction.type) {
             this.curaction = data.actionInfo.curaction;
             this.showOperateBtn(true, data.actionInfo);
+
+            for (let i = 0; i < data.diPai.length; i++) {
+                for (let j = 0; i < this._handCards.length; j++) {
+                    if (data.diPai[i] == this._handCards[j]) {
+                        this._handCards.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+            this.showHandCard(this._handCards);
+            
+            this.btn_diCard.active = true;
+        }
+        if (0 == this._chairId) {
+            this.btn_checkCard.active = true;
+            this.btn_checkScore.active = true;
         }
     },
 
     onClickJiaoScore(event){
         this.curSelectScore = event.target.score;
         for (let i = 0; i < this.jiaoScoreList.length; i++) {
-            let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + this.jiaoScoreList[i]);
+            let btn_score = this.panel_jiaoScore_btns.getChildByName("btn_score" + this.jiaoScoreList[i]);
             btn_score.getChildByName("mask").active = (this.curSelectScore == this.jiaoScoreList[i]);
         }
     },
@@ -216,6 +260,40 @@ cc.Class({
         } else {
             cc.vv.FloatTip.show("必须埋牌8张");
         }
+    },
+
+    onClickDiCard(){
+        this.panel_diCard.active = !this.panel_diCard.active;
+    },
+
+    onClickCheckCard(){
+        this.panel_checkCard.active = !this.panel_checkCard.active;
+    },
+
+    onClickCheckScore(){
+        this.panel_checkScore.active = !this.panel_checkScore.active;
+    },
+
+    setJiaoZhu(showType = -1){
+        for (let i = 0; i <= 5; i++) {
+            this.bg_right_top.getChildByName("spr_cardType"+i).active = (showType == i);
+        }
+    },
+
+    setJiaoScore(score = -1){
+        if (0 > score) {
+            this.bg_right_top.getChildByName("text_jiaoScore").getComponent(cc.Label).string = "";
+        } else {
+            this.bg_right_top.getChildByName("text_jiaoScore").getComponent(cc.Label).string = score;
+        }
+    },
+
+    setZhuaScore(score = -1){
+
+    },
+
+    setYuScore(score = -1){
+
     },
 
     onRcvOutCardNotify(data){
@@ -289,27 +367,27 @@ cc.Class({
         }
         this._operateNode.active = bShow;
         if (bShow) {
-            this.panel_jiaoScore.active = false;
-            this.panel_selectColor.active = false;
-            this.panel_selectColor45.active = false;
-            this.panel_maidi.active = false;
+            this.panel_jiaoScore_btns.active = false;
+            this.panel_selectColor_btns.active = false;
+            this.panel_selectColor45_btns.active = false;
+            this.panel_maidi_btns.active = false;
             this.btn_outCard.active = false;
  
             let type = actionInfo.nextaction.type;
             if (1 == type) {
                 this.curSelectScore = 0;
                 for (let i = 0; i < this.jiaoScoreList.length; i++) {
-                    let btn_score = this.panel_jiaoScore.getChildByName("btn_score" + this.jiaoScoreList[i]);
+                    let btn_score = this.panel_jiaoScore_btns.getChildByName("btn_score" + this.jiaoScoreList[i]);
                     btn_score.getComponent(cc.Button).interactable = (actionInfo.curaction.jiaoFen.maxJiaoFen < this.jiaoScoreList[i]);
                     btn_score.getChildByName("mask").active = false;
                 }
-                this.panel_jiaoScore.active = true;
+                this.panel_jiaoScore_btns.active = true;
 
             } else if (2 == type) {
                 if (cc.vv.gameData.getRoomConf().param2) {
-                    this.panel_selectColor45.active = true;
+                    this.panel_selectColor45_btns.active = true;
                 } else {
-                    this.panel_selectColor.active = true;
+                    this.panel_selectColor_btns.active = true;
                 }
 
             } else if (3 == type) {
@@ -321,7 +399,7 @@ cc.Class({
                 } else {
                     this.btn_maidi.x = 0;
                 }
-                this.panel_maidi.active = true;
+                this.panel_maidi_btns.active = true;
 
             } else if (4 == type) {
                 this.btn_outCard.active = true;
@@ -407,7 +485,7 @@ cc.Class({
 
     // 检查是否可以出牌
     checkCanOutCard(seat){
-        if(this._chairId === 0){
+        if(0 == this._chairId){
             if(this._seatIndex === seat){
                 this._canOutCard = true;
             } else {
@@ -542,7 +620,7 @@ cc.Class({
                 card.y = card.isSelect ? 50 : 0;
             }
         }
-        if (this.panel_maidi.active) {
+        if (this.panel_maidi_btns.active) {
             this.updateCardSelectNum();
         }
     },
@@ -575,6 +653,8 @@ cc.Class({
     clearDesk(){
         if(this._handcardNode) {
             this._handcardNode.removeAllChildren(true);
+            this.setJiaoZhu(-1);
+            this.setJiaoScore(-1);
         }
     },
 
