@@ -168,17 +168,21 @@ cc.Class({
             }
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
-            if (0 == this._UISeat || 2 != data.actionInfo.nextaction.type) {
-                // this.showNoOutCard(false);
-                this.showOutCard();
-            }
             if (0 < data.actionInfo.nextaction.type) {
                 this.setShowTimeCount(true, data.actionInfo.nextaction.time);
             }
         }
-        // if (data.isOverRound) {
-        //     this.showOutCard();
-        // }
+        if (data.isOverRound) {
+            let self = this;
+            this.node.runAction(
+                cc.sequence(
+                    cc.delayTime(0.5), 
+                    cc.callFunc(()=>{
+                        self.showOutCard();
+                    }), 
+                )
+            )
+        }
     },
 
     onRecvHandCard(data){

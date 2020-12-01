@@ -444,11 +444,22 @@ cc.Class({
                 this.showHandCard(handCards);
             }
         }
+        this.showOperateBtn(false);
         if (data.actionInfo.nextaction.seat === this._seatIndex && 4 == data.actionInfo.nextaction.type) {
             this.curaction = data.actionInfo.curaction;
-            this.showOperateBtn(true, data.actionInfo);
-        } else {
-            this.showOperateBtn(false);
+            if (data.isOverRound) {
+                let self = this;
+                this.node.runAction(
+                    cc.sequence(
+                        cc.delayTime(0.5), 
+                        cc.callFunc(()=>{
+                            self.showOperateBtn(true, data.actionInfo);
+                        }), 
+                    )
+                )
+            } else {
+                this.showOperateBtn(true, data.actionInfo);
+            }
         }
 
         if (0 == this._chairId) {
