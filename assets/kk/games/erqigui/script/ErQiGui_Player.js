@@ -101,6 +101,9 @@ cc.Class({
         if (data.actionInfo.curaction.jiaoFen.curJiaoSeat === this._seatIndex) {
             this.setJiaoScore(data.actionInfo.curaction.jiaoFen.curJiaoFen);
         }
+        if (data.actionInfo.curaction.jiaoFen.maxJiaoSeat === this._seatIndex && 2 == data.actionInfo.nextaction.type) {
+            this.showBanker(true);
+        }
     },
 
     setJiaoScore(score = 0){
@@ -327,7 +330,6 @@ cc.Class({
             this.setTotalScore(user.score);
             this.showOffline(user.ofline===1);
             this._playerNode.active = true;
-            // this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
             this.showReady(user.state === 1);
 
             this.setJiaoScore();
@@ -339,6 +341,11 @@ cc.Class({
                         break;
                     }
                 }
+            }
+            if (2 <= deskInfo.actionInfo.nextaction.type) {
+                this.showBanker(user.uid == deskInfo.actionInfo.curaction.jiaoFen.maxJiaoUid);
+            } else {
+                this.showBanker(false);
             }
         }
     },
@@ -354,10 +361,10 @@ cc.Class({
         }
     },
 
-    // 显示房主
-    // showMaster(bShow){
-    //     this._playerNode.getChildByName("mask_master").active = bShow;
-    // },
+    // 显示庄家
+    showBanker(bShow){
+        this._playerNode.getChildByName("mask_banker").active = bShow;
+    },
 
     recvSendCard(){
         this.showReady(false);
@@ -368,6 +375,7 @@ cc.Class({
     },
 
     clearDesk(){
+        this.showBanker(false);
     },
 
     onDestroy(){

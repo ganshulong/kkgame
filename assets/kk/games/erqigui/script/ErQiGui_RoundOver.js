@@ -36,8 +36,8 @@ cc.Class({
                     this._layer.y = this.node.height/2;
 
                     this.initRoomInfo();
-                    // this.initPlayerInfo(data);
-                    // this.showNoSendCard(data.diPaiCards);
+                    this.initRoundInfo(data);
+                    this.initPlayerInfo(data);
 
                     let self = this;
                     this.scheduleOnce(()=>{
@@ -60,78 +60,64 @@ cc.Class({
     },
 
     initPlayerInfo(data){
+        let xianCount = 0;
         for(let i = 0; i < data.users.length; ++i){
-            let player = this._layer.getChildByName("player" + i);
+            let player = null;
+            if (data.users[i].seat == (data.banker || 1)) {
+                player = this._layer.getChildByName("playerBanker");
+            } else {
+                player = this._layer.getChildByName("player" + xianCount++);
+            }
 
             let spr_head = cc.find("head/radio_mask/spr_head",player);
             Global.setHead(spr_head, data.users[i].usericon);
-
             player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
-            player.getChildByName("text_id").getComponent(cc.Label).string = "ID:"+data.users[i].uid;
-
-            player.getChildByName("text_surplusCardNum").getComponent(cc.Label).string = "剩牌:"+data.users[i].handInCards.length;
-            player.getChildByName("text_bombNum").getComponent(cc.Label).string = "炸弹:"+data.users[i].roundzhadan;
-
-            let node_card = player.getChildByName("node_card");
-            for (let c = 0; c < data.users[i].putCards.length; c++) {
-                let node = this.node.getComponent("ErQiGui_Card").createCard(data.users[i].putCards[c]);
-                node.scale = 0.33;
-                node.x = node.width * node.scale * 0.8 * c;
-                node.parent = node_card;
-            }
-            for (let c = 0; c < data.users[i].handInCards.length; c++) {
-                let node = this.node.getComponent("ErQiGui_Card").createCard(data.users[i].handInCards[c]);
-                node.scale = 0.33;
-                node.color = new cc.Color(100,100,100);
-                node.x = node.width * node.scale * 0.8 * (c + data.users[i].putCards.length);
-                node.parent = node_card;
-            }
-
-            if (0 <= data.users[i].roundScore) {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+            player.getChildByName("text_cardRound").getComponent(cc.Label).string = data.users[i].roundScore;
+            if (0 < data.users[i].roundScore) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('.' + data.users[i].roundScore);
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
+            } else if (0 == data.users[i].roundScore) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '0';
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
             }
-
-            if (data.users[i].uid == cc.vv.UserManager.uid) {
-                this._layer.getChildByName("spr_title_win").active = (0 <= data.users[i].roundScore);
-                this._layer.getChildByName("spr_title_lose").active = (0 > data.users[i].roundScore);
-            }
         }
-        for (let i = data.users.length; i < cc.vv.gameData.RoomSeat; i++) {
-            this._layer.getChildByName("player" + i).active = false;
-        }
-
     },
 
-    showNoSendCard(card){
-        this._layer.getChildByName("text_noSendCard").active = (0 < card.length);
-        let node_noSendCard = cc.find("text_noSendCard/node_noSendCard", this._layer);
-        for (let c = 0; c < card.length; c++) {
-            let node = this.node.getComponent("ErQiGui_Card").createCard(card[c]);
-            node.scale = 0.33;
-            node.x = node.width * node.scale * 0.8 * c;
-            node.parent = node_noSendCard;
+    initRoundInfo(data){
+        let roundInfo = this._layer.getChildByName("roundInfo");
+
+        let zhuCardColor = roundInfo.getChildByName("zhuCardColor");
+        for (let i = 0; i <= 5; i++) {
+            zhuCardColor.getChildByName("spr_cardColor" + i).active = (i == data.jiaoZhu);
+        }
+        roundInfo.getChildByName("text_zhuaScore").getComponent(cc.Label).string = data.zhuaFen;
+        roundInfo.getChildByName("text_koudi").getComponent(cc.Label).string = data.diFen;
+        roundInfo.getChildByName("text_jiaoScore").getComponent(cc.Label).string = data.jiaoFen;
+        roundInfo.getChildByName("text_totalScore").getComponent(cc.Label).string = data.zhuaFen + data.diFen;
+        let roundType = roundInfo.getChildByName("roundType");
+        for (let i = 1; i <= 5; i++) {
+            roundType.getChildByName("spr_resoultType" + i).active = (i == data.resulType);
         }
     },
 
     initRoomInfo(){
-        // let conf = cc.vv.gameData.getRoomConf();
-        // let roomId = cc.find("roomInfoNode/txt_room_id",this._layer);
-        // roomId.getComponent(cc.Label).string = "游戏号:" + conf.deskId;
+        let conf = cc.vv.gameData.getRoomConf();
+        let roomId = cc.find("roomInfoNode/txt_room_id",this._layer);
+        roomId.getComponent(cc.Label).string = "游戏号:" + conf.deskId;
 
-        // let roundNum = cc.find("roomInfoNode/txt_round_num",this._layer);
-        // roundNum.getComponent(cc.Label).string = "(" + cc.vv.gameData.getDeskInfo().round + "/" + conf.gamenum + "局)";
+        let roundNum = cc.find("roomInfoNode/txt_round_num",this._layer);
+        roundNum.getComponent(cc.Label).string = "(" + cc.vv.gameData.getDeskInfo().round + "/" + conf.gamenum + "局)";
 
-        // let desc = cc.find("roomInfoNode/txt_game_desc",this._layer);
-        // let str = "";
-        // let list = cc.vv.gameData.getWanFa();
-        // for(let i=0;i<list.length;++i){
-        //     str += list[i];
-        // }
-        // desc.getComponent(cc.Label).string = str;
+        let desc = cc.find("roomInfoNode/txt_game_desc",this._layer);
+        let str = "";
+        let list = cc.vv.gameData.getWanFa();
+        for(let i=0;i<list.length;++i){
+            str += list[i];
+        }
+        desc.getComponent(cc.Label).string = str;
 
         let okBtn = this._layer.getChildByName("btn_comfirm");
         Global.btnClickEvent(okBtn,this.onClose,this);

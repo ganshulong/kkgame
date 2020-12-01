@@ -36,36 +36,21 @@ cc.Class({
                 let btnBtn = this._layer.getChildByName("btn_back");
                 Global.btnClickEvent(btnBtn,this.onBack,this);
 
-                // 创建者
-                // let creator = cc.find("game_end_bg/creator",this._layer);
-                // let icon = cc.find("radio_mask/spr_head",creator);
-                // Global.setHead(icon,data.createUser.usericon);
+                this._layer.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
+                this._layer.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
 
-                // creator.getChildByName("name").getComponent(cc.Label).string = data.createUser.playername;
-                // creator.getChildByName("id").getComponent(cc.Label).string = "ID:"+data.createUser.uid;
+                let btn_share = this._layer.getChildByName("btn_share");
+                Global.btnClickEvent(btn_share,this.onShare,this);
 
-                // this._layer.getChildByName("room_id").getComponent(cc.Label).string = cc.vv.gameData.getRoomConf().deskId;
-                // this._layer.getChildByName("txt_end_time").getComponent(cc.Label).string = data.overTime;
-
-                // let btn_share = this._layer.getChildByName("btn_share");
-                // Global.btnClickEvent(btn_share,this.onShare,this);
-
-                // let scoreList = data.users.slice(0);
-                // scoreList.sort((a,b)=>{
-                //     return b.score - a.score;
-                // });
-
-                // let posArr = [[0,0,0],[0,0,0],[-230,230,0],[-385,0,385],[-420,-130,160,450]];
-                // let bigWinerId = scoreList[0].uid;
-                // for(let i = 0; i < data.users.length; ++i){
-                //     let player = cc.find("game_end_bg/player"+i,this._layer);
-                //     this.initPlayer(player, data.users[i], bigWinerId, data.createUser.uid);
-                //     player.x = posArr[data.users.length][i];
-                //     player.active = true;
-                // }
-                // for(let i = data.users.length; i < cc.vv.gameData.RoomSeat; ++i){
-                //     cc.find("game_end_bg/player"+i,this._layer).active = false;
-                // }
+                let scoreList = data.users.slice(0);
+                scoreList.sort((a,b)=>{
+                    return b.scoreCount - a.scoreCount;
+                });
+                let bigWinerScore = (0 < scoreList[0].scoreCount) ?  scoreList[0].scoreCount : "";
+                for(let i = 0; i < data.users.length; ++i){
+                    let player = cc.find("game_end_bg/player"+i,this._layer);
+                    this.initPlayer(player, data.users[i], bigWinerScore);
+                }
             }
         })
     },
@@ -79,31 +64,27 @@ cc.Class({
         if(cc.vv.gameData) cc.vv.gameData.exitGame();
     },
 
-    initPlayer(player,user,dayingjiaID,createID){
+    initPlayer(player, user, bigWinerScore){
         if(player){
-            let head = player.getChildByName("head");
-            let icon = cc.find("radio_mask/spr_head",head);
-            Global.setHead(icon,user.usericon);
+            let spr_head = cc.find("head/radio_mask/spr_head",player);
+            Global.setHead(spr_head, user.usericon);
 
-            // player.getChildByName("mask_master").active = (user.uid == createID);
-
+            player.getChildByName("flag_dayingjia").active = (user.scoreCount === bigWinerScore);
             player.getChildByName("txt_name").getComponent(cc.Label).string = user.playername;
             player.getChildByName("txt_id").getComponent(cc.Label).string = "ID:"+user.uid;
 
-            player.getChildByName("flag_dayingjia").active = user.uid === dayingjiaID;
+            player.getChildByName("text_bankerNum").getComponent(cc.Label).string = user.buckCount;
+            player.getChildByName("text_winNum").getComponent(cc.Label).string = user.winCount;
+            player.getChildByName("text_lossNum").getComponent(cc.Label).string = user.loseCount;
+            player.getChildByName("text_totalScxore").getComponent(cc.Label).string = user.score + "x" + user.beishu;
 
-            player.getChildByName("text_maxRoundScore").getComponent(cc.Label).string = "当局最高分数："+ user.highscore;
-            player.getChildByName("text_bombNum").getComponent(cc.Label).string = "打出炸弹数："+ user.zhadancount;
-            player.getChildByName("text_winLoseNum").getComponent(cc.Label).string = "胜负局数：" + user.winCount + "赢" + user.loseCount + "输";
-            player.getChildByName("text_scoreMul").getComponent(cc.Label).string = "积分倍数：" + user.score + "x" + user.beishu + "=" + user.scoreCount;
-
-            let bg_bar = player.getChildByName("bg_bar");
-            if (0 <= user.scoreCount) {
-                bg_bar.getComponent(cc.Sprite).spriteFrame = this.bg_bar_win;
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs((user.scoreCount)));
+            if (0 < user.scoreCount) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + user.scoreCount);
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
+            } else if (0 == user.scoreCount) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '0';
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
-                bg_bar.getComponent(cc.Sprite).spriteFrame = this.bg_bar_lose;
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs((user.scoreCount)));
             }

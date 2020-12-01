@@ -87,6 +87,10 @@ cc.Class({
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
 
+        Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
+        Global.registerEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,this.onRcvSelectColorNotify,this);
+        Global.registerEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,this.onRcvMaiCardNotify,this);
+
         this.recvDeskInfoMsg();
     },
 
@@ -121,6 +125,29 @@ cc.Class({
                     this.setShowTimeCount(true, data.actionInfo.nextaction.time);
                 }
             }
+        }
+    },
+
+    onRcvJiaoScoreNotify(data){
+        data = data.detail;
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+            this.setShowTimeCount(true, data.actionInfo.nextaction.time);
+        } else {
+            this.setShowTimeCount(false);
+        }
+    },
+
+    onRcvSelectColorNotify(data){
+        data = data.detail;
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 3 == data.actionInfo.nextaction.type) {
+            this.setShowTimeCount(true, data.actionInfo.nextaction.time);
+        }
+    },
+
+    onRcvMaiCardNotify(data){
+        data = data.detail;
+        if (data.actionInfo.nextaction.seat === this._seatIndex && 4 == data.actionInfo.nextaction.type) {
+            this.setShowTimeCount(true, data.actionInfo.nextaction.time);
         }
     },
 
