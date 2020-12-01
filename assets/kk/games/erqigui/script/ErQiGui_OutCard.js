@@ -73,7 +73,7 @@ cc.Class({
         if(this._outCardNode) {
             this._outCardNode.removeAllChildren();
         }
-        this.showNoOutCard(false);
+        // this.showNoOutCard(false);
         this.showOutCard();
     },
 
@@ -115,7 +115,7 @@ cc.Class({
             for (let i = 0; i < putCardsList.length; i++) {
                 if (putCardsList[i].seat === this._seatIndex) {
                     if (!(data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type)) {    //非当前出牌玩家才显示出牌情况
-                        this.showNoOutCard(putCardsList[i].isPass);
+                        // this.showNoOutCard(putCardsList[i].isPass);
                         this.showOutCard(putCardsList[i].outCards);
                     }
                 }
@@ -156,7 +156,7 @@ cc.Class({
         data = data.detail;
         if (data.actionInfo.curaction.seat === this._seatIndex) {
             let outCards = data.actionInfo.curaction.outCards;
-            this.showNoOutCard(0 == outCards.length);
+            // this.showNoOutCard(0 == outCards.length);
             this.showOutCard(outCards);
             this.setShowTimeCount(false);
             if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
@@ -169,13 +169,16 @@ cc.Class({
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
             if (0 == this._UISeat || 2 != data.actionInfo.nextaction.type) {
-                this.showNoOutCard(false);
+                // this.showNoOutCard(false);
                 this.showOutCard();
             }
             if (0 < data.actionInfo.nextaction.type) {
                 this.setShowTimeCount(true, data.actionInfo.nextaction.time);
             }
         }
+        // if (data.isOverRound) {
+        //     this.showOutCard();
+        // }
     },
 
     onRecvHandCard(data){
@@ -284,9 +287,9 @@ cc.Class({
         }
     },
 
-    showNoOutCard(bShow){
-        this.mask_onOut.active = bShow;
-    },
+    // showNoOutCard(bShow){
+    //     this.mask_onOut.active = bShow;
+    // },
 
     recvRoundOver(data){
         data = data.detail;

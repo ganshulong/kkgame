@@ -101,9 +101,8 @@ cc.Class({
             this.bg_right_top = cc.find("scene/bg_right_top",this.node);
             this.setTableJiaoZhu(-1);
             this.setTableJiaoScore(-1);
-            this.setTableZhuaScore(-1);
             this.setTableYuScore(-1);
-
+            this.setTableZhuaScore(-1);
             this.setCurTableScore(0);
             this.showBankerOperateTips(0);
 
@@ -162,16 +161,17 @@ cc.Class({
                         if (0 === this._chairId && data.actionInfo.nextaction.seat != this._seatIndex) {
                             this.showBankerOperateTips(data.actionInfo.nextaction.type);
                         }
+
+                        this.btn_checkCard.active = (4 == data.actionInfo.nextaction.type);
+                        this.btn_checkScore.active = (4 == data.actionInfo.nextaction.type);
+                        this.btn_diCard.active = (4 == data.actionInfo.nextaction.type && this._seatIndex == data.actionInfo.curaction.jiaoFen.maxJiaoSeat);
+
+                        this.setTableJiaoZhu(data.jiaoZhu);
+                        this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
+                        this.setTableZhuaScore(data.actionInfo.curaction.zhuafen);
+                        this.setTableYuScore(data.actionInfo.curaction.yufen);
+                        this.setCurTableScore(data.actionInfo.curaction.tablefen);
                     }
-
-                    this.btn_checkCard.active = (4 == data.actionInfo.nextaction.type);
-                    this.btn_checkScore.active = (4 == data.actionInfo.nextaction.type);
-                    this.btn_diCard.active = (4 == data.actionInfo.nextaction.type && this._seatIndex == data.actionInfo.curaction.jiaoFen.maxJiaoSeat);
-
-                    this.setTableJiaoZhu(data.jiaoZhu);
-                    this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
-                    this.setTableZhuaScore(data.actionInfo.zhuafen);
-                    this.setTableYuScore(data.actionInfo.yufen);
                 }
             }
         }
@@ -183,7 +183,6 @@ cc.Class({
             this.btn_checkCard.active = false;
             this.btn_checkScore.active = false;
             this.showOperateBtn(false);
-            this.showBankerOperateTips(0);
         }
     },
 
@@ -350,7 +349,13 @@ cc.Class({
                 let cardOffsetIndexX = 0;
                 for (let j = 0; j < msg.chaPai[i].outCards.length; j++) {
                     for (let k = 0; k < msg.chaPai[i].outCards[j].length; k++) {
-                        let node = this.node.getComponent("ErQiGui_Card").createCard(msg.chaPai[i].outCards[j][k]);
+                        let cardValue = msg.chaPai[i].outCards[j][k];
+                        let node = this.node.getComponent("ErQiGui_Card").createCard(cardValue);
+                        if ((5 == (cardValue%0x10)) ||
+                            (10 == (cardValue%0x10)) ||
+                            (13 == (cardValue%0x10))) {
+                            node.color = new cc.Color(255, 150, 150);
+                        }
                         node.parent = outCards;
                         node.scale = cardScale;
                         node.x = cardOffsetX * cardOffsetIndexX++;
@@ -364,6 +369,23 @@ cc.Class({
 
     onRcvCheckScore(msg){
         if (200 == msg.code) {
+            let cards = msg.chaFen.cards;
+            let node_scoreCards = this.panel_checkScore.getChildByName("node_scoreCards");
+            node_scoreCards.removeAllChildren();
+            let cardScale = 0.65;
+            let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
+            let cardStartPosX = -(cardOffsetX * (cards.length-1))/2;
+            let allCardWidth = cardOffsetX * (cards.length + 1);
+            if (node_scoreCards.width < allCardWidth) {
+                cardOffsetX = node_scoreCards.width / (cards.length + 1);
+                cardStartPosX = -(cardOffsetX * (cards.length-1))/2;
+            }
+            for(let i = 0; i < cards.length; ++i){
+                let node = this.node.getComponent("ErQiGui_Card").createCard(cards[i]);
+                node.parent = node_scoreCards;
+                node.scale = cardScale;
+                node.x = cardStartPosX + cardOffsetX * i;
+            }
             this.panel_checkScore.active = true;
         }
     },
@@ -380,18 +402,18 @@ cc.Class({
     },
 
     setTableZhuaScore(score = -1){
-        if (0 > score) {
-            this.bg_right_top.getChildByName("text_zhuaScore").getComponent(cc.Label).string = "";
-        } else {
+        if (0 <= score) {
             this.bg_right_top.getChildByName("text_zhuaScore").getComponent(cc.Label).string = score;
+        } else {
+            this.bg_right_top.getChildByName("text_zhuaScore").getComponent(cc.Label).string = "";
         }
     },
 
     setTableYuScore(score = -1){
-        if (0 > score) {
-            this.bg_right_top.getChildByName("text_yuScore").getComponent(cc.Label).string = "";
-        } else {
+        if (0 <= score) {
             this.bg_right_top.getChildByName("text_yuScore").getComponent(cc.Label).string = score;
+        } else {
+            this.bg_right_top.getChildByName("text_yuScore").getComponent(cc.Label).string = "";
         }
     },
 
@@ -427,6 +449,14 @@ cc.Class({
             this.showOperateBtn(true, data.actionInfo);
         } else {
             this.showOperateBtn(false);
+        }
+
+        if (0 == this._chairId) {
+            this.setTableYuScore(data.actionInfo.curaction.yufen);
+            this.setCurTableScore(data.actionInfo.curaction.tablefen);
+            if (data.isOverRound) {
+                this.setTableZhuaScore(data.actionInfo.curaction.zhuafen);
+            }
         }
     },
 
@@ -496,6 +526,11 @@ cc.Class({
                 if (cc.vv.gameData.getRoomConf().param2) {
                     this.panel_selectColor45_btns.active = true;
                     showPanel = this.panel_selectColor45_btns;
+
+                    let btn_color5 = showPanel.getChildByName("btn_color5");
+                    btn_color5.getChildByName("text_cardNum").getComponent(cc.Label).string = cc.vv.gameData.getCardColor5Num(this._handCards, i);
+                    btn_color5.getChildByName("text_doubleNum").getComponent(cc.Label).string = cc.vv.gameData.getCardColor5DoubleNum(this._handCards, i) + "个对";
+
                 } else {
                     this.panel_selectColor_btns.active = true;
                     showPanel = this.panel_selectColor_btns;
@@ -771,8 +806,10 @@ cc.Class({
             this._handcardNode.removeAllChildren(true);
             this.setTableJiaoZhu(-1);
             this.setTableJiaoScore(-1);
-            this.setTableZhuaScore(-1);
             this.setTableYuScore(-1);
+            this.setTableZhuaScore(-1);
+            this.setCurTableScore(0);
+            this.showBankerOperateTips(0);
         }
     },
 

@@ -629,7 +629,29 @@ cc.Class({
             }
         }
         return count;
-    }
+    },
+
+    getCardColor5Num(cardlist, cardColor){
+        let count = 0;
+        for (let i = 0; i < cardlist.length; i++) {
+            if ((2 == (cardlist[i]%0x10)) || (7 == (cardlist[i]%0x10))) {
+                count++;
+            }
+        }
+        return count;
+    },
+
+    getCardColor5DoubleNum(cardlist, cardColor){
+        let count = 0;
+        for (let i = 0; i < cardlist.length - 1; i++) {
+            if ((cardlist[i] == cardlist[i+1]) &&
+                ((2 == (cardlist[i]%0x10)) || (7 == (cardlist[i]%0x10)))) {
+                count++;
+                i++;
+            }
+        }
+        return count;
+    },
 
 /*
 ** Define the messge id 

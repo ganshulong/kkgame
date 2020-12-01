@@ -195,4 +195,5 @@ codeCfg.code = {
     '446':"score_power",
     '445':"water_line_less",
     '447':"no_can_create_club",
+    '605':"out_card_type_error",
 }
