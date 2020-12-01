@@ -492,10 +492,18 @@ cc.Class({
                 this.panel_jiaoScore_btns.active = true;
 
             } else if (2 == type) {
+                let showPanel = null;
                 if (cc.vv.gameData.getRoomConf().param2) {
                     this.panel_selectColor45_btns.active = true;
+                    showPanel = this.panel_selectColor45_btns;
                 } else {
                     this.panel_selectColor_btns.active = true;
+                    showPanel = this.panel_selectColor_btns;
+                }
+                for (let i = 0; i < 4; i++) {
+                    let btn_color = showPanel.getChildByName("btn_color" + i);
+                    btn_color.getChildByName("text_cardNum").getComponent(cc.Label).string = cc.vv.gameData.getCardColorNum(this._handCards, i);
+                    btn_color.getChildByName("text_doubleNum").getComponent(cc.Label).string = cc.vv.gameData.getCardColorDoubleNum(this._handCards, i) + "个对";
                 }
 
             } else if (3 == type) {
