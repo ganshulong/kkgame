@@ -65,6 +65,9 @@ cc.Class({
             let player = null;
             if (data.users[i].seat == (data.banker || 1)) {
                 player = this._layer.getChildByName("playerBanker");
+                if (0 == data.banker) {
+                    player.getChildByName("spr_banker").active = false;
+                }
             } else {
                 player = this._layer.getChildByName("player" + xianCount++);
             }

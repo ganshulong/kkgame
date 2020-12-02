@@ -8,9 +8,10 @@ cc.Class({
         _atlas:null,
     },
 
-    init(atlas, star){
+    init(atlas, starSpr, maxCardSpr){
         this._atlas = atlas;
-        this._star = star;
+        this._starSpr = starSpr;
+        this._maxCardSpr = maxCardSpr;
     },
 
     // 0x32-0x35-0x3D : 黑桃2-黑桃5-黑桃k
@@ -32,11 +33,13 @@ cc.Class({
         spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame("card_"+resColor+"_"+resValue);
 
         if (cc.vv.gameData.getIsZhuCard(cardValue)) {
-            this.showZhuStar(spr);
+            this.showZhuStarSpr(spr);
         } else {
             spr.isZhuCard = false;
         }
-        
+
+        this.showMaxCardSpr(spr);
+
         spr.cardValue = cardValue;
         spr.isTouchSelect = false;
         spr.isSelect = false;
@@ -44,15 +47,25 @@ cc.Class({
         return spr;
     },
 
-    showZhuStar(node){
+    showZhuStarSpr(node){
         let starSpr = new cc.Node();
         starSpr.name = "starSpr";
         starSpr.addComponent(cc.Sprite);
-        starSpr.getComponent(cc.Sprite).spriteFrame = this._star;
+        starSpr.getComponent(cc.Sprite).spriteFrame = this._starSpr;
         starSpr.x = -40;
         starSpr.y = -60;
         starSpr.parent = node;
         node.isZhuCard = true;
+    },
+
+    showMaxCardSpr(node){
+        let maxCardSpr = new cc.Node();
+        maxCardSpr.name = "maxCardSpr";
+        maxCardSpr.addComponent(cc.Sprite);
+        maxCardSpr.getComponent(cc.Sprite).spriteFrame = this._maxCardSpr;
+        maxCardSpr.x = 50;
+        maxCardSpr.y = 80;
+        maxCardSpr.parent = node;
     },
     
     changCardBg(node,isMoPai){

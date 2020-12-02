@@ -17378,7 +17378,7 @@
       }
     ],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 500
@@ -18576,7 +18576,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_sure",
+    "_name": "btn_cancel",
     "_objFlags": 0,
     "_parent": {
       "__id__": 466
@@ -18593,7 +18593,7 @@
       }
     ],
     "_prefab": null,
-    "_id": "3ftyhlXqlKML5jAp1KD3uR",
+    "_id": "67rQ8VPqxE85R3ZAczr0Tg",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -18690,7 +18690,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "898be784-27ce-4467-a0be-91c62e3878a4"
+      "__uuid__": "bf1e3ddc-dc16-465e-8cce-c41353e44cf0"
     },
     "_type": 0,
     "_sizeMode": 2,
@@ -18709,7 +18709,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_cancel",
+    "_name": "btn_sure",
     "_objFlags": 0,
     "_parent": {
       "__id__": 466
@@ -18726,7 +18726,7 @@
       }
     ],
     "_prefab": null,
-    "_id": "67rQ8VPqxE85R3ZAczr0Tg",
+    "_id": "3ftyhlXqlKML5jAp1KD3uR",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -18823,7 +18823,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "bf1e3ddc-dc16-465e-8cce-c41353e44cf0"
+      "__uuid__": "898be784-27ce-4467-a0be-91c62e3878a4"
     },
     "_type": 0,
     "_sizeMode": 2,
@@ -46896,8 +46896,11 @@
     "emjoAtlas": {
       "__uuid__": "056a65b8-90e0-4a82-b6a8-b8c49f817f3c"
     },
-    "star": {
+    "starSpr": {
       "__uuid__": "cbd4aac3-ee84-405f-a2c6-8c4b2d8380cb"
+    },
+    "maxCardSpr": {
+      "__uuid__": "9567032a-0b31-4de0-bba2-9e2d1d7b174b"
     },
     "_gameCount": 0
   },

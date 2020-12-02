@@ -101,8 +101,8 @@ cc.Class({
             this.bg_right_top = cc.find("scene/bg_right_top",this.node);
             this.setTableJiaoZhu(-1);
             this.setTableJiaoScore(-1);
-            this.setTableYuScore(-1);
-            this.setTableZhuaScore(-1);
+            this.setTableYuScore(0);
+            this.setTableZhuaScore(0);
             this.setCurTableScore(0);
             this.showBankerOperateTips(0);
 
@@ -530,7 +530,15 @@ cc.Class({
                     btn_score.getComponent(cc.Button).interactable = (actionInfo.curaction.jiaoFen.maxJiaoFen < this.jiaoScoreList[i]);
                     btn_score.getChildByName("mask").active = false;
                 }
-                this.panel_jiaoScore_btns.active = true;
+                let self = this;
+                this.node.runAction(
+                    cc.sequence(
+                        cc.delayTime(1), 
+                        cc.callFunc(()=>{
+                            self.panel_jiaoScore_btns.active = true;
+                        }), 
+                    )
+                )
 
             } else if (2 == type) {
                 let showPanel = null;
@@ -566,7 +574,7 @@ cc.Class({
             } else if (4 == type) {
                 this.btn_outCard.active = true;
 
-
+                //gsltodo
                 // let cardIsCanOutList = this.getCardIsCanOutList(nextaction.hint);
                 // if (this.getIsInitCardSelectState(cardIsCanOutList)) {
                 //     this.initCardSelectState();
@@ -583,6 +591,7 @@ cc.Class({
     updateCardSelectNum(){
         let cards = this.getSelectedCards();
         this.text_curSelectNum.getComponent(cc.Label).string = cards.length;
+        this.btn_maidi.getComponent(cc.Button).interactable = (8 == cards.length);
     },
 
     getCardIsCanOutList(hint){
@@ -809,6 +818,9 @@ cc.Class({
             } else {
                 this.showOperateBtn(false);
             }
+
+            this.setTableZhuaScore(data.actionInfo.curaction.zhuafen);
+            this.setTableYuScore(data.actionInfo.curaction.yufen);
         }
     },
 
@@ -817,8 +829,8 @@ cc.Class({
             this._handcardNode.removeAllChildren(true);
             this.setTableJiaoZhu(-1);
             this.setTableJiaoScore(-1);
-            this.setTableYuScore(-1);
-            this.setTableZhuaScore(-1);
+            this.setTableYuScore(0);
+            this.setTableZhuaScore(0);
             this.setCurTableScore(0);
             this.showBankerOperateTips(0);
         }
