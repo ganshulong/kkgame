@@ -89,7 +89,7 @@ cc.Class({
 
         Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
         Global.registerEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,this.onRcvSelectColorNotify,this);
-        Global.registerEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,this.onRcvMaiCardNotify,this);
+        Global.registerEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,this.onRcvMaiCardNotify,this);        
 
         this.recvDeskInfoMsg();
     },
@@ -111,13 +111,11 @@ cc.Class({
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
         if(data.isReconnect && this._outCardNode){
-            let putCardsList = data.actionInfo.curaction.putCardsList;
-            for (let i = 0; i < putCardsList.length; i++) {
-                if (putCardsList[i].seat === this._seatIndex) {
-                    if (!(data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type)) {    //非当前出牌玩家才显示出牌情况
-                        // this.showNoOutCard(putCardsList[i].isPass);
-                        this.showOutCard(putCardsList[i].outCards);
-                    }
+            let curRoundOutCards = data.actionInfo.curOutCardInfo.curRoundOutCards;
+            for (let i = 0; i < curRoundOutCards.length; i++) {
+                if (curRoundOutCards[i].seat === this._seatIndex) {
+                    let isMaxOutCard = (this._seatIndex == data.actionInfo.curOutCardInfo.curMaxSeat);
+                    this.showOutCard(curRoundOutCards[i].cards, isMaxOutCard);
                 }
             }
             if (data.actionInfo.nextaction.seat === this._seatIndex) {
@@ -154,10 +152,11 @@ cc.Class({
     // 轮到谁出牌谁上一轮出的牌或者要不起就隐藏，但是在压死之后大家都要不起又轮到他出牌的时候，这时候好像上一轮的牌要等他出完牌才隐藏‘’
     onRcvOutCardNotify(data){
         data = data.detail;
+        let isMaxOutCard = (data.actionInfo.curaction.seat == data.actionInfo.curOutCardInfo.curMaxSeat);
         if (data.actionInfo.curaction.seat === this._seatIndex) {
             let outCards = data.actionInfo.curaction.outCards;
             // this.showNoOutCard(0 == outCards.length);
-            this.showOutCard(outCards);
+            this.showOutCard(outCards, isMaxOutCard);
             this.setShowTimeCount(false);
             if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
                 this.playCardAni(data.actionInfo.curaction.cardType);
@@ -165,6 +164,10 @@ cc.Class({
             // this.showCardNum(data.cardsCnt);
             if (1 == data.cardsCnt) {
                 cc.vv.AudioManager.playEff("paodekuai/", "alarm",true);
+            }
+        } else {
+            if (isMaxOutCard && 0 < this._outCardNode.children.length) {
+                this._outCardNode.children[this._outCardNode.children.length-1].getChildByName("maxCardSpr").active = false;
             }
         }
         if (data.actionInfo.nextaction.seat === this._seatIndex) {
@@ -269,7 +272,7 @@ cc.Class({
         }
     },
 
-    showOutCard(list){
+    showOutCard(list, isMaxOutCard = false){
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
             let cardScale = 0.4;
@@ -284,6 +287,9 @@ cc.Class({
             }
             for (let i = 0; i < list.length; i++) {
                 let node = this.node.getComponent("ErQiGui_Card").createCard(list[i]);
+                if (list.length - 1 == i) {
+                    node.getChildByName("maxCardSpr").active = isMaxOutCard;
+                }
                 node.scale = cardScale;
                 node.parent = this._outCardNode;
                 node.x = startPosX + cardOffsetX * i;

@@ -66,9 +66,6 @@ cc.Class({
             this.btn_maidi = this.panel_maidi_btns.getChildByName("btn_maidi");
             Global.btnClickEvent(this.btn_maidi,this.onClickMaiDi,this);
 
-            // 提示
-            // this.btn_tipCard = this._operateNode.getChildByName("btn_tipCard");
-            // Global.btnClickEvent(this.btn_tipCard,this.onClickTipCard,this);
             // 出
             this.btn_outCard = this._operateNode.getChildByName("btn_outCard");
             Global.btnClickEvent(this.btn_outCard,this.onClickOutCard,this);
@@ -430,7 +427,6 @@ cc.Class({
         data = data.detail;
         if (data.actionInfo.curaction.seat === this._seatIndex) {
             let outCards = data.actionInfo.curaction.outCards;
-            this.initCardHintState();
             if (0 < outCards.length) {
                 let handCards = this._handCards.slice(0);
                 for (let o = 0; o < outCards.length; o++) {
@@ -471,41 +467,13 @@ cc.Class({
         }
     },
 
-    onClickTipCard(){
-        if (0 < this.hintList.length) {
-            this.initCardSelectState();
-            ++this.hintIndex;
-            this.hintIndex = this.hintIndex % this.hintList.length;
-            this.popHintCards(this.hintList[this.hintIndex]);
-        } else {
-            cc.vv.FloatTip.show("本轮首出，无法提示");
-        }
-    },
-
-    popHintCards(hintCards){
-        for (let i = 0; i < hintCards.length; i++) {
-            let finIndex = 0;
-            for (let finIndex = 0; finIndex < this._handCards.length; finIndex++) {
-                if (hintCards[i] == this._handCards[finIndex]) {
-                    this._handcardNode.children[finIndex].isSelect = true;
-                    this._handcardNode.children[finIndex].y = 50;
-                    break;
-                }
-            }
-        }
-        
-    },
-
     onClickOutCard(){
         let cards = this.getSelectedCards();
         if (0 < cards.length) {
-            // let typeCards = this.ErQiGui_CardLogicJS.checkCardIsCanOut(cards, this._handCards.length, this.curaction);
-            // if (0 < cards.length) {
-                let req = {c: MsgId.OUT_CARD};
-                req.cards = cards;
-                cc.vv.NetManager.send(req);
-                return;
-            // }
+            let req = {c: MsgId.OUT_CARD};
+            req.cards = cards;
+            cc.vv.NetManager.send(req);
+            return;
         }
         cc.vv.FloatTip.show("无效出牌");
     },
@@ -574,17 +542,23 @@ cc.Class({
             } else if (4 == type) {
                 this.btn_outCard.active = true;
 
-                //gsltodo
+                this.initCardSelectState();
+                // this.initCardCanOutState();
+
                 // let cardIsCanOutList = this.getCardIsCanOutList(nextaction.hint);
-                // if (this.getIsInitCardSelectState(cardIsCanOutList)) {
-                //     this.initCardSelectState();
-                // }
-                // this.setCardHintState(cardIsCanOutList);
-                // this.hintList = nextaction.hint;
-                // this.hintIndex = -1;
+                // this.setCardCanOutState(cardIsCanOutList);
             }
         } else {
             this.curaction = null;
+        }
+    },
+
+    initCardSelectState(){
+        for (let i = 0; i < this._handcardNode.children.length; i++) {
+            if (this._handcardNode.children[i].isSelect) {
+                this._handcardNode.children[i].isSelect = false;
+                this._handcardNode.children[i].y =  0;
+            }
         }
     },
 
@@ -618,49 +592,20 @@ cc.Class({
         return cardIsCanOutList;
     },
 
-    getIsInitCardSelectState(cardIsCanOutList){
-        for (let i = 0; i < this._handCards.length; i++) {
-            if (this._handcardNode.children[i].isSelect && !cardIsCanOutList[this._handCards[i] % 0x10]) {
-                return true;
-            }
-        }
-        return false;
-    },
+    // initCardCanOutState(){
+    //     for (let i = 0; i < this._handcardNode.children.length; i++) {
+    //         if (this._handcardNode.children[i].isNoCanOut) {
+    //             this._handcardNode.children[i].isNoCanOut = false;
+    //             this._handcardNode.children[i].color = new cc.Color(255,255,255);
+    //         }
+    //     }
+    // },
 
-    initCardSelectState(){
-        for (let i = 0; i < this._handcardNode.children.length; i++) {
-            if (this._handcardNode.children[i].isSelect) {
-                this._handcardNode.children[i].isSelect = false;
-                this._handcardNode.children[i].y =  0;
-            }
-        }
-    },
-
-    initCardHintState(){
-        for (let i = 0; i < this._handcardNode.children.length; i++) {
-            if (this._handcardNode.children[i].isNoCanOut) {
-                this._handcardNode.children[i].isNoCanOut = false;
-                this._handcardNode.children[i].color = new cc.Color(255,255,255);
-            }
-        }
-    },
-
-    setCardHintState(cardIsCanOutList){
+    setCardCanOutState(cardIsCanOutList){
         for (let i = 0; i < this._handCards.length; i++) {
             if (!cardIsCanOutList[this._handCards[i] % 0x10]) {
                 this._handcardNode.children[i].isNoCanOut = true;
                 this._handcardNode.children[i].color = new cc.Color(100,100,100);
-            }
-        }
-    },
-
-    // 检查是否可以出牌
-    checkCanOutCard(seat){
-        if(0 == this._chairId){
-            if(this._seatIndex === seat){
-                this._canOutCard = true;
-            } else {
-                this._canOutCard = false;
             }
         }
     },
@@ -682,8 +627,19 @@ cc.Class({
             cardOffsetX /= 2;
             cardStartPosX /= 2;
         }
+        let diPai = cc.vv.gameData._deskInfo.buckPai.slice(0);
         for(let i = 0; i < this._handCards.length; ++i){
             let node = this.node.getComponent("ErQiGui_Card").createCard(this._handCards[i]);
+            if (24 == this._handCards.length) {
+                for (let j = 0; j < diPai.length; j++) {
+                    if (diPai[j] == this._handCards[i]) {
+                        diPai.splice(j, 1);
+                        node.isDiPai = true;
+                        node.color = new cc.Color(100,100,100);
+                        break;
+                    }
+                }
+            }
             node.parent = this._handcardNode;
             node.cardOffsetX = cardOffsetX;
             let endPosX = cardStartPosX + cardOffsetX * i;
@@ -766,7 +722,11 @@ cc.Class({
                     card.color = new cc.Color(100,100,100);
                 } else {
                     card.isTouchSelect = false;
-                    card.color = new cc.Color(255,255,255); 
+                    if (card.isDiPai) {
+                        card.color = new cc.Color(100,100,100);
+                    } else {
+                        card.color = new cc.Color(255,255,255); 
+                    }
                 }
             }
         }
@@ -785,7 +745,11 @@ cc.Class({
             let card = this._handcardNode.children[i];
             if (card.isTouchSelect) {
                 card.isTouchSelect = false;
-                card.color = new cc.Color(255,255,255); 
+                if (card.isDiPai) {
+                    card.color = new cc.Color(100,100,100);
+                } else {
+                    card.color = new cc.Color(255,255,255); 
+                }
 
                 card.isSelect = !card.isSelect;
                 card.y = card.isSelect ? 50 : 0;

@@ -38,7 +38,7 @@ cc.Class({
             spr.isZhuCard = false;
         }
 
-        this.showMaxCardSpr(spr);
+        this.setMaxCardSpr(spr);
 
         spr.cardValue = cardValue;
         spr.isTouchSelect = false;
@@ -58,7 +58,7 @@ cc.Class({
         node.isZhuCard = true;
     },
 
-    showMaxCardSpr(node){
+    setMaxCardSpr(node){
         let maxCardSpr = new cc.Node();
         maxCardSpr.name = "maxCardSpr";
         maxCardSpr.addComponent(cc.Sprite);
@@ -66,6 +66,7 @@ cc.Class({
         maxCardSpr.x = 50;
         maxCardSpr.y = 80;
         maxCardSpr.parent = node;
+        maxCardSpr.active = false;
     },
     
     changCardBg(node,isMoPai){

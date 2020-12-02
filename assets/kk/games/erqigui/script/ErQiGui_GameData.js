@@ -224,7 +224,10 @@ cc.Class({
 
     onRcvSelectColorNotify(msg){
         if(msg.code == 200){
-            this._deskInfo.jiaoZhu = msg.jiaoZhu
+            this._deskInfo.jiaoZhu = msg.jiaoZhu;
+            if (msg.actionInfo.nextaction.seat === this._seatIndex && 3 == msg.actionInfo.nextaction.type) {
+                this._deskInfo.buckPai = msg.diPai;
+            }
             Global.dispatchEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,msg)           
         }
     },
