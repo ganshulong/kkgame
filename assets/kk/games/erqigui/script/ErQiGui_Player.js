@@ -59,6 +59,7 @@ cc.Class({
     registerMsg(){
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice, this);
         cc.vv.NetManager.registerMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, this);
+        cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_KUAI_NUM_NOTIFY, this.onRcvKuaiNumNotify, this);
 
         Global.registerEvent(EventId.GAME_RECONNECT_DESKINFO,this.recvDeskInfoMsg,this);
         Global.registerEvent(EventId.CHAT_NOTIFY,this.onRcvChatNotify,this);
@@ -93,6 +94,14 @@ cc.Class({
         if (!bHavePlayer && this._playerNode.active) {
             this._seatIndex = -1;
             this._playerNode.active = false;
+        }
+    },
+
+    onRcvKuaiNumNotify(msg){
+        if (200 == msg.code) {
+            if (msg.seat == this._seatIndex) {
+                this.setKuaiZiScore(msg.kuaiZiCount);
+            }
         }
     },
 
@@ -152,6 +161,7 @@ cc.Class({
     unregisterMsg(){
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_PLAYER_ENTER, this.onRcvPlayerComeNotice,false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.NOTICE_PLAYER_EXIT, this.onRcvPlayerExitNotice, false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_KUAI_NUM_NOTIFY, this.onRcvKuaiNumNotify, false,this);
     },
 
     onRcvChatNotify(data){
@@ -347,6 +357,8 @@ cc.Class({
             } else {
                 this.showBanker(false);
             }
+
+            this.setKuaiZiScore(user.kuaiZiCount);
         }
     },
 
@@ -358,6 +370,13 @@ cc.Class({
     setTotalScore(score){
         if (typeof score != 'undefined' && this._playerNode) {
             cc.find("txt_total_score",this._playerNode).getComponent(cc.Label).string = score;
+        }
+    },
+
+    // 筷子分
+    setKuaiZiScore(score){
+        if (typeof score != 'undefined' && this._playerNode) {
+            cc.find("txt_kuaizi_score",this._playerNode).getComponent(cc.Label).string = score;
         }
     },
 
