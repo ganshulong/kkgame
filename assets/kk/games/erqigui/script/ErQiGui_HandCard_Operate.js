@@ -351,7 +351,7 @@ cc.Class({
                         if ((5 == (cardValue%0x10)) ||
                             (10 == (cardValue%0x10)) ||
                             (13 == (cardValue%0x10))) {
-                            node.color = new cc.Color(255, 150, 150);
+                            node.color = new cc.Color(255, 200, 200);
                         }
                         node.parent = outCards;
                         node.scale = cardScale;
@@ -447,7 +447,7 @@ cc.Class({
                 let self = this;
                 this.node.runAction(
                     cc.sequence(
-                        cc.delayTime(0.5), 
+                        cc.delayTime(1), 
                         cc.callFunc(()=>{
                             self.showOperateBtn(true, data.actionInfo);
                         }), 
@@ -498,15 +498,19 @@ cc.Class({
                     btn_score.getComponent(cc.Button).interactable = (actionInfo.curaction.jiaoFen.maxJiaoFen < this.jiaoScoreList[i]);
                     btn_score.getChildByName("mask").active = false;
                 }
-                let self = this;
-                this.node.runAction(
-                    cc.sequence(
-                        cc.delayTime(1), 
-                        cc.callFunc(()=>{
-                            self.panel_jiaoScore_btns.active = true;
-                        }), 
+                if (actionInfo.curaction.jiaoFen.curJiaoSeat) {
+                    this.panel_jiaoScore_btns.active = true;
+                } else {
+                    let self = this;
+                    this.node.runAction(
+                        cc.sequence(
+                            cc.delayTime(1), 
+                            cc.callFunc(()=>{
+                                self.panel_jiaoScore_btns.active = true;
+                            }), 
+                        )
                     )
-                )
+                }
 
             } else if (2 == type) {
                 let showPanel = null;
@@ -545,7 +549,7 @@ cc.Class({
                     this.initCardSelectState();
                     this.initCardCanOutState();
                     if (0 < actionInfo.curOutCardInfo.curRoundOutCards.length &&
-                        2 > actionInfo.curOutCardInfo.curRoundOutCards.length) {
+                        cc.vv.gameData.getRoomConf().seat > actionInfo.curOutCardInfo.curRoundOutCards.length) {
                         let firstOutCards = actionInfo.curOutCardInfo.curRoundOutCards[0].cards;
                         this.checkCardCanOutState(firstOutCards);
                     }
@@ -589,12 +593,21 @@ cc.Class({
             isZhu = true;
         }
         if (cardColorNum >= firstOutCards.length) {
-            if (4 == firstOutCards.length) {    //拖拉机
-                let cardColorCompanyCards = cc.vv.gameData.getCardColorCompanyCards(this._handCards, cardColor);
-                if (0 < cardColorCompanyCards.length) {
-                    this.setCardCanOutState(cardColorCompanyCards)
+            if (4 <= firstOutCards.length) {    //拖拉机
+                if (isZhu) {
+                    let cardZhuCompanyCards = cc.vv.gameData.getCardZhuCompanyCards(this._handCards, cardColor);
+                    if (cardZhuCompanyCards.length*2 >= firstOutCards.length) {
+                        this.setCardCanOutState(cardZhuCompanyCards);
+                    } else {
+                        this.setZhuCardCanOut();
+                    }
                 } else {
-                    this.setCardCanOutState([], cardColor);
+                    let cardColorCompanyCards = cc.vv.gameData.getCardColorCompanyCards(this._handCards, cardColor);
+                    if (cardColorCompanyCards.length*2 >= firstOutCards.length) {
+                        this.setCardCanOutState(cardColorCompanyCards);
+                    } else {
+                        this.setCardCanOutState([], cardColor);
+                    }
                 }
 
             } else if (2 == firstOutCards.length) {    //对子
@@ -634,7 +647,7 @@ cc.Class({
                 }
                 if (cardList.length == findIndex) {
                     this._handcardNode.children[i].isNoCanOut = true;
-                    this._handcardNode.children[i].color = new cc.Color(100,100,100);
+                    this._handcardNode.children[i].color = cc.vv.gameData.CardNoCanOutColor;
                 }
             }
         } else {
@@ -642,7 +655,7 @@ cc.Class({
                 if ((cc.vv.gameData.getIsZhuCard(this._handcardNode.children[i].cardValue)) ||
                     (parseInt(this._handcardNode.children[i].cardValue/0x10) != cardColor)) {
                     this._handcardNode.children[i].isNoCanOut = true;
-                    this._handcardNode.children[i].color = new cc.Color(100,100,100);
+                    this._handcardNode.children[i].color = cc.vv.gameData.CardNoCanOutColor;
                 }
             }
         }
@@ -652,7 +665,7 @@ cc.Class({
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             if (!cc.vv.gameData.getIsZhuCard(this._handcardNode.children[i].cardValue)) {
                 this._handcardNode.children[i].isNoCanOut = true;
-                this._handcardNode.children[i].color = new cc.Color(100,100,100);
+                this._handcardNode.children[i].color = cc.vv.gameData.CardNoCanOutColor;
             }
         }
     },
@@ -682,7 +695,7 @@ cc.Class({
                     if (diPai[j] == this._handCards[i]) {
                         diPai.splice(j, 1);
                         node.isDiPai = true;
-                        node.color = new cc.Color(100,100,100);
+                        node.color = cc.vv.gameData.CardNoCanOutColor;
                         break;
                     }
                 }
@@ -766,11 +779,11 @@ cc.Class({
                    (touchLeftPosX < cardRightPosX && touchRightPosX > cardRightPosX) ||
                    (cardLeftPosX < touchLeftPosX && cardRightPosX > touchLeftPosX)){
                     card.isTouchSelect = true;
-                    card.color = new cc.Color(100,100,100);
+                    card.color = cc.vv.gameData.CardNoCanOutColor;
                 } else {
                     card.isTouchSelect = false;
                     if (card.isDiPai) {
-                        card.color = new cc.Color(100,100,100);
+                        card.color = cc.vv.gameData.CardNoCanOutColor;
                     } else {
                         card.color = new cc.Color(255,255,255); 
                     }
@@ -793,7 +806,7 @@ cc.Class({
             if (card.isTouchSelect) {
                 card.isTouchSelect = false;
                 if (card.isDiPai) {
-                    card.color = new cc.Color(100,100,100);
+                    card.color = cc.vv.gameData.CardNoCanOutColor;
                 } else {
                     card.color = new cc.Color(255,255,255); 
                 }

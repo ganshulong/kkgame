@@ -44,6 +44,7 @@ cc.Class({
     },
 
     init(data){
+        this.CardNoCanOutColor = new cc.Color(150,150,150);
         this.CardWidth = 161;
         this.CardScale = 0.8;
         this.RoomSeat = 4;
@@ -666,6 +667,19 @@ cc.Class({
         return count;
     },
 
+    getCardZhuCompanyCards(cardlist, cardColor){
+        let tempList = cardlist.slice(0);;
+        let cardZhuCompanyCards = [];
+        for (let i = 0; i < tempList.length - 1; i++) {
+            if (this.getIsZhuCard(cardlist[i]) &&
+                (tempList[i] == tempList[i+1])) {
+                cardZhuCompanyCards.push(tempList[i]);
+                i++;
+            }
+        }
+        return cardZhuCompanyCards;
+    },
+
     getCardColorCompanyCards(cardlist, cardColor){
         let tempList = [];
         for (let i = 0; i < cardlist.length; i++) {
@@ -683,12 +697,9 @@ cc.Class({
             return -(a - b);    //从大到小
         });
         let cardColorCompanyCards = [];
-        for (let i = 0; i < tempList.length - 3; i++) {
-            if ((tempList[i] == tempList[i+1]) &&
-                (tempList[i] == tempList[i+2]+1) &&
-                (tempList[i] == tempList[i+3]+1)) {
+        for (let i = 0; i < tempList.length - 1; i++) {
+            if (tempList[i] == tempList[i+1]) {
                 cardColorCompanyCards.push(tempList[i]);
-                cardColorCompanyCards.push(tempList[i+2]);
                 i++;
             }
         }

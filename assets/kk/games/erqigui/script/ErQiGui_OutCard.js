@@ -179,7 +179,7 @@ cc.Class({
             let self = this;
             this.node.runAction(
                 cc.sequence(
-                    cc.delayTime(0.5), 
+                    cc.delayTime(1), 
                     cc.callFunc(()=>{
                         self.showOutCard();
                     }), 
