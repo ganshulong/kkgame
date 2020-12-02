@@ -656,6 +656,70 @@ cc.Class({
         return count;
     },
 
+    getCardZhuNum(cardlist){
+        let count = 0;
+        for (let i = 0; i < cardlist.length; i++) {
+            if (this.getIsZhuCard(cardlist[i])) {
+                count++;
+            }
+        }
+        return count;
+    },
+
+    getCardColorCompanyCards(cardlist, cardColor){
+        let tempList = [];
+        for (let i = 0; i < cardlist.length; i++) {
+            if (parseInt(cardlist[i]/0x10) == cardColor) {
+                if (2 == (cardlist[i]%0x10) || 7 == (cardlist[i]%0x10)) {
+                    if (this._deskInfo.conf.param2 && (4 == this._deskInfo.jiaoZhu)) {    //四色玩法
+                        tempList.push(cardlist[i]);
+                    }
+                } else {
+                    tempList.push(cardlist[i]);
+                }
+            }
+        }
+        tempList.sort((a,b)=>{
+            return -(a - b);    //从大到小
+        });
+        let cardColorCompanyCards = [];
+        for (let i = 0; i < tempList.length - 3; i++) {
+            if ((tempList[i] == tempList[i+1]) &&
+                (tempList[i] == tempList[i+2]+1) &&
+                (tempList[i] == tempList[i+3]+1)) {
+                cardColorCompanyCards.push(tempList[i]);
+                cardColorCompanyCards.push(tempList[i+2]);
+                i++;
+            }
+        }
+        return cardColorCompanyCards;
+    },
+
+    getCardColorDoubleCards(cardlist, cardColor){
+        let cardColorDoubleCards = [];
+        for (let i = 0; i < cardlist.length - 1; i++) {
+            if ((!this.getIsZhuCard(cardlist[i])) &&
+                (cardlist[i] == cardlist[i+1]) &&
+                (parseInt(cardlist[i]/0x10) == cardColor)) {
+                cardColorDoubleCards.push(cardlist[i]);
+                i++;
+            }
+        }
+        return cardColorDoubleCards;
+    },
+
+    getCardZhuDoubleCards(cardlist){
+        let cardZhuDoubleCards = [];
+        for (let i = 0; i < cardlist.length - 1; i++) {
+            if (this.getIsZhuCard(cardlist[i]) &&
+                (cardlist[i] == cardlist[i+1])) {
+                cardZhuDoubleCards.push(cardlist[i]);
+                i++;
+            }
+        }
+        return cardZhuDoubleCards;
+    }
+
 /*
 ** Define the messge id 
 */
