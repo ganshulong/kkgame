@@ -163,8 +163,10 @@ cc.Class({
                         this.btn_checkScore.active = (4 == data.actionInfo.nextaction.type);
                         this.btn_diCard.active = (4 == data.actionInfo.nextaction.type && this._seatIndex == data.actionInfo.curaction.jiaoFen.maxJiaoSeat);
 
-                        this.setTableJiaoZhu(data.jiaoZhu);
-                        this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
+                        if (2 <= data.actionInfo.nextaction.type) {
+                            this.setTableJiaoZhu(data.jiaoZhu);
+                            this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
+                        }
                         this.setTableZhuaScore(data.actionInfo.curaction.zhuafen);
                         this.setTableYuScore(data.actionInfo.curaction.yufen);
                         this.setCurTableScore(data.actionInfo.curaction.tablefen);
@@ -194,7 +196,7 @@ cc.Class({
         if (0 === this._chairId && data.actionInfo.nextaction.seat != this._seatIndex && 2 == data.actionInfo.nextaction.type) {
             this.showBankerOperateTips(2);
         }
-        if (0 == this._chairId) {
+        if (0 == this._chairId && 2 == data.actionInfo.nextaction.type) {
             this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
         }
     },

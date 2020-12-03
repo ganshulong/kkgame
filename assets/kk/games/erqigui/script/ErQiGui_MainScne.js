@@ -33,7 +33,7 @@ cc.Class({
         // this.node.addComponent("ErQiGui_Operate");
         // this.node.addComponent("ErQiGui_Tips");
         // this.node.addComponent("ErQiGui_Action");
-        this.node.addComponent("ErQiGui_RemainCard");
+        // this.node.addComponent("ErQiGui_RemainCard");
         this.node.addComponent("ErQiGui_RoundOver");
         this.node.addComponent("ErQiGui_GameOver");
         this.node.addComponent("ErQiGui_Sound");
