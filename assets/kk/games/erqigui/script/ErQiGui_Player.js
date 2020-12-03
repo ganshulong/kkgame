@@ -75,7 +75,6 @@ cc.Class({
 
         Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
         Global.registerEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,this.onRcvSelectColorNotify,this);
-        Global.registerEvent(EventId.ERQIGUI_MAI_CARD_NOTIFY,this.onRcvMaiCardNotify,this);
     },
 
     onRcvUpdatePlayerInfo(){
@@ -123,10 +122,6 @@ cc.Class({
 
     onRcvSelectColorNotify(data){
         this.setJiaoScore();
-    },
-
-    onRcvMaiCardNotify(data){
-        
     },
 
     onRcvScoreUpdateNotify(data){
@@ -328,6 +323,7 @@ cc.Class({
             if(chairId === this._chairId){
                 this.initPlayerInfo(msg.user);
                 this._seatIndex = msg.user.seat;
+                cc.vv.AudioManager.playEff("erqigui/", "userin",true);
             }
         }
     },

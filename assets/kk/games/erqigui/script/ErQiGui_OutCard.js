@@ -73,7 +73,6 @@ cc.Class({
         if(this._outCardNode) {
             this._outCardNode.removeAllChildren();
         }
-        // this.showNoOutCard(false);
         this.showOutCard();
     },
 
@@ -155,15 +154,10 @@ cc.Class({
         let isMaxOutCard = (data.actionInfo.curaction.seat == data.actionInfo.curOutCardInfo.curMaxSeat);
         if (data.actionInfo.curaction.seat === this._seatIndex) {
             let outCards = data.actionInfo.curaction.outCards;
-            // this.showNoOutCard(0 == outCards.length);
             this.showOutCard(outCards, isMaxOutCard);
             this.setShowTimeCount(false);
             if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
                 this.playCardAni(data.actionInfo.curaction.cardType);
-            }
-            // this.showCardNum(data.cardsCnt);
-            if (1 == data.cardsCnt) {
-                cc.vv.AudioManager.playEff("paodekuai/", "alarm",true);
             }
         } else {
             if (isMaxOutCard && 0 < this._outCardNode.children.length) {
@@ -296,10 +290,6 @@ cc.Class({
             }
         }
     },
-
-    // showNoOutCard(bShow){
-    //     this.mask_onOut.active = bShow;
-    // },
 
     recvRoundOver(data){
         data = data.detail;
