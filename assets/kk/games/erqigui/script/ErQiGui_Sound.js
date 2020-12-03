@@ -45,14 +45,12 @@ cc.Class({
 
     playCardSound(audioType, outCards, seat){
         let soundName = "";
+        soundName += this.getLanguage();
+        soundName += this.getSex(seat);
         if (0 < audioType) {
-            soundName += this.getLanguage();
-            soundName += this.getSex(seat);
             soundName += "cards/";
             soundName += ["","type_bile","type_gaibi","type_biele","type_tractor","type_diaozhu","type_shuaipai",][audioType];
         } else {
-            soundName += "mandarin/"
-            soundName += this.getSex(seat);
             soundName += (1 == outCards.length) ? "card1/" : "card2/";
             let sex = cc.vv.gameData.getUserInfo(seat).sex;
             soundName += (1 == sex) ? "m_card_" : "f_card_";
@@ -96,10 +94,6 @@ cc.Class({
     },
 
     getLanguage(){
-        if(Global.language === 1) {
-            return "dialect/"
-        } else {
-            return "mandarin/";
-        }
+        return "mandarin/";
     },
 });
