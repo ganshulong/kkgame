@@ -88,8 +88,8 @@ cc.Class({
     getSex(seat){
         let user = cc.vv.gameData.getUserInfo(seat);
         if(user){
-            if(user.sex === 1) return "boy/";
-            else  return "girl/";
+            if(user.sex === 1) return "nan/";
+            else  return "nv/";
         }
     },
 

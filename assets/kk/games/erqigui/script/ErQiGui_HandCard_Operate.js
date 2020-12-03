@@ -548,8 +548,6 @@ cc.Class({
             } else if (4 == type) {
                 if (0 < this._handcardNode.children.length) {
                     this.btn_outCard.active = true;
-                    this.initCardSelectState();
-                    this.initCardCanOutState();
                     if (0 < actionInfo.curOutCardInfo.curRoundOutCards.length &&
                         cc.vv.gameData.getRoomConf().seat > actionInfo.curOutCardInfo.curRoundOutCards.length) {
                         let firstOutCards = actionInfo.curOutCardInfo.curRoundOutCards[0].cards;
@@ -595,6 +593,8 @@ cc.Class({
             isZhu = true;
         }
         if (cardColorNum >= firstOutCards.length) {
+            this.initCardSelectState();
+            this.initCardCanOutState();
             if (4 <= firstOutCards.length) {    //拖拉机
                 if (isZhu) {
                     let cardZhuCompanyCards = cc.vv.gameData.getCardZhuCompanyCards(this._handCards, cardColor);
