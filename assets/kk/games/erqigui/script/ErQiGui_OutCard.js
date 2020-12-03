@@ -28,10 +28,9 @@ cc.Class({
         }
 
         this.card_ani = cc.find("scene/out_cards/card_ani" + index, this.node);
-
-        // this.aircraft_ani = cc.find("scene/out_cards/aircraft_ani", this.node);
-        // this.aircraft_ani_Pos = cc.v2(this.node.width/2+this.aircraft_ani.width/2, 150);
-        // this.aircraft_ani.position = this.aircraft_ani_Pos;
+        for (var i = 0; i < this.card_ani.children.length; i++) {
+            this.card_ani.children[i].getChildByName("skeleton").active = false;
+        }
 
         this.ani_clock = cc.find("scene/out_cards/ani_clock" + index, this.node);
         this.setShowTimeCount(false);
@@ -156,8 +155,9 @@ cc.Class({
             let outCards = data.actionInfo.curaction.outCards;
             this.showOutCard(outCards, isMaxOutCard);
             this.setShowTimeCount(false);
-            if (cc.vv.gameData.CARDTYPE.CONNECT_CARD <= data.actionInfo.curaction.cardType) {
-                this.playCardAni(data.actionInfo.curaction.cardType);
+
+            if (1 == data.audioType || 2 == data.audioType || 6 == data.audioType) {
+                this.playCardAni(data.audioType);
             }
         } else {
             if (isMaxOutCard && 0 < this._outCardNode.children.length) {
@@ -216,54 +216,29 @@ cc.Class({
     },
 
     playCardAni(cardType){
-        if (cardType) {
-            let cardAniNode = null;
-            if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD || 
-                cardType == cc.vv.gameData.CARDTYPE.COMPANY_CARD ||
-                cardType == cc.vv.gameData.CARDTYPE.CHUN_TIAN) {
-                if (cardType == cc.vv.gameData.CARDTYPE.CONNECT_CARD) {
-                    cardAniNode = this.card_ani.getChildByName("connect_ani");
-                } else if (cardType == cc.vv.gameData.CARDTYPE.COMPANY_CARD) {
-                    cardAniNode = this.card_ani.getChildByName("company_ani");
-                } else {
-                    cardAniNode = this.card_ani.getChildByName("chuntian_ani");
-                }
-                cardAniNode.stopAllActions();
-                cardAniNode.active = true;
-                cardAniNode.scale = 0;
-                cardAniNode.runAction(
-                    cc.sequence(
-                        cc.scaleTo(0.3, 1.2, 1.2),
-                        cc.scaleTo(0.1, 0.8, 0.8),
-                        cc.scaleTo(0.1, 1.1, 1.1),
-                        cc.scaleTo(0.1, 1, 1),
-                        cc.delayTime(0.2),
-                        cc.callFunc(()=>{
-                            cardAniNode.active = false;
-                        })
-                    )
-                )
-
-            // } else if (cardType == cc.vv.gameData.CARDTYPE.AIRCRAFT) {
-            //     this.aircraft_ani.stopAllActions();
-            //     this.aircraft_ani.position = this.aircraft_ani_Pos;
-            //     this.aircraft_ani.runAction(cc.moveTo(1, cc.v2(-this.aircraft_ani_Pos.x, -this.aircraft_ani_Pos.y)));
-
-            } else if (cardType == cc.vv.gameData.CARDTYPE.BOMB_CARD) {
-                cardAniNode = this.card_ani.getChildByName("bomb_ani");
-                cardAniNode.stopAllActions();
-                cardAniNode.active = true;
-                cardAniNode.getComponent(cc.Animation).play("show");
-                cardAniNode.runAction(
-                    cc.sequence(
-                        cc.delayTime(0.85),
-                        cc.callFunc(()=>{
-                            cardAniNode.active = false;
-                        })
-                    )
-                )
+        let skeletonNode = cc.find("" + cardType + "/skeleton", this.card_ani);
+        skeletonNode.active = true;
+        let skeletonCom = skeletonNode.getComponent(sp.Skeleton);
+        skeletonCom.clearTrack(0);
+        if (1 == cardType) {
+            skeletonCom.setAnimation(0, "bile", false);
+        } else if (2 == cardType) {
+            skeletonCom.setAnimation(0, "gaibi", false);
+        } else if (2 == cardType) {
+            if (1 == this._UISeat) {
+                skeletonCom.setAnimation(0, "shuaipaib", false);
+            } else {
+                skeletonCom.setAnimation(0, "shuaipai", false);
             }
         }
+        skeletonNode.runAction(
+            cc.sequence(
+                cc.delayTime(1), 
+                cc.callFunc(()=>{
+                    skeletonNode.active = false;
+                }), 
+            )
+        )
     },
 
     showOutCard(list, isMaxOutCard = false){
@@ -296,11 +271,6 @@ cc.Class({
         for(let i=0;i<data.users.length;++i){
             if(data.users[i].seat === this._seatIndex){    
                 this.setShowTimeCount(false);
-                // this.ani_warn.active = false;     
-                if (data.users[i].isChunTian) {
-                    this.playCardAni(cc.vv.gameData.CARDTYPE.CHUN_TIAN);
-                    break;
-                }
             }
         }
     },

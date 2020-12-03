@@ -1,0 +1,80 @@
+{
+"skeleton": { "hash": "uo0ULbtDYPTA3EVwnNen6yn4ZDY", "spine": "3.6.52", "width": 1334, "height": 750, "images": "./gd/" },
+"bones": [
+	{ "name": "root", "y": 1.64 },
+	{ "name": "bile1", "parent": "root", "length": 51.12, "rotation": 90 },
+	{ "name": "gd_bl1", "parent": "bile1", "length": 43.84 },
+	{ "name": "gd_bl7", "parent": "bile1", "length": 35.7 },
+	{ "name": "gd_bl8", "parent": "bile1", "length": 43.84 }
+],
+"slots": [
+	{ "name": "bj", "bone": "root" },
+	{ "name": "gd_bl1", "bone": "gd_bl1", "attachment": "gd_bl1" },
+	{ "name": "gd_bl5", "bone": "gd_bl8", "attachment": "gd_bl1" },
+	{ "name": "gd_bl4", "bone": "gd_bl7", "color": "ffffff23", "attachment": "gd_bl1", "blend": "additive" }
+],
+"skins": {
+	"default": {
+		"gd_bl1": {
+			"gd_bl1": { "y": 0.04, "rotation": -90, "width": 238, "height": 138 }
+		},
+		"gd_bl4": {
+			"gd_bl1": { "y": 0.04, "rotation": -90, "width": 238, "height": 138 }
+		},
+		"gd_bl5": {
+			"gd_bl1": { "y": 0.04, "rotation": -90, "width": 238, "height": 138 }
+		}
+	}
+},
+"animations": {
+	"bile": {
+		"slots": {
+			"gd_bl4": {
+				"color": [
+					{ "time": 0, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.2, "color": "ffffff57" },
+					{ "time": 0.4333, "color": "ffffff00" }
+				]
+			},
+			"gd_bl5": {
+				"color": [
+					{ "time": 0, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.1333, "color": "ffffff00" },
+					{ "time": 0.1667, "color": "ffffffff" },
+					{ "time": 0.3, "color": "ffffff00" }
+				]
+			}
+		},
+		"bones": {
+			"gd_bl1": {
+				"translate": [
+					{ "time": 0, "x": 60, "y": 0 },
+					{ "time": 0.1667, "x": 0, "y": 0 }
+				],
+				"scale": [
+					{ "time": 0, "x": 1.983, "y": 1.983 },
+					{ "time": 0.1667, "x": 0.8, "y": 0.8, "curve": "stepped" },
+					{ "time": 0.5667, "x": 0.8, "y": 0.8 }
+				]
+			},
+			"gd_bl7": {
+				"scale": [
+					{ "time": 0, "x": 0.8, "y": 0.8, "curve": "stepped" },
+					{ "time": 0.2, "x": 0.8, "y": 0.8 },
+					{ "time": 0.4333, "x": 1.1, "y": 1.1 }
+				]
+			},
+			"gd_bl8": {
+				"translate": [
+					{ "time": 0.1667, "x": 0, "y": 0 }
+				],
+				"scale": [
+					{ "time": 0.1667, "x": 0.8, "y": 0.8 },
+					{ "time": 0.3, "x": 0.9, "y": 0.9 }
+				]
+			}
+		}
+	}
+}
+}
