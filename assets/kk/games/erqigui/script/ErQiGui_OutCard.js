@@ -31,6 +31,7 @@ cc.Class({
         for (var i = 0; i < this.card_ani.children.length; i++) {
             this.card_ani.children[i].getChildByName("skeleton").active = false;
         }
+        this.card_ani.active = true;
 
         this.ani_clock = cc.find("scene/out_cards/ani_clock" + index, this.node);
         this.setShowTimeCount(false);
@@ -224,7 +225,7 @@ cc.Class({
             skeletonCom.setAnimation(0, "bile", false);
         } else if (2 == cardType) {
             skeletonCom.setAnimation(0, "gaibi", false);
-        } else if (2 == cardType) {
+        } else if (6 == cardType) {
             if (1 == this._UISeat) {
                 skeletonCom.setAnimation(0, "shuaipaib", false);
             } else {
@@ -247,11 +248,11 @@ cc.Class({
             let cardScale = 0.4;
             let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
             let startPosX = 0;
-            if(0 == this._UISeat || 2 == this._UISeat){         // 上下 居中
+            if(0 == this._UISeat){         // 下 居中
                 startPosX = - (cardOffsetX * (list.length-1))/2;
-            } else if(this._UISeat === 1){  //右 右对齐
+            } else if(1 == this._UISeat){  //右 右对齐
                 startPosX = - cardOffsetX * (list.length-1);
-            } else if(this._UISeat === 2){  //左 左对齐
+            } else if(2 == this._UISeat || 3 == this._UISeat){  //左 左对齐
                 startPosX = 0;
             }
             for (let i = 0; i < list.length; i++) {
