@@ -68,7 +68,7 @@ cc.Class({
         maxCardSpr.getComponent(cc.Sprite).spriteFrame = this._maxCardSpr;
         maxCardSpr.scale = 1.4;
         maxCardSpr.x = 38;
-        maxCardSpr.y = 70;
+        maxCardSpr.y = 72;
         maxCardSpr.parent = node;
         maxCardSpr.active = false;
     },

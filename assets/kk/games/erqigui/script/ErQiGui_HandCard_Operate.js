@@ -575,14 +575,6 @@ cc.Class({
         this.btn_maidi.getComponent(cc.Button).interactable = (8 == cards.length);
     },
 
-    initCardCanOutState(){
-        for (let i = 0; i < this._handcardNode.children.length; i++) {
-            if (this._handcardNode.children[i].isNoCanOut) {
-                this._handcardNode.children[i].isNoCanOut = false;
-                this._handcardNode.children[i].color = new cc.Color(255,255,255);
-            }
-        }
-    },
 
     checkCardCanOutState(firstOutCards){
         let cardColor = parseInt(firstOutCards[0]/0x10);
@@ -593,8 +585,6 @@ cc.Class({
             isZhu = true;
         }
         if (cardColorNum >= firstOutCards.length) {
-            this.initCardSelectState();
-            this.initCardCanOutState();
             if (4 <= firstOutCards.length) {    //拖拉机
                 if (isZhu) {
                     let cardZhuCompanyCards = cc.vv.gameData.getCardZhuCompanyCards(this._handCards, cardColor);
@@ -648,16 +638,14 @@ cc.Class({
                     }
                 }
                 if (cardList.length == findIndex) {
-                    this._handcardNode.children[i].isNoCanOut = true;
-                    this._handcardNode.children[i].color = cc.vv.gameData.CardNoCanOutColor;
+                    this.setCardCanOut(this._handcardNode.children[i]);
                 }
             }
         } else {
             for (let i = 0; i < this._handcardNode.children.length; i++) {
                 if ((cc.vv.gameData.getIsZhuCard(this._handcardNode.children[i].cardValue)) ||
                     (parseInt(this._handcardNode.children[i].cardValue/0x10) != cardColor)) {
-                    this._handcardNode.children[i].isNoCanOut = true;
-                    this._handcardNode.children[i].color = cc.vv.gameData.CardNoCanOutColor;
+                    this.setCardCanOut(this._handcardNode.children[i]);
                 }
             }
         }
@@ -666,11 +654,18 @@ cc.Class({
     setZhuCardCanOut(){
         for (let i = 0; i < this._handcardNode.children.length; i++) {
             if (!cc.vv.gameData.getIsZhuCard(this._handcardNode.children[i].cardValue)) {
-                this._handcardNode.children[i].isNoCanOut = true;
-                this._handcardNode.children[i].color = cc.vv.gameData.CardNoCanOutColor;
+                this.setCardCanOut(this._handcardNode.children[i]);
             }
         }
     },
+
+    setCardCanOut(node){
+        node.isNoCanOut = true;
+        node.color = cc.vv.gameData.CardNoCanOutColor;
+        node.isSelect = false;
+        node.y =  0;
+    },
+
 
     showHandCard(list, bShowMoveAni = false){
         this._handCards = cc.vv.gameData.sortCard(list);

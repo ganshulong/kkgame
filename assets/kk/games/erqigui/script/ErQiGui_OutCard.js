@@ -37,36 +37,6 @@ cc.Class({
         this.setShowTimeCount(false);
     },
 
-    getEndPos(cardsNum){
-        let endPos = cc.v2(0,0);
-        let y = parseInt(cardsNum/5);   //竖行
-        let x = cardsNum%5;
-        let width = 37;
-        let height = 36;
-
-        // 下
-        if(this._UISeat === 0){
-            endPos.x = width*x;
-            endPos.y = height*y;
-
-        //右
-        } else if(this._UISeat === 1){
-            endPos.y = height*x;
-            endPos.x = -width*y;
-        
-        //上
-        } else if(this._UISeat === 2){
-            endPos.x = width*x;
-            endPos.y = -height*y;
-        
-        //左
-        } else if(this._UISeat === 3){
-            endPos.y = height*x;
-            endPos.x = width*y;
-        }
-        return endPos;
-    },
-
     clearDesk(){
         this._outCardValue = null;
         this._cardsNum = 0;
@@ -247,7 +217,7 @@ cc.Class({
     showOutCard(list, isMaxOutCard = false){
         this._outCardNode.removeAllChildren();
         if (list && 0 < list.length) {
-            let cardScale = 0.4;
+            let cardScale = 0.5;
             let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
             let startPosX = 0;
             if(0 == this._UISeat){         // 下 居中
