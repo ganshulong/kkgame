@@ -11,9 +11,9 @@ var GlobalVar = cc.Class({
 
     statics: {
   		// 登录游戏服地址
-        loginServerAddress:"47.241.145.84:7180",    //开发测试
-        // loginServerAddress:"123.57.94.118:7180",    //正式
-        resVersion:"1.2.21",
+        // loginServerAddress:"47.241.145.84:7180",    //开发测试
+        loginServerAddress:"123.57.94.118:7180",    //正式
+        resVersion:"1.2.22",
         
         //非常用的配置
         localVersion:true,
