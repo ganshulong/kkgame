@@ -100,6 +100,11 @@ cc.Class({
             this.setTableJiaoScore(-1);
             this.setTableYuScore(0);
             this.setTableZhuaScore(0);
+            this.curTableScore = cc.find("scene/curTableScore",this.node);
+            this.curTableScore.x = this.node.width/2;;
+            this.curTableScore.y = this.node.height/2+70;;
+            this.curTableScore.oldX = this.curTableScore.x;
+            this.curTableScore.oldY = this.curTableScore.y;
             this.setCurTableScore(0);
             this.showBankerOperateTips(0);
 
@@ -417,7 +422,7 @@ cc.Class({
     },
 
     setCurTableScore(score){
-        cc.find("scene/curTableScore",this.node).getComponent(cc.Label).string = (0 < score) ? score : "";;
+        this.curTableScore.getComponent(cc.Label).string = (0 < score) ? score : "";
     },
 
     showBankerOperateTips(curOperateType = 0){
@@ -463,8 +468,32 @@ cc.Class({
         if (0 == this._chairId) {
             this.setTableYuScore(data.actionInfo.curaction.yufen);
             this.setCurTableScore(data.actionInfo.curaction.tablefen);
-            if (data.isOverRound) {
-                this.setTableZhuaScore(data.actionInfo.curaction.zhuafen);
+            if (data.isOverRound && 0 < data.actionInfo.curaction.tablefen) {
+                let self = this;
+                if (data.actionInfo.curaction.jiaoFen.maxJiaoSeat == data.actionInfo.curOutCardInfo.curMaxSeat) {    //庄家赢
+                    self.curTableScore.runAction(
+                        cc.sequence(
+                            cc.delayTime(1), 
+                            cc.callFunc(()=>{
+                                self.setCurTableScore(0);
+                            }), 
+                        )
+                    )
+                } else {
+                    self.curTableScore.runAction(
+                        cc.sequence(
+                            cc.delayTime(0.3), 
+                            cc.moveBy(0.5, cc.v2(self.node.width/2-120, self.node.height/2-70-15)),
+                            cc.callFunc(()=>{
+                                self.setCurTableScore(0);
+                                self.curTableScore.x = self.curTableScore.oldX;
+                                self.curTableScore.y = self.curTableScore.oldY;
+                                self.setTableZhuaScore(data.actionInfo.curaction.zhuafen);
+                                cc.vv.AudioManager.playEff("erqigui/", "getScore",true);
+                            }), 
+                        )
+                    )
+                }
             }
         }
     },
