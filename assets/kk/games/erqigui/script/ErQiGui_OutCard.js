@@ -221,6 +221,7 @@ cc.Class({
         skeletonNode.active = true;
         let skeletonCom = skeletonNode.getComponent(sp.Skeleton);
         skeletonCom.clearTrack(0);
+        let showTime = 0.6;
         if (1 == cardType) {
             skeletonCom.setAnimation(0, "bile", false);
         } else if (2 == cardType) {
@@ -231,10 +232,11 @@ cc.Class({
             } else {
                 skeletonCom.setAnimation(0, "shuaipai", false);
             }
+            showTime = 1;
         }
         skeletonNode.runAction(
             cc.sequence(
-                cc.delayTime(1), 
+                cc.delayTime(showTime), 
                 cc.callFunc(()=>{
                     skeletonNode.active = false;
                 }), 
