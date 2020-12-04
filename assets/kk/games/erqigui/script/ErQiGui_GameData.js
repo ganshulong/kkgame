@@ -575,7 +575,7 @@ cc.Class({
             if (this.getIsZhuCard(tempList[i])) {
                 let resColor = parseInt(tempList[i]/0x10);
                 let resValue = (tempList[i]%0x10);
-                if (!(this._deskInfo.conf.param2 && (4 == this._deskInfo.jiaoZhu || -1 == this._deskInfo.jiaoZhu))) {
+                if (!(this._deskInfo.conf.param2 && 4 == this._deskInfo.jiaoZhu)) {
                     if (2 == resValue) {
                         tempList[i] += 0x200;
                     } else if (7 == resValue) {
@@ -600,7 +600,7 @@ cc.Class({
         let resColor = parseInt(cardValue/0x10);
         let resValue = (cardValue%0x10);
         if (2 == resValue || 7 == resValue) {
-            if (this._deskInfo.conf.param2 && (4 == this._deskInfo.jiaoZhu || -1 == this._deskInfo.jiaoZhu)) {    //四五色玩法
+            if (this._deskInfo.conf.param2 && (4 == this._deskInfo.jiaoZhu)) {    //四五色玩法
                 return false;
             } else {
                 return true
