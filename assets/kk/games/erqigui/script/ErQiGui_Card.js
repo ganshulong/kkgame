@@ -29,8 +29,11 @@ cc.Class({
         }
 
         let resColor = parseInt(cardValue / 0x10);
-        let resValue = (cardValue % 0x10 - 1);
-        spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame("card_"+resColor+"_"+resValue);
+        let resValue = (cardValue % 0x10);
+        spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(resColor+"-"+resValue);
+        spr.getComponent(cc.Sprite).sizeMode = cc.Sprite.SizeMode.CUSTOM;
+        spr.width = cc.vv.gameData.CardWidth;
+        spr.height = cc.vv.gameData.CardHeight;
 
         if (cc.vv.gameData.getIsZhuCard(cardValue)) {
             this.showZhuStarSpr(spr);
@@ -63,8 +66,9 @@ cc.Class({
         maxCardSpr.name = "maxCardSpr";
         maxCardSpr.addComponent(cc.Sprite);
         maxCardSpr.getComponent(cc.Sprite).spriteFrame = this._maxCardSpr;
-        maxCardSpr.x = 50;
-        maxCardSpr.y = 80;
+        maxCardSpr.scale = 1.4;
+        maxCardSpr.x = 38;
+        maxCardSpr.y = 70;
         maxCardSpr.parent = node;
         maxCardSpr.active = false;
     },

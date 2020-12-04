@@ -46,6 +46,7 @@ cc.Class({
     init(data){
         this.CardNoCanOutColor = new cc.Color(150,150,150);
         this.CardWidth = 161;
+        this.CardHeight = 227;
         this.CardScale = 0.8;
         this.RoomSeat = 4;
         this.OPERATETYPE={
