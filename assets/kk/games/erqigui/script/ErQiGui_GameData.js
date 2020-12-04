@@ -668,45 +668,6 @@ cc.Class({
         return count;
     },
 
-    getCardZhuCompanyCards(cardlist, cardColor){
-        let tempList = cardlist.slice(0);;
-        let cardZhuCompanyCards = [];
-        for (let i = 0; i < tempList.length - 1; i++) {
-            if (this.getIsZhuCard(cardlist[i]) &&
-                (tempList[i] == tempList[i+1])) {
-                cardZhuCompanyCards.push(tempList[i]);
-                i++;
-            }
-        }
-        return cardZhuCompanyCards;
-    },
-
-    getCardColorCompanyCards(cardlist, cardColor){
-        let tempList = [];
-        for (let i = 0; i < cardlist.length; i++) {
-            if (parseInt(cardlist[i]/0x10) == cardColor) {
-                if (2 == (cardlist[i]%0x10) || 7 == (cardlist[i]%0x10)) {
-                    if (this._deskInfo.conf.param2 && (4 == this._deskInfo.jiaoZhu)) {    //四色玩法
-                        tempList.push(cardlist[i]);
-                    }
-                } else {
-                    tempList.push(cardlist[i]);
-                }
-            }
-        }
-        tempList.sort((a,b)=>{
-            return -(a - b);    //从大到小
-        });
-        let cardColorCompanyCards = [];
-        for (let i = 0; i < tempList.length - 1; i++) {
-            if (tempList[i] == tempList[i+1]) {
-                cardColorCompanyCards.push(tempList[i]);
-                i++;
-            }
-        }
-        return cardColorCompanyCards;
-    },
-
     getCardColorDoubleCards(cardlist, cardColor){
         let cardColorDoubleCards = [];
         for (let i = 0; i < cardlist.length - 1; i++) {
