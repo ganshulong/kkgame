@@ -42,7 +42,7 @@ cc.Class({
                     let self = this;
                     this.scheduleOnce(()=>{
                         self._layer.active = true;
-                    },2);
+                    },3);
                 }
             })
         }

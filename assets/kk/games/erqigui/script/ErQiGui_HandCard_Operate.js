@@ -181,12 +181,55 @@ cc.Class({
         }
     },
 
-    recvRoundOver(){
+    recvRoundOver(data){
         if (0 === this._chairId) { 
             this.btn_diCard.active = false;
             this.btn_checkCard.active = false;
             this.btn_checkScore.active = false;
             this.showOperateBtn(false);
+            
+            data = data.detail;
+            if (data.iskoudi) {
+                let diCards = cc.find("scene/diCards",this.node);
+                diCards.removeAllChildren();
+                let cardScale = 0.5;
+                let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
+                let startPosX = - (cardOffsetX * (data.diPai.length-1))/2;
+                let self = this;
+                diCards.runAction(
+                    cc.sequence(
+                        cc.delayTime(1.1),
+                        cc.callFunc(()=>{
+                            for (let i = 0; i < data.diPai.length; i++) {
+                                let node = self.node.getComponent("ErQiGui_Card").createCard(data.diPai[i]);
+                                node.scale = cardScale;
+                                node.parent = diCards;
+                                node.x = startPosX + cardOffsetX * i;
+                                if ((5 == (data.diPai[i]%0x10)) ||
+                                    (10 == (data.diPai[i]%0x10)) ||
+                                    (13 == (data.diPai[i]%0x10))) {
+                                    node.y = 50 * cardScale;
+                                }
+                            }
+                        }), 
+                    )
+                )
+                if (0 < data.diFen) {
+                    self.setCurTableScore(data.diFen);
+                    self.curTableScore.runAction(
+                        cc.sequence(
+                            cc.delayTime(0.3), 
+                            cc.moveBy(0.5, cc.v2(self.node.width/2-120, self.node.height/2-70-15)),
+                            cc.callFunc(()=>{
+                                self.setCurTableScore(0);
+                                self.curTableScore.x = self.curTableScore.oldX;
+                                self.curTableScore.y = self.curTableScore.oldY;
+                                cc.vv.AudioManager.playEff("erqigui/", "getScore",true);
+                            }), 
+                        )
+                    )
+                }
+            }
         }
     },
 
@@ -912,6 +955,7 @@ cc.Class({
             this.setTableZhuaScore(0);
             this.setCurTableScore(0);
             this.showBankerOperateTips(0);
+            cc.find("scene/diCards",this.node).removeAllChildren();
         }
     },
 
