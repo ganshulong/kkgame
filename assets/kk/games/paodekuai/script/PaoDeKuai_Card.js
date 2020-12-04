@@ -33,9 +33,12 @@ cc.Class({
         let color = parseInt(cardValue / 0x10);
         let resColor = [3,2,1,0][color];
         let value = cardValue % 0x10;
-        let resValue = (0x0D < value) ? (value-14) : (value-1);
+        let resValue = (0x0D < value) ? (value-13) : (value);
 
-        spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame("card_"+resColor+"_"+resValue);
+        spr.getComponent(cc.Sprite).spriteFrame = this._atlas.getSpriteFrame(resColor+"-"+resValue);
+        spr.getComponent(cc.Sprite).sizeMode = cc.Sprite.SizeMode.CUSTOM;
+        spr.width = cc.vv.gameData.CardWidth;
+        spr.height = cc.vv.gameData.CardHeight;
         
         spr.cardValue = cardValue;
         spr.isTouchSelect = false;
