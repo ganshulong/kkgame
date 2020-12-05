@@ -12,7 +12,7 @@ var manifest = {
     packageUrl: 'http://123.57.94.118/remote-assets/',
     remoteManifestUrl: 'http://123.57.94.118/remote-assets/project.manifest',
     remoteVersionUrl: 'http://123.57.94.118/remote-assets/version.manifest',
-    version: '1.2.22',
+    version: '1.2.23',
     assets: {},
     searchPaths: []
 };
