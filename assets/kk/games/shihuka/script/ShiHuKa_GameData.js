@@ -302,7 +302,7 @@ cc.Class({
             list.push("同IP禁止进入 "); 
         } 
         if(conf.distance){
-            list.push("距离相近200米禁止加入 "); 
+            list.push("距离相近1000米禁止加入 "); 
         } 
         return list;
     },
