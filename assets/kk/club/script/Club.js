@@ -680,7 +680,7 @@ cc.Class({
                 item.getChildByName("text_index").getComponent(cc.Label).string = i + 1;
                 let prefabIcon = this.prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
                 item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
-                item.getChildByName("text_gameName").getComponent(cc.Label).string = Global.getGameName(tableTypeList[i].config.gameid);
+                item.getChildByName("text_gameName").getComponent(cc.Label).string = tableTypeList[i].config.tname;
                 item.getChildByName("text_onlineNum").getComponent(cc.Label).string = tableTypeList[i].onlineNum + "人在线";
                 item.getChildByName("text_round").getComponent(cc.Label).string = tableTypeList[i].config.gamenum + "局";
                 item.getChildByName("text_playerNum").getComponent(cc.Label).string = tableTypeList[i].config.seat + "人";

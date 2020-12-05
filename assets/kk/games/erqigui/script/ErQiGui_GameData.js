@@ -614,8 +614,7 @@ cc.Class({
         let count = 0;
         for (let i = 0; i < cardlist.length; i++) {
             if ((parseInt(cardlist[i]/0x10) == cardColor) && 
-                (2 != (cardlist[i]%0x10)) &&
-                (7 != (cardlist[i]%0x10))) {
+                (!this.getIsZhuCard(cardlist[i]))) {
                 count++;
             }
         }
@@ -627,8 +626,7 @@ cc.Class({
         for (let i = 0; i < cardlist.length - 1; i++) {
             if ((cardlist[i] == cardlist[i+1]) &&
                 (parseInt(cardlist[i]/0x10) == cardColor) && 
-                (2 != (cardlist[i]%0x10)) &&
-                (7 != (cardlist[i]%0x10))) {
+                (!this.getIsZhuCard(cardlist[i]))) {
                 count++;
                 i++;
             }
