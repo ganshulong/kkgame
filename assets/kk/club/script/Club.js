@@ -129,6 +129,7 @@ cc.Class({
         this.ruleSelectItem.active = false;
         let btn_ruleSelect = cc.find("Layer/img_bottomBg/btn_ruleSelect",this.node);
         Global.btnClickEvent(btn_ruleSelect,this.onClickRuleSelect,this);
+        this.prefabRes = this.panel_ruleSelect.getChildByName("prefabRes");
 
         let btn_backRoom = cc.find("Layer/img_bottomBg/btn_backRoom",this.node);
         Global.btnClickEvent(btn_backRoom,this.onClickBackRoom,this);
@@ -677,6 +678,8 @@ cc.Class({
                 item.parent = this.ruleSelectContent;
                 item.y = - item.height * i;
                 item.getChildByName("text_index").getComponent(cc.Label).string = i + 1;
+                let prefabIcon = this.prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
+                item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
                 item.getChildByName("text_gameName").getComponent(cc.Label).string = Global.getGameName(tableTypeList[i].config.gameid);
                 item.getChildByName("text_onlineNum").getComponent(cc.Label).string = tableTypeList[i].onlineNum + "人在线";
                 item.getChildByName("text_round").getComponent(cc.Label).string = tableTypeList[i].config.gamenum + "局";

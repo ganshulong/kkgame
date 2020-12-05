@@ -1461,7 +1461,7 @@ Global.getDataStr = function (year,month,day){
 }
 
 Global.getGameName = function (gameid){
-    let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快","红中","红中","十胡卡","十胡卡","同花","同花"];
+    let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快","红中","红中","十胡卡","十胡卡","同花","同花","二七鬼","二七鬼"];
     return gameNameStr[gameid];
 }
 
