@@ -265,8 +265,7 @@ cc.Class({
 
                 let text_roomInfo = roomInfo.getChildByName("text_roomInfo");
                 text_roomInfo.getChildByName("text_roomID").getComponent(cc.Label).string = "房间号：" + msg.data[i].deskid;
-                let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快","红中","红中","十胡卡","十胡卡"];
-                text_roomInfo.getChildByName("text_game_name").getComponent(cc.Label).string = gameNameStr[msg.data[i].gameid];
+                text_roomInfo.getChildByName("text_game_name").getComponent(cc.Label).string = Global.getGameName(msg.data[i].gameid);
                 text_roomInfo.getChildByName("text_game_jushu").getComponent(cc.Label).string = msg.data[i].gameNum + "局";
                 text_roomInfo.getChildByName("text_people_num").getComponent(cc.Label).string = msg.data[i].presonNum;
 
