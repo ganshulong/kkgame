@@ -371,7 +371,7 @@ cc.Class({
         if (Global.curRoomID) {
             this.sendEnterRoomMsg(Global.curRoomID);
         } else {
-            cc.vv.FloatTip.show("当前还未加入过桌子");
+            this.sendEnterRoomMsg(0);
         }
     },
 
