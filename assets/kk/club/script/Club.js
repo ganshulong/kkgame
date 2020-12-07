@@ -678,7 +678,7 @@ cc.Class({
                 item.parent = this.ruleSelectContent;
                 item.y = - item.height * i;
                 item.getChildByName("text_index").getComponent(cc.Label).string = i + 1;
-                let prefabIcon = this.prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
+                let prefabIcon = this.prefabRes.getChildByName(""+tableTypeList[i].config.gameid);
                 item.getChildByName("gameIcon").getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
                 item.getChildByName("text_gameName").getComponent(cc.Label).string = tableTypeList[i].config.tname;
                 item.getChildByName("text_onlineNum").getComponent(cc.Label).string = tableTypeList[i].onlineNum + "人在线";
@@ -710,6 +710,11 @@ cc.Class({
                         ruleStr += ["一胡一分","三胡一分"][tableTypeList[i].config.param1];
                         ruleStr += " ";
                         ruleStr += ["不带醒","翻醒","随醒"][tableTypeList[i].config.param2];
+                        break;
+                    case 17:
+                        ruleStr += "筷子" + tableTypeList[i].config.param1 + "分 "
+                        ruleStr += " ";
+                        ruleStr += ["","五色四色"][tableTypeList[i].config.param2];
                         break;
                 }
                 item.getChildByName("text_rule").getComponent(cc.Label).string = ruleStr;

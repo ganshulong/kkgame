@@ -12,7 +12,6 @@ cc.Class({
         _outCardY:0,
         _startPosX:null,
         _canOutCard:false,      // 可以出牌
-        _cardBoXPos:null,
         _handCardData:null,
         _canTouch:true,
     },
@@ -117,11 +116,6 @@ cc.Class({
             this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);
         }
-
-        let box = cc.find("scene/cardBox",this.node);
-        this._cardBoXPos = box.parent.convertToWorldSpaceAR(box.position);
-        this._cardBoXPos.x -= 8;
-        this._cardBoXPos.y += 24;
     },
 
     start () {
@@ -387,10 +381,13 @@ cc.Class({
         if (200 == msg.code) {
             let cardScale = 0.25;
             let cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
+            for (let i = 0; i < 4; i++) {
+                cc.find("bg_player" + i + "/txt_name", this.panel_checkCard).getComponent(cc.Label).string = "";
+                this.panel_checkCard.getChildByName("outCards"+i).removeAllChildren();
+            }
             for (let i = 0; i < msg.chaPai.length; i++) {
                 let playername = cc.vv.gameData.getUserInfo(msg.chaPai[i].seat).playername;
                 cc.find("bg_player" + i + "/txt_name", this.panel_checkCard).getComponent(cc.Label).string = playername;
-
                 let outCards = this.panel_checkCard.getChildByName("outCards"+i);
                 outCards.removeAllChildren();
                 let cardOffsetIndexX = 0;
