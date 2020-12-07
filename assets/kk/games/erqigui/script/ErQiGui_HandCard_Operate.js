@@ -147,28 +147,29 @@ cc.Class({
                 if(this._seatIndex === data.users[i].seat){
                     if (data.users[i].handInCards) {
                         this.showHandCard(data.users[i].handInCards);
+                        if (0 === this._chairId) {
+                            if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
+                                this.curaction = data.actionInfo.curaction;
+                                this.showOperateBtn(true, data.actionInfo);
+                            } else {
+                                this.showOperateBtn(false);
+                            }
+                            if (data.actionInfo.nextaction.seat != this._seatIndex) {
+                                this.showBankerOperateTips(data.actionInfo.nextaction.type);
+                            }
 
-                        if (data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type) {
-                            this.curaction = data.actionInfo.curaction;
-                            this.showOperateBtn(true, data.actionInfo);
-                        } else {
-                            this.showOperateBtn(false);
-                        }
-                        if (0 === this._chairId && data.actionInfo.nextaction.seat != this._seatIndex) {
-                            this.showBankerOperateTips(data.actionInfo.nextaction.type);
-                        }
+                            this.btn_checkCard.active = (4 == data.actionInfo.nextaction.type);
+                            this.btn_checkScore.active = (4 == data.actionInfo.nextaction.type);
+                            this.btn_diCard.active = (4 == data.actionInfo.nextaction.type && this._seatIndex == data.actionInfo.curaction.jiaoFen.maxJiaoSeat);
 
-                        this.btn_checkCard.active = (4 == data.actionInfo.nextaction.type);
-                        this.btn_checkScore.active = (4 == data.actionInfo.nextaction.type);
-                        this.btn_diCard.active = (4 == data.actionInfo.nextaction.type && this._seatIndex == data.actionInfo.curaction.jiaoFen.maxJiaoSeat);
-
-                        if (2 <= data.actionInfo.nextaction.type) {
-                            this.setTableJiaoZhu(data.jiaoZhu);
-                            this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
+                            if (2 <= data.actionInfo.nextaction.type) {
+                                this.setTableJiaoZhu(data.jiaoZhu);
+                                this.setTableJiaoScore(data.actionInfo.curaction.jiaoFen.maxJiaoFen);
+                            }
+                            this.setTableZhuaScore(data.actionInfo.curaction.zhuafen);
+                            this.setTableYuScore(data.actionInfo.curaction.yufen);
+                            this.setCurTableScore(data.actionInfo.curaction.tablefen);
                         }
-                        this.setTableZhuaScore(data.actionInfo.curaction.zhuafen);
-                        this.setTableYuScore(data.actionInfo.curaction.yufen);
-                        this.setCurTableScore(data.actionInfo.curaction.tablefen);
                     }
                 }
             }
@@ -549,7 +550,7 @@ cc.Class({
         cc.vv.FloatTip.show("无效出牌");
     },
 
-    showOperateBtn(bShow, actionInfo){
+    showOperateBtn(bShow, actionInfo, delayTimeShow = false){
         if (cc.vv.gameData._isPlayBack || 0 != this._chairId) {
             return;
         }
@@ -569,9 +570,7 @@ cc.Class({
                     btn_score.getComponent(cc.Button).interactable = (actionInfo.curaction.jiaoFen.maxJiaoFen < this.jiaoScoreList[i]);
                     btn_score.getChildByName("mask").active = false;
                 }
-                if (actionInfo.curaction.jiaoFen.curJiaoSeat) {
-                    this.panel_jiaoScore_btns.active = true;
-                } else {
+                if (delayTimeShow) {
                     let self = this;
                     this.node.runAction(
                         cc.sequence(
@@ -580,7 +579,9 @@ cc.Class({
                                 self.panel_jiaoScore_btns.active = true;
                             }), 
                         )
-                    )
+                    )                
+                } else {
+                    this.panel_jiaoScore_btns.active = true;
                 }
 
             } else if (2 == type) {
@@ -778,9 +779,9 @@ cc.Class({
             cardStartPosX = -(cardOffsetX * (this._handCards.length-1))/2;
         }
         if (cc.vv.gameData._isPlayBack && 0 < this._chairId) {
-            cardScale /= 2;
-            cardOffsetX /= 2;
-            cardStartPosX /= 2;
+            cardScale = 0.5;
+            cardOffsetX = cc.vv.gameData.CardWidth/2 * cardScale;
+            cardStartPosX = -(cardOffsetX * (this._handCards.length-1))/2;
         }
         let diPai = cc.vv.gameData._deskInfo.buckPai.slice(0);
         for(let i = 0; i < this._handCards.length; ++i){
@@ -933,7 +934,7 @@ cc.Class({
 
             if (this._seatIndex == data.actionInfo.nextaction.seat && 1 == data.actionInfo.nextaction.type) {
                 this.curaction = data.actionInfo.curaction;
-                this.showOperateBtn(true, data.actionInfo);
+                this.showOperateBtn(true, data.actionInfo, true);
             } else {
                 this.showOperateBtn(false);
             }
