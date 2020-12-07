@@ -714,7 +714,7 @@ cc.Class({
                     case 17:
                         ruleStr += "筷子" + tableTypeList[i].config.param1 + "分 "
                         ruleStr += " ";
-                        ruleStr += ["","五色四色"][tableTypeList[i].config.param2];
+                        ruleStr += ["不打五色四色 ","打五色四色 "][tableTypeList[i].config.param2];
                         break;
                 }
                 item.getChildByName("text_rule").getComponent(cc.Label).string = ruleStr;

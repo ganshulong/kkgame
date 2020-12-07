@@ -315,9 +315,7 @@ cc.Class({
         list.push(conf.gamenum+"局 ");
         list.push(conf.seat+ "人 ");
         list.push("筷子" + conf.param1 + "分 ");
-        if (conf.param2) {
-            list.push("五色四色 ");
-        }
+        list.push(["不打五色四色 ","打五色四色 "][conf.param2]);
         list.push(conf.score+ "倍 ");
         if(conf.speed === 1){
             list.push("快速 ");
