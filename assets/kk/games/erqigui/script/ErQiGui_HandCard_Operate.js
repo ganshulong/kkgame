@@ -278,9 +278,11 @@ cc.Class({
             }
             this.showHandCard(this._handCards);
             
-            this.btn_diCard.active = true;
+            if (!cc.vv.gameData._isPlayBack) {
+                this.btn_diCard.active = true;
+            }
         }
-        if (0 == this._chairId) {
+        if (0 == this._chairId && !cc.vv.gameData._isPlayBack) {
             this.btn_checkCard.active = true;
             this.btn_checkScore.active = true;
         }
