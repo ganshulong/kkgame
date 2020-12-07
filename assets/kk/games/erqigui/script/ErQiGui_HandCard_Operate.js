@@ -61,9 +61,16 @@ cc.Class({
             this.panel_maidi_btns = this._operateNode.getChildByName("panel_maidi_btns");
             this.text_curSelectNum = this.panel_maidi_btns.getChildByName("text_curSelectNum");
             this.btn_surrender = this.panel_maidi_btns.getChildByName("btn_surrender");
-            Global.btnClickEvent(this.btn_surrender,this.onClickSurrender,this);
+            Global.btnClickEvent(this.btn_surrender,this.onClickShowSurrender,this);
             this.btn_maidi = this.panel_maidi_btns.getChildByName("btn_maidi");
             Global.btnClickEvent(this.btn_maidi,this.onClickMaiDi,this);
+
+            this.panel_surrender = cc.find("scene/panel_surrender",this.node);
+            this.panel_surrender.active = false;
+            let btn_cancelSurrender = this.panel_surrender.getChildByName("btn_cancelSurrender");
+            Global.btnClickEvent(btn_cancelSurrender,this.onClickCancelSurrender,this);
+            let btn_defineSurrender = this.panel_surrender.getChildByName("btn_defineSurrender");
+            Global.btnClickEvent(btn_defineSurrender,this.onClickDefineSurrender,this);
 
             // 出
             this.btn_outCard = this._operateNode.getChildByName("btn_outCard");
@@ -319,7 +326,16 @@ cc.Class({
         cc.vv.NetManager.send(req);
     },
 
-    onClickSurrender(){
+    onClickShowSurrender(){
+        this.panel_surrender.active = true;
+    },
+
+    onClickCancelSurrender(){
+        this.panel_surrender.active = false;
+    },
+
+    onClickDefineSurrender(){
+        this.panel_surrender.active = false;
         let req = {c: MsgId.ERQIGUI_SURRENDER};
         cc.vv.NetManager.send(req);
     },
