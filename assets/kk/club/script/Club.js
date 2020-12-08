@@ -117,6 +117,8 @@ cc.Class({
         Global.btnClickEvent(this.btn_member,this.onClickMember,this);
         this.btn_member.active = (info.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
 
+        this.node.addComponent("ClubWaterRecord");
+
         this.node.addComponent("ClubRecord");
         this.ClubRecordJS = this.node.getComponent("ClubRecord");
 
