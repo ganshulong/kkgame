@@ -631,7 +631,7 @@ cc.Class({
     },
 
     setPower(power){
-        cc.find("Layer/bg/power_bg/text_power", this.node).getComponent(cc.Label).string = power.toFixed(1);
+        cc.find("Layer/bg/power_bg/text_power", this.node).getComponent(cc.Label).string = power.toFixed(2);
     },
 
     onClickInviteToWx(){

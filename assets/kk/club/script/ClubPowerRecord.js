@@ -127,9 +127,9 @@ cc.Class({
             bg_memberItem.getChildByName("text_partnerID").getComponent(cc.Label).string = showList[i].actuid;
             bg_memberItem.getChildByName("text_operaType").getComponent(cc.Label).string = showList[i].type ? "增加" : "减少";
             bg_memberItem.getChildByName("text_operaType").color = showList[i].type ? (new cc.Color(0,220,0)) : (new cc.Color(220,0,0));
-            bg_memberItem.getChildByName("text_powerChange").getComponent(cc.Label).string = showList[i].power;
+            bg_memberItem.getChildByName("text_powerChange").getComponent(cc.Label).string = showList[i].power.toFixed(2);
             if (0 != showList[i].lastpower) {
-                bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].lastpower.toFixed(1);
+                bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].lastpower.toFixed(2);
             }
             bg_memberItem.getChildByName("text_time").getComponent(cc.Label).string = showList[i].time;
             item.active = true;

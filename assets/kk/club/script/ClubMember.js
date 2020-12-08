@@ -401,13 +401,13 @@ cc.Class({
                 bg_memberItem.getChildByName("text_waterPro").getComponent(cc.Label).string = "--";
             }
             if (0 != showList[i].totalScore) {
-                bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore.toFixed(1);
+                bg_memberItem.getChildByName("text_score").getComponent(cc.Label).string = showList[i].totalScore.toFixed(2);
             }
             if (0 != showList[i].power) {
-                bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power.toFixed(1);
+                bg_memberItem.getChildByName("text_power").getComponent(cc.Label).string = showList[i].power.toFixed(2);
             }
             if (0 != showList[i].totalPower) {
-                bg_memberItem.getChildByName("text_totalPower").getComponent(cc.Label).string = showList[i].totalPower.toFixed(1);
+                bg_memberItem.getChildByName("text_totalPower").getComponent(cc.Label).string = showList[i].totalPower.toFixed(2);
             }
             
             if (0 === Global.checkPartnerList.length) {
@@ -571,11 +571,11 @@ cc.Class({
                 let childrenItem = this.memberListContent.children[i];
                 if (cc.vv.UserManager.uid === childrenItem.uid && childrenItem.active) {
                     this.memberList[i].power = msg.myPower;
-                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.myPower.toFixed(1);
+                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.myPower.toFixed(2);
                 }
                 if (msg.memberuid === childrenItem.uid && childrenItem.active) {
                     this.memberList[i].power = msg.memPower;
-                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.memPower.toFixed(1);
+                    cc.find("bg_memberItem/text_power", childrenItem).getComponent(cc.Label).string = msg.memPower.toFixed(2);
                 }
             }
             cc.vv.FloatTip.show("操作成功");

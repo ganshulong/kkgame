@@ -196,4 +196,5 @@ codeCfg.code = {
     '445':"water_line_less",
     '447':"no_can_create_club",
     '448':"no_junior_member",
+    '449':"water_line_no_set",
 }

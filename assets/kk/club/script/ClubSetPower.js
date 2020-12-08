@@ -55,17 +55,17 @@ cc.Class({
 
     onClickConfirm(event){
         let mul = parseInt(event.target.mul);
-        let uidInt = 0;
+        let inputFloat = 0;
         if (1 == mul) {
-            uidInt = parseInt(this.input_addPower_editBox.string);
+            inputFloat = parseFloat(this.input_addPower_editBox.string);
         } else {
-            uidInt = parseInt(this.input_deductionPower_editBox.string);
+            inputFloat = parseFloat(this.input_deductionPower_editBox.string);
         }
-        if (uidInt) {
+        if (inputFloat) {
             var req = { 'c': MsgId.CLUB_SET_POWER};
             req.clubid = cc.vv.UserManager.currClubId;
             req.memberuid = this.memberuid;
-            req.power = uidInt*mul;
+            req.power = inputFloat*mul;
             cc.vv.NetManager.send(req);
             this.onClose();
         } else {
