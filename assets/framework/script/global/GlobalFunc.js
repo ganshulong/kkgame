@@ -829,11 +829,13 @@ GlobalFunc.btnClickEvent = function (btn, func, obj, soundCfg = null) {
     return btn;
 }
 
+GlobalFunc.btnClickEventOff = function (btn, func, obj) {
+    btn.off("click", func, obj);
+    return btn;
+}
+
 // 按钮点击事件, 不需要默认音效版本，如樱桃的爱，伟大的蓝色，func 中 自己单独播放 同一个按键不同的音效
-GlobalFunc.btnClickEventNoDefaultSound = function (btn, func, obj) {
-    if (btn == null) {
-        return null;
-    }
+GlobalFunc.btnClickEventOn = function (btn, func, obj) {
     btn.on("click", func, obj);
     return btn;
 }

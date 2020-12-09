@@ -159,8 +159,10 @@ cc.Class({
             req.tarUid = Global.checkPartnerList[Global.checkPartnerList.length-1];
         }
         req.starty = this.curStartIndex;
-        req.endy = 4;
+        req.endy = 10000;
         cc.vv.NetManager.send(req);
+
+        this.showList = [];
     },
 
     onClickSearch(event){
@@ -328,62 +330,106 @@ cc.Class({
             }
         }
 
-        let clubCeateUid = cc.vv.UserManager.getCurClubInfo().createUid;
+        this.showMemberList(showList);
+    },
+
+    showMemberList(showList){
+        this.showList = showList;
+        this.showNum = (15 > showList.length) ? showList.length : 15;
         this.memberListContent.removeAllChildren();
-        for (let i = 0; i < showList.length; i++) {
+        for (let i = 0; i < this.showNum; i++) {
             let item =  cc.instantiate(this.memberItem);
             item.parent = this.memberListContent;
-            item.y = - item.height * i;
-            item.uid = showList[i].uid;
-            if (cc.vv.UserManager.uid != showList[i].uid && showList[i].hehuo) {
-                if (0 === Global.checkPartnerList.length) {
-                    item.partneruid = showList[i].uid;
-                    Global.btnClickEvent(item, this.onClickSetPartnerRatio,this);
-                }
-
-                if ( ! (0 < Global.checkPartnerList.length && showList[i].uid == Global.checkPartnerList[Global.checkPartnerList.length-1])) {
-                    let userHead = cc.find("bg_memberItem/UserHead", item);
-                    userHead.partneruid = showList[i].uid;
-                    Global.btnClickEvent(userHead, this.onClickCheckPartnerMember,this);
-                }
-            }
-            if (!showList[i].hehuo) {
-                item.uid = showList[i].uid;
-                Global.btnClickEvent(item, this.onClickCheckRecord,this);
-            }
-            
-            let bg_memberItem = item.getChildByName("bg_memberItem");
-            bg_memberItem.getChildByName("spr_creater").active = (clubCeateUid == showList[i].uid);
-            bg_memberItem.getChildByName("spr_partner").active = (clubCeateUid != showList[i].uid && showList[i].hehuo);
-            bg_memberItem.getChildByName("spr_stopPlay").active = (!showList[i].state);
-            let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
-            Global.setHead(spr_head, showList[i].usericon);
-
-            bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = showList[i].playername;
-            bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = showList[i].uid;
-            bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = showList[i].isOnLine ? "在线" : "离线";
-            bg_memberItem.getChildByName("text_state").color = showList[i].isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
-            bg_memberItem.getChildByName("text_score1").active = showList[i].hehuo;
-            if (showList[i].hehuo) {
-                bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = showList[i].shuiScore;
-            }
-            bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = showList[i].jushu;
-            bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = showList[i].bigWinCnt;
-            bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = showList[i].cost;
-            bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = showList[i].totalScore;
-
-            if (0 === Global.checkPartnerList.length) {
-                let btn_operate = bg_memberItem.getChildByName("btn_operate");
-                if (cc.vv.UserManager.uid == showList[i].uid) {
-                    Global.btnClickEvent(btn_operate, this.onClickSetPartner,this);
-                } else {
-                    btn_operate.playerInfo = showList[i];
-                    Global.btnClickEvent(btn_operate, this.onClickShowMemberOperate,this);
-                }
-            }
+            item.listIndex = i;
+            this.updateMemberItem(item);
             item.active = true;
         }
         this.memberListContent.height = this.memberItem.height * showList.length;
+        this.memberListContent.y = 0;
+        this.lastFrameContentY = this.memberListContent.y;
+    },
+
+    update (dt) {
+        if (this.showList && 15 < this.showList.length) {
+            if (this.lastFrameContentY < this.memberListContent.y) {        //上移中
+                for (var i = 0; i < this.memberListContent.children.length; i++) {
+                    let item = this.memberListContent.children[i];
+                    if (500 < (item.y + this.memberListContent.y) && (item.listIndex + 15) < this.showList.length) {
+                        item.listIndex += 15;
+                        this.updateMemberItem(item);
+                    }
+                }
+
+            } else if (this.lastFrameContentY > this.memberListContent.y && 0 < this.memberListContent.y) { //下移中
+                for (var i = this.memberListContent.children.length - 1; i >= 0 ; i--) {
+                    let item = this.memberListContent.children[i];
+                    if (-500 > (item.y + this.memberListContent.y) && (item.listIndex - 15) >= 0) {
+                        item.listIndex -= 15;
+                        this.updateMemberItem(item);
+                    }
+                }
+            }
+            this.lastFrameContentY = this.memberListContent.y;
+        }
+    },
+
+    updateMemberItem(item){
+        let userInfo = this.showList[item.listIndex];
+        item.y = - item.height * item.listIndex;
+        item.uid = userInfo.uid;
+
+        Global.btnClickEventOff(item, this.onClickSetPartnerRatio,this);
+        Global.btnClickEventOff(cc.find("bg_memberItem/UserHead", item), this.onClickCheckPartnerMember,this);
+        Global.btnClickEventOff(item, this.onClickCheckRecord,this);
+        Global.btnClickEventOff(cc.find("bg_memberItem/btn_operate", item), this.onClickSetPartner,this);
+        Global.btnClickEventOff(cc.find("bg_memberItem/btn_operate", item), this.onClickShowMemberOperate,this);
+
+        if (cc.vv.UserManager.uid != userInfo.uid && userInfo.hehuo) {
+            if (0 === Global.checkPartnerList.length) {
+                item.partneruid = userInfo.uid;
+                Global.btnClickEventOn(item, this.onClickSetPartnerRatio,this);
+            }
+
+            if ( ! (0 < Global.checkPartnerList.length && userInfo.uid == Global.checkPartnerList[Global.checkPartnerList.length-1])) {
+                let userHead = cc.find("bg_memberItem/UserHead", item);
+                userHead.partneruid = userInfo.uid;
+                Global.btnClickEventOn(userHead, this.onClickCheckPartnerMember,this);
+            }
+        }
+        if (!userInfo.hehuo) {
+            item.uid = userInfo.uid;
+            Global.btnClickEventOn(item, this.onClickCheckRecord,this);
+        }
+        
+        let bg_memberItem = item.getChildByName("bg_memberItem");
+        bg_memberItem.getChildByName("spr_creater").active = (cc.vv.UserManager.getCurClubInfo().createUid == userInfo.uid);
+        bg_memberItem.getChildByName("spr_partner").active = (cc.vv.UserManager.getCurClubInfo().createUid != userInfo.uid && userInfo.hehuo);
+        bg_memberItem.getChildByName("spr_stopPlay").active = (!userInfo.state);
+        let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
+        Global.setHead(spr_head, userInfo.usericon);
+
+        bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = userInfo.playername;
+        bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = userInfo.uid;
+        bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = userInfo.isOnLine ? "在线" : "离线";
+        bg_memberItem.getChildByName("text_state").color = userInfo.isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
+        bg_memberItem.getChildByName("text_score1").active = userInfo.hehuo;
+        if (userInfo.hehuo) {
+            bg_memberItem.getChildByName("text_score1").getComponent(cc.Label).string = userInfo.shuiScore;
+        }
+        bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = userInfo.jushu;
+        bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = userInfo.bigWinCnt;
+        bg_memberItem.getChildByName("text_speed").getComponent(cc.Label).string = userInfo.cost;
+        bg_memberItem.getChildByName("text_score2").getComponent(cc.Label).string = userInfo.totalScore;
+
+        if (0 === Global.checkPartnerList.length) {
+            let btn_operate = bg_memberItem.getChildByName("btn_operate");
+            if (cc.vv.UserManager.uid == userInfo.uid) {
+                Global.btnClickEventOn(btn_operate, this.onClickSetPartner,this);
+            } else {
+                btn_operate.playerInfo = userInfo;
+                Global.btnClickEventOn(btn_operate, this.onClickShowMemberOperate,this);
+            }
+        }
     },
 
     onClickCheckRecord(event){
