@@ -20,8 +20,8 @@ cc.Class({
         this._chairId = cc.vv.gameData.getLocalSeatByUISeat(index);
         this._UISeat = index;
         this._outCardNode = cc.find("scene/out_cards/out_card"+index,this.node);
-        this.mask_onOut = cc.find("scene/out_cards/mask_onOut"+index,this.node);
-        this.mask_onOut.active = false;
+        // this.mask_onOut = cc.find("scene/out_cards/mask_onOut"+index,this.node);
+        // this.mask_onOut.active = false;
 
         if(this._outCardNode){
             this._seatIndex = cc.vv.gameData.getUserSeatIndex(this._chairId);

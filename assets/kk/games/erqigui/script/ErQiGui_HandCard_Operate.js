@@ -114,8 +114,8 @@ cc.Class({
             this.setCurTableScore(0);
             this.showBankerOperateTips(0);
 
-            this.ErQiGui_CardLogicJS = this.node.getComponent("ErQiGui_CardLogic");
-            this.ErQiGui_CardLogicJS.init();
+            // this.ErQiGui_CardLogicJS = this.node.getComponent("ErQiGui_CardLogic");
+            // this.ErQiGui_CardLogicJS.init();
         }
 
         if (cc.vv.gameData._isPlayBack && 0 < index) {
