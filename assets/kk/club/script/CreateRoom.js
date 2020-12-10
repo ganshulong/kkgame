@@ -90,12 +90,12 @@ cc.Class({
                     this._createLayer.y = this.node.height/2 - this.node.y;
 
                     this.initUI();
-                    this.showGameType();
+                    this.showGamePanel();
                 }
             })
         } else{
             this._createLayer.active = true;
-            this.showGameType();
+            this.showGamePanel();
         }
     },
 
@@ -128,7 +128,7 @@ cc.Class({
             item.parent = this.content_gameBtns;
             item.active = true;
             item.id = cc.vv.UserManager.gameList[i].id;
-            Global.btnClickEvent(item,this.onClickGameType,this);
+            Global.btnClickEvent(item,this.onClickGameBtn,this);
         }
         //更多按钮
         let item = cc.instantiate(tempItem);
@@ -146,68 +146,84 @@ cc.Class({
 
         //游戏玩法选项页面
         this.gamePanels = [];
-        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_erqigui"];
-        for (let i = 0; i < gamePanelStr.length; i++) {
-            cc.find("img_bg/"+gamePanelStr[i],this._createLayer).active = false;
-        }
-        for (let i = 0; i < cc.vv.UserManager.gameList.length; i++) {
-            let panel = cc.find("img_bg/"+gamePanelStr[cc.vv.UserManager.gameList[i].id],this._createLayer);
-            panel.id = cc.vv.UserManager.gameList[i].id;
-
-            let round = cc.find("right_bg/scrollview/content/round", panel);
-            let roundData = cc.vv.UserManager.gameList[i].data.split(';');
-            for (let j = 0; j < roundData.length; j++) {
-                let roundItemData = roundData[j].split(':');
-                let toggle = round.getChildByName("toggle" + j);
-                toggle.round = roundItemData[0];
-                toggle.getChildByName("txt_inning_eight").getComponent(cc.Label).string = roundItemData[0] + "局";
-                toggle.getChildByName("txt_dou1").getComponent(cc.Label).string = "(房卡x"+ roundItemData[1] +")";
-                toggle.active = true;
-            }
-            for (let j = roundData.length; j < 3; j++) {
-                let toggle = round.getChildByName("toggle" + j);
-                if (toggle) {
-                    toggle.active = false;
-                }
-            }
-
-            let bg_score = cc.find("right_bg/scrollview/content/bg_score", panel);
-            let btn_deduction = bg_score.getChildByName("btn_deduction");
-            Global.btnClickEvent(btn_deduction,this.onClickScoreDedution,this);
-            let btn_add = bg_score.getChildByName("btn_add");
-            Global.btnClickEvent(btn_add,this.onClickScoreAdd,this);
-
-            let btn_create_room = cc.find("right_bg/btn_create_room", panel);
-            btn_create_room.id = cc.vv.UserManager.gameList[i].id;
-            Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
-
-            cc.find("left_bg/btn_selectedGame/label_selectedGame", panel).getComponent(cc.Label).string = cc.vv.UserManager.gameList[i].title;
-
-            // this.gamePanels.push(panel);
-            this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
-
-            let content = cc.find("right_bg/scrollview/content", panel);
-
-            if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name) {
-                this.initGamePanelCommom(content, ["round","player_num","param1","param2","speed"]);
-            } else {
-                this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
-            }
-        }
+        this.gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_erqigui"];
     },
 
-    showGameType(){
-        for (var i = 0; i < this.content_gameBtns.children.length - 1; i++) {
+    showGamePanel(){
+        for (let i = 0; i < this.content_gameBtns.children.length - 1; i++) {
             let gameBtn = this.content_gameBtns.children[i];
             gameBtn.getChildByName("selected_bg").active = (this.curGameIndex === gameBtn.id);
+        }
 
-            this.gamePanels[i].active = (this.curGameIndex === this.gamePanels[i].id);
+        for (let i = 0; i < this.gamePanels.length; i++) {
+            if (this.gamePanels[i]) {
+                this.gamePanels[i].active = (this.curGameIndex === this.gamePanels[i].id);
+            }
+        } 
+
+        if (!this.gamePanels[this.curGameIndex]) {
+            cc.loader.loadRes("common/prefab/gameCreatePanel/" + this.gamePanelStr[this.curGameIndex], cc.Prefab,(err,prefab)=>{
+                if(err === null){
+                    let panel = cc.instantiate(prefab);
+                    panel.parent = this._createLayer.getChildByName("img_bg");
+                    panel.id = this.curGameIndex;
+
+                    let gameRuleInfo = null;
+                    for (let i = 0; i < cc.vv.UserManager.gameList.length; i++) {
+                        if (this.curGameIndex == cc.vv.UserManager.gameList[i].id) {
+                            gameRuleInfo = cc.vv.UserManager.gameList[i];
+                            break;
+                        }
+                    }
+                    let round = cc.find("right_bg/scrollview/content/round", panel);
+                    let roundData = gameRuleInfo.data.split(';');
+                    for (let j = 0; j < roundData.length; j++) {
+                        let roundItemData = roundData[j].split(':');
+                        let toggle = round.getChildByName("toggle" + j);
+                        toggle.gamenum = roundItemData[0];
+                        toggle.getChildByName("txt_inning_eight").getComponent(cc.Label).string = roundItemData[0] + "局";
+                        toggle.getChildByName("txt_dou1").getComponent(cc.Label).string = "(房卡x"+ roundItemData[1] +")";
+                        toggle.active = true;
+                    }
+                    for (let j = roundData.length; j < 3; j++) {
+                        let toggle = round.getChildByName("toggle" + j);
+                        if (toggle) {
+                            toggle.active = false;
+                        }
+                    }
+
+                    let bg_score = cc.find("right_bg/scrollview/content/bg_score", panel);
+                    let btn_deduction = bg_score.getChildByName("btn_deduction");
+                    Global.btnClickEvent(btn_deduction,this.onClickScoreDedution,this);
+                    let btn_add = bg_score.getChildByName("btn_add");
+                    Global.btnClickEvent(btn_add,this.onClickScoreAdd,this);
+
+                    let btn_create_room = cc.find("right_bg/btn_create_room", panel);
+                    btn_create_room.id = gameRuleInfo.id;
+                    Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
+
+                    cc.find("left_bg/btn_selectedGame/label_selectedGame", panel).getComponent(cc.Label).string = gameRuleInfo.title;
+
+                    let content = cc.find("right_bg/scrollview/content", panel);
+
+                    if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name) {
+                        this.initGamePanelCommom(content, ["round","player_num","param1","param2","speed"]);
+                    } else {
+                        this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
+                    }
+
+                    this.gamePanels[this.curGameIndex] = panel;
+                } else {
+                    cc.vv.FloatTip.show("加载失败，请重新尝试");
+                    this._createLayer.active = false;
+                }
+            })
         }
     },
 
-    onClickGameType(event){
+    onClickGameBtn(event){
         this.curGameIndex = event.target.id;
-        this.showGameType();
+        this.showGamePanel();
     },
 
     onClickMoreGame(event){
@@ -316,7 +332,7 @@ cc.Class({
         for (let j = 0; j < round.children.length; j++) {
             let toggle = round.getChildByName("toggle" + j);
             if (toggle.getComponent(cc.Toggle).isChecked) {
-                req.gamenum = parseInt(toggle.round);
+                req.gamenum = parseInt(toggle.gamenum);
                 break;
             }
         }
