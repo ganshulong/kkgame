@@ -919,14 +919,16 @@ cc.Class({
             let card = this._handcardNode.children[i];
             if (card.isTouchSelect) {
                 card.isTouchSelect = false;
-                if (card.isDiPai) {
-                    card.color = cc.vv.gameData.CardNoCanOutColor;
-                } else {
-                    card.color = new cc.Color(255,255,255); 
-                }
+                if (!card.isNoCanOut) {
+                    if (card.isDiPai) {
+                        card.color = cc.vv.gameData.CardNoCanOutColor;
+                    } else {
+                        card.color = new cc.Color(255,255,255); 
+                    }
 
-                card.isSelect = !card.isSelect;
-                card.y = card.isSelect ? 50 : 0;
+                    card.isSelect = !card.isSelect;
+                    card.y = card.isSelect ? 50 : 0;
+                }
             }
         }
         if (this.panel_maidi_btns.active) {
