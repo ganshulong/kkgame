@@ -79,7 +79,7 @@ cc.Class({
     
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
-        if(this._outCardNode){
+        if(data.isReconnect){
             let curRoundOutCards = data.actionInfo.curOutCardInfo.curRoundOutCards;
             for (let i = 0; i < curRoundOutCards.length; i++) {
                 if (curRoundOutCards[i].seat === this._seatIndex) {
