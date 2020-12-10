@@ -149,7 +149,7 @@ cc.Class({
 
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
-        if((data.isReconnect || cc.vv.gameData._isPlayBack) && this._handcardNode) {
+        if(this._handcardNode) {
             for(let i=0;i<data.users.length;++i){
                 if(this._seatIndex === data.users[i].seat){
                     if (data.users[i].handInCards) {
