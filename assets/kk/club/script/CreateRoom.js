@@ -73,7 +73,7 @@ cc.Class({
 
     showCreateRoom(isClubRoom){
         this._isClubRoom = (isClubRoom === false) ? false : true;
-        this.curGameIndex = 0;
+        this.curGameIndex = cc.vv.UserManager.gameList[0].id || 0;
         if(this._createLayer === null){
             cc.loader.loadRes("common/prefab/create_room",cc.Prefab,(err,prefab)=>{
                 if(err === null){
@@ -85,12 +85,12 @@ cc.Class({
                     this._createLayer.y = this.node.height/2 - this.node.y;
 
                     this.initUI();
-                    this.showGameType();
+                    this.showGamePanel();
                 }
             })
         } else{
             this._createLayer.active = true;
-            this.showGameType();
+            this.showGamePanel();
         }
     },
 
@@ -119,92 +119,109 @@ cc.Class({
             item.y = - (item.height + 5) * i;
             item.parent = this.content_gameBtns;
             item.active = true;
-            item.index = i;
-            Global.btnClickEvent(item,this.onClickGameType,this);
+            item.id = cc.vv.UserManager.gameList[i].id;
+            Global.btnClickEvent(item,this.onClickGameBtn,this);
         }
         this.content_gameBtns.height = (tempItem.height + 5) * cc.vv.UserManager.gameList.length;
 
         //游戏玩法选项页面
         this.gamePanels = [];
-        let gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_tonghua"];
-        for (let i = 0; i < gamePanelStr.length; i++) {
-            cc.find("img_bg/"+gamePanelStr[i],this._createLayer).active = false;
-        }
-        for (let i = 0; i < cc.vv.UserManager.gameList.length; i++) {
-            let panel = cc.find("img_bg/"+gamePanelStr[cc.vv.UserManager.gameList[i].id],this._createLayer);
-            panel.id = cc.vv.UserManager.gameList[i].id;
-
-            let round = cc.find("right_bg/scrollview/content/round", panel);
-            let roundData = cc.vv.UserManager.gameList[i].data.split(';');
-            for (let j = 0; j < roundData.length; j++) {
-                let roundItemData = roundData[j].split(':');
-                let toggle = round.getChildByName("toggle" + j);
-                toggle.round = roundItemData[0];
-                toggle.getChildByName("txt_inning_eight").getComponent(cc.Label).string = roundItemData[0] + "局";
-                toggle.getChildByName("txt_dou1").getComponent(cc.Label).string = "(房卡x"+ roundItemData[1] +")";
-                if (9 < roundItemData[0]) {
-                    // toggle.getChildByName("txt_inning_eight").x += 8;
-                    toggle.getChildByName("txt_dou1").x += 8;
-                }
-                toggle.active = true;
-            }
-            for (let j = roundData.length; j < 4; j++) {
-                let toggle = round.getChildByName("toggle" + j);
-                if (toggle) {
-                    toggle.active = false;
-                }
-            }
-
-            let bg_score = cc.find("right_bg/scrollview/content/bg_score", panel);
-
-            let multList = JSON.parse(cc.vv.UserManager.gameList[i].mult);
-            let text_score = bg_score.getChildByName("text_score");
-            if (0.1 > multList[0]) {
-                text_score.getComponent(cc.Label).string = multList[0].toFixed(2);
-            } else if (1 > multList[0]) {
-                text_score.getComponent(cc.Label).string = multList[0].toFixed(1);
-            } else {
-                text_score.getComponent(cc.Label).string = multList[0].toFixed(0);
-            }
-
-            let btn_deduction = bg_score.getChildByName("btn_deduction");
-            btn_deduction.multList = multList;
-            btn_deduction.curIndex = 0;
-            Global.btnClickEvent(btn_deduction,this.onClickScoreDedution,this);
-
-            let btn_add = bg_score.getChildByName("btn_add");
-            btn_add.multList = multList;
-            btn_add.curIndex = 0;
-            Global.btnClickEvent(btn_add,this.onClickScoreAdd,this);
-
-            let btn_create_room = cc.find("right_bg/btn_create_room", panel);
-            btn_create_room.id = cc.vv.UserManager.gameList[i].id;
-            Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
-
-            this.gamePanels.push(panel);
-            // this.gamePanels[cc.vv.UserManager.gameList[i].id] = panel;
-
-            let content = cc.find("right_bg/scrollview/content", panel);
-            content.isTongHua = ("panel_tonghua" === panel.name);
-
-            if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name || "panel_tonghua" === panel.name) {
-                this.initGamePanelCommom(content, ["round","player_num","param1","param2","speed"]);
-            } else {
-                this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
-            }
-        }
+        this.gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_tonghua"];
     },
 
-    showGameType(){
+    showGamePanel(){
         for (var i = 0; i < this.content_gameBtns.children.length; i++) {
-            this.content_gameBtns.children[i].getComponent(cc.Button).interactable = (this.curGameIndex != i);
-            this.gamePanels[i].active = (this.curGameIndex == i);
+            let gameBtn = this.content_gameBtns.children[i];
+            gameBtn.getComponent(cc.Button).interactable = (this.curGameIndex != gameBtn.id);
+        }
+
+        for (let i = 0; i < this.gamePanels.length; i++) {
+            if (this.gamePanels[i]) {
+                this.gamePanels[i].active = (this.curGameIndex === this.gamePanels[i].gameIndex);
+            }
+        } 
+
+        if (!this.gamePanels[this.curGameIndex]) {
+            cc.loader.loadRes("common/prefab/gameCreatePanel/" + this.gamePanelStr[this.curGameIndex], cc.Prefab,(err,prefab)=>{
+                if(err === null){
+                    let panel = cc.instantiate(prefab);
+                    panel.parent = this._createLayer.getChildByName("img_bg");
+                    panel.gameIndex = this.curGameIndex;
+
+                    let gameRuleInfo = null;
+                    for (let i = 0; i < cc.vv.UserManager.gameList.length; i++) {
+                        if (this.curGameIndex == cc.vv.UserManager.gameList[i].id) {
+                            gameRuleInfo = cc.vv.UserManager.gameList[i];
+                            break;
+                        }
+                    }
+                    let round = cc.find("right_bg/scrollview/content/round", panel);
+                    let roundData = gameRuleInfo.data.split(';');
+                    for (let j = 0; j < roundData.length; j++) {
+                        let roundItemData = roundData[j].split(':');
+                        let toggle = round.getChildByName("toggle" + j);
+                        toggle.round = roundItemData[0];
+                        toggle.getChildByName("txt_inning_eight").getComponent(cc.Label).string = roundItemData[0] + "局";
+                        toggle.getChildByName("txt_dou1").getComponent(cc.Label).string = "(房卡x"+ roundItemData[1] +")";
+                        if (9 < roundItemData[0]) {
+                            toggle.getChildByName("txt_dou1").x += 8;
+                        }
+                        toggle.active = true;
+                    }
+                    for (let j = roundData.length; j < 4; j++) {
+                        let toggle = round.getChildByName("toggle" + j);
+                        if (toggle) {
+                            toggle.active = false;
+                        }
+                    }
+
+                    let bg_score = cc.find("right_bg/scrollview/content/bg_score", panel);
+
+                    let multList = JSON.parse(gameRuleInfo.mult);
+                    let text_score = bg_score.getChildByName("text_score");
+                    if (0.1 > multList[0]) {
+                        text_score.getComponent(cc.Label).string = multList[0].toFixed(2);
+                    } else if (1 > multList[0]) {
+                        text_score.getComponent(cc.Label).string = multList[0].toFixed(1);
+                    } else {
+                        text_score.getComponent(cc.Label).string = multList[0].toFixed(0);
+                    }
+
+                    let btn_deduction = bg_score.getChildByName("btn_deduction");
+                    btn_deduction.multList = multList;
+                    btn_deduction.curIndex = 0;
+                    Global.btnClickEvent(btn_deduction,this.onClickScoreDedution,this);
+
+                    let btn_add = bg_score.getChildByName("btn_add");
+                    btn_add.multList = multList;
+                    btn_add.curIndex = 0;
+                    Global.btnClickEvent(btn_add,this.onClickScoreAdd,this);
+
+                    let btn_create_room = cc.find("right_bg/btn_create_room", panel);
+                    btn_create_room.id = gameRuleInfo.id;
+                    Global.btnClickEvent(btn_create_room,this.onCreateGame,this);
+
+                    let content = cc.find("right_bg/scrollview/content", panel);
+
+                    if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name || "panel_tonghua" === panel.name) {
+                        this.initGamePanelCommom(content, ["round","player_num","param1","param2","speed"]);
+                    } else {
+                        this.initGamePanelCommom(content, ["round","player_num","param1","speed"]);
+                    }
+
+                    this.gamePanels[this.curGameIndex] = panel;
+                    
+                } else {
+                    cc.vv.FloatTip.show("加载失败，请重新尝试");
+                    this._createLayer.active = false;
+                }
+            })
         }
     },
 
-    onClickGameType(event){
-        this.curGameIndex = event.target.index;
-        this.showGameType();
+    onClickGameBtn(event){
+        this.curGameIndex = event.target.id;
+        this.showGamePanel();
     },
 
     onClickMoreGame(event){
