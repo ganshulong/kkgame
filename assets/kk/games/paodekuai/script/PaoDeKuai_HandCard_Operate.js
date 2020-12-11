@@ -462,7 +462,7 @@ cc.Class({
     getSelectedCards(){
         let list = [];
         for (let i = 0; i < this._handcardNode.children.length; i++) {
-            if (this._handcardNode.children[i].isSelect) {
+            if (this._handcardNode.children[i].isSelect && 50 == this._handcardNode.children[i].y) {
                 list.push(this._handcardNode.children[i].cardValue);
             }
         }
