@@ -185,6 +185,7 @@ cc.Class({
                 bg_memberItem.getChildByName("text_time").getComponent(cc.Label).string = showList[i].time;
                 item.active = true;
             }
+            this.listContent.height = this.listItem.height * showList.length;
         }
     },
 
