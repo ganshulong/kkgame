@@ -7,7 +7,7 @@ var manifest = {
     packageUrl: 'http://www.kayuxin.com/remote-assets/',
     remoteManifestUrl: 'http://www.kayuxin.com/remote-assets/project.manifest',
     remoteVersionUrl: 'http://www.kayuxin.com/remote-assets/version.manifest',
-    version: '1.2.30',
+    version: '1.2.31',
     assets: {},
     searchPaths: []
 };
