@@ -373,7 +373,7 @@ cc.Class({
 
         let param2 = content.getChildByName("param2");
         if (param2) {
-            for (let j = 0; j < param1.children.length; j++) {
+            for (let j = 0; j < param2.children.length; j++) {
                 let toggle = param2.getChildByName("toggle" + j);
                 toggle.getComponent(cc.Toggle).isChecked = (toggle.param2 == this.modifyConfig.param2);
             }

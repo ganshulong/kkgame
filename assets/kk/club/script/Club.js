@@ -187,6 +187,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, this); //退出房间
         cc.vv.NetManager.registerMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
+        cc.vv.NetManager.registerMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
@@ -207,6 +208,29 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, false, this); //退出房间
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, false, this);
+    },
+
+    onRcvModifyRoomPlay(msg){
+        if(msg.code === 200){
+            this.CreateRoomJS.onClose();
+
+            let deskInfo = msg.response.deskInfo;
+            for(let i=0;i<this._content.childrenCount;++i){
+                let item = this._content.children[i];
+                if(item._deskId == deskInfo.deskid){
+                    for(let i=0;i<this._tableList.length;++i){
+                        if(this._tableList[i].deskid == deskInfo.deskid){
+                            this._tableList[i] = deskInfo;
+                            this.initTables(this._tableList);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            cc.vv.FloatTip.show("修改玩法成功!");
+        }
     },
 
     onRcvSetPower(msg){
