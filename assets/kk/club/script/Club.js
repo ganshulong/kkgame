@@ -138,6 +138,15 @@ cc.Class({
         let btn_ruleSelect = cc.find("Layer/img_bottomBg/btn_ruleSelect",this.node);
         Global.btnClickEvent(btn_ruleSelect,this.onClickRuleSelect,this);
 
+        this.panel_tableOperate = cc.find("Layer/panel_tableOperate",this.node);
+        this.panel_tableOperate.active = false;
+        let btnCloseTableOperate = this.panel_tableOperate.getChildByName("btnCloseTableOperate");
+        Global.btnClickEvent(btnCloseTableOperate,this.onClickCloseTableOperate,this);
+        this.btn_deleteTable = this.panel_tableOperate.getChildByName("btn_deleteTable");
+        Global.btnClickEvent(this.btn_deleteTable,this.onClickDeleteTable,this);
+        this.btn_modifyTable = this.panel_tableOperate.getChildByName("btn_modifyTable");
+        Global.btnClickEvent(this.btn_modifyTable,this.onClickModifyTable,this);
+
         let btn_backRoom = cc.find("Layer/img_bottomBg/btn_backRoom",this.node);
         Global.btnClickEvent(btn_backRoom,this.onClickBackRoom,this);
 
@@ -535,31 +544,10 @@ cc.Class({
             }
         }
 
-        let btn_delete = cc.find("node/btn_delete",item);
-        btn_delete.active = (this._clubInfo.createUid == cc.vv.UserManager.uid);
-        btn_delete.deskid = data.deskid;
-        Global.btnClickEvent(btn_delete,this.onClickDeleteTable,this);
-    },
-
-    onClickDeleteTable(event){
-        let deskid = event.target.deskid;
-        for (let i = 0; i < this._tableList.length; i++) {
-            if (this._tableList[i].deskid == deskid) {
-                if (0 < this._tableList[i].users.length) {
-                    cc.vv.FloatTip.show("不能删除，有人坐下的桌子");
-                    return;
-                }
-            }
-        }
-        let sureCall = function () {
-            var req = { c: MsgId.CLUB_DELETE_TABLE};
-            req.clubid = cc.vv.UserManager.currClubId;
-            req.deskid = deskid;
-            cc.vv.NetManager.send(req);
-        }
-        let cancelCall = function () {
-        }
-        cc.vv.AlertView.show("是否确实删除桌子："+deskid, sureCall, cancelCall);
+        let btn_tableOperate = cc.find("node/btn_tableOperate",item);
+        btn_tableOperate.active = (this._clubInfo.createUid == cc.vv.UserManager.uid);
+        btn_tableOperate.tableInfo = data;
+        Global.btnClickEvent(btn_tableOperate,this.onClickShowTableOperate,this);
     },
 
     initTables(list){
@@ -764,6 +752,46 @@ cc.Class({
         this.showRuleInfo = event.target.tableInfo;
         this.initTables(this._tableList);
         this.setRuleSelectShow(false);
+    },
+
+    onClickCloseTableOperate(){
+        this.panel_tableOperate.active = false;
+    },
+
+    onClickShowTableOperate(event){
+        let tableInfo = event.target.tableInfo;
+        for (let i = 0; i < this._tableList.length; i++) {
+            if (this._tableList[i].deskid == tableInfo.deskid) {
+                if (0 < this._tableList[i].users.length) {
+                    cc.vv.FloatTip.show("以有人坐下的桌子，不能删除或修改玩法");
+                    return;
+                }
+            }
+        }
+        this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前操作桌子:" + tableInfo.config.tname;
+        this.btn_deleteTable.deskid = tableInfo.deskid;
+        tableInfo.config.deskid = tableInfo.deskid;
+        this.btn_modifyTable.config = tableInfo.config;
+        this.panel_tableOperate.active = true;
+    },
+
+    onClickDeleteTable(event){
+        this.panel_tableOperate.active = false;
+        let deskid = event.target.deskid;
+        let sureCall = function () {
+            var req = { c: MsgId.CLUB_DELETE_TABLE};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.deskid = deskid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("是否确实删除桌子："+deskid, sureCall, cancelCall);
+    },
+
+    onClickModifyTable(event){
+        this.panel_tableOperate.active = false;
+        this.CreateRoomJS.showCreateRoom(true, event.target.config);
     },
 
     onBack(){
