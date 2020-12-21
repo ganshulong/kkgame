@@ -91,9 +91,6 @@ cc.Class({
         Global.btnClickEvent(this.btn_nextPage, this.onClickNextPage,this); 
         this.text_page = cc.find("bg_member/panel_list/node_bottom/text_page",this._layer);
 
-        this._layer.addComponent("ClubSetPartner");
-        this.ClubSetPartnerJS = this._layer.getComponent("ClubSetPartner");
-
         this._layer.addComponent("ClubSetPartnerRatio");
         this.ClubSetPartnerRatioJS = this._layer.getComponent("ClubSetPartnerRatio");
 
@@ -404,7 +401,6 @@ cc.Class({
         Global.btnClickEventOff(item, this.onClickCheckRecord,this);
         Global.btnClickEventOff(cc.find("bg_memberItem/text_waterScore/btn_waterScore", item), this.onClickWaterScore,this);
         Global.btnClickEventOff(cc.find("bg_memberItem/text_power/btn_setPower", item), this.onClickSetPower,this);
-        Global.btnClickEventOff(cc.find("bg_memberItem/btn_operate", item), this.onClickSetPartner,this);
         Global.btnClickEventOff(cc.find("bg_memberItem/btn_operate", item), this.onClickShowMemberOperate,this);
 
         if (cc.vv.UserManager.uid != userInfo.uid && userInfo.hehuo) {
@@ -476,11 +472,10 @@ cc.Class({
                 Global.btnClickEventOn(btn_setPower, this.onClickSetPower,this); 
             }
             let btn_operate = bg_memberItem.getChildByName("btn_operate");
-            if (cc.vv.UserManager.uid == userInfo.uid) {
-                Global.btnClickEventOn(btn_operate, this.onClickSetPartner,this);
-            } else {
+            btn_operate.active = (userInfo.isMember && cc.vv.UserManager.uid != userInfo.uid);
+            if (btn_operate.active) {
                 btn_operate.playerInfo = userInfo;
-                Global.btnClickEventOn(btn_operate, this.onClickShowMemberOperate,this);
+                Global.btnClickEventOn(btn_operate, this.onClickShowMemberOperate,this); 
             }
         }
     },
@@ -490,15 +485,11 @@ cc.Class({
         Global.curStartIndex = this.curStartIndex;
     },
 
-    onClickSetPartner(){
-        this.ClubSetPartnerJS.showLayer();
-    },
-
     onClickShowMemberOperate(event){
         this.panel_memberOperate.active = true;
 
         let playerInfo = event.target.playerInfo;
-        this.panel_memberOperate.getChildByName("text_memberInfo").getComponent(cc.Label).string = "成员:"+playerInfo.playername;
+        this.panel_memberOperate.getChildByName("text_memberInfo").getComponent(cc.Label).string = "当前操作成员:"+playerInfo.playername;
 
         this.btn_tickout.uid = playerInfo.uid;
         this.btn_tickout.playername = playerInfo.playername;
