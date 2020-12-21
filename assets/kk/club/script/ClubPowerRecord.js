@@ -47,7 +47,7 @@ cc.Class({
         Global.btnClickEvent(btn_close,this.onClose,this);
 
         let clubInfo = cc.vv.UserManager.getCurClubInfo();
-        let isShowSearch = (clubInfo.createUid == cc.vv.UserManager.uid || clubInfo.hehuo);
+        let isShowSearch = (0 == clubInfo.level || 3 <= clubInfo.level);
         cc.find("bg_member/bg_input",this._layer).active = isShowSearch;
         if (isShowSearch) {
             this.input_searchID = cc.find("bg_member/bg_input/input_searchID",this._layer);

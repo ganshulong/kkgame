@@ -76,13 +76,12 @@ cc.Class({
         let power_bg = cc.find("Layer/bg/power_bg",this.node);
         Global.btnClickEvent(power_bg,this.onClickPowerRecord,this);
 
-        cc.find("Layer/bg/img_card_bg",this.node).active = (info.createUid == cc.vv.UserManager.uid);
-
-        let txt_card_num = cc.find("Layer/bg/img_card_bg/txt_card_num",this.node);
-        txt_card_num.getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
+        this.img_card_bg = cc.find("Layer/bg/img_card_bg",this.node);
+        this.img_card_bg.active = this.getIsManager();
+        this.img_card_bg.getChildByName("txt_card_num").getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
         this.btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
-        this.btn_invite.active = (info.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+        this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
         Global.btnClickEvent(this.btn_invite,this.onClickInviteJoin,this);
         this.node.addComponent("ClubInviteJoin");
         this.ClubInviteJoinJS = this.node.getComponent("ClubInviteJoin");
@@ -90,11 +89,11 @@ cc.Class({
         this.node.addComponent("ClubExitApplyMessage");
         this.ClubExitApplyMessageJS = this.node.getComponent("ClubExitApplyMessage");
 
-        let btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
-        Global.btnClickEvent(btn_msg,this.onClickMsg,this);
-        btn_msg.active = (info.createUid == cc.vv.UserManager.uid);
+        this.btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
+        Global.btnClickEvent(this.btn_msg,this.onClickMsg,this);
+        this.btn_msg.active = this.getIsManager();
 
-        this.spr_redPoint = btn_msg.getChildByName("spr_redPoint");
+        this.spr_redPoint = this.btn_msg.getChildByName("spr_redPoint");
         this.spr_redPoint.active = this._clubInfo.exitHave;
 
         this.node.addComponent("ClubSetting");
@@ -103,9 +102,9 @@ cc.Class({
         let btn_setting = cc.find("Layer/bg/bg_top/btn_setting",this.node);
         Global.btnClickEvent(btn_setting,this.onClickSetting,this);
 
-        let createRoomBtn = cc.find("Layer/img_bottomBg/btn_switch",this.node);
-        Global.btnClickEvent(createRoomBtn,this.onCreateRoom,this);
-        createRoomBtn.active = (info.createUid == cc.vv.UserManager.uid);
+        this.createRoomBtn = cc.find("Layer/img_bottomBg/btn_switch",this.node);
+        Global.btnClickEvent(this.createRoomBtn,this.onCreateRoom,this);
+        this.createRoomBtn.active = this.getIsManager();
 
         this.CreateRoomJS = this.node.getComponent("CreateRoom");
         //this.CreateRoomJS.preLoadPrefab(true);
@@ -115,7 +114,7 @@ cc.Class({
 
         this.btn_member = cc.find("Layer/img_bottomBg/btn_member",this.node);
         Global.btnClickEvent(this.btn_member,this.onClickMember,this);
-        this.btn_member.active = (info.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+        this.btn_member.active = (this.getIsManager() || this.getIsPartner());
 
         this.node.addComponent("ClubWaterRecord");
 
@@ -249,13 +248,34 @@ cc.Class({
         }
     },
 
+    getIsManager(){
+        this._clubInfo = cc.vv.UserManager.getCurClubInfo();
+        return (1 == this._clubInfo.level || 2 == this._clubInfo.level);
+    },
+
+    getIsPartner(){
+        this._clubInfo = cc.vv.UserManager.getCurClubInfo();
+        return (1 == this._clubInfo.level || 3 <= this._clubInfo.level);
+    },
+
     onRcvSetPartner(data){
         data = data.detail;
         if (200 == data.code) {
+            if (data.clubid === cc.vv.UserManager.currClubId && data.setuid === cc.vv.UserManager.uid) {
+                this.img_card_bg.active = this.getIsManager();
+                this.btn_msg.active = this.getIsManager();
+                this.createRoomBtn.active = this.getIsManager();
+                this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
+                this.btn_member.active = (this.getIsManager() || this.getIsPartner());
+                for(let i=0; i<this._content.childrenCount;++i){
+                    let btn_tableOperate = cc.find("node/btn_tableOperate", this._content.children[i]);
+                    btn_tableOperate.active = (this.getIsManager() || this.getIsPartner());
+                }
+            }
             if (data.clubid === cc.vv.UserManager.currClubId && data.partneruid === cc.vv.UserManager.uid) {
                 this._clubInfo = cc.vv.UserManager.getCurClubInfo();
-                this.btn_invite.active = (this._clubInfo.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
-                this.btn_member.active = (this._clubInfo.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+                this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
+                this.btn_member.active = (this.getIsManager() || this.getIsPartner());
             }
         }
     },
@@ -336,20 +356,6 @@ cc.Class({
                     }
                 }
             }
-
-            // for(let i=0;i<this._content.childrenCount;++i){
-            //     let item = this._content.children[i];
-            //     if(item._deskId === deskInfo.deskid){
-            //         this.initTable(item,deskInfo.config,deskInfo);
-            //         for(let i=0;i<this._tableList.length;++i){
-            //             if(this._tableList[i].deskid === deskInfo.deskid){
-            //                 this._tableList[i] = deskInfo;
-            //                 break;
-            //             }
-            //         }
-            //         break;
-            //     }
-            // }
         }
     },
 
@@ -569,7 +575,7 @@ cc.Class({
         }
 
         let btn_tableOperate = cc.find("node/btn_tableOperate",item);
-        btn_tableOperate.active = (this._clubInfo.createUid == cc.vv.UserManager.uid);
+        btn_tableOperate.active = (this.getIsManager() || this.getIsPartner());
         btn_tableOperate.tableInfo = data;
         Global.btnClickEvent(btn_tableOperate,this.onClickShowTableOperate,this);
     },
