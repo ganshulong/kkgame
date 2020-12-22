@@ -51,6 +51,7 @@ cc.Class({
         Global.autoAdaptDevices(false);
 
         this.node.addComponent("ClubMessage");
+        this.node.addComponent("ClubExitApplyMessage");
         this.node.addComponent("CreateRoom");
 
         let info = cc.vv.UserManager.getCurClubInfo();
@@ -86,15 +87,15 @@ cc.Class({
         this.node.addComponent("ClubInviteJoin");
         this.ClubInviteJoinJS = this.node.getComponent("ClubInviteJoin");
 
-        this.node.addComponent("ClubExitApplyMessage");
-        this.ClubExitApplyMessageJS = this.node.getComponent("ClubExitApplyMessage");
+        this.node.addComponent("ClubPlayerInOutRecord");
+        this.ClubPlayerInOutRecordJS = this.node.getComponent("ClubPlayerInOutRecord");
 
         this.btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
         Global.btnClickEvent(this.btn_msg,this.onClickMsg,this);
         this.btn_msg.active = this.getIsManager();
 
         this.spr_redPoint = this.btn_msg.getChildByName("spr_redPoint");
-        this.spr_redPoint.active = this._clubInfo.exitHave;
+        this.spr_redPoint.active = false;
 
         this.node.addComponent("ClubSetting");
         this.ClubSettingJS = this.node.getComponent("ClubSetting");
@@ -172,6 +173,7 @@ cc.Class({
             this._tableList = msg.response.deskList;
             this.initTables(this._tableList);
             this.setPower(msg.response.pscore);
+            this.spr_redPoint.active = msg.response.hsNew;
         }
     },
 
@@ -190,7 +192,7 @@ cc.Class({
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
-        Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
+        // Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
         Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
@@ -291,11 +293,11 @@ cc.Class({
         }
     },
 
-    onRcvClubExitApplyNotify(data){
-        if(data.detail.clubid == cc.vv.UserManager.currClubId){
-            this.spr_redPoint.active = data.detail.isShow;
-        }
-    },
+    // onRcvClubExitApplyNotify(data){
+    //     if(data.detail.clubid == cc.vv.UserManager.currClubId){
+    //         this.spr_redPoint.active = data.detail.isShow;
+    //     }
+    // },
 
     updateClubList(){
         let currClubIsHave = false;
@@ -666,9 +668,8 @@ cc.Class({
     },
 
     onClickMsg(){
-        if (this.spr_redPoint.active) {
-            this.ClubExitApplyMessageJS.showLayer();
-        }
+        this.ClubPlayerInOutRecordJS.showLayer();
+        this.spr_redPoint.active = false;
     },
 
     onClickSetting(){
