@@ -144,6 +144,13 @@ cc.Class({
         //游戏玩法选项页面
         this.gamePanels = [];
         this.gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_tonghua"];
+
+        this.btn_rule = this._createLayer.getChildByName("btn_rule");
+        Global.btnClickEvent(this.btn_rule,this.onClickSetRuleShow,this);
+        this.panel_rule = this._createLayer.getChildByName("panel_rule");
+        this.panel_rule.active = false;
+        let btnClose = this.panel_rule.getChildByName("btnClose");
+        Global.btnClickEvent(btnClose,this.onClickSetRuleShow,this);
     },
 
     initShow(){
@@ -178,9 +185,9 @@ cc.Class({
                         this.setTaggleOriginalSelect(content);
                     } else {
                         if ("panel_liuhuqiang" === panel.name || "panel_shihuka" === panel.name || "panel_tonghua" === panel.name) {
-                            this.setTaggleDefaultSelect(content, ["round","player_num","param1","param2","speed"]);
+                            this.setTaggleDefaultSelect(content, ["round","player_num","param1","param2","speed","trustee"]);
                         } else {
-                            this.setTaggleDefaultSelect(content, ["round","player_num","param1","speed"]);
+                            this.setTaggleDefaultSelect(content, ["round","player_num","param1","speed","trustee"]);
                         }
                     }
 
@@ -283,6 +290,13 @@ cc.Class({
         for (let i = 0; i < speed.children.length; i++) {
             let toggle = speed.getChildByName("toggle" + i);
             toggle.speed = i;
+        }
+
+        // 托管
+        let trustee = content.getChildByName("trustee");
+        for (let i = 0; i < trustee.children.length; i++) {
+            let toggle = trustee.getChildByName("toggle" + i);
+            toggle.trustee = i;
         }
     },
 
@@ -407,8 +421,11 @@ cc.Class({
             toggle.getComponent(cc.Toggle).isChecked = (toggle.speed == this.modifyConfig.speed);
         }
 
-        let trusteeship = cc.find("trusteeship/toggle0",content);
-        trusteeship.getComponent(cc.Toggle).isChecked = this.modifyConfig.trustee;
+        let trustee = content.getChildByName("trustee");
+        for (let i = 0; i < trustee.children.length; i++) {
+            let toggle = trustee.getChildByName("toggle" + i);
+            toggle.getComponent(cc.Toggle).isChecked = (toggle.trustee == this.modifyConfig.trustee);
+        }
 
         let dismiss = cc.find("dismiss/toggle0",content);
         dismiss.getComponent(cc.Toggle).isChecked = this.modifyConfig.isdissolve;
@@ -441,9 +458,6 @@ cc.Class({
                 break;
             }
         }
-
-        let trusteeship = cc.find("trusteeship/toggle0",content);
-        trusteeship.getComponent(cc.Toggle).isChecked = false;
 
         let dismiss = cc.find("dismiss/toggle0",content);
         dismiss.getComponent(cc.Toggle).isChecked = true;
@@ -592,9 +606,15 @@ cc.Class({
         let speed = cc.find("speed/toggle0",content);
         req.speed = speed.getComponent(cc.Toggle).isChecked ? 0 : 1;
 
-        // 托管
-        let trusteeship = cc.find("trusteeship/toggle0",content);
-        req.trustee = trusteeship.getComponent(cc.Toggle).isChecked ? 1 : 0;
+        //托管
+        let trustee = content.getChildByName("trustee");
+        for (let j = 0; j < trustee.children.length; j++) {
+            let toggle = trustee.getChildByName("toggle" + j);
+            if (toggle.getComponent(cc.Toggle).isChecked) {
+                req.trustee = parseInt(toggle.trustee);
+                break;
+            }
+        }
 
         // 解散
         let dismiss = cc.find("dismiss/toggle0",content);
@@ -640,6 +660,16 @@ cc.Class({
         }
         data.gameInfo = req;
         cc.vv.NetManager.send(data);
+    },
+
+    onClickSetRuleShow(){
+        this.panel_rule.active = !this.panel_rule.active;
+        if (this.panel_rule.active) {
+            let scrollView_rules = this.panel_rule.getChildByName("scrollView_rules");
+            for (let i = 0; i < scrollView_rules.children.length; i++) {
+                scrollView_rules.children[i].active = (scrollView_rules.children[i].name == this.curGameIndex);
+            }
+        }
     },
 
     onDestroy(){
