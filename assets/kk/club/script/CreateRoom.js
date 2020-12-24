@@ -668,6 +668,9 @@ cc.Class({
             let scrollView_rules = this.panel_rule.getChildByName("scrollView_rules");
             for (let i = 0; i < scrollView_rules.children.length; i++) {
                 scrollView_rules.children[i].active = (scrollView_rules.children[i].name == this.curGameIndex);
+                if (scrollView_rules.children[i].active) {
+                    scrollView_rules.children[i].getComponent(cc.ScrollView).scrollToTop(0);
+                }
             }
         }
     },
