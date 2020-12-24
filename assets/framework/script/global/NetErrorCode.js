@@ -197,4 +197,7 @@ codeCfg.code = {
     '447':"no_can_create_club",
     '448':"no_junior_member",
     '449':"water_line_no_set",
+    '9936':"power_not_0",
+    '9937':"not_normal_player",
+    '450':"not_permissions",
 }

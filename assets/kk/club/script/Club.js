@@ -271,7 +271,7 @@ cc.Class({
                 this.btn_member.active = (this.getIsManager() || this.getIsPartner());
                 for(let i=0; i<this._content.childrenCount;++i){
                     let btn_tableOperate = cc.find("node/btn_tableOperate", this._content.children[i]);
-                    btn_tableOperate.active = (this.getIsManager() || this.getIsPartner());
+                    btn_tableOperate.active = this.getIsManager();
                 }
             }
             if (data.clubid === cc.vv.UserManager.currClubId && data.partneruid === cc.vv.UserManager.uid) {
@@ -577,7 +577,7 @@ cc.Class({
         }
 
         let btn_tableOperate = cc.find("node/btn_tableOperate",item);
-        btn_tableOperate.active = (this.getIsManager() || this.getIsPartner());
+        btn_tableOperate.active = this.getIsManager();
         btn_tableOperate.tableInfo = data;
         Global.btnClickEvent(btn_tableOperate,this.onClickShowTableOperate,this);
     },
