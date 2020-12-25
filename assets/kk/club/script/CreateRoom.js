@@ -306,7 +306,7 @@ cc.Class({
             req.gameid = this._isClubRoom ? 17 : 18;
             req.param2 = 0;
             optionList.push({option:"player_num",       valueList:[4]});
-            optionList.push({option:"param1",           valueList:[20,40,60]});
+            optionList.push({option:"param1",           valueList:[20,30]});
             optionList.push({option:"param2",           valueList:[1]});
         }
 
