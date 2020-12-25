@@ -196,7 +196,12 @@ cc.Class({
                 item.y = this.gameRecordContent.children[0].y - i * (item.height + 5);
                 item.active = true;
 
-                item.getChildByName("text_gameName").getComponent(cc.Label).string = Global.getGameName(msg.data[i].gameid);
+                let gameIcon = item.getChildByName("gameIcon");
+                let gameIconStr = ["","penghu","paohuzi","penghu","paohuzi","hongheihu","hongheihu","liuhuqiang","liuhuqiang","paodekuai","paodekuai",
+                                    "hongzhong","hongzhong","shihuka","shihuka","erqigui","erqigui"];
+                let gameIconPrefabRes= cc.find("prefabRes/" + gameIconStr[msg.data[i].gameid], this._layer);
+                gameIcon.getComponent(cc.Sprite).spriteFrame  = gameIconPrefabRes.getComponent(cc.Sprite).spriteFrame;
+                
                 let strArr = msg.data[i].beginTime.split(" ");
                 item.getChildByName("text_time").getComponent(cc.Label).string = strArr[0];
                 item.getChildByName("text_time1").getComponent(cc.Label).string = strArr[1];
