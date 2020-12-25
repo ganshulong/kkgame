@@ -56,6 +56,7 @@ cc.Class({
 
         let btnMsg = cc.find("scene/operate_btn_view/btn_msg",this.node);
         Global.btnClickEvent(btnMsg,this.onShowMsg,this);
+        btnMsg.getComponent(cc.Button).interactable = !conf.interact;
 
         cc.find("scene/panel_ting",this.node).active = false;
 

@@ -53,6 +53,7 @@ cc.Class({
 
         let btnMsg = cc.find("scene/operate_btn_view/btn_msg",this.node);
         Global.btnClickEvent(btnMsg,this.onShowMsg,this);
+        btnMsg.getComponent(cc.Button).interactable = !conf.interact;
 
         this.node.addComponent("HongZhong_Card").init();
 
