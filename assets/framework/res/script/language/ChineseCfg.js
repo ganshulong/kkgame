@@ -628,5 +628,6 @@ Wild只出现在2~5列",
     power_not_0:"该玩家分数未清零",
     not_normal_player:"非普通玩家不可以删除",
     not_permissions:"没有权限",
+    not_set_power_to_manager:"不能给管理员设置疲劳值",
 };
 

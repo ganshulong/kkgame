@@ -200,4 +200,5 @@ codeCfg.code = {
     '9936':"power_not_0",
     '9937':"not_normal_player",
     '450':"not_permissions",
+    '451':"not_set_power_to_manager",
 }
