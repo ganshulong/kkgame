@@ -822,7 +822,7 @@ cc.Class({
 
     onClickModifyTable(event){
         this.panel_tableOperate.active = false;
-        this.CreateRoomJS.showCreateRoom(true, event.target.config);
+        this.CreateRoomJS.showCreateRoom(true, undefined, event.target.config);
     },
 
     onBack(){

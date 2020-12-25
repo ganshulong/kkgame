@@ -72,22 +72,22 @@ cc.Class({
             )
         )
 
-        // let prefabRes = this.node.getChildByName("prefabRes");
-        // let content = cc.find("right_list/scrollview/view/content",this.node)
-        // content.removeAllChildren(true);
-        // let tempItem = cc.find("right_list/scrollview/view/item",this.node);
-        // tempItem.active = false;
-        // for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
-        //     let item = cc.instantiate(tempItem);
-        //     let prefabIcon = prefabRes.getChildByName(""+cc.vv.UserManager.gameList[i].id);
-        //     item.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
-        //     item.x = item.width * item.scaleX * i;
-        //     item.parent = content;
-        //     item.active = true;
-        //     item.id = cc.vv.UserManager.gameList[i].id;
-        //     Global.btnClickEvent(item,this.onClickCreateRoom,this);
-        // }
-        // content.width = tempItem.width * tempItem.scaleX * cc.vv.UserManager.gameList.length;
+        let prefabRes = this.node.getChildByName("prefabRes");
+        let content = cc.find("right_list/scrollview/view/content",this.node)
+        content.removeAllChildren(true);
+        let tempItem = cc.find("right_list/scrollview/view/item",this.node);
+        tempItem.active = false;
+        for (var i = 0; i < cc.vv.UserManager.gameList.length; i++) {
+            let item = cc.instantiate(tempItem);
+            let prefabIcon = prefabRes.getChildByName("gameIcon"+cc.vv.UserManager.gameList[i].id);
+            item.getComponent(cc.Sprite).spriteFrame  = prefabIcon.getComponent(cc.Sprite).spriteFrame;
+            item.x = item.width * item.scaleX * i;
+            item.parent = content;
+            item.active = true;
+            item.id = cc.vv.UserManager.gameList[i].id;
+            Global.btnClickEvent(item,this.onClickCreateRoom,this);
+        }
+        content.width = tempItem.width * tempItem.scaleX * cc.vv.UserManager.gameList.length;
 
         cc.find("head_bg/UserHead/name",this.node).getComponent(cc.Label).string = cc.vv.UserManager.nickName;
         cc.find("head_bg/id",this.node).getComponent(cc.Label).string = cc.vv.UserManager.uid;
@@ -125,8 +125,8 @@ cc.Class({
         let history_btn = cc.find("dt_xmt/history_btn",this.node)
         Global.btnClickEvent(history_btn,this.onClickHistory,this);
 
-        let btn_create_game = cc.find("right_list/btn_create_game", this.node);
-        Global.btnClickEvent(btn_create_game, this.onClickCreateRoom,this);
+        // let btn_create_game = cc.find("right_list/btn_create_game", this.node);
+        // Global.btnClickEvent(btn_create_game, this.onClickCreateRoom,this);
 
         this.initJoinGame();
 
@@ -202,8 +202,8 @@ cc.Class({
         this.HallRecordJS.showGameRecord();
     },
 
-    onClickCreateRoom(){
-        this.CreateRoomJS.showCreateRoom(false);
+    onClickCreateRoom(event){
+        this.CreateRoomJS.showCreateRoom(false, event.target.id);
     },
 
     onClickSet(){
@@ -211,7 +211,7 @@ cc.Class({
     },
     
     initJoinGame(){
-        let btn_join_game = cc.find("right_list/btn_join_game", this.node);
+        let btn_join_game = cc.find("dt_xmt/joinGame_btn",this.node)
         Global.btnClickEvent(btn_join_game,this.onClickJoinGame,this);
 
         this.panel_join_game = this.node.getChildByName("panel_join_game");
