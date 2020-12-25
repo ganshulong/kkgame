@@ -291,6 +291,7 @@ GlobalMsgId.CLUB_INVITE_All_AGREE = 8829; 	// 全部同意加入俱乐部
 GlobalMsgId.CLUB_INVITE_NOTIFY = 8830;  	// 俱乐部邀请通知
 
 GlobalMsgId.CLUB_SET_PARTNER = 8831;  		// 俱乐部授权合伙人
+GlobalMsgId.CLUB_SET_MANAGER = 8837;    	// 俱乐部授权管理
 GlobalMsgId.CLUB_SET_PARTNER_RATIO = 8832; 	// 设置合伙人抽水比
 GlobalMsgId.CLUB_SET_POWER = 8833; 			// 设置疲劳
 GlobalMsgId.CLUB_POWER_NOTIFY = 18817; 		// 疲劳通知
@@ -299,3 +300,6 @@ GlobalMsgId.CLUB_POWER_RECORD = 8834; 		// 疲劳记录
 GlobalMsgId.SEARCH_CLUB_MEMBER = 8835;      // 搜索亲友圈成员
 GlobalMsgId.MEMEBER_WATER_RECORD = 8836;    // 成员抽水记录
 
+GlobalMsgId.MODIFY_ROOM_PLAY = 2207;    	// 修改房间玩法
+
+GlobalMsgId.CLUB_PLAYER_IN_OUT_RECORD = 173;// 俱乐部玩家进出记录

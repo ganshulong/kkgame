@@ -175,14 +175,27 @@ cc.Class({
                 item.y = - item.height * i;
 
                 let bg_memberItem = item.getChildByName("bg_memberItem");
+                bg_memberItem.getChildByName("spr_partner").active = (0 == i);
                 let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
                 Global.setHead(spr_head, showList[i].usericon);
                 bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = showList[i].playername;
-                bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = showList[i].gxuid;
-                if (0 != showList[i].score) {
-                    bg_memberItem.getChildByName("text_water").getComponent(cc.Label).string = showList[i].score.toFixed(2);
+                if (0 != showList[i].gxuid) {
+                    bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = showList[i].gxuid;
+                } else {
+                    bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = "ALL";
                 }
-                bg_memberItem.getChildByName("text_time").getComponent(cc.Label).string = showList[i].time;
+                if (0 != showList[i].score1) {
+                    bg_memberItem.getChildByName("text_water1").getComponent(cc.Label).string = showList[i].score1.toFixed(2);
+                }
+                if (0 != showList[i].score3) {
+                    bg_memberItem.getChildByName("text_water3").getComponent(cc.Label).string = showList[i].score3.toFixed(2);
+                }
+                if (0 != showList[i].score7) {
+                    bg_memberItem.getChildByName("text_water7").getComponent(cc.Label).string = showList[i].score7.toFixed(2);
+                }
+                if (0 != showList[i].allscore) {
+                    bg_memberItem.getChildByName("text_waterAll").getComponent(cc.Label).string = showList[i].allscore.toFixed(2);
+                }
                 item.active = true;
             }
             this.listContent.height = this.listItem.height * showList.length;

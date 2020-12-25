@@ -149,6 +149,9 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.OUT_CARD, this.onRcvOutCard, this);
         cc.vv.NetManager.registerMsg(MsgId.SCORE_UPDATE_NOTIFY, this.onRcvScoreUpdateNotify,this);
+        cc.vv.NetManager.registerMsg(MsgId.TRUSTEE_NOTIFY, this.onRcvTrusteeNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.CANCEL_TRUSTEE, this.onRcvCancelTrustee, this);
+        cc.vv.NetManager.registerMsg(MsgId.CANCEL_TRUSTEE_NOTIFY, this.onRcvCancelTrusteeNotify, this);
     },
 
     unregisterMsg() {
@@ -189,7 +192,26 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.OUT_CARD_NOTIFY, this.onRcvOutCardNotify, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.OUT_CARD, this.onRcvOutCard, false,this);
         cc.vv.NetManager.unregisterMsg(MsgId.SCORE_UPDATE_NOTIFY, this.onRcvScoreUpdateNotify, false,this);
+        cc.vv.NetManager.unregisterMsg(MsgId.TRUSTEE_NOTIFY, this.onRcvTrusteeNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CANCEL_TRUSTEE, this.onRcvCancelTrustee, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CANCEL_TRUSTEE_NOTIFY, this.onRcvCancelTrusteeNotify, false, this);
+    },
 
+    onRcvCancelTrusteeNotify(msg){
+        if(msg.code == 200){
+            Global.dispatchEvent(EventId.CANCEL_TRUSTEE_NOTIFY, msg)
+        }
+    },
+
+    onRcvCancelTrustee(msg){
+        if(msg.code == 200){
+        }
+    },
+
+    onRcvTrusteeNotify(msg){
+        if(msg.code == 200){
+            Global.dispatchEvent(EventId.TRUSTEE_NOTIFY, msg)
+        }
     },
 
     onRcvUpdateTableInfo(msg){
@@ -289,9 +311,7 @@ cc.Class({
         if(conf.speed === 1){
             list.push("快速 ");
         }
-        if(conf.trustee){
-            list.push("托管 ");
-        }
+        list.push(["不托管 ","30秒托管 ","60秒托管 ","90秒托管 "][conf.trustee]);
         list.push(["禁止解散 ","允许解散 "][conf.isdissolve]);
         if(conf.ipcheck){
             list.push("同IP禁止进入 "); 

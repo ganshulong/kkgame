@@ -308,9 +308,7 @@ cc.Class({
         if(conf.speed === 1){
             list.push("快速 ");
         }
-        if(conf.trustee){
-            list.push("托管 ");
-        }
+        list.push(["不托管 ","30秒托管 ","60秒托管 ","90秒托管 "][conf.trustee]);
         list.push(["禁止解散 ","允许解散 "][conf.isdissolve]);
         if(conf.ipcheck){
             list.push("同IP禁止进入 "); 

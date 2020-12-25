@@ -150,8 +150,8 @@ cc.Class({
             if (200 == msg.code) {
                 for (let i = 0; i < cc.vv.UserManager.clubs.length; i++) {
                     if (msg.clubid === cc.vv.UserManager.clubs[i].clubid) {
-                        if (msg.partneruid === cc.vv.UserManager.uid) {
-                            cc.vv.UserManager.clubs[i].hehuo = (1 == msg.type) ? 1 : 0;
+                        if (msg.partneruid === cc.vv.UserManager.uid || msg.setuid === cc.vv.UserManager.uid) {
+                            cc.vv.UserManager.clubs[i].level = msg.level;
                         }
                         Global.dispatchEvent(EventId.CLUB_SET_PARTNER, msg);
                         break;

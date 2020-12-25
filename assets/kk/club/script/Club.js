@@ -51,6 +51,7 @@ cc.Class({
         Global.autoAdaptDevices(false);
 
         this.node.addComponent("ClubMessage");
+        this.node.addComponent("ClubExitApplyMessage");
         this.node.addComponent("CreateRoom");
 
         let info = cc.vv.UserManager.getCurClubInfo();
@@ -76,26 +77,25 @@ cc.Class({
         let power_bg = cc.find("Layer/bg/power_bg",this.node);
         Global.btnClickEvent(power_bg,this.onClickPowerRecord,this);
 
-        cc.find("Layer/bg/img_card_bg",this.node).active = (info.createUid == cc.vv.UserManager.uid);
-
-        let txt_card_num = cc.find("Layer/bg/img_card_bg/txt_card_num",this.node);
-        txt_card_num.getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
+        this.img_card_bg = cc.find("Layer/bg/img_card_bg",this.node);
+        this.img_card_bg.active = this.getIsManager();
+        this.img_card_bg.getChildByName("txt_card_num").getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
         this.btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
-        this.btn_invite.active = (info.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+        this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
         Global.btnClickEvent(this.btn_invite,this.onClickInviteJoin,this);
         this.node.addComponent("ClubInviteJoin");
         this.ClubInviteJoinJS = this.node.getComponent("ClubInviteJoin");
 
-        this.node.addComponent("ClubExitApplyMessage");
-        this.ClubExitApplyMessageJS = this.node.getComponent("ClubExitApplyMessage");
+        this.node.addComponent("ClubPlayerInOutRecord");
+        this.ClubPlayerInOutRecordJS = this.node.getComponent("ClubPlayerInOutRecord");
 
-        let btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
-        Global.btnClickEvent(btn_msg,this.onClickMsg,this);
-        btn_msg.active = (info.createUid == cc.vv.UserManager.uid);
+        this.btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
+        Global.btnClickEvent(this.btn_msg,this.onClickMsg,this);
+        this.btn_msg.active = this.getIsManager();
 
-        this.spr_redPoint = btn_msg.getChildByName("spr_redPoint");
-        this.spr_redPoint.active = this._clubInfo.exitHave;
+        this.spr_redPoint = this.btn_msg.getChildByName("spr_redPoint");
+        this.spr_redPoint.active = false;
 
         this.node.addComponent("ClubSetting");
         this.ClubSettingJS = this.node.getComponent("ClubSetting");
@@ -103,9 +103,9 @@ cc.Class({
         let btn_setting = cc.find("Layer/bg/bg_top/btn_setting",this.node);
         Global.btnClickEvent(btn_setting,this.onClickSetting,this);
 
-        let createRoomBtn = cc.find("Layer/img_bottomBg/btn_switch",this.node);
-        Global.btnClickEvent(createRoomBtn,this.onCreateRoom,this);
-        createRoomBtn.active = (info.createUid == cc.vv.UserManager.uid);
+        this.createRoomBtn = cc.find("Layer/img_bottomBg/btn_switch",this.node);
+        Global.btnClickEvent(this.createRoomBtn,this.onCreateRoom,this);
+        this.createRoomBtn.active = this.getIsManager();
 
         this.CreateRoomJS = this.node.getComponent("CreateRoom");
         //this.CreateRoomJS.preLoadPrefab(true);
@@ -115,7 +115,7 @@ cc.Class({
 
         this.btn_member = cc.find("Layer/img_bottomBg/btn_member",this.node);
         Global.btnClickEvent(this.btn_member,this.onClickMember,this);
-        this.btn_member.active = (info.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+        this.btn_member.active = (this.getIsManager() || this.getIsPartner());
 
         this.node.addComponent("ClubWaterRecord");
 
@@ -137,6 +137,15 @@ cc.Class({
         this.ruleSelectItem.active = false;
         let btn_ruleSelect = cc.find("Layer/img_bottomBg/btn_ruleSelect",this.node);
         Global.btnClickEvent(btn_ruleSelect,this.onClickRuleSelect,this);
+
+        this.panel_tableOperate = cc.find("Layer/panel_tableOperate",this.node);
+        this.panel_tableOperate.active = false;
+        let btnCloseTableOperate = this.panel_tableOperate.getChildByName("btnCloseTableOperate");
+        Global.btnClickEvent(btnCloseTableOperate,this.onClickCloseTableOperate,this);
+        this.btn_deleteTable = this.panel_tableOperate.getChildByName("btn_deleteTable");
+        Global.btnClickEvent(this.btn_deleteTable,this.onClickDeleteTable,this);
+        this.btn_modifyTable = this.panel_tableOperate.getChildByName("btn_modifyTable");
+        Global.btnClickEvent(this.btn_modifyTable,this.onClickModifyTable,this);
 
         let btn_backRoom = cc.find("Layer/img_bottomBg/btn_backRoom",this.node);
         Global.btnClickEvent(btn_backRoom,this.onClickBackRoom,this);
@@ -164,6 +173,7 @@ cc.Class({
             this._tableList = msg.response.deskList;
             this.initTables(this._tableList);
             this.setPower(msg.response.pscore);
+            this.spr_redPoint.active = msg.response.hsNew;
         }
     },
 
@@ -178,10 +188,11 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, this); //退出房间
         cc.vv.NetManager.registerMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
+        cc.vv.NetManager.registerMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
-        Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
+        // Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
         Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
@@ -198,6 +209,29 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.GAME_LEVELROOM, this.onRcvNetExitRoom, false, this); //退出房间
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, false, this);
+    },
+
+    onRcvModifyRoomPlay(msg){
+        if(msg.code === 200){
+            this.CreateRoomJS.onClose();
+
+            let deskInfo = msg.response.deskInfo;
+            for(let i=0;i<this._content.childrenCount;++i){
+                let item = this._content.children[i];
+                if(item._deskId == deskInfo.deskid){
+                    for(let i=0;i<this._tableList.length;++i){
+                        if(this._tableList[i].deskid == deskInfo.deskid){
+                            this._tableList[i] = deskInfo;
+                            this.initTables(this._tableList);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            cc.vv.FloatTip.show("修改玩法成功!");
+        }
     },
 
     onRcvSetPower(msg){
@@ -216,13 +250,34 @@ cc.Class({
         }
     },
 
+    getIsManager(){
+        this._clubInfo = cc.vv.UserManager.getCurClubInfo();
+        return (1 == this._clubInfo.level || 2 == this._clubInfo.level);
+    },
+
+    getIsPartner(){
+        this._clubInfo = cc.vv.UserManager.getCurClubInfo();
+        return (1 == this._clubInfo.level || 3 <= this._clubInfo.level);
+    },
+
     onRcvSetPartner(data){
         data = data.detail;
         if (200 == data.code) {
+            if (data.clubid === cc.vv.UserManager.currClubId && data.setuid === cc.vv.UserManager.uid) {
+                this.img_card_bg.active = this.getIsManager();
+                this.btn_msg.active = this.getIsManager();
+                this.createRoomBtn.active = this.getIsManager();
+                this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
+                this.btn_member.active = (this.getIsManager() || this.getIsPartner());
+                for(let i=0; i<this._content.childrenCount;++i){
+                    let btn_tableOperate = cc.find("node/btn_tableOperate", this._content.children[i]);
+                    btn_tableOperate.active = this.getIsManager();
+                }
+            }
             if (data.clubid === cc.vv.UserManager.currClubId && data.partneruid === cc.vv.UserManager.uid) {
                 this._clubInfo = cc.vv.UserManager.getCurClubInfo();
-                this.btn_invite.active = (this._clubInfo.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
-                this.btn_member.active = (this._clubInfo.createUid == cc.vv.UserManager.uid || this._clubInfo.hehuo);
+                this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
+                this.btn_member.active = (this.getIsManager() || this.getIsPartner());
             }
         }
     },
@@ -238,11 +293,11 @@ cc.Class({
         }
     },
 
-    onRcvClubExitApplyNotify(data){
-        if(data.detail.clubid == cc.vv.UserManager.currClubId){
-            this.spr_redPoint.active = data.detail.isShow;
-        }
-    },
+    // onRcvClubExitApplyNotify(data){
+    //     if(data.detail.clubid == cc.vv.UserManager.currClubId){
+    //         this.spr_redPoint.active = data.detail.isShow;
+    //     }
+    // },
 
     updateClubList(){
         let currClubIsHave = false;
@@ -303,20 +358,6 @@ cc.Class({
                     }
                 }
             }
-
-            // for(let i=0;i<this._content.childrenCount;++i){
-            //     let item = this._content.children[i];
-            //     if(item._deskId === deskInfo.deskid){
-            //         this.initTable(item,deskInfo.config,deskInfo);
-            //         for(let i=0;i<this._tableList.length;++i){
-            //             if(this._tableList[i].deskid === deskInfo.deskid){
-            //                 this._tableList[i] = deskInfo;
-            //                 break;
-            //             }
-            //         }
-            //         break;
-            //     }
-            // }
         }
     },
 
@@ -535,31 +576,10 @@ cc.Class({
             }
         }
 
-        let btn_delete = cc.find("node/btn_delete",item);
-        btn_delete.active = (this._clubInfo.createUid == cc.vv.UserManager.uid);
-        btn_delete.deskid = data.deskid;
-        Global.btnClickEvent(btn_delete,this.onClickDeleteTable,this);
-    },
-
-    onClickDeleteTable(event){
-        let deskid = event.target.deskid;
-        for (let i = 0; i < this._tableList.length; i++) {
-            if (this._tableList[i].deskid == deskid) {
-                if (0 < this._tableList[i].users.length) {
-                    cc.vv.FloatTip.show("不能删除，有人坐下的桌子");
-                    return;
-                }
-            }
-        }
-        let sureCall = function () {
-            var req = { c: MsgId.CLUB_DELETE_TABLE};
-            req.clubid = cc.vv.UserManager.currClubId;
-            req.deskid = deskid;
-            cc.vv.NetManager.send(req);
-        }
-        let cancelCall = function () {
-        }
-        cc.vv.AlertView.show("是否确实删除桌子："+deskid, sureCall, cancelCall);
+        let btn_tableOperate = cc.find("node/btn_tableOperate",item);
+        btn_tableOperate.active = this.getIsManager();
+        btn_tableOperate.tableInfo = data;
+        Global.btnClickEvent(btn_tableOperate,this.onClickShowTableOperate,this);
     },
 
     initTables(list){
@@ -648,9 +668,8 @@ cc.Class({
     },
 
     onClickMsg(){
-        if (this.spr_redPoint.active) {
-            this.ClubExitApplyMessageJS.showLayer();
-        }
+        this.ClubPlayerInOutRecordJS.showLayer();
+        this.spr_redPoint.active = false;
     },
 
     onClickSetting(){
@@ -764,6 +783,46 @@ cc.Class({
         this.showRuleInfo = event.target.tableInfo;
         this.initTables(this._tableList);
         this.setRuleSelectShow(false);
+    },
+
+    onClickCloseTableOperate(){
+        this.panel_tableOperate.active = false;
+    },
+
+    onClickShowTableOperate(event){
+        let tableInfo = event.target.tableInfo;
+        for (let i = 0; i < this._tableList.length; i++) {
+            if (this._tableList[i].deskid == tableInfo.deskid) {
+                if (0 < this._tableList[i].users.length) {
+                    cc.vv.FloatTip.show("以有人坐下的桌子，不能删除或修改玩法");
+                    return;
+                }
+            }
+        }
+        this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前操作桌子:" + tableInfo.config.tname;
+        this.btn_deleteTable.deskid = tableInfo.deskid;
+        tableInfo.config.deskid = tableInfo.deskid;
+        this.btn_modifyTable.config = tableInfo.config;
+        this.panel_tableOperate.active = true;
+    },
+
+    onClickDeleteTable(event){
+        this.panel_tableOperate.active = false;
+        let deskid = event.target.deskid;
+        let sureCall = function () {
+            var req = { c: MsgId.CLUB_DELETE_TABLE};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.deskid = deskid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("是否确实删除桌子："+deskid, sureCall, cancelCall);
+    },
+
+    onClickModifyTable(event){
+        this.panel_tableOperate.active = false;
+        this.CreateRoomJS.showCreateRoom(true, event.target.config);
     },
 
     onBack(){

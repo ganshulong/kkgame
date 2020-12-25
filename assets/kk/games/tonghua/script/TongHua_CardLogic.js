@@ -41,10 +41,15 @@ cc.Class({
                 }
             }
         }
-        card2DListTongHua.sort((a,b)=>{
-            return a.length - b.length;
-        });
-        let tongHuaNum = card2DListTongHua.length;
+        let card2DListReturn = [];
+        for (let i = tongHuaMinCardNum; i <= conf.param1; i++) {
+            for (let j = 0; j < card2DListTongHua.length; j++) {
+                if (card2DListTongHua[j].length == i) {
+                    card2DListReturn.push(card2DListTongHua[j]);
+                }
+            }
+        }
+        let tongHuaNum = card2DListReturn.length;
 
         //其他(炸弹)
         let card2DListOther = [];
@@ -60,14 +65,14 @@ cc.Class({
         if (0 < curCardList.length) {
             card2DListOther.push(curCardList);
         }
-        card2DListOther.sort((a,b)=>{
-            return a.length - b.length;
-        });
-
-        for (let i = 0; i < card2DListOther.length; i++) {
-            card2DListTongHua.push(card2DListOther[i]);
+        for (let i = 1; i <= 16; i++) {
+            for (let j = 0; j < card2DListOther.length; j++) {
+                if (card2DListOther[j].length == i) {
+                    card2DListReturn.push(card2DListOther[j]);
+                }
+            }
         }
 
-        return {card2DListEx:card2DListTongHua, tongHuaNum:tongHuaNum};
+        return {card2DListEx:card2DListReturn, tongHuaNum:tongHuaNum};
     },
 });

@@ -22,6 +22,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.registerMsg(MsgId.SEARCH_CLUB_MEMBER, this.onRcvSearchClubMember, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_MANAGER, this.onRcvSetManager, this);
 
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
         Global.registerEvent(EventId.SHOW_CLUB_MEMBER, this.showLayer,this);
@@ -91,9 +92,6 @@ cc.Class({
         Global.btnClickEvent(this.btn_nextPage, this.onClickNextPage,this); 
         this.text_page = cc.find("bg_member/panel_list/node_bottom/text_page",this._layer);
 
-        this._layer.addComponent("ClubSetPartner");
-        this.ClubSetPartnerJS = this._layer.getComponent("ClubSetPartner");
-
         this._layer.addComponent("ClubSetPartnerRatio");
         this.ClubSetPartnerRatioJS = this._layer.getComponent("ClubSetPartnerRatio");
 
@@ -106,10 +104,21 @@ cc.Class({
         Global.btnClickEvent(btnCloseMemberOperate, this.onClickCloseMemberOperate, this);
         this.btn_tickout = this.panel_memberOperate.getChildByName("btn_tickout");
         Global.btnClickEvent(this.btn_tickout, this.onClickTickout,this);
+
         this.btn_forbidPlay = this.panel_memberOperate.getChildByName("btn_forbidPlay");
         Global.btnClickEvent(this.btn_forbidPlay, this.onClickForbidPlay,this);
         this.btn_recoverPlay = this.panel_memberOperate.getChildByName("btn_recoverPlay");
         Global.btnClickEvent(this.btn_recoverPlay, this.onClickRecoverPlay,this); 
+
+        this.btn_cancelPartner = this.panel_memberOperate.getChildByName("btn_cancelPartner");
+        Global.btnClickEvent(this.btn_cancelPartner, this.onClickCancelPartner,this); 
+        this.btn_setPartner = this.panel_memberOperate.getChildByName("btn_setPartner");
+        Global.btnClickEvent(this.btn_setPartner, this.onClickSetPartner,this); 
+
+        this.btn_cancelManager = this.panel_memberOperate.getChildByName("btn_cancelManager");
+        Global.btnClickEvent(this.btn_cancelManager, this.onClickCancelManager,this); 
+        this.btn_setManager = this.panel_memberOperate.getChildByName("btn_setManager");
+        Global.btnClickEvent(this.btn_setManager, this.onClickSetManager,this); 
     },
 
     initShow(){
@@ -324,7 +333,17 @@ cc.Class({
         let showList = list ? list : this.memberList;
         let removeCount = 0;
         for (let i = showList.length-1; i >= removeCount; i--) {
-            if (showList[i].hehuo) {
+            if (3 <= showList[i].level) {
+                let tempInfo = showList[i];
+                showList.splice(i, 1);
+                showList.unshift(tempInfo);
+                ++removeCount;
+                ++i;
+            }
+        }
+        removeCount = 0;
+        for (let i = showList.length-1; i >= removeCount; i--) {
+            if (2 == showList[i].level) {
                 let tempInfo = showList[i];
                 showList.splice(i, 1);
                 showList.unshift(tempInfo);
@@ -404,10 +423,9 @@ cc.Class({
         Global.btnClickEventOff(item, this.onClickCheckRecord,this);
         Global.btnClickEventOff(cc.find("bg_memberItem/text_waterScore/btn_waterScore", item), this.onClickWaterScore,this);
         Global.btnClickEventOff(cc.find("bg_memberItem/text_power/btn_setPower", item), this.onClickSetPower,this);
-        Global.btnClickEventOff(cc.find("bg_memberItem/btn_operate", item), this.onClickSetPartner,this);
         Global.btnClickEventOff(cc.find("bg_memberItem/btn_operate", item), this.onClickShowMemberOperate,this);
 
-        if (cc.vv.UserManager.uid != userInfo.uid && userInfo.hehuo) {
+        if (3 <= userInfo.level) {
             if (0 === Global.checkPartnerList.length) {
                 item.partneruid = userInfo.uid;
                 Global.btnClickEventOn(item, this.onClickSetPartnerRatio,this);
@@ -419,14 +437,15 @@ cc.Class({
                 Global.btnClickEventOn(userHead, this.onClickCheckPartnerMember,this);
             }
         }
-        if (!userInfo.hehuo) {
+        if (0 == userInfo.level) {
             item.uid = userInfo.uid;
             Global.btnClickEventOn(item, this.onClickCheckRecord,this);
         }
         
         let bg_memberItem = item.getChildByName("bg_memberItem");
-        bg_memberItem.getChildByName("spr_creater").active = (cc.vv.UserManager.getCurClubInfo().createUid == userInfo.uid);
-        bg_memberItem.getChildByName("spr_partner").active = (cc.vv.UserManager.getCurClubInfo().createUid != userInfo.uid && userInfo.hehuo);
+        bg_memberItem.getChildByName("spr_creater").active = (1 == userInfo.level);
+        bg_memberItem.getChildByName("spr_manager").active = (2 == userInfo.level);
+        bg_memberItem.getChildByName("spr_partner").active = (3 <= userInfo.level);
         bg_memberItem.getChildByName("spr_stopPlay").active = (!userInfo.state);
         let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
         Global.setHead(spr_head, userInfo.usericon);
@@ -435,8 +454,8 @@ cc.Class({
         bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = userInfo.uid;
         bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = userInfo.isOnLine ? "在线" : "离线";
         bg_memberItem.getChildByName("text_state").color = userInfo.isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
-        bg_memberItem.getChildByName("text_waterScore").active = userInfo.hehuo;
-        if (userInfo.hehuo) {
+        bg_memberItem.getChildByName("text_waterScore").active = (1 == userInfo.level || 3 <= userInfo.level)
+        if (1 == userInfo.level || 3 <= userInfo.level) {
             if (0 != userInfo.shuiScore) {
                 bg_memberItem.getChildByName("text_waterScore").getComponent(cc.Label).string = userInfo.shuiScore.toFixed(2);
             } else {
@@ -476,11 +495,10 @@ cc.Class({
                 Global.btnClickEventOn(btn_setPower, this.onClickSetPower,this); 
             }
             let btn_operate = bg_memberItem.getChildByName("btn_operate");
-            if (cc.vv.UserManager.uid == userInfo.uid) {
-                Global.btnClickEventOn(btn_operate, this.onClickSetPartner,this);
-            } else {
-                btn_operate.playerInfo = userInfo;
-                Global.btnClickEventOn(btn_operate, this.onClickShowMemberOperate,this);
+            btn_operate.active = (cc.vv.UserManager.uid != userInfo.uid);
+            if (btn_operate.active) {
+                btn_operate.userInfo = userInfo;
+                Global.btnClickEventOn(btn_operate, this.onClickShowMemberOperate,this); 
             }
         }
     },
@@ -490,26 +508,71 @@ cc.Class({
         Global.curStartIndex = this.curStartIndex;
     },
 
-    onClickSetPartner(){
-        this.ClubSetPartnerJS.showLayer();
-    },
-
     onClickShowMemberOperate(event){
         this.panel_memberOperate.active = true;
 
-        let playerInfo = event.target.playerInfo;
-        this.panel_memberOperate.getChildByName("text_memberInfo").getComponent(cc.Label).string = "成员:"+playerInfo.playername;
+        let userInfo = event.target.userInfo;
 
-        this.btn_tickout.uid = playerInfo.uid;
-        this.btn_tickout.playername = playerInfo.playername;
+        let spr_head = cc.find("UserHead/radio_mask/spr_head", this.panel_memberOperate);
+        Global.setHead(spr_head, userInfo.usericon);
+        this.panel_memberOperate.getChildByName("text_name").getComponent(cc.Label).string = userInfo.playername;
+        this.panel_memberOperate.getChildByName("text_ID").getComponent(cc.Label).string = "ID: "+userInfo.uid;
 
-        this.btn_forbidPlay.active = (1 == playerInfo.state);
-        this.btn_forbidPlay.uid = playerInfo.uid;
-        this.btn_forbidPlay.playername = playerInfo.playername;
+        let showBtnList = [this.btn_tickout];
+        this.btn_tickout.uid = userInfo.uid;
+        this.btn_tickout.playername = userInfo.playername;
 
-        this.btn_recoverPlay.active = (0 == playerInfo.state);
-        this.btn_recoverPlay.uid = playerInfo.uid;
-        this.btn_recoverPlay.playername = playerInfo.playername;
+        this.btn_forbidPlay.active = (1 == userInfo.state);
+        if (this.btn_forbidPlay.active) {
+            showBtnList.push(this.btn_forbidPlay);
+            this.btn_forbidPlay.uid = userInfo.uid;
+            this.btn_forbidPlay.playername = userInfo.playername;
+        }
+        this.btn_recoverPlay.active = (0 == userInfo.state);
+        if (this.btn_recoverPlay.active) {
+            showBtnList.push(this.btn_recoverPlay);
+            this.btn_recoverPlay.uid = userInfo.uid;
+            this.btn_recoverPlay.playername = userInfo.playername;
+        }
+
+        this.btn_cancelPartner.active = (3 <= userInfo.level);
+        if (this.btn_cancelPartner.active) {
+            showBtnList.push(this.btn_cancelPartner);
+            this.btn_cancelPartner.uid = userInfo.uid;
+            this.btn_cancelPartner.playername = userInfo.playername;
+        }
+        this.btn_setPartner.active = (0 == userInfo.level);
+        if (this.btn_setPartner.active) {
+            showBtnList.push(this.btn_setPartner);
+            this.btn_setPartner.uid = userInfo.uid;
+            this.btn_setPartner.playername = userInfo.playername;
+        }
+
+        this._clubInfo = cc.vv.UserManager.getCurClubInfo();
+        this.btn_cancelManager.active = (2 == userInfo.level && this._clubInfo.createUid == cc.vv.UserManager.uid);
+        if (this.btn_cancelManager.active) {
+            showBtnList.push(this.btn_cancelManager);
+            this.btn_cancelManager.uid = userInfo.uid;
+            this.btn_cancelManager.playername = userInfo.playername;
+        }
+        this.btn_setManager.active = (0 == userInfo.level && this._clubInfo.createUid == cc.vv.UserManager.uid);
+        if (this.btn_setManager.active) {
+            showBtnList.push(this.btn_setManager);
+            this.btn_setManager.uid = userInfo.uid;
+            this.btn_setManager.playername = userInfo.playername;
+        }
+
+        let btnPosXList = [];
+        if (2 == showBtnList.length) {
+            btnPosXList = [-80,80];
+        } else if (3 == showBtnList.length) {
+            btnPosXList = [-160,0,160];
+        } else if (4 == showBtnList.length) {
+            btnPosXList = [-240,-80,80,240];
+        }
+        for (var i = 0; i < showBtnList.length; i++) {
+            showBtnList[i].x = btnPosXList[i];
+        }
     },
 
     onClickCloseMemberOperate(){
@@ -528,45 +591,32 @@ cc.Class({
         this.sendMemberListReq();
     },
 
-    onRcvSetPartner(data){
-        data = data.detail;
+    onRcvSetManager(msg){
+        let data = msg;
         if (200 == data.code && this._layer && this._layer.active && data.clubid === cc.vv.UserManager.currClubId) {
             for (let i = 0; i < this.memberList.length; i++) {
-                if (data.partneruid === this.memberList[i].uid) {
-                    this.memberList[i].hehuo = (1 == data.type) ? 1 : 0;
+                if (data.setuid === this.memberList[i].uid) {
+                    this.memberList[i].level = data.level;
                     this.updateMemberList();
                     break;
                 }
             }
+            this.onClickCloseMemberOperate();
         }
     },
 
-    onClickForbidPlay(event){
-        let self = this;
-        self.kickUid = event.target.uid;
-        let sureCall = function () {
-            let req = { 'c': MsgId.MEMBER_FORBID_PLAY};
-            req.clubid = cc.vv.UserManager.currClubId;
-            req.pauseUid = self.kickUid;
-            cc.vv.NetManager.send(req);
+    onRcvSetPartner(data){
+        data = data.detail;
+        if (200 == data.code && this._layer && this._layer.active && data.clubid === cc.vv.UserManager.currClubId) {
+            for (let i = 0; i < this.memberList.length; i++) {
+                if (data.partneruid === this.memberList[i].uid || data.setuid === this.memberList[i].uid) {
+                    this.memberList[i].level = data.level;
+                    this.updateMemberList();
+                    break;
+                }
+            }
+            this.onClickCloseMemberOperate();
         }
-        let cancelCall = function () {
-        }
-        cc.vv.AlertView.show("确定将" + event.target.playername + "禁止娱乐吗", sureCall, cancelCall);
-    },
-
-    onClickRecoverPlay(event){
-        let self = this;
-        self.kickUid = event.target.uid;
-        let sureCall = function () {
-            let req = { 'c': MsgId.MEMBER_RECOVER_PLAY};
-            req.clubid = cc.vv.UserManager.currClubId;
-            req.recoverUid = self.kickUid;
-            cc.vv.NetManager.send(req);
-        }
-        let cancelCall = function () {
-        }
-        cc.vv.AlertView.show("确定将" + event.target.playername + "恢复娱乐吗", sureCall, cancelCall);
     },
 
     onClickTickout(event){
@@ -580,7 +630,95 @@ cc.Class({
         }
         let cancelCall = function () {
         }
-        cc.vv.AlertView.show("确定将" + event.target.playername + "踢出亲友圈吗", sureCall, cancelCall);
+        cc.vv.AlertView.show("确定将玩家 " + event.target.playername + "，踢出亲友圈吗？", sureCall, cancelCall);
+    },
+
+    onClickForbidPlay(event){
+        let self = this;
+        self.kickUid = event.target.uid;
+        let sureCall = function () {
+            let req = { 'c': MsgId.MEMBER_FORBID_PLAY};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.pauseUid = self.kickUid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将玩家 " + event.target.playername + "，禁止娱乐吗？", sureCall, cancelCall);
+    },
+
+    onClickRecoverPlay(event){
+        let self = this;
+        self.kickUid = event.target.uid;
+        let sureCall = function () {
+            let req = { 'c': MsgId.MEMBER_RECOVER_PLAY};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.recoverUid = self.kickUid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将玩家 " + event.target.playername + "，恢复娱乐吗？", sureCall, cancelCall);
+    },
+
+    onClickCancelPartner(event){
+        let self = this;
+        self.uid = event.target.uid;
+        let sureCall = function () {
+            var req = { 'c': MsgId.CLUB_SET_PARTNER};
+            req.type = 2;
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.partneruid = self.uid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将玩家" + event.target.playername + "，合伙人权限取消吗？\n该合伙人与下级玩家将自动归属到您名下", sureCall, cancelCall);
+    },
+
+    onClickSetPartner(event){
+        let self = this;
+        self.uid = event.target.uid;
+        let sureCall = function () {
+            var req = { 'c': MsgId.CLUB_SET_PARTNER};
+            req.type = 1;
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.partneruid = self.uid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将玩家" + event.target.playername + "，授权为合伙人吗？", sureCall, cancelCall);
+    },
+
+    onClickCancelManager(event){
+        let self = this;
+        self.uid = event.target.uid;
+        let sureCall = function () {
+            let req = { 'c': MsgId.CLUB_SET_MANAGER};
+            req.type = 2;
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.setuid = self.uid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将玩家" + event.target.playername + "，管理权限取消吗", sureCall, cancelCall);
+    },
+
+    onClickSetManager(event){
+        let self = this;
+        self.uid = event.target.uid;
+        let sureCall = function () {
+            let req = { 'c': MsgId.CLUB_SET_MANAGER};
+            req.type = 1;
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.setuid = self.uid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("确定将玩家" + event.target.playername + "，授权为管理者吗", sureCall, cancelCall);
     },
 
     onClickWaterScore(event){
@@ -598,7 +736,7 @@ cc.Class({
             for(let i = 0; i < this.memberListContent.children.length; ++i){
                 let childrenItem = this.memberListContent.children[i];
                 if (msg.uid === childrenItem.uid && childrenItem.active) {
-                    cc.find("bg_memberItem/btn_operate", childrenItem).playerInfo.state = msg.state;
+                    cc.find("bg_memberItem/btn_operate", childrenItem).userInfo.state = msg.state;
                     cc.find("bg_memberItem/spr_stopPlay", childrenItem).active = (!msg.state);
                     break;
                 }
