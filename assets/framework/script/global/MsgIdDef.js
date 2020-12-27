@@ -303,3 +303,8 @@ GlobalMsgId.MEMEBER_WATER_RECORD = 8836;    // 成员抽水记录
 GlobalMsgId.MODIFY_ROOM_PLAY = 2207;    	// 修改房间玩法
 
 GlobalMsgId.CLUB_PLAYER_IN_OUT_RECORD = 173;// 俱乐部玩家进出记录
+
+GlobalMsgId.GAME_CONTINUE_NOTIFY = 18818;			// 游戏继续_通知
+GlobalMsgId.GAME_CONTINUE_REFUSE_NOTIFY = 18819;   	// 游戏继续_拒绝通知
+GlobalMsgId.GAME_CONTINUE_AGREE_NOTIFY = 18820;   	// 游戏继续_同意通知
+GlobalMsgId.GAME_CONTINUE_SELECT = 8838;   			// 游戏继续_选择

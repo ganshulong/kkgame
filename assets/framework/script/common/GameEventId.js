@@ -96,6 +96,7 @@ EventId.SHOW_CLUB_RECORD = "SHOW_CLUB_RECORD";			  // 显示俱乐部战绩
 EventId.SHOW_CLUB_MEMBER = "SHOW_CLUB_MEMBER";			  // 显示俱乐部成员
 EventId.OUT_CARD_FAILD = "OUT_CARD_FAILD";			  	  // 出牌失败
 EventId.UPDATE_CARD_SPRITE = "UPDATE_CARD_SPRITE";	      // 更新扑克牌资源
+EventId.GAME_CONTINUE_NOTIFY = "GAME_CONTINUE_NOTIFY";	  // 继续游戏通知
 
 
 EventId.TEST_EVENT = "TEST_EVENT";  					  // 测试
