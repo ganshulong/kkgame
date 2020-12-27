@@ -108,6 +108,11 @@ cc.Class({
                         else if(i===1)player.x = 280;
                     }
                 }
+
+                let penghu_round_over_view = this._gameOverNode.parent.getChildByName("Penghu_round_over_view");
+                if (!penghu_round_over_view || !penghu_round_over_view.active) {
+                    this.recvShowGameOver();   
+                }
             }
         })
     },
