@@ -107,6 +107,11 @@ cc.Class({
                 for(let i = data.users.length; i < 3; ++i){
                     cc.find("game_end_bg/player"+i,this._layer).active = false;
                 }
+
+                let round_over_view = this._layer.parent.getChildByName("round_over_view");
+                if (!round_over_view || !round_over_view.active) {
+                    this.recvShowGameOver();   
+                }
             }
         })
     },
