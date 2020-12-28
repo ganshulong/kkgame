@@ -40,6 +40,8 @@ cc.Class({
         this.node.addComponent("TongHua_Chat");
         this.node.addComponent("TongHua_Setting");
 
+        this.node.addComponent("TipGameContinue");
+
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);

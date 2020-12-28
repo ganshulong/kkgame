@@ -74,6 +74,12 @@ cc.Class({
         Global.registerEvent(EventId.OUT_CARD_NOTIFY,this.onRcvOutCardNotify,this);
         Global.registerEvent(EventId.TRUSTEE_NOTIFY,this.onRcvTrusteeNotify,this);
         Global.registerEvent(EventId.CANCEL_TRUSTEE_NOTIFY,this.onRcvCancelTrusteeNotify,this);
+        Global.registerEvent(EventId.GAME_CONTINUE_NOTIFY,this.onRcvGameContinueNotify,this);
+    },
+
+    onRcvGameContinueNotify(){
+        this.setTotalScore(0);
+        this.setCoinScore(0);
     },
 
     onRcvCancelTrusteeNotify(data){
@@ -350,6 +356,19 @@ cc.Class({
                 if(this._playerNode) {
                     this._playerNode.active = false;
                     cc.vv.AudioManager.playEff("paodekuai/", "userleave",true);
+
+                    let uiSeat = cc.vv.gameData.getUISeatBylocalSeat(this._chairId);
+                    let out_cards = this._playerNode.parent.getChildByName("out_cards");
+                    out_cards.getChildByName("out_card"+uiSeat).removeAllChildren();
+                    out_cards.getChildByName("mask_onOut"+uiSeat).active = false;
+                    out_cards.getChildByName("mask_shangYou"+uiSeat).active = false;
+                    out_cards.getChildByName("bg_cardNum"+uiSeat).active = false;
+                    out_cards.getChildByName("ani_warn"+uiSeat).active = false;
+                    
+                    if (uiSeat) {
+                        let playback_handle = this._playerNode.parent.getChildByName("playback_handle");
+                        playback_handle.getChildByName("player"+uiSeat).removeAllChildren();
+                    }
                 }
             }
         }
