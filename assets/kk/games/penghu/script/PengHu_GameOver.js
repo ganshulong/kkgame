@@ -58,7 +58,7 @@ cc.Class({
             if(err === null){
                 this._gameOverNode = cc.instantiate(prefab);
                 this._gameOverNode.active = this._show;
-                this._gameOverNode.zIndex = 3;
+                this._gameOverNode.zIndex = 2;
                 this._gameOverNode.parent = this.node.getChildByName("scene");
                 this._gameOverNode.x = this.node.width/2;
                 this._gameOverNode.y = this.node.height/2;
