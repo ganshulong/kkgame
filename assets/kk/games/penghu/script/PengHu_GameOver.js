@@ -54,7 +54,7 @@ cc.Class({
 
     recvGameOver(data){
         data = data.detail;
-        cc.loader.loadRes("common/prefab/Penghui_game_over_view",(err,prefab)=>{
+        cc.loader.loadRes("common/prefab/Penghu_game_over_view",(err,prefab)=>{
             if(err === null){
                 this._gameOverNode = cc.instantiate(prefab);
                 this._gameOverNode.active = this._show;
@@ -109,8 +109,8 @@ cc.Class({
                     }
                 }
 
-                let penghu_round_over_view = this._gameOverNode.parent.getChildByName("Penghu_round_over_view");
-                if (!penghu_round_over_view || !penghu_round_over_view.active) {
+                let round_over_view = this._gameOverNode.parent.getChildByName("round_over_view");
+                if (!round_over_view || !round_over_view.active) {
                     this.recvShowGameOver();   
                 }
             }
@@ -172,7 +172,7 @@ cc.Class({
     },
 
     onDestroy(){
-        if(this._gameOverNode) cc.loader.releaseRes("common/prefab/Penghui_game_over_view",cc.Prefab);
+        if(this._gameOverNode) cc.loader.releaseRes("common/prefab/Penghu_game_over_view",cc.Prefab);
     }
     // update (dt) {},
 });
