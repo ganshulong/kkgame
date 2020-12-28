@@ -121,8 +121,13 @@ cc.Class({
         Global.registerEvent(EventId.GPS_TIPS_NOTIFY, this.onRcvGpsTipsNotify,this);
         Global.registerEvent(EventId.DISMISS_NOTIFY, this.onRcvDismissNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOver,this);
+        Global.registerEvent(EventId.GAME_CONTINUE_NOTIFY,this.onRcvGameContinueNotify,this);
 
         this.recvDeskInfoMsg();
+    },
+
+    onRcvGameContinueNotify(){
+        this._isPlaying = false;
     },
 
     recvRoundOver(){
