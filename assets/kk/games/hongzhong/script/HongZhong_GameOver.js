@@ -35,7 +35,7 @@ cc.Class({
                 // this._layer.scaleX = this.node.width / this._layer.width;
                 // this._layer.scaleY = this.node.height / this._layer.height;
                 this._layer.active = this._show;
-                this._layer.zIndex = 3;
+                this._layer.zIndex = 2;
                 this._layer.x = this.node.width/2;
                 this._layer.y = this.node.height/2;
 
@@ -60,6 +60,11 @@ cc.Class({
 
                 let txt_game_desc = this._layer.getChildByName("txt_game_desc");
                 txt_game_desc.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrDetail();
+
+                let round_over_view = this._layer.parent.getChildByName("round_over_view");
+                if (!round_over_view || !round_over_view.active) {
+                    this.recvShowGameOver();   
+                }
             }
         })
     },

@@ -72,6 +72,8 @@ cc.Class({
         this.node.addComponent("HongZhong_Chat");
         this.node.addComponent("HongZhong_Setting");
 
+        this.node.addComponent("TipGameContinue");
+
         Global.registerEvent(EventId.HANDCARD,this.recvHandCard,this);
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.HU_NOTIFY,this.recvRoundOverNotify,this);
