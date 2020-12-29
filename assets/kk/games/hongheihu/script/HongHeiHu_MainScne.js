@@ -120,6 +120,8 @@ cc.Class({
         this.node.addComponent("HongHeiHu_Chat");
         this.node.addComponent("HongHeiHu_Setting");
 
+        this.node.addComponent("TipGameContinue");
+
         Global.registerEvent(EventId.HANDCARD,this.onRecvHandCard,this);
         Global.registerEvent(EventId.BATTERY_CHANGE_NOTIFY, this.onRcvBatteryChangeNotify,this);
         Global.registerEvent(EventId.OUTCARD_RESULT, this.onRcvOutCardResult,this);
