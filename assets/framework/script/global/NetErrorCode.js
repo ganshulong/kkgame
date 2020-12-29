@@ -196,4 +196,10 @@ codeCfg.code = {
     '445':"water_line_less",
     '447':"no_can_create_club",
     '605':"out_card_type_error",
+    '448':"no_junior_member",
+    '449':"water_line_no_set",
+    '9936':"power_not_0",
+    '9937':"not_normal_player",
+    '450':"not_permissions",
+    '451':"not_set_power_to_manager",
 }

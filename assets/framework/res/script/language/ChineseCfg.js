@@ -624,5 +624,11 @@ Wild只出现在2~5列",
     water_line_less:"水线值不能低于当前值",
     no_can_create_club:"没有创建亲友圈的权限",
     out_card_type_error:"出牌类型不正确",
+    no_junior_member:"您当前成员列表没有此成员",
+    water_line_no_set:"您的水线值还未设定",
+    power_not_0:"该玩家分数未清零",
+    not_normal_player:"非普通玩家不可以删除",
+    not_permissions:"没有权限",
+    not_set_power_to_manager:"不能给管理员设置疲劳值",
 };
 
