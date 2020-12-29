@@ -58,7 +58,7 @@ cc.Class({
             if(err === null){
                 this._gameOverNode = cc.instantiate(prefab);
                 this._gameOverNode.active = this._show;
-                this._gameOverNode.zIndex = 3;
+                this._gameOverNode.zIndex = 2;
                 this._gameOverNode.parent = this.node.getChildByName("scene");
                 this._gameOverNode.x = this.node.width/2;
                 this._gameOverNode.y = this.node.height/2;
@@ -107,6 +107,11 @@ cc.Class({
                         if(i===0)player.x = -180;
                         else if(i===1)player.x = 280;
                     }
+                }
+
+                let round_over_view = this._gameOverNode.parent.getChildByName("round_over_view");
+                if (!round_over_view || !round_over_view.active) {
+                    this.recvShowGameOver();   
                 }
             }
         })
