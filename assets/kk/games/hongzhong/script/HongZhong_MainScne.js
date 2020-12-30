@@ -47,10 +47,6 @@ cc.Class({
         let txt_game_desc = cc.find("scene/bg_view/room_info/img_hear_bg/txt_game_desc",this.node);
         txt_game_desc.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrSimple();
 
-        let txt_game_desc_detail = cc.find("scene/bg_view/room_info/img_hear_bg/txt_game_desc_detail",this.node);
-        txt_game_desc_detail.getComponent(cc.Label).string = cc.vv.gameData.getWanFaStrDetail();
-
-
         let btnMsg = cc.find("scene/operate_btn_view/btn_msg",this.node);
         Global.btnClickEvent(btnMsg,this.onShowMsg,this);
         btnMsg.getComponent(cc.Button).interactable = !conf.interact;
