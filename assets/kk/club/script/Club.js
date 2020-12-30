@@ -137,6 +137,7 @@ cc.Class({
         this.ruleSelectItem.active = false;
         let btn_ruleSelect = cc.find("Layer/img_bottomBg/btn_ruleSelect",this.node);
         Global.btnClickEvent(btn_ruleSelect,this.onClickRuleSelect,this);
+        this.prefabRes = this.panel_ruleSelect.getChildByName("prefabRes");
 
         this.panel_tableOperate = cc.find("Layer/panel_tableOperate",this.node);
         this.panel_tableOperate.active = false;
@@ -535,6 +536,8 @@ cc.Class({
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[8];
         } else if (13 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[9];
+        } else if (15 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[10];
         } else if (17 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[10];
         }
