@@ -75,6 +75,12 @@ cc.Class({
 
         Global.registerEvent(EventId.ERQIGUI_JIAO_SCORE_NOTIFY,this.onRcvJiaoScoreNotify,this);
         Global.registerEvent(EventId.ERQIGUI_SELECT_COLOR_NOTIFY,this.onRcvSelectColorNotify,this);
+        Global.registerEvent(EventId.GAME_CONTINUE_NOTIFY,this.onRcvGameContinueNotify,this);
+    },
+
+    onRcvGameContinueNotify(){
+        this.setKuaiZiScore(0);
+        this.setTotalScore(0);
     },
 
     onRcvUpdatePlayerInfo(){
@@ -312,6 +318,16 @@ cc.Class({
                 if(this._playerNode) {
                     this._playerNode.active = false;
                     cc.vv.AudioManager.playEff("paodekuai/", "userleave",true);
+
+                    let uiSeat = cc.vv.gameData.getUISeatBylocalSeat(this._chairId);
+                    let out_cards = this._playerNode.parent.getChildByName("out_cards");
+                    out_cards.getChildByName("out_card"+uiSeat).removeAllChildren();
+                    out_cards.getChildByName("mask_onOut"+uiSeat).active = false;
+                    
+                    if (uiSeat) {
+                        let playback_handle = this._playerNode.parent.getChildByName("playback_handle");
+                        playback_handle.getChildByName("player"+uiSeat).removeAllChildren();
+                    }
                 }
             }
         }
