@@ -102,23 +102,39 @@ cc.Class({
         this.onClickCloseMemberOperate();
         let btnCloseMemberOperate = this.panel_memberOperate.getChildByName("btnCloseMemberOperate");
         Global.btnClickEvent(btnCloseMemberOperate, this.onClickCloseMemberOperate, this);
-        this.btn_tickout = this.panel_memberOperate.getChildByName("btn_tickout");
-        Global.btnClickEvent(this.btn_tickout, this.onClickTickout,this);
 
         this.btn_forbidPlay = this.panel_memberOperate.getChildByName("btn_forbidPlay");
         Global.btnClickEvent(this.btn_forbidPlay, this.onClickForbidPlay,this);
         this.btn_recoverPlay = this.panel_memberOperate.getChildByName("btn_recoverPlay");
         Global.btnClickEvent(this.btn_recoverPlay, this.onClickRecoverPlay,this); 
 
+        this.btn_cancelManager = this.panel_memberOperate.getChildByName("btn_cancelManager");
+        Global.btnClickEvent(this.btn_cancelManager, this.onClickCancelManager,this); 
+        this.btn_setManager = this.panel_memberOperate.getChildByName("btn_setManager");
+        Global.btnClickEvent(this.btn_setManager, this.onClickSetManager,this); 
+
         this.btn_cancelPartner = this.panel_memberOperate.getChildByName("btn_cancelPartner");
         Global.btnClickEvent(this.btn_cancelPartner, this.onClickCancelPartner,this); 
         this.btn_setPartner = this.panel_memberOperate.getChildByName("btn_setPartner");
         Global.btnClickEvent(this.btn_setPartner, this.onClickSetPartner,this); 
 
-        this.btn_cancelManager = this.panel_memberOperate.getChildByName("btn_cancelManager");
-        Global.btnClickEvent(this.btn_cancelManager, this.onClickCancelManager,this); 
-        this.btn_setManager = this.panel_memberOperate.getChildByName("btn_setManager");
-        Global.btnClickEvent(this.btn_setManager, this.onClickSetManager,this); 
+        this.btn_setPartnerRatio = this.panel_memberOperate.getChildByName("btn_setPartnerRatio");
+        Global.btnClickEvent(this.btn_setPartnerRatio, this.onClickSetPartnerRatio,this);
+
+        this.btn_checkWaterRecord = this.panel_memberOperate.getChildByName("btn_checkWaterRecord");
+        Global.btnClickEvent(this.btn_checkWaterRecord, this.onClickCheckWaterRecord,this);
+
+        this.btn_checkPartnerMember = this.panel_memberOperate.getChildByName("btn_checkPartnerMember");
+        Global.btnClickEvent(this.btn_checkPartnerMember, this.onClickCheckPartnerMember,this);
+
+        this.btn_checkGameRecord = this.panel_memberOperate.getChildByName("btn_checkGameRecord");
+        Global.btnClickEvent(this.btn_checkGameRecord, this.onClickCheckGameRecord,this);
+
+        this.btn_tickout = this.panel_memberOperate.getChildByName("btn_tickout");
+        Global.btnClickEvent(this.btn_tickout, this.onClickTickout,this);
+        
+        this.btn_setPower = this.panel_memberOperate.getChildByName("btn_setPower");
+        Global.btnClickEvent(this.btn_setPower, this.onClickSetPower,this);
     },
 
     initShow(){
@@ -417,30 +433,6 @@ cc.Class({
         let userInfo = this.showList[item.listIndex];
         item.y = - item.height * item.listIndex;
         item.uid = userInfo.uid;
-
-        Global.btnClickEventOff(item, this.onClickSetPartnerRatio,this);
-        Global.btnClickEventOff(cc.find("bg_memberItem/UserHead", item), this.onClickCheckPartnerMember,this);
-        Global.btnClickEventOff(item, this.onClickCheckRecord,this);
-        Global.btnClickEventOff(cc.find("bg_memberItem/text_waterScore/btn_waterScore", item), this.onClickWaterScore,this);
-        Global.btnClickEventOff(cc.find("bg_memberItem/text_power/btn_setPower", item), this.onClickSetPower,this);
-        Global.btnClickEventOff(cc.find("bg_memberItem/btn_operate", item), this.onClickShowMemberOperate,this);
-
-        if (3 <= userInfo.level) {
-            if (0 === Global.checkPartnerList.length) {
-                item.partneruid = userInfo.uid;
-                Global.btnClickEventOn(item, this.onClickSetPartnerRatio,this);
-            }
-
-            if ( ! (0 < Global.checkPartnerList.length && userInfo.uid == Global.checkPartnerList[Global.checkPartnerList.length-1])) {
-                let userHead = cc.find("bg_memberItem/UserHead", item);
-                userHead.partneruid = userInfo.uid;
-                Global.btnClickEventOn(userHead, this.onClickCheckPartnerMember,this);
-            }
-        }
-        if (0 == userInfo.level) {
-            item.uid = userInfo.uid;
-            Global.btnClickEventOn(item, this.onClickCheckRecord,this);
-        }
         
         let bg_memberItem = item.getChildByName("bg_memberItem");
         bg_memberItem.getChildByName("spr_creater").active = (1 == userInfo.level);
@@ -449,7 +441,6 @@ cc.Class({
         bg_memberItem.getChildByName("spr_stopPlay").active = (!userInfo.state);
         let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
         Global.setHead(spr_head, userInfo.usericon);
-
         bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = userInfo.playername;
         bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = userInfo.uid;
         bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = userInfo.isOnLine ? "在线" : "离线";
@@ -461,9 +452,6 @@ cc.Class({
             } else {
                 bg_memberItem.getChildByName("text_waterScore").getComponent(cc.Label).string = userInfo.shuiScore;
             }
-            let btn_waterScore = cc.find("text_waterScore/btn_waterScore", bg_memberItem);
-            btn_waterScore.uid = userInfo.uid;
-            Global.btnClickEventOn(btn_waterScore, this.onClickWaterScore,this); 
         }
         bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = userInfo.jushu;
         bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = userInfo.bigWinCnt;
@@ -488,24 +476,9 @@ cc.Class({
             bg_memberItem.getChildByName("text_totalPower").getComponent(cc.Label).string = userInfo.totalPower;
         }
         
-        if (0 === Global.checkPartnerList.length) {
-            if (cc.vv.UserManager.getCurClubInfo().createUid == userInfo.uid || cc.vv.UserManager.uid != userInfo.uid) {
-                let btn_setPower = cc.find("text_power/btn_setPower", bg_memberItem);
-                btn_setPower.uid = userInfo.uid;
-                Global.btnClickEventOn(btn_setPower, this.onClickSetPower,this); 
-            }
-            let btn_operate = bg_memberItem.getChildByName("btn_operate");
-            btn_operate.active = (cc.vv.UserManager.uid != userInfo.uid);
-            if (btn_operate.active) {
-                btn_operate.userInfo = userInfo;
-                Global.btnClickEventOn(btn_operate, this.onClickShowMemberOperate,this); 
-            }
-        }
-    },
-
-    onClickCheckRecord(event){
-        Global.dispatchEvent(EventId.SHOW_CLUB_RECORD, event.target.uid);
-        Global.curStartIndex = this.curStartIndex;
+        let btn_operate = bg_memberItem.getChildByName("btn_operate");
+        btn_operate.userInfo = userInfo;
+        Global.btnClickEventOn(btn_operate, this.onClickShowMemberOperate,this); 
     },
 
     onClickShowMemberOperate(event){
@@ -515,64 +488,96 @@ cc.Class({
 
         let spr_head = cc.find("UserHead/radio_mask/spr_head", this.panel_memberOperate);
         Global.setHead(spr_head, userInfo.usericon);
-        this.panel_memberOperate.getChildByName("text_name").getComponent(cc.Label).string = userInfo.playername;
-        this.panel_memberOperate.getChildByName("text_ID").getComponent(cc.Label).string = "ID: "+userInfo.uid;
+        cc.find("UserHead/text_name", this.panel_memberOperate).getComponent(cc.Label).string = userInfo.playername;
+        cc.find("UserHead/text_ID", this.panel_memberOperate).getComponent(cc.Label).string = "ID: "+userInfo.uid;
 
-        let showBtnList = [this.btn_tickout];
+        let btnisActive = true;
+        let isSelf = (cc.vv.UserManager.uid == userInfo.uid);
+        let isSelfMember = (0 === Global.checkPartnerList.length);
+        let normalColor = new cc.Color(255, 255, 255);
+        let forbidColor = new cc.Color(127, 127, 127);
+
+        // 禁止娱乐
+        btnisActive = (!isSelf && isSelfMember && 1 == userInfo.state && 2 != userInfo.level);
+        this.btn_forbidPlay.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_forbidPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_forbidPlay.uid = userInfo.uid;
+        this.btn_forbidPlay.playername = userInfo.playername;
+
+        // 恢复娱乐
+        btnisActive = (!isSelf && isSelfMember && 0 == userInfo.state && 2 != userInfo.level);
+        this.btn_recoverPlay.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_recoverPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_recoverPlay.uid = userInfo.uid;
+        this.btn_recoverPlay.playername = userInfo.playername;
+
+        // 取消管理
+        let clubInfo = cc.vv.UserManager.getCurClubInfo();
+        btnisActive = (!isSelf && isSelfMember && 2 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
+        this.btn_cancelManager.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_cancelManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_cancelManager.uid = userInfo.uid;
+        this.btn_cancelManager.playername = userInfo.playername;
+
+        // 设置管理
+        btnisActive = (!isSelf && isSelfMember && 0 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
+        this.btn_setManager.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_setManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setManager.uid = userInfo.uid;
+        this.btn_setManager.playername = userInfo.playername;
+
+        // 取消合伙人
+        btnisActive = (!isSelf && isSelfMember && 3 <= userInfo.level);
+        this.btn_cancelPartner.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_cancelPartner.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_cancelPartner.uid = userInfo.uid;
+        this.btn_cancelPartner.playername = userInfo.playername;
+
+        // 设置合伙人
+        btnisActive = (!isSelf && isSelfMember && 0 == userInfo.level);
+        this.btn_setPartner.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_setPartner.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setPartner.uid = userInfo.uid;
+        this.btn_setPartner.playername = userInfo.playername;
+
+        // 设置合伙人抽水
+        btnisActive = (isSelfMember && 3 <= userInfo.level);
+        this.btn_setPartnerRatio.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_setPartnerRatio.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setPartnerRatio.partneruid = userInfo.uid;
+
+        // 查看抽水记录
+        btnisActive = (1 == userInfo.level || 3 <= userInfo.level);
+        this.btn_checkWaterRecord.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_checkWaterRecord.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_checkWaterRecord.uid = userInfo.uid;
+
+        // 查看合伙人成员
+        let isCheckPartnerListFirstPlayer = (0 < Global.checkPartnerList.length && userInfo.uid == Global.checkPartnerList[Global.checkPartnerList.length-1])
+        btnisActive = (!isSelf && 3 <= userInfo.level && !isCheckPartnerListFirstPlayer);
+        this.btn_checkPartnerMember.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_checkPartnerMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_checkPartnerMember.partneruid = userInfo.uid;
+
+        // 查看游戏战绩
+        btnisActive = true;
+        this.btn_checkGameRecord.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_checkGameRecord.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_checkGameRecord.uid = userInfo.uid;
+        
+        // 踢出玩家
+        btnisActive = (!isSelf && isSelfMember);
+        this.btn_tickout.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_tickout.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_tickout.uid = userInfo.uid;
         this.btn_tickout.playername = userInfo.playername;
 
-        this.btn_forbidPlay.active = (1 == userInfo.state);
-        if (this.btn_forbidPlay.active) {
-            showBtnList.push(this.btn_forbidPlay);
-            this.btn_forbidPlay.uid = userInfo.uid;
-            this.btn_forbidPlay.playername = userInfo.playername;
-        }
-        this.btn_recoverPlay.active = (0 == userInfo.state);
-        if (this.btn_recoverPlay.active) {
-            showBtnList.push(this.btn_recoverPlay);
-            this.btn_recoverPlay.uid = userInfo.uid;
-            this.btn_recoverPlay.playername = userInfo.playername;
-        }
-
-        this.btn_cancelPartner.active = (3 <= userInfo.level);
-        if (this.btn_cancelPartner.active) {
-            showBtnList.push(this.btn_cancelPartner);
-            this.btn_cancelPartner.uid = userInfo.uid;
-            this.btn_cancelPartner.playername = userInfo.playername;
-        }
-        this.btn_setPartner.active = (0 == userInfo.level);
-        if (this.btn_setPartner.active) {
-            showBtnList.push(this.btn_setPartner);
-            this.btn_setPartner.uid = userInfo.uid;
-            this.btn_setPartner.playername = userInfo.playername;
-        }
-
-        this._clubInfo = cc.vv.UserManager.getCurClubInfo();
-        this.btn_cancelManager.active = (2 == userInfo.level && this._clubInfo.createUid == cc.vv.UserManager.uid);
-        if (this.btn_cancelManager.active) {
-            showBtnList.push(this.btn_cancelManager);
-            this.btn_cancelManager.uid = userInfo.uid;
-            this.btn_cancelManager.playername = userInfo.playername;
-        }
-        this.btn_setManager.active = (0 == userInfo.level && this._clubInfo.createUid == cc.vv.UserManager.uid);
-        if (this.btn_setManager.active) {
-            showBtnList.push(this.btn_setManager);
-            this.btn_setManager.uid = userInfo.uid;
-            this.btn_setManager.playername = userInfo.playername;
-        }
-
-        let btnPosXList = [];
-        if (2 == showBtnList.length) {
-            btnPosXList = [-80,80];
-        } else if (3 == showBtnList.length) {
-            btnPosXList = [-160,0,160];
-        } else if (4 == showBtnList.length) {
-            btnPosXList = [-240,-80,80,240];
-        }
-        for (var i = 0; i < showBtnList.length; i++) {
-            showBtnList[i].x = btnPosXList[i];
-        }
+        // 设置疲劳
+        let isCreaterOrNoself =  (cc.vv.UserManager.getCurClubInfo().createUid == userInfo.uid || cc.vv.UserManager.uid != userInfo.uid);   //创建者本人，或自己下级
+        btnisActive = (isSelfMember && isCreaterOrNoself);
+        this.btn_setPower.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_setPower.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setPower.uid = userInfo.uid;
     },
 
     onClickCloseMemberOperate(){
@@ -580,10 +585,12 @@ cc.Class({
     },
 
     onClickSetPartnerRatio(event){
+        this.onClickCloseMemberOperate();
         this.ClubSetPartnerRatioJS.showLayer(event.target.partneruid);
     },
 
     onClickCheckPartnerMember(event){
+        this.onClickCloseMemberOperate();
         Global.checkPartnerList.push(event.target.partneruid);
         Global.checkPartnerListCurStartIndex.push(this.curStartIndex);
         this.btn_back.active = (0 < Global.checkPartnerList.length);
@@ -721,12 +728,20 @@ cc.Class({
         cc.vv.AlertView.show("确定将玩家" + event.target.playername + "，授权为管理者吗", sureCall, cancelCall);
     },
 
-    onClickWaterScore(event){
+    onClickCheckWaterRecord(event){
+        this.onClickCloseMemberOperate();
         let data = {checkUid:event.target.uid, checkData:this.selectData}
         this.node.getComponent("ClubWaterRecord").showLayer(data);
     },
 
+    onClickCheckGameRecord(event){
+        this.onClickCloseMemberOperate();
+        Global.dispatchEvent(EventId.SHOW_CLUB_RECORD, event.target.uid);
+        Global.curStartIndex = this.curStartIndex;
+    },
+
     onClickSetPower(event){
+        this.onClickCloseMemberOperate();
         this.ClubSetPowerJS.showLayer(event.target.uid);
     },
 
