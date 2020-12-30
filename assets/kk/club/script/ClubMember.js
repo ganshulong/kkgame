@@ -789,6 +789,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.TICKOUT_CLUB_MEMBER, this.onRcvTickoutMember, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.unregisterMsg(MsgId.SEARCH_CLUB_MEMBER, this.onRcvSearchClubMember, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_MANAGER, this.onRcvSetManager, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_member",cc.Prefab);
         }
