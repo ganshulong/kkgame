@@ -110,7 +110,7 @@ cc.Class({
                 }
 
                 let round_over_view = this._gameOverNode.parent.getChildByName("round_over_view");
-                if (!round_over_view || !round_over_view.active) {
+                if (!round_over_view) {
                     this.recvShowGameOver();   
                 }
             }
