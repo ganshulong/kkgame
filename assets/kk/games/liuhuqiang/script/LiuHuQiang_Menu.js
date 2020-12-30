@@ -145,7 +145,7 @@ cc.Class({
     },
 
     onRcvGameContinueNotify(){
-        this._isPlaying = false;
+        this.showInviteWxCopyRoomId(true);
     },
 
     recvRoundOver(){
