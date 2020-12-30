@@ -202,4 +202,5 @@ codeCfg.code = {
     '9937':"not_normal_player",
     '450':"not_permissions",
     '451':"not_set_power_to_manager",
+    '9935':"have_work_wait_done",
 }
