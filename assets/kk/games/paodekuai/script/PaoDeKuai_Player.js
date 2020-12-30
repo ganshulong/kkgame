@@ -71,11 +71,33 @@ cc.Class({
         Global.registerEvent(EventId.HANDCARD,this.recvSendCard,this);
         Global.registerEvent(EventId.SCORE_UPDATE_NOTIFY,this.onRcvScoreUpdateNotify,this);
         Global.registerEvent(EventId.UPDATE_PLAYER_INFO,this.onRcvUpdatePlayerInfo,this);
+        Global.registerEvent(EventId.TRUSTEE_NOTIFY,this.onRcvTrusteeNotify,this);
+        Global.registerEvent(EventId.CANCEL_TRUSTEE_NOTIFY,this.onRcvCancelTrusteeNotify,this);
         Global.registerEvent(EventId.GAME_CONTINUE_NOTIFY,this.onRcvGameContinueNotify,this);
     },
 
     onRcvGameContinueNotify(){
         this.setTotalScore(0);
+    },
+
+    onRcvCancelTrusteeNotify(data){
+        data = data.detail;
+        if(data.seat === this._seatIndex){
+            this._playerNode.getChildByName("mask_trustee").active = false;
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = false;
+            }
+        }
+    },
+
+    onRcvTrusteeNotify(data){
+        data = data.detail;
+        if(data.seat === this._seatIndex){
+            this._playerNode.getChildByName("mask_trustee").active = true;
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = true;
+            }
+        }
     },
 
     onRcvUpdatePlayerInfo(){
@@ -321,6 +343,10 @@ cc.Class({
             this._playerNode.active = true;
             this.showMaster(user.uid == cc.vv.gameData.getRoomConf().createUserInfo.uid);
             this.showReady(user.state === 1);
+            this._playerNode.getChildByName("mask_trustee").active = (0 < user.autoc);
+            if (0 == this._chairId) {
+                cc.find("scene/panel_trustee", this.node).active = (0 < user.autoc);
+            }
         }
     },
 

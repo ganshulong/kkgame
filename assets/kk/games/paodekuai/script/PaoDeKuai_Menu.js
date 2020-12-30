@@ -104,6 +104,9 @@ cc.Class({
         btn_helper.active = cc.vv.UserManager.currClubId;
         Global.btnClickEvent(btn_helper, this.onClickSwitchToClub,this);
 
+        let btn_cancelTrustee = cc.find("scene/panel_trustee/btn_cancelTrustee", this.node);
+        Global.btnClickEvent(btn_cancelTrustee,this.onClickCancelTrustee,this);
+
         if (cc.vv.gameData._isPlayBack) {
             this.readyBtn.active = false;
             this.btn_gps.active = false;
@@ -133,6 +136,11 @@ cc.Class({
         }
         // this.panel_dismiss.active = false;
         this.readyBtn.active = false;
+    },
+
+    onClickCancelTrustee(event){
+        let req = {c: MsgId.CANCEL_TRUSTEE};
+        cc.vv.NetManager.send(req);
     },
 
     onClickSwitchToClub(event){
