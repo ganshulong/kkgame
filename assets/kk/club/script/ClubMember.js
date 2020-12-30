@@ -541,7 +541,7 @@ cc.Class({
         this.btn_setPartner.playername = userInfo.playername;
 
         // 设置合伙人抽水
-        btnisActive = (isSelfMember && 3 <= userInfo.level);
+        btnisActive = (!isSelf && isSelfMember && 3 <= userInfo.level);
         this.btn_setPartnerRatio.getComponent(cc.Button).interactable = btnisActive;
         this.btn_setPartnerRatio.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPartnerRatio.partneruid = userInfo.uid;
