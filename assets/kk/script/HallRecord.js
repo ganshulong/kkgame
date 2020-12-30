@@ -267,7 +267,7 @@ cc.Class({
                 bg_clubInfo.getChildByName("text_roomType").getComponent(cc.Label).string = (0 == this.curShowRecordType) ? "个人房间" : "亲友圈房间";
                 bg_clubInfo.getChildByName("text_houseOwner").getComponent(cc.Label).string = msg.data[i].houseOwner;
                 
-                cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score;
+                cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score.toFixed(2);
 
                 let btn_detail = roomInfo.getChildByName("btn_detail");
                 btn_detail._index = i;
