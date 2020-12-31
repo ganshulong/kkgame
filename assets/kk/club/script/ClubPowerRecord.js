@@ -47,7 +47,7 @@ cc.Class({
         Global.btnClickEvent(btn_close,this.onClose,this);
 
         let clubInfo = cc.vv.UserManager.getCurClubInfo();
-        let isShowSearch = (0 == clubInfo.level || 3 <= clubInfo.level);
+        let isShowSearch = (0 < clubInfo.level);
         cc.find("bg_member/bg_input",this._layer).active = isShowSearch;
         if (isShowSearch) {
             this.input_searchID = cc.find("bg_member/bg_input/input_searchID",this._layer);
@@ -87,7 +87,7 @@ cc.Class({
 
     onClickSearch(event){
         let searchID = this.input_searchID.getComponent(cc.EditBox).string;
-        if (searchID && 0 < searchID.length) {
+        if (searchID && 6 == searchID.length) {
             this.sendListReq(searchID);
         }
     },
