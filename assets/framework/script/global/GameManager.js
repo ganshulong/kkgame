@@ -122,6 +122,7 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify, this);
             cc.vv.NetManager.registerMsg(MsgId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_SWITCH_MODE, this.onRcvClubSwitchMode, this);
 
             cc.vv.NetManager.registerMsg(MsgId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
 
@@ -224,6 +225,13 @@ cc.Class({
             if(msg.code === 200){
                 cc.vv.UserManager.dismissExitCurClub();
                 Global.dispatchEvent(EventId.DISMISS_CLUB_NOTIFY, msg.response);
+            }
+        },
+
+        onRcvClubSwitchMode(msg){
+            if(msg.code === 200){
+                cc.vv.UserManager.setClubMode(msg.clubid, msg.mode);
+                cc.vv.FloatTip.show("切换俱乐部模式成功!");
             }
         },
 

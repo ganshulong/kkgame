@@ -321,3 +321,5 @@ GlobalMsgId.ERQIGUI_CHECK_SCORE = 9905; 			// 二七鬼查分
 GlobalMsgId.ERQIGUI_CHECK_CARD = 9906; 				// 二七鬼查牌
 GlobalMsgId.ERQIGUI_CHECK_DI_CARD = 9907; 			// 二七鬼查看底牌
 
+GlobalMsgId.CLUB_SWITCH_MODE = 8839;   				// 俱乐部切换模式
+

@@ -47,19 +47,20 @@ cc.Class({
 
         let bg_content = cc.find("bg_set/bg_content",this._layer);
         this.ItemArr = [];
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
             this.ItemArr.push(bg_content.getChildByName("bg_Item"+i));
             let btn = this.ItemArr[i].getChildByName("btn_"+i);
             btn.index = i;
             Global.btnClickEvent(btn,this.onClickItemConfirm,this);
         }
 
-
         this._itemEnum = {
             Exit:0,
             Dismiss:1,
             Freeze:2,
             DismissFre:3,
+            ModeBigWiner:4,
+            ModeWinerAA:5,
         },
 
         this.panel_confirmTips = cc.find("bg_set/panel_confirmTips",this._layer);
@@ -77,6 +78,8 @@ cc.Class({
         this.ItemArr[this._itemEnum.Dismiss].active = (this._clubInfo.createUid == cc.vv.UserManager.uid);
         this.ItemArr[this._itemEnum.Freeze].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && this._clubInfo.state);  //state:1正常，0冻结
         this.ItemArr[this._itemEnum.DismissFre].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && !this._clubInfo.state);
+        this.ItemArr[this._itemEnum.ModeBigWiner].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && (1 == this._clubInfo.mode));
+        this.ItemArr[this._itemEnum.ModeWinerAA].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && (1 != this._clubInfo.mode));
 
         this.panel_confirmTips.active = false;
         this.clickItemIndex = -1;
@@ -102,6 +105,8 @@ cc.Class({
         tipsStrArr[1] = "确定解散以下亲友圈？";
         tipsStrArr[2] = "确定冻结以下亲友圈？";
         tipsStrArr[3] = "确定解冻以下亲友圈？";
+        tipsStrArr[4] = "确定切换平摊模式？";
+        tipsStrArr[5] = "确定切换大赢家模式？";
         confirmTips_bg.getChildByName("text_tip").getComponent(cc.Label).string = tipsStrArr[this.clickItemIndex];
         confirmTips_bg.getChildByName("text_clubName").getComponent(cc.Label).string = "亲友圈名称：" + this._clubInfo.name;
         confirmTips_bg.getChildByName("text_clubID").getComponent(cc.Label).string = "亲友圈ID：" + this._clubInfo.clubid;
@@ -112,13 +117,17 @@ cc.Class({
     },
 
     onClickConfirm(){
-        let msgIDArr = [MsgId.EXIT_CLUB_APPLY,MsgId.DISMISS_CLUB,MsgId.FREEZE_CLUB,MsgId.FREEZE_CLUB];
+        let msgIDArr = [MsgId.EXIT_CLUB_APPLY, MsgId.DISMISS_CLUB, MsgId.FREEZE_CLUB, MsgId.FREEZE_CLUB, MsgId.CLUB_SWITCH_MODE, MsgId.CLUB_SWITCH_MODE];
         if (-1 < this.clickItemIndex) {
             var req = { 'c': msgIDArr[this.clickItemIndex]};
             if (2 == this.clickItemIndex) {
                 req.state = 0;
             } else if (3 == this.clickItemIndex) {
                 req.state = 1;
+            } else if (4 == this.clickItemIndex) {
+                req.mode = 2;
+            } else if (5 == this.clickItemIndex) {
+                req.mode = 1;
             }
             req.clubid = cc.vv.UserManager.currClubId;
             cc.vv.NetManager.send(req);
