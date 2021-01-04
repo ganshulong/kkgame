@@ -158,6 +158,15 @@ cc.Class({
 
         this._startPos = cc.v2(this._content.children[0].x,this._content.children[0].y);
 
+        let _tableSortIndex = parseInt(cc.sys.localStorage.getItem("_tableSortIndex")) == "1" ? 1 : 0;
+        this.sortBtns = cc.find("Layer/sortBtns",this.node);
+        for (let j = 0; j < this.sortBtns.children.length; j++) {
+            let btn = this.sortBtns.getChildByName("btn" + j);
+            btn.index = j;
+            Global.btnClickEvent(btn, this.onClickSortBtn, this);
+            btn.getComponent(cc.Button).interactable = (j != _tableSortIndex);
+        }
+
         // 请求俱乐部信息
         var req = { 'c': MsgId.ENTERCLUB};
         req.clubid = cc.vv.UserManager.currClubId;
@@ -604,13 +613,25 @@ cc.Class({
         list.sort((obj1, obj2)=>{
             let obj2UserNum = (obj2.users.length || 0);
             let obj1UserNum = (obj1.users.length || 0);
-            let obj2SeatRateState = (obj2UserNum == obj2.config.seat) ? 1 : 0;
-            if (0 < obj2UserNum && obj2UserNum < obj2.config.seat) {
-                obj2SeatRateState = 2;
-            }
-            let obj1SeatRateState = (obj1UserNum == obj1.config.seat) ? 1 : 0;
-            if (0 < obj1UserNum && obj1UserNum < obj1.config.seat) {
-                obj1SeatRateState = 2;
+            let obj2SeatRateState = obj2UserNum / obj2.config.seat;
+            let obj1SeatRateState = obj1UserNum / obj1.config.seat;
+
+            let _tableSortIndex = parseInt(cc.sys.localStorage.getItem("_tableSortIndex")) == "1" ? 1 : 0;
+            //游戏在前 占座率: 未坐满2 > 坐满1 > 空0
+            if (_tableSortIndex) {
+                obj2SeatRateState = (obj2UserNum == obj2.config.seat) ? 1 : 0;
+                if (0 < obj2UserNum && obj2UserNum < obj2.config.seat) {
+                    obj2SeatRateState = 2;
+                }
+                let obj1SeatRateState = (obj1UserNum == obj1.config.seat) ? 1 : 0;
+                if (0 < obj1UserNum && obj1UserNum < obj1.config.seat) {
+                    obj1SeatRateState = 2;
+                }
+            
+            //等待在前 占座率:从小到大
+            } else {
+                obj2SeatRateState = -obj2SeatRateState;                
+                obj1SeatRateState = -obj1SeatRateState;
             }
 
             if (obj2SeatRateState == obj1SeatRateState) {
@@ -620,7 +641,7 @@ cc.Class({
                     return obj2UserNum - obj1UserNum;                                   //2.人数从多到少
                 }
             } else {
-                return obj2SeatRateState - obj1SeatRateState;                           //1.占座率: 未坐满 > 坐满 > 空
+                return obj2SeatRateState - obj1SeatRateState;                           //1.占座率
             }
         });
 
@@ -651,6 +672,7 @@ cc.Class({
         }
         this._content.active = list.length>0;
         this._content.width = width+50;
+        this._content.x = 0;
     },
 
     setPower(power){
@@ -782,6 +804,16 @@ cc.Class({
             }
             this.ruleSelectContent.height = this.ruleSelectItem.height * tableTypeList.length;
         }
+    },
+
+    onClickSortBtn(event){
+        let _tableSortIndex = event.target.index;
+        cc.sys.localStorage.setItem("_tableSortIndex", _tableSortIndex);
+        for (let j = 0; j < this.sortBtns.children.length; j++) {
+            let btn = this.sortBtns.getChildByName("btn" + j);
+            btn.getComponent(cc.Button).interactable = (j != _tableSortIndex);
+        }
+        this.initTables(this._tableList);
     },
 
     onClickSelectGame(event){
