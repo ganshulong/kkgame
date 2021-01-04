@@ -322,4 +322,6 @@ GlobalMsgId.ERQIGUI_CHECK_CARD = 9906; 				// 二七鬼查牌
 GlobalMsgId.ERQIGUI_CHECK_DI_CARD = 9907; 			// 二七鬼查看底牌
 
 GlobalMsgId.CLUB_SWITCH_MODE = 8839;   				// 俱乐部切换模式
+GlobalMsgId.CLUB_ALLOCATE_MEMBER = 8840;   			// 俱乐部调配成员
+GlobalMsgId.CLUB_MEMBER_UPDATE = 20001;   			// 俱乐部成员列表刷新
 

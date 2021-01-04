@@ -23,6 +23,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.registerMsg(MsgId.SEARCH_CLUB_MEMBER, this.onRcvSearchClubMember, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_MANAGER, this.onRcvSetManager, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_MEMBER_UPDATE, this.onRcvMmeberUpdate, this);
 
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
         Global.registerEvent(EventId.SHOW_CLUB_MEMBER, this.showLayer,this);
@@ -98,6 +99,9 @@ cc.Class({
         this._layer.addComponent("ClubSetPower");
         this.ClubSetPowerJS = this._layer.getComponent("ClubSetPower");
 
+        this._layer.addComponent("ClubAllocateMember");
+        this.ClubAllocateMemberJS = this._layer.getComponent("ClubAllocateMember");
+
         this.panel_memberOperate = cc.find("bg_member/panel_member", this._layer);
         this.onClickCloseMemberOperate();
         let btnCloseMemberOperate = this.panel_memberOperate.getChildByName("btnCloseMemberOperate");
@@ -135,6 +139,9 @@ cc.Class({
         
         this.btn_setPower = this.panel_memberOperate.getChildByName("btn_setPower");
         Global.btnClickEvent(this.btn_setPower, this.onClickSetPower,this);
+        
+        this.btn_allocateMember = this.panel_memberOperate.getChildByName("btn_allocateMember");
+        Global.btnClickEvent(this.btn_allocateMember, this.onClickAllocateMember,this);
     },
 
     initShow(){
@@ -573,11 +580,17 @@ cc.Class({
         this.btn_tickout.playername = userInfo.playername;
 
         // 设置疲劳
-        let isCreaterOrNoself =  (cc.vv.UserManager.getCurClubInfo().createUid == userInfo.uid || cc.vv.UserManager.uid != userInfo.uid);   //创建者本人，或自己下级
+        let isCreaterOrNoself =  (clubInfo.createUid == userInfo.uid || cc.vv.UserManager.uid != userInfo.uid);   //创建者本人，或自己下级
         btnisActive = (isSelfMember && isCreaterOrNoself);
         this.btn_setPower.getComponent(cc.Button).interactable = btnisActive;
         this.btn_setPower.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPower.uid = userInfo.uid;
+
+        // 调配成员
+        btnisActive = (0 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
+        this.btn_allocateMember.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_allocateMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_allocateMember.userInfo = userInfo;
     },
 
     onClickCloseMemberOperate(){
@@ -609,6 +622,14 @@ cc.Class({
                 }
             }
             this.onClickCloseMemberOperate();
+        }
+    },
+
+    onRcvMmeberUpdate(msg){
+        if (200 == msg.code && this._layer && this._layer.active && msg.clubid === cc.vv.UserManager.currClubId) {
+            this.onClickCloseMemberOperate();
+            this.memberList = msg.memberList;;
+            this.updateMemberList();
         }
     },
 
@@ -745,6 +766,11 @@ cc.Class({
         this.ClubSetPowerJS.showLayer(event.target.uid);
     },
 
+    onClickAllocateMember(event){
+        this.onClickCloseMemberOperate();
+        this.ClubAllocateMemberJS.showLayer(event.target.userInfo);
+    },
+
     onRcvMemberState(msg){
         this.onClickCloseMemberOperate();
         if (200 == msg.code) {
@@ -805,6 +831,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.unregisterMsg(MsgId.SEARCH_CLUB_MEMBER, this.onRcvSearchClubMember, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_MANAGER, this.onRcvSetManager, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_MEMBER_UPDATE, this.onRcvMmeberUpdate, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_member",cc.Prefab);
         }
