@@ -206,4 +206,5 @@ codeCfg.code = {
     '452':"not_permissions",
     '453':"have_empty_forbid_group",
     '9901':"玩家以存在于这个限制组",
+    '454':"该桌子存在禁止同桌的玩家",
 }
