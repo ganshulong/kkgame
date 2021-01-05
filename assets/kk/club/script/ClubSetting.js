@@ -57,6 +57,7 @@ cc.Class({
             Global.btnClickEvent(btn, this.onClickLeftBtn, this);
             btn.getComponent(cc.Button).interactable = (j != 0);
         }
+        this.left_btn_bg.getChildByName("btn1").active = (1 == cc.vv.UserManager.getCurClubInfo().level);
 
         //基础操作
         this.panel_baseContent = cc.find("bg_set/panel_baseContent",this._layer);
@@ -116,7 +117,7 @@ cc.Class({
         this.ItemArr[4].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && (1 == this._clubInfo.mode));
         this.ItemArr[5].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && (1 != this._clubInfo.mode));
 
-        this.setPanelShow(1);
+        this.setPanelShow(0);
         this.panel_confirmTips.active = false;
         this.panel_inputID.active = false;
     },
@@ -147,7 +148,6 @@ cc.Class({
         if (200 == msg.code) {
             this.forbidList.push({groupid : msg.groupid, mutexUser : []});
             this.updateForbidList();
-            this.forbidTogetherContent.parent.getComponent(cc.ScrollView).scrollToBottom(0);
         }
     },
 
