@@ -232,7 +232,7 @@ cc.Class({
         onRcvClubSwitchMode(msg){
             if(msg.code === 200){
                 cc.vv.UserManager.setClubMode(msg.clubid, msg.mode);
-                cc.vv.FloatTip.show("切换俱乐部模式成功!");
+                cc.vv.FloatTip.show("切换亲友圈模式成功!");
             }
         },
 
