@@ -203,4 +203,7 @@ codeCfg.code = {
     '450':"not_permissions",
     '451':"not_set_power_to_manager",
     '9935':"have_work_wait_done",
+    '452':"not_permissions",
+    '453':"have_empty_forbid_group",
+    '9901':"玩家以存在于这个限制组",
 }

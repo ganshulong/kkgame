@@ -631,5 +631,6 @@ Wild只出现在2~5列",
     not_permissions:"没有权限",
     not_set_power_to_manager:"不能给管理员设置疲劳值",
     have_work_wait_done:"还有任务待处理",
+    have_empty_forbid_group:"已存在空限制组",
 };
 

@@ -325,3 +325,8 @@ GlobalMsgId.CLUB_SWITCH_MODE = 8839;   				// 俱乐部切换模式
 GlobalMsgId.CLUB_ALLOCATE_MEMBER = 8840;   			// 俱乐部调配成员
 GlobalMsgId.CLUB_MEMBER_UPDATE = 20001;   			// 俱乐部成员列表刷新
 
+GlobalMsgId.CLUB_FORBID_LIST = 178;
+GlobalMsgId.CLUB_ADD_FORBID_LIST = 174;
+GlobalMsgId.CLUB_DELETE_FORBID_LIST = 175;
+GlobalMsgId.CLUB_ADD_FORBID_MEMBER = 176;
+GlobalMsgId.CLUB_DELETE_FORBID_MEMBER = 177;
