@@ -503,23 +503,23 @@ cc.Class({
         let isSelfMember = (0 === Global.checkPartnerList.length);
         let normalColor = new cc.Color(255, 255, 255);
         let forbidColor = new cc.Color(127, 127, 127);
+        let clubInfo = cc.vv.UserManager.getCurClubInfo();
 
         // 禁止娱乐
-        btnisActive = (!isSelf && isSelfMember && 1 == userInfo.state && 2 != userInfo.level);
+        btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level) && 1 == userInfo.state && 2 != userInfo.level);
         this.btn_forbidPlay.getComponent(cc.Button).interactable = btnisActive;
         this.btn_forbidPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_forbidPlay.uid = userInfo.uid;
         this.btn_forbidPlay.playername = userInfo.playername;
 
         // 恢复娱乐
-        btnisActive = (!isSelf && isSelfMember && 0 == userInfo.state && 2 != userInfo.level);
+        btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level) && 0 == userInfo.state && 2 != userInfo.level);
         this.btn_recoverPlay.getComponent(cc.Button).interactable = btnisActive;
         this.btn_recoverPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_recoverPlay.uid = userInfo.uid;
         this.btn_recoverPlay.playername = userInfo.playername;
 
         // 取消管理
-        let clubInfo = cc.vv.UserManager.getCurClubInfo();
         btnisActive = (!isSelf && isSelfMember && 2 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
         this.btn_cancelManager.getComponent(cc.Button).interactable = btnisActive;
         this.btn_cancelManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
@@ -573,15 +573,14 @@ cc.Class({
         this.btn_checkGameRecord.uid = userInfo.uid;
         
         // 踢出玩家
-        btnisActive = (!isSelf && isSelfMember);
+        btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level));
         this.btn_tickout.getComponent(cc.Button).interactable = btnisActive;
         this.btn_tickout.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_tickout.uid = userInfo.uid;
         this.btn_tickout.playername = userInfo.playername;
 
         // 设置疲劳
-        let isCreaterOrNoself =  (clubInfo.createUid == userInfo.uid || cc.vv.UserManager.uid != userInfo.uid);   //创建者本人，或自己下级
-        btnisActive = (isSelfMember && isCreaterOrNoself);
+        btnisActive = ((1 == clubInfo.level || 2 == clubInfo.level) || (!isSelf && isSelfMember));      //创建管理者，或自己下级
         this.btn_setPower.getComponent(cc.Button).interactable = btnisActive;
         this.btn_setPower.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPower.uid = userInfo.uid;
