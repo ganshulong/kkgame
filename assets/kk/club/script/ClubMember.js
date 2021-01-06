@@ -93,6 +93,9 @@ cc.Class({
         Global.btnClickEvent(this.btn_nextPage, this.onClickNextPage,this); 
         this.text_page = cc.find("bg_member/panel_list/node_bottom/text_page",this._layer);
 
+        this._layer.addComponent("ClubSetMemberNote");
+        this.ClubSetMemberNoteJS = this._layer.getComponent("ClubSetMemberNote");
+
         this._layer.addComponent("ClubSetPartnerRatio");
         this.ClubSetPartnerRatioJS = this._layer.getComponent("ClubSetPartnerRatio");
 
@@ -448,8 +451,18 @@ cc.Class({
         bg_memberItem.getChildByName("spr_stopPlay").active = (!userInfo.state);
         let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
         Global.setHead(spr_head, userInfo.usericon);
+        let btn_note = bg_memberItem.getChildByName("btn_note");
+        btn_note.active = ((cc.vv.UserManager.uid != userInfo.uid) && (0 === Global.checkPartnerList.length));
+        if (btn_note.active) {
+            btn_note.getChildByName("text_note").getComponent(cc.Label).string = userInfo.remark;
+            btn_note.uid = userInfo.uid;
+            Global.btnClickEventOn(btn_note, this.onClickSetMemberNoteJS,this);
+        }
         bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = userInfo.playername;
+        bg_memberItem.getChildByName("text_name").y = btn_note.active ? -25 : -46;
         bg_memberItem.getChildByName("text_ID").getComponent(cc.Label).string = userInfo.uid;
+        bg_memberItem.getChildByName("text_ID").y = btn_note.active ? -25 : -46;
+
         bg_memberItem.getChildByName("text_state").getComponent(cc.Label).string = userInfo.isOnLine ? "在线" : "离线";
         bg_memberItem.getChildByName("text_state").color = userInfo.isOnLine ? (new cc.Color(0,255,0)) : (new cc.Color(135,135,135));
         bg_memberItem.getChildByName("text_waterScore").active = (1 == userInfo.level || 3 <= userInfo.level)
@@ -486,6 +499,10 @@ cc.Class({
         let btn_operate = bg_memberItem.getChildByName("btn_operate");
         btn_operate.userInfo = userInfo;
         Global.btnClickEventOn(btn_operate, this.onClickShowMemberOperate,this); 
+    },
+
+    onClickSetMemberNoteJS(event){
+        this.ClubSetMemberNoteJS.showLayer(event.target.uid);
     },
 
     onClickShowMemberOperate(event){
