@@ -92,7 +92,7 @@ cc.Class({
 
         this.btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
         Global.btnClickEvent(this.btn_msg,this.onClickMsg,this);
-        this.btn_msg.active = this.getIsManager();
+        this.btn_msg.active = (this.getIsManager() || this.getIsPartner());
 
         this.spr_redPoint = this.btn_msg.getChildByName("spr_redPoint");
         this.spr_redPoint.active = false;
