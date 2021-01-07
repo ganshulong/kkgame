@@ -397,6 +397,7 @@ cc.Class({
         }
 
         this.showMemberList(showList);
+        cc.find("bg_member/bg_title/text_title",this._layer).getComponent(cc.Label).string = "成员列表(" + showList.length + ")";
     },
 
     showMemberList(showList){

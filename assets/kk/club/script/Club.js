@@ -143,10 +143,14 @@ cc.Class({
         this.panel_tableOperate.active = false;
         let btnCloseTableOperate = this.panel_tableOperate.getChildByName("btnCloseTableOperate");
         Global.btnClickEvent(btnCloseTableOperate,this.onClickCloseTableOperate,this);
-        this.btn_deleteTable = this.panel_tableOperate.getChildByName("btn_deleteTable");
-        Global.btnClickEvent(this.btn_deleteTable,this.onClickDeleteTable,this);
         this.btn_modifyTable = this.panel_tableOperate.getChildByName("btn_modifyTable");
         Global.btnClickEvent(this.btn_modifyTable,this.onClickModifyTable,this);
+        this.btn_deleteTable = this.panel_tableOperate.getChildByName("btn_deleteTable");
+        Global.btnClickEvent(this.btn_deleteTable,this.onClickDeleteTable,this);
+        this.btn_dismissTable = this.panel_tableOperate.getChildByName("btn_dismissTable");
+        Global.btnClickEvent(this.btn_dismissTable,this.onClickDismissTable,this);
+        this.btn_confirmRule = this.panel_tableOperate.getChildByName("btn_confirmRule");
+        Global.btnClickEvent(this.btn_confirmRule,this.onClickCloseTableOperate,this);
 
         let btn_backRoom = cc.find("Layer/img_bottomBg/btn_backRoom",this.node);
         Global.btnClickEvent(btn_backRoom,this.onClickBackRoom,this);
@@ -199,6 +203,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.registerMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_DISMISS_TABLE, this.onRcvDismissNotify, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
@@ -220,6 +225,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_DISMISS_TABLE, this.onRcvDismissNotify, false, this);
     },
 
     onRcvModifyRoomPlay(msg){
@@ -279,10 +285,10 @@ cc.Class({
                 this.createRoomBtn.active = this.getIsManager();
                 this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
                 this.btn_member.active = (this.getIsManager() || this.getIsPartner());
-                for(let i=0; i<this._content.childrenCount;++i){
-                    let btn_tableOperate = cc.find("node/btn_tableOperate", this._content.children[i]);
-                    btn_tableOperate.active = this.getIsManager();
-                }
+                // for(let i=0; i<this._content.childrenCount;++i){
+                //     let btn_tableOperate = cc.find("node/btn_tableOperate", this._content.children[i]);
+                //     btn_tableOperate.active = this.getIsManager();
+                // }
             }
             if (data.clubid === cc.vv.UserManager.currClubId && data.partneruid === cc.vv.UserManager.uid) {
                 this._clubInfo = cc.vv.UserManager.getCurClubInfo();
@@ -572,14 +578,14 @@ cc.Class({
                 }
                 if (Global.curRoomID && Global.curRoomID == data.deskid) {
                     if (users[j].uid == cc.vv.UserManager.uid) {
-                        bInRoomMask.position = cc.v2(-5, 80);
+                        bInRoomMask.position = cc.v2(-70, 30);
                         bInRoomMask.active = true;
                         bInRoomMask.stopAllActions();
                         bInRoomMask.runAction(
                             cc.repeatForever(
                                 cc.sequence(
-                                    cc.moveTo(0.3, cc.v2(-5, 90)),
-                                    cc.moveTo(0.3, cc.v2(-5, 80))
+                                    cc.moveTo(0.3, cc.v2(-70, 30+10)),
+                                    cc.moveTo(0.3, cc.v2(-70, 30))
                                 )
                             )
                         )
@@ -589,7 +595,7 @@ cc.Class({
         }
 
         let btn_tableOperate = cc.find("node/btn_tableOperate",item);
-        btn_tableOperate.active = this.getIsManager();
+        // btn_tableOperate.active = this.getIsManager();
         btn_tableOperate.tableInfo = data;
         Global.btnClickEvent(btn_tableOperate,this.onClickShowTableOperate,this);
     },
@@ -828,19 +834,35 @@ cc.Class({
 
     onClickShowTableOperate(event){
         let tableInfo = event.target.tableInfo;
-        for (let i = 0; i < this._tableList.length; i++) {
-            if (this._tableList[i].deskid == tableInfo.deskid) {
-                if (0 < this._tableList[i].users.length) {
-                    cc.vv.FloatTip.show("以有人坐下的桌子，不能删除或修改玩法");
-                    return;
-                }
+        if (this.getIsManager()) { //hui
+            this.panel_tableOperate.getChildByName("text_title").getComponent(cc.Label).string = "桌子操作";
+            this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前操作桌子:" + tableInfo.config.tname;
+            this.btn_dismissTable.active = (0 < tableInfo.users.length);
+            this.btn_modifyTable.active = !(0 < tableInfo.users.length);
+            this.btn_deleteTable.active = !(0 < tableInfo.users.length);
+            this.btn_confirmRule.active = false;
+            if (this.btn_dismissTable.active) {
+                this.btn_dismissTable.deskid = tableInfo.deskid;
+            } else {
+                tableInfo.config.deskid = tableInfo.deskid;
+                this.btn_modifyTable.config = tableInfo.config;
+                this.btn_deleteTable.deskid = tableInfo.deskid;
             }
+        } else {
+            this.panel_tableOperate.getChildByName("text_title").getComponent(cc.Label).string = "桌子规则";
+            this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前桌子玩法:" +  Global.getGameRuleStr(tableInfo.config);
+            this.btn_modifyTable.active = false;
+            this.btn_deleteTable.active = false;
+            this.btn_dismissTable.active = false;
+            this.btn_confirmRule.active = true;
         }
-        this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前操作桌子:" + tableInfo.config.tname;
-        this.btn_deleteTable.deskid = tableInfo.deskid;
-        tableInfo.config.deskid = tableInfo.deskid;
-        this.btn_modifyTable.config = tableInfo.config;
+
         this.panel_tableOperate.active = true;
+    },
+
+    onClickModifyTable(event){
+        this.panel_tableOperate.active = false;
+        this.CreateRoomJS.showCreateRoom(true, 0, event.target.config);
     },
 
     onClickDeleteTable(event){
@@ -857,9 +879,18 @@ cc.Class({
         cc.vv.AlertView.show("是否确实删除桌子："+deskid, sureCall, cancelCall);
     },
 
-    onClickModifyTable(event){
+    onClickDismissTable(event){
         this.panel_tableOperate.active = false;
-        this.CreateRoomJS.showCreateRoom(true, 0, event.target.config);
+        let deskid = event.target.deskid;
+        let sureCall = function () {
+            var req = { c: MsgId.CLUB_DISMISS_TABLE};
+            req.clubid = cc.vv.UserManager.currClubId;
+            req.deskid = deskid;
+            cc.vv.NetManager.send(req);
+        }
+        let cancelCall = function () {
+        }
+        cc.vv.AlertView.show("是否确实解散桌子："+deskid, sureCall, cancelCall);
     },
 
     onBack(){
