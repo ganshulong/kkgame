@@ -453,7 +453,7 @@ cc.Class({
         let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
         Global.setHead(spr_head, userInfo.usericon);
         let btn_note = bg_memberItem.getChildByName("btn_note");
-        btn_note.active = ((cc.vv.UserManager.uid != userInfo.uid) && (0 === Global.checkPartnerList.length) && !this.isShowSearchMember);
+        btn_note.active = userInfo.remark;
         if (btn_note.active) {
             btn_note.getChildByName("text_note").getComponent(cc.Label).string = userInfo.remark;
             btn_note.uid = userInfo.uid;
