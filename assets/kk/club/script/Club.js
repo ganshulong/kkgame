@@ -634,10 +634,14 @@ cc.Class({
                     obj1SeatRateState = 2;
                 }
             
-            //等待在前 占座率:从小到大
+            //等待在前 占座率 未满  > 空桌 > 满桌
             } else {
-                obj2SeatRateState = -obj2SeatRateState;                
-                obj1SeatRateState = -obj1SeatRateState;
+                if (1 == obj2SeatRateState) {
+                    obj2SeatRateState = -1;
+                }
+                if (1 == obj1SeatRateState) {
+                    obj1SeatRateState = -1;
+                }
             }
 
             if (obj2SeatRateState == obj1SeatRateState) {
