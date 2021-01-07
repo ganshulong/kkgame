@@ -158,6 +158,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_SELECT_COLOR_NOTIFY, this.onRcvSelectColorNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.ERQIGUI_MAI_CARD_NOTIFY, this.onRcvMaiCardNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvCreateDismissTableNotify,this);
     },
 
     unregisterMsg() {
@@ -202,6 +203,16 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_JIAO_SCORE_NOTIFY, this.onRcvJiaoScoreNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_SELECT_COLOR_NOTIFY, this.onRcvSelectColorNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.ERQIGUI_MAI_CARD_NOTIFY, this.onRcvMaiCardNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvCreateDismissTableNotify, false,this);
+    },
+
+    onRcvCreateDismissTableNotify(msg){
+        if(msg.code == 200){
+            cc.vv.FloatTip.show("房间已被会长或管理解散");
+            if (!msg.isShowJieSuan) {
+                this.exitGame();
+            }
+        }
     },
 
     onRcvUpdateTableInfo(msg){

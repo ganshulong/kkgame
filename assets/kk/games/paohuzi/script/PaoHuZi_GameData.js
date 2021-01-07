@@ -158,6 +158,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.TRUSTEE_NOTIFY, this.onRcvTrusteeNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.CANCEL_TRUSTEE, this.onRcvCancelTrustee, this);
         cc.vv.NetManager.registerMsg(MsgId.CANCEL_TRUSTEE_NOTIFY, this.onRcvCancelTrusteeNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvCreateDismissTableNotify,this);
     },
 
     unregisterMsg() {
@@ -199,6 +200,16 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.TRUSTEE_NOTIFY, this.onRcvTrusteeNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CANCEL_TRUSTEE, this.onRcvCancelTrustee, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CANCEL_TRUSTEE_NOTIFY, this.onRcvCancelTrusteeNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvCreateDismissTableNotify, false,this);
+    },
+
+    onRcvCreateDismissTableNotify(msg){
+        if(msg.code == 200){
+            cc.vv.FloatTip.show("房间已被会长或管理解散");
+            if (!msg.isShowJieSuan) {
+                this.exitGame();
+            }
+        }
     },
 
     onRcvCancelTrusteeNotify(msg){
