@@ -6,8 +6,9 @@ cc.Class({
         _Layer:null,
     },
 
-    showLayer(uid){
+    showLayer(uid, oldNoteStr){
         this.uid = uid;
+        this.oldNoteStr = oldNoteStr;
         if(this._Layer === null){
             cc.loader.loadRes("common/prefab/club_setMemberNote",cc.Prefab,(err,prefab)=>{
                 if(err === null){
@@ -38,7 +39,7 @@ cc.Class({
     },
 
     initShow(){
-        this.input_editBox.string = "";
+        this.input_editBox.string = this.oldNoteStr;
     },
 
     onClose(){

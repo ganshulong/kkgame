@@ -119,6 +119,7 @@ cc.Class({
             node.name = "card";
             if(this._chairId === 0) {
                 node.y = (node.height-22)*i+node.height*0.5-25;
+                node.scale = 1.1;
                 node.addComponent(cc.Button);
                 node.on(cc.Node.EventType.TOUCH_START,this.onTouchStart,this);
                 node.on(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove,this);
@@ -135,7 +136,7 @@ cc.Class({
             }
             else node.y = node.height*i+node.height*0.5;
             if(this._chairId === 0){
-                node.x = this._handcardNode.parent.parent.width*0.5-len*0.5*node.width+node.width*this._num;
+                node.x = this._handcardNode.parent.parent.width*0.5-len*0.5*node.width*node.scale+node.width*node.scale*this._num;
             } else {
                 node.x = node.width*this._num;
             }
@@ -388,10 +389,10 @@ cc.Class({
                 }
                 if(this._cardBox[i][j] ){
 
-                    let endPos = cc.v2(this._handcardNode.parent.width*0.5-len*0.5*this._cardBox[i][j].width+
-                        i*this._cardBox[i][j].width,(this._cardBox[i][j].height-22)*j+this._cardBox[i][j].height*0.5-25);
+                    let endPos = cc.v2(this._handcardNode.parent.width*0.5-len*0.5*this._cardBox[i][j].width*this._cardBox[i][j].scale+
+                        i*this._cardBox[i][j].width*this._cardBox[i][j].scale,(this._cardBox[i][j].height-22)*j+this._cardBox[i][j].height*0.5-25);
                     if (cc.vv.gameData._isPlayBack && 0 != this._chairId) {
-                        endPos.x = this._cardBox[i][j].width*i;
+                        endPos.x = this._cardBox[i][j].width*this._cardBox[i][j].scale*i;
                         endPos.y = this._cardBox[i][j].height*j+this._cardBox[i][j].height*0.5;
                     }
                     if(showAction){

@@ -207,7 +207,7 @@ cc.Class({
 
     onClickSearch(event){
         let inputStr = this.input_nameID.getComponent(cc.EditBox).string;
-        if (inputStr && 6 == inputStr.length) {
+        if (inputStr && 0 < inputStr.length) {
             let req = { 'c': MsgId.SEARCH_CLUB_MEMBER};
             req.selectTime = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);
             req.clubid = cc.vv.UserManager.currClubId;
@@ -350,7 +350,7 @@ cc.Class({
 
             this.isShowSearchMember = true;
             this.btn_back.active = true;
-            this.memberList = [msg.memberInfo];
+            this.memberList = msg.memberList;
             this.updateMemberList()
         }
     },
@@ -453,10 +453,11 @@ cc.Class({
         let spr_head = cc.find("UserHead/radio_mask/spr_head", bg_memberItem);
         Global.setHead(spr_head, userInfo.usericon);
         let btn_note = bg_memberItem.getChildByName("btn_note");
-        btn_note.active = ((cc.vv.UserManager.uid != userInfo.uid) && (0 === Global.checkPartnerList.length));
+        btn_note.active = ((cc.vv.UserManager.uid != userInfo.uid) && (0 === Global.checkPartnerList.length) && !this.isShowSearchMember);
         if (btn_note.active) {
             btn_note.getChildByName("text_note").getComponent(cc.Label).string = userInfo.remark;
             btn_note.uid = userInfo.uid;
+            btn_note.oldNoteStr = userInfo.remark;
             Global.btnClickEventOn(btn_note, this.onClickSetMemberNoteJS,this);
         }
         bg_memberItem.getChildByName("text_name").getComponent(cc.Label).string = userInfo.playername;
@@ -503,7 +504,7 @@ cc.Class({
     },
 
     onClickSetMemberNoteJS(event){
-        this.ClubSetMemberNoteJS.showLayer(event.target.uid);
+        this.ClubSetMemberNoteJS.showLayer(event.target.uid, event.target.oldNoteStr);
     },
 
     onClickShowMemberOperate(event){
