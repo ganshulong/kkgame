@@ -369,7 +369,17 @@ cc.Class({
                 for(let i=0;i<this._tableList.length;++i){
                     if(this._tableList[i].deskid === deskInfo.deskid){
                         this._tableList[i] = deskInfo;
-                        this.initTables(this._tableList);
+                        if (msg.response.isRefresh) {
+                            this.initTables(this._tableList);
+                        } else {
+                            for (let i = 0; i < this._content.childrenCount; i++) {
+                                let item = this._content.children[i];
+                                if(item._deskId == deskInfo.deskid){
+                                    this.initTable(item, deskInfo);
+                                    break;
+                                }
+                            }
+                        }
                         break;
                     }
                 }
@@ -504,7 +514,8 @@ cc.Class({
     },
 
     // 更新桌子信息
-    initTable(item,config,data){
+    initTable(item,data){
+        let config = data.config;
         let type = cc.find("node/type_bg",item);
         type.getComponent(cc.Sprite).spriteFrame = this.wanfaAtlas.getSpriteFrame("hallClub-img-table-moreRule-index_" +
             config.playtype);
@@ -657,7 +668,6 @@ cc.Class({
 
         let width = 0;
         for(let i=0;i<list.length;++i){
-            let config = list[i].config;
             let item = null;
             if(i < this._content.childrenCount) {
                 item = this._content.children[i];
@@ -674,7 +684,7 @@ cc.Class({
             item.x  = this._startPos.x + (clickBtn.width+30)*parseInt(i/2);
             item.y  = this._startPos.y - (clickBtn.height+30)*(i%2);
             if(i%2===0) width +=  (clickBtn.width+30);
-            this.initTable(item,config,list[i]);
+            this.initTable(item,list[i]);
 
         }
         for(let i=list.length;i<this._content.childrenCount;++i){
