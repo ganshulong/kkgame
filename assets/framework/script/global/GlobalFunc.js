@@ -1468,50 +1468,50 @@ Global.getGameName = function (gameid){
 }
 
 Global.getGameRuleStr = function (config){
-    let gameRuleStr = Global.getGameName(config.gameid);
-    gameRuleStr += ("," + config.gamenum + "局");
-    gameRuleStr += ("," + config.seat + "人");
+    let gameRuleStr = config.tname;
+    gameRuleStr += ("    " + config.gamenum + "局");
+    gameRuleStr += ("    " + config.seat + "人");
     switch(config.gameid) {
         case 1:
-            gameRuleStr += ("," + ["连中","中庄x2","四首相乘"][config.param1]);
+            gameRuleStr += ("    " + ["连中","中庄x2","四首相乘"][config.param1]);
             break;
         case 2:
-            gameRuleStr += ("," + ["蚂蚁上树","见三加一","见六加一"][config.param1-1]);
+            gameRuleStr += ("    " + ["蚂蚁上树","见三加一","见六加一"][config.param1-1]);
             break;
         case 5:
-            gameRuleStr += ("," + ["一胡一分","1分底","2分底","3分底","4分底","5分底"][config.param1]);
+            gameRuleStr += ("    " + ["一胡一分","1分底","2分底","3分底","4分底","5分底"][config.param1]);
             break;
         case 7:
-            gameRuleStr += ("," + ["一胡一分","三胡一分","一胡一分"][config.param1]);
-            gameRuleStr += ("," + ["不带醒","翻醒","随醒"][config.param2]);
+            gameRuleStr += ("    " + ["一胡一分","三胡一分","一胡一分"][config.param1]);
+            gameRuleStr += ("    " + ["不带醒","翻醒","随醒"][config.param2]);
             break;
         case 9:
-            gameRuleStr += ("," + ["","","首轮最小手牌先出 ","首轮黑桃三先出 "][config.seat]);
-            gameRuleStr += ("," + ["不扎鸟","红桃10扎鸟翻倍","红桃10扎鸟+5分","红桃10扎鸟+10分"][config.param1]);
+            gameRuleStr += ("    " + ["","","首轮最小手牌先出 ","首轮黑桃三先出 "][config.seat]);
+            gameRuleStr += ("    " + ["不扎鸟","红桃10扎鸟翻倍","红桃10扎鸟+5分","红桃10扎鸟+10分"][config.param1]);
             break;
         case 11:
-            gameRuleStr += ("," + ["不抓鸟","抓2鸟","抓4鸟","抓6鸟"][config.param1/2]);
+            gameRuleStr += ("    " + ["不抓鸟","抓2鸟","抓4鸟","抓6鸟"][config.param1/2]);
             break;
         case 13:
-            gameRuleStr += ("," + ["一胡一分","三胡一分"][config.param1]);
-            gameRuleStr += ("," + ["不带醒","翻醒","随醒"][config.param2]);
+            gameRuleStr += ("    " + ["一胡一分","三胡一分"][config.param1]);
+            gameRuleStr += ("    " + ["不带醒","翻醒","随醒"][config.param2]);
             break;
         case 17:
-            gameRuleStr += (",筷子" + config.param1 + "分 ");
-            gameRuleStr += ("," + ["不打五色四色 ","打五色四色 "][config.param2]);
+            gameRuleStr += ("    筷子" + config.param1 + "分 ");
+            gameRuleStr += ("    " + ["不打五色四色 ","打五色四色 "][config.param2]);
             break;
     }
-    gameRuleStr += ("," + config.score + "倍");
+    gameRuleStr += ("    " + config.score + "倍");
     if(config.speed === 1){
-        gameRuleStr += (",快速");
+        gameRuleStr += ("    快速");
     }
-    gameRuleStr += ("," + ["不托管","30秒托管","60秒托管","90秒托管"][config.trustee]);
-    gameRuleStr += ("," + ["禁止解散","允许解散"][config.isdissolve]);
+    gameRuleStr += ("    " + ["不托管","30秒托管","60秒托管","90秒托管"][config.trustee]);
+    gameRuleStr += ("    " + ["禁止解散","允许解散"][config.isdissolve]);
     if(config.ipcheck === 1){
-        gameRuleStr += (",同IP禁止进入");
+        gameRuleStr += ("    同IP禁止进入");
     }
     if(config.distance === 1){
-        gameRuleStr += (",距离相近1000米禁止加入");
+        gameRuleStr += ("    距离相近1000米禁止加入");
     }
     return gameRuleStr;
 }

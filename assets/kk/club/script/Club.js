@@ -141,8 +141,8 @@ cc.Class({
 
         this.panel_tableOperate = cc.find("Layer/panel_tableOperate",this.node);
         this.panel_tableOperate.active = false;
-        let btnCloseTableOperate = this.panel_tableOperate.getChildByName("btnCloseTableOperate");
-        Global.btnClickEvent(btnCloseTableOperate,this.onClickCloseTableOperate,this);
+        let mask = this.panel_tableOperate.getChildByName("mask");
+        Global.btnClickEvent(mask,this.onClickCloseTableOperate,this);
         this.btn_modifyTable = this.panel_tableOperate.getChildByName("btn_modifyTable");
         Global.btnClickEvent(this.btn_modifyTable,this.onClickModifyTable,this);
         this.btn_deleteTable = this.panel_tableOperate.getChildByName("btn_deleteTable");
@@ -848,9 +848,8 @@ cc.Class({
 
     onClickShowTableOperate(event){
         let tableInfo = event.target.tableInfo;
+        this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前桌子玩法:\n" +  Global.getGameRuleStr(tableInfo.config);
         if (this.getIsManager()) { //hui
-            this.panel_tableOperate.getChildByName("text_title").getComponent(cc.Label).string = "桌子操作";
-            this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前操作桌子:" + tableInfo.config.tname;
             this.btn_dismissTable.active = (0 < tableInfo.users.length);
             this.btn_modifyTable.active = !(0 < tableInfo.users.length);
             this.btn_deleteTable.active = !(0 < tableInfo.users.length);
@@ -863,8 +862,6 @@ cc.Class({
                 this.btn_deleteTable.deskid = tableInfo.deskid;
             }
         } else {
-            this.panel_tableOperate.getChildByName("text_title").getComponent(cc.Label).string = "桌子规则";
-            this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前桌子玩法:" +  Global.getGameRuleStr(tableInfo.config);
             this.btn_modifyTable.active = false;
             this.btn_deleteTable.active = false;
             this.btn_dismissTable.active = false;
@@ -890,7 +887,7 @@ cc.Class({
         }
         let cancelCall = function () {
         }
-        cc.vv.AlertView.show("是否确实删除桌子："+deskid, sureCall, cancelCall);
+        cc.vv.AlertView.show("是否确定删除桌子："+deskid, sureCall, cancelCall);
     },
 
     onClickDismissTable(event){
@@ -904,7 +901,7 @@ cc.Class({
         }
         let cancelCall = function () {
         }
-        cc.vv.AlertView.show("是否确实解散桌子："+deskid, sureCall, cancelCall);
+        cc.vv.AlertView.show("是否确定解散桌子："+deskid, sureCall, cancelCall);
     },
 
     onBack(){
