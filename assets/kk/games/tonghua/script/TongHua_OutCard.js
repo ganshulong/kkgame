@@ -98,7 +98,7 @@ cc.Class({
     
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
-        if(data.isReconnect && this._outCardNode){
+        if(this._outCardNode){
             let outCards = data.actionInfo.curaction.outCards;
             if (data.actionInfo.curaction.seat === this._seatIndex) {
                 if (!(data.actionInfo.nextaction.seat === this._seatIndex && 0 < data.actionInfo.nextaction.type)) {    //非当前出牌玩家才显示出牌情况

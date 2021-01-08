@@ -136,7 +136,7 @@ cc.Class({
     
     recvDeskInfoMsg(){
         let data = cc.vv.gameData.getDeskInfo();
-        if(data.isReconnect && this._outCardNode){
+        if(this._outCardNode){
             let putCardsList = data.actionInfo.curaction.putCardsList;
             for (let i = 0; i < putCardsList.length; i++) {
                 if (putCardsList[i].seat === this._seatIndex) {
