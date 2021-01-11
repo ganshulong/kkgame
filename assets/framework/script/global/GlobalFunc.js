@@ -836,9 +836,6 @@ GlobalFunc.btnClickEventOff = function (btn, func, obj) {
 
 // 按钮点击事件, 不需要默认音效版本，如樱桃的爱，伟大的蓝色，func 中 自己单独播放 同一个按键不同的音效
 GlobalFunc.btnClickEventOn = function (btn, func, obj) {
-    if (btn == null) {
-        return null;
-    }
     btn.on("click", func, obj);
     return btn;
 }
@@ -1468,6 +1465,63 @@ Global.getDataStr = function (year,month,day){
 Global.getGameName = function (gameid){
     let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快","红中","红中","十胡卡","十胡卡","同花","同花"];
     return gameNameStr[gameid];
+}
+
+Global.getGameRuleStr = function (config){
+    let gameRuleStr = config.tname;
+    gameRuleStr += ("    " + config.gamenum + "局");
+    gameRuleStr += ("    " + config.seat + "人");
+    switch(config.gameid) {
+        case 1:
+            gameRuleStr += ("    " + ["连中","中庄x2","四首相乘"][config.param1]);
+            break;
+        case 2:
+            gameRuleStr += ("    " + ["蚂蚁上树","见三加一","见六加一"][config.param1-1]);
+            break;
+        case 5:
+            gameRuleStr += ("    " + ["一胡一分","1分底","2分底","3分底","4分底","5分底"][config.param1]);
+            break;
+        case 7:
+            gameRuleStr += ("    " + ["一胡一分","三胡一分","一胡一分"][config.param1]);
+            gameRuleStr += ("    " + ["不带醒","翻醒","随醒"][config.param2]);
+            break;
+        case 9:
+            gameRuleStr += ("    " + ["","","首轮最小手牌先出 ","首轮黑桃三先出 "][config.seat]);
+            gameRuleStr += ("    " + ["不扎鸟","红桃10扎鸟翻倍","红桃10扎鸟+5分","红桃10扎鸟+10分"][config.param1]);
+            break;
+        case 11:
+            gameRuleStr += ("    " + ["不抓鸟","抓2鸟","抓4鸟","抓6鸟"][config.param1/2]);
+            break;
+        case 13:
+            gameRuleStr += ("    " + ["一胡一分","三胡一分"][config.param1]);
+            gameRuleStr += ("    " + ["不带醒","翻醒","随醒"][config.param2]);
+            break;
+        case 15:
+            gameRuleStr += ("    " + config.param1 + "副牌");
+            gameRuleStr += ("    " + ["不显示剩余牌","显示剩余牌"][config.param2]);
+            gameRuleStr += ("    沉死分给对手");
+            if (15 <= config.param1) {
+                gameRuleStr += ("    不可废同");
+            }
+            break;
+        case 17:
+            gameRuleStr += ("    筷子" + config.param1 + "分 ");
+            gameRuleStr += ("    " + ["不打五色四色 ","打五色四色 "][config.param2]);
+            break;
+    }
+    gameRuleStr += ("    " + config.score + "倍");
+    if(config.speed === 1){
+        gameRuleStr += ("    快速");
+    }
+    gameRuleStr += ("    " + ["不托管","30秒托管","60秒托管","90秒托管"][config.trustee]);
+    gameRuleStr += ("    " + ["禁止解散","允许解散"][config.isdissolve]);
+    if(config.ipcheck === 1){
+        gameRuleStr += ("    同IP禁止进入");
+    }
+    if(config.distance === 1){
+        gameRuleStr += ("    距离相近1000米禁止加入");
+    }
+    return gameRuleStr;
 }
 
 GlobalFunc.initRecord = function (){
