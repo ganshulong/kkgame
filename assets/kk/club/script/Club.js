@@ -281,7 +281,7 @@ cc.Class({
         if (200 == data.code) {
             if (data.clubid === cc.vv.UserManager.currClubId && data.setuid === cc.vv.UserManager.uid) {
                 this.img_card_bg.active = this.getIsManager();
-                this.btn_msg.active = this.getIsManager();
+                this.btn_msg.active = (this.getIsManager() || this.getIsPartner());
                 this.createRoomBtn.active = this.getIsManager();
                 this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
                 this.btn_member.active = (this.getIsManager() || this.getIsPartner());
