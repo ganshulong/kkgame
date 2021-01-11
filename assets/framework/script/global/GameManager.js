@@ -122,11 +122,13 @@ cc.Class({
 
             cc.vv.NetManager.registerMsg(MsgId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify, this);
             cc.vv.NetManager.registerMsg(MsgId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_SWITCH_MODE, this.onRcvClubSwitchMode, this);
 
             cc.vv.NetManager.registerMsg(MsgId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
 
             cc.vv.NetManager.registerMsg(MsgId.BACK_GAME, this.onRcvPublicCodeCheck, this);
             cc.vv.NetManager.registerMsg(MsgId.CREATECULB, this.onRcvPublicCodeCheck, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_ALLOCATE_MEMBER, this.onRcvPublicCodeCheck, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_INVITE_JOIN, this.onRcvInviteJoin, this);
             cc.vv.NetManager.registerMsg(MsgId.CHAT, this.onRcvChat, this);
 
@@ -150,7 +152,7 @@ cc.Class({
             if (200 == msg.code) {
                 for (let i = 0; i < cc.vv.UserManager.clubs.length; i++) {
                     if (msg.clubid === cc.vv.UserManager.clubs[i].clubid) {
-                        if (msg.partneruid === cc.vv.UserManager.uid || msg.setuid === cc.vv.UserManager.uid) {
+                        if (msg.partneruid === cc.vv.UserManager.uid) {
                             cc.vv.UserManager.clubs[i].level = msg.level;
                         }
                         Global.dispatchEvent(EventId.CLUB_SET_PARTNER, msg);
@@ -224,6 +226,13 @@ cc.Class({
             if(msg.code === 200){
                 cc.vv.UserManager.dismissExitCurClub();
                 Global.dispatchEvent(EventId.DISMISS_CLUB_NOTIFY, msg.response);
+            }
+        },
+
+        onRcvClubSwitchMode(msg){
+            if(msg.code === 200){
+                cc.vv.UserManager.setClubMode(msg.clubid, msg.mode);
+                cc.vv.FloatTip.show("切换亲友圈模式成功!");
             }
         },
 

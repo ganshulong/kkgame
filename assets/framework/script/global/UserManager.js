@@ -299,6 +299,15 @@ cc.Class({
             }
         },
 
+        setClubMode(clubID, mode){
+            for(let i=0;i<this.clubs.length;++i){
+                if(clubID === this.clubs[i].clubid){
+                    this.clubs[i].mode = mode;
+                    return;
+                }
+            }
+        },
+
         setClubExitApplyState(clubID, state){
             for(let i=0;i<this.clubs.length;++i){
                 if(clubID === this.clubs[i].clubid){
