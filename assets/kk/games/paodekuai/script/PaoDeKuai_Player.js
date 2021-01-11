@@ -303,7 +303,7 @@ cc.Class({
             let chairId = cc.vv.gameData.getLocalChair(msg.seat);
             if(chairId === this._chairId){
                 this._seatIndex = -1;
-                if(this._playerNode){
+                if(this._playerNode) {
                     this._playerNode.active = false;
                     cc.vv.AudioManager.playEff("paodekuai/", "userleave",true);
 

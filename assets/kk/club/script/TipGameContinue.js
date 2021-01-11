@@ -13,7 +13,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.GAME_CONTINUE_AGREE_NOTIFY, this.onRcvAgreeNotify, this);
 
         let deskInfo = cc.vv.gameData.getDeskInfo();
-        if (deskInfo.againInfo.iStart) {
+        if (deskInfo.againInfo && deskInfo.againInfo.iStart) {
             for (let i = 0; i < deskInfo.againInfo.agreeUsers.length; i++) {
                 let userData = deskInfo.againInfo.agreeUsers[i];
                 if (userData.uid == cc.vv.UserManager.uid && (-1 != userData.isargee)) {
