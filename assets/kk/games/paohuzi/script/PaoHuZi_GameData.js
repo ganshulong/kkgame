@@ -301,6 +301,9 @@ cc.Class({
         list.push(conf.seat+ "人 ");
         list.push(["蚂蚁上树 ","见三加一 ","见六加一 "][conf.param1-1]);
         list.push(conf.score+ "倍 ");
+        if (cc.vv.UserManager.currClubId) {
+            list.push("最低入场" + conf.tiredsill + "分 ");
+        }
         if(conf.speed === 1){
             list.push("快速 ");
         }

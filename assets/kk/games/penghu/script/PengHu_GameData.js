@@ -315,6 +315,9 @@ cc.Class({
         else if(conf.param1 === 1) list.push("中庄x2 ");
         else if(conf.param1 === 2) list.push("四首相乘 ");
         list.push(conf.score+ "倍 ");
+        if (cc.vv.UserManager.currClubId) {
+            list.push("最低入场" + conf.tiredsill + "分 ");
+        }
         if(conf.speed === 1){
             list.push("快速 ");
         }

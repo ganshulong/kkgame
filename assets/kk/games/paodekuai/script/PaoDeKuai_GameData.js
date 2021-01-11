@@ -317,6 +317,9 @@ cc.Class({
         list.push(["","","首轮最小手牌先出 ","首轮黑桃三先出 "][conf.seat]);
         list.push(["不扎鸟 ","红桃10扎鸟翻倍 ","红桃10扎鸟+5分 ","红桃10扎鸟+10分 "][conf.param1]);
         list.push(conf.score+ "倍 ");
+        if (cc.vv.UserManager.currClubId) {
+            list.push("最低入场" + conf.tiredsill + "分 ");
+        }
         if(conf.speed === 1){
             list.push("快速 ");
         }

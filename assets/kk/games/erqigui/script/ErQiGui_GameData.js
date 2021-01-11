@@ -328,6 +328,9 @@ cc.Class({
         list.push("筷子" + conf.param1 + "分 ");
         list.push(["不打五色四色 ","打五色四色 "][conf.param2]);
         list.push(conf.score+ "倍 ");
+        if (cc.vv.UserManager.currClubId) {
+            list.push("最低入场" + conf.tiredsill + "分 ");
+        }
         if(conf.speed === 1){
             list.push("快速 ");
         }
