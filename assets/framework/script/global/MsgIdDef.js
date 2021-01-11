@@ -308,3 +308,29 @@ GlobalMsgId.GAME_CONTINUE_NOTIFY = 18818;			// 游戏继续_通知
 GlobalMsgId.GAME_CONTINUE_REFUSE_NOTIFY = 18819;   	// 游戏继续_拒绝通知
 GlobalMsgId.GAME_CONTINUE_AGREE_NOTIFY = 18820;   	// 游戏继续_同意通知
 GlobalMsgId.GAME_CONTINUE_SELECT = 8838;   			// 游戏继续_选择
+
+GlobalMsgId.ERQIGUI_JIAO_SCORE = 9901; 				// 二七鬼叫分
+GlobalMsgId.ERQIGUI_JIAO_SCORE_NOTIFY = 18901; 		// 二七鬼叫分通知
+GlobalMsgId.ERQIGUI_SELECT_COLOR = 9902; 			// 二七鬼叫主
+GlobalMsgId.ERQIGUI_SELECT_COLOR_NOTIFY = 18902;	// 二七鬼选主通知
+GlobalMsgId.ERQIGUI_MAI_CARD = 9903; 				// 二七鬼埋底牌
+GlobalMsgId.ERQIGUI_MAI_CARD_NOTIFY = 18903; 		// 二七鬼埋底牌通知
+GlobalMsgId.ERQIGUI_SURRENDER = 9904; 				// 二七鬼投降
+GlobalMsgId.ERQIGUI_KUAI_NUM_NOTIFY = 18904; 		// 二七鬼筷子数通知
+GlobalMsgId.ERQIGUI_CHECK_SCORE = 9905; 			// 二七鬼查分
+GlobalMsgId.ERQIGUI_CHECK_CARD = 9906; 				// 二七鬼查牌
+GlobalMsgId.ERQIGUI_CHECK_DI_CARD = 9907; 			// 二七鬼查看底牌
+
+GlobalMsgId.CLUB_SWITCH_MODE = 8839;   				// 俱乐部切换模式
+GlobalMsgId.CLUB_ALLOCATE_MEMBER = 8840;   			// 俱乐部调配成员
+GlobalMsgId.CLUB_MEMBER_UPDATE = 20001;   			// 俱乐部成员列表刷新
+
+GlobalMsgId.CLUB_FORBID_LIST = 178;
+GlobalMsgId.CLUB_ADD_FORBID_LIST = 174;
+GlobalMsgId.CLUB_DELETE_FORBID_LIST = 175;
+GlobalMsgId.CLUB_ADD_FORBID_MEMBER = 176;
+GlobalMsgId.CLUB_DELETE_FORBID_MEMBER = 177;
+
+GlobalMsgId.CLUB_SET_MEMBER_NOTE = 8842;
+GlobalMsgId.CLUB_DISMISS_TABLE = 8841;
+GlobalMsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY = 1026; 	// 会长解散通知
