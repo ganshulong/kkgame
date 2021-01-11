@@ -130,6 +130,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.TRUSTEE_NOTIFY, this.onRcvTrusteeNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.CANCEL_TRUSTEE, this.onRcvCancelTrustee, this);
         cc.vv.NetManager.registerMsg(MsgId.CANCEL_TRUSTEE_NOTIFY, this.onRcvCancelTrusteeNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvCreateDismissTableNotify,this);
     },
 
     unregisterMsg() {
@@ -172,6 +173,16 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.TRUSTEE_NOTIFY, this.onRcvTrusteeNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CANCEL_TRUSTEE, this.onRcvCancelTrustee, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CANCEL_TRUSTEE_NOTIFY, this.onRcvCancelTrusteeNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvCreateDismissTableNotify, false,this);
+    },
+
+    onRcvCreateDismissTableNotify(msg){
+        if(msg.code == 200){
+            cc.vv.FloatTip.show("房间已被会长或管理解散");
+            if (!msg.isShowJieSuan) {
+                this.exitGame();
+            }
+        }
     },
 
     onRcvCancelTrusteeNotify(msg){
@@ -268,7 +279,7 @@ cc.Class({
             list.push("同IP禁止进入 "); 
         } 
         if(conf.distance){
-            list.push("距离相近200米禁止加入 "); 
+            list.push("距离相近1000米禁止加入 "); 
         } 
         return list;
     },
@@ -295,7 +306,7 @@ cc.Class({
             wanFaStr += ("同IP禁止进入 "); 
         } 
         if(conf.distance){
-            wanFaStr += ("距离相近200米禁止加入 "); 
+            wanFaStr += ("距离相近1000米禁止加入 "); 
         } 
         return wanFaStr;
     },
