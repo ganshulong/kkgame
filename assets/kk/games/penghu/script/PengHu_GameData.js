@@ -341,161 +341,215 @@ cc.Class({
 
     // 手牌排序
     sortCard(cards){
+        // new sort 从小到大 只整理对子 同大小
         let menziList = [];
         let card2DList = this.getCard2DList(cards);
 
-        //二二二二
-        for (let i = 1; i <= 20; i++) {
-            if (4 == card2DList[i].length){
-                menziList.push(card2DList[i]);
-                card2DList[i] = [];
-            }
-        }
-        //二二二
-        for (let i = 1; i <= 20; i++) {
-            if (3 == card2DList[i].length){
-                menziList.push(card2DList[i]);
-                card2DList[i] = [];
-            }
-        }
-        //二二贰
         for (let i = 1; i <= 10; i++) {
-            if (3 == (card2DList[i].length + card2DList[i+10].length)){
-                menziList.push(card2DList[i+10]);
-                for (var j = 0; j < card2DList[i].length; j++) {
-                    menziList[menziList.length-1].push(card2DList[i][j]);
-                }
-                card2DList[i] = [];
-                card2DList[i+10] = [];
-            }
-        }
-        //二二+贰贰
-        for (let i = 1; i <= 10; i++) {
-            if (2 == card2DList[i].length && 2 == card2DList[i+10].length){
-                menziList.push(card2DList[i]);
-                card2DList[i] = [];
-                menziList.push(card2DList[i+10]);
-                card2DList[i+10] = [];
-            }
-        }
-        //一二三
-        for (let i = 1; i <= 10-2; i++) {
-            if (card2DList[i].length && card2DList[i+1].length && card2DList[i+2].length) {
-                let menzi = [];
-                menzi.push(card2DList[i].shift());
-                menzi.push(card2DList[i+1].shift());
-                menzi.push(card2DList[i+2].shift());
-                menziList.push(menzi);
-            }
-        }
-        //壹贰叁
-        for (let i = 11; i <= 20-2; i++) {
-            if (card2DList[i].length && card2DList[i+1].length && card2DList[i+2].length) {
-                let menzi = [];
-                menzi.push(card2DList[i].shift());
-                menzi.push(card2DList[i+1].shift());
-                menzi.push(card2DList[i+2].shift());
-                menziList.push(menzi);
-            }
-        }
-        //二七十 贰柒拾
-        let indesPair = [[2,7,10],[12,17,20]];
-        for (var i = 0; i < indesPair.length; i++) {
-            if (card2DList[indesPair[i][0]].length && card2DList[indesPair[i][1]].length && card2DList[indesPair[i][2]].length) {
-                let menzi = [];
-                menzi.push(card2DList[indesPair[i][0]].shift());
-                menzi.push(card2DList[indesPair[i][1]].shift());
-                menzi.push(card2DList[indesPair[i][2]].shift());
-                menziList.push(menzi);
-            }
-        }
-        //二二 贰贰
-        for (let i = 1; i <= 10; i++) {
-            if (2 == card2DList[i].length){
-                menziList.push(card2DList[i]);
-                card2DList[i] = [];
-            }
-            if (2 == card2DList[i+10].length) {
-                menziList.push(card2DList[i+10]);
-                card2DList[i+10] = [];
-            }
-        }
-        //一二
-        for (let i = 1; i <= 10-1; i++) {
-            if (card2DList[i].length && card2DList[i+1].length) {
-                let menzi = [];
-                menzi.push(card2DList[i].shift());
-                menzi.push(card2DList[i+1].shift());
-                menziList.push(menzi);
-            }
-        }
-        //壹贰
-        for (let i = 11; i <= 20-1; i++) {
-            if (card2DList[i].length && card2DList[i+1].length) {
-                let menzi = [];
-                menzi.push(card2DList[i].shift());
-                menzi.push(card2DList[i+1].shift());
-                menziList.push(menzi);
-            }
-        }
-        //二贰
-        for (let i = 1; i <= 10; i++) {
-            if (1 == card2DList[i].length && 1 == card2DList[i+10].length){
-                menziList.push([card2DList[i+10][0], card2DList[i][0]]);
-                card2DList[i] = [];
-                card2DList[i+10] = [];
-            }
-        }
-        //一三
-        for (let i = 1; i <= 10-2; i++) {
-            if (card2DList[i].length && card2DList[i+2].length) {
-                let menzi = [];
-                menzi.push(card2DList[i].shift());
-                menzi.push(card2DList[i+2].shift());
-                menziList.push(menzi);
-            }
-        }
-        //壹叁
-        for (let i = 11; i <= 20-2; i++) {
-            if (card2DList[i].length && card2DList[i+2].length) {
-                let menzi = [];
-                menzi.push(card2DList[i].shift());
-                menzi.push(card2DList[i+2].shift());
-                menziList.push(menzi);
-            }
-        }
-        //2+7 7+10 2+10 
-        indesPair = [[2,7],[2,10],[7,10],[12,17],[12,20],[17,20]];
-        for (var i = 0; i < indesPair.length; i++) {
-            if (card2DList[indesPair[i][0]].length && card2DList[indesPair[i][1]].length) {
-                let menzi = [];
-                menzi.push(card2DList[indesPair[i][0]].shift());
-                menzi.push(card2DList[indesPair[i][1]].shift());
-                menziList.push(menzi);
-            }
-        }
-        //散牌
-        for (let i = 1; i <= 20; i++) {
-            if (card2DList[i].length) {
-                if (10 > menziList.length) {
-                    menziList.push(card2DList[i]);
+            if (1 < (card2DList[i].length + card2DList[i+10].length)) {
+                if ((1 == card2DList[i].length && 1 == card2DList[i+10].length) ||
+                    (1 == card2DList[i].length && 2 == card2DList[i+10].length) ||
+                    (2 == card2DList[i].length && 1 == card2DList[i+10].length))  {     //大小牌合并
+                    menziList.push(card2DList[i+10]);
+                    card2DList[i+10] = [];
+                    for (let j = 0; j < card2DList[i].length; j++) {
+                        menziList[menziList.length-1].push(card2DList[i][j]);
+                    }
                     card2DList[i] = [];
                 } else {
-                    for (let j = menziList.length-1; j >= 0; j--) {
-                        let k = menziList[j].length;
-                        for (k = menziList[j].length; k < 3; k++) {
-                            menziList[j].push(card2DList[i][0]);
-                            card2DList[i] = [];
-                            break;
-                        }
-                        if (k < 3) {
-                            break;
-                        }
+                    if (1 < card2DList[i].length) {
+                        menziList.push(card2DList[i]);
+                        card2DList[i] = [];
+                    }
+                    if (1 < card2DList[i+10].length) {
+                        menziList.push(card2DList[i+10]);
+                        card2DList[i+10] = [];
                     }
                 }
             }
         }
+        for (let i = 1; i <= 10; i++) {
+            if (1 == (card2DList[i].length + card2DList[i+10].length)) {
+                let singleCard = card2DList[i].length ? card2DList[i][0] : card2DList[i+10][0];
+                if (10 > menziList.length) {
+                    let j = 0
+                    for (j = 0; j < menziList.length; j++) {
+                        if (singleCard % 100 < menziList[j][0] % 100) {
+                            menziList.splice(j, 0, [singleCard]);
+                            break;
+                        }
+                    }
+                    if (j == menziList.length) {
+                        menziList.push([singleCard]);
+                    }
+                } else {
+                     for (let j = menziList.length-1; j >= 0; j--) {
+                        if (1 == menziList[j].length) {
+                            menziList[j].unshift(singleCard);
+                            break;
+                        }
+                     }
+                }
+            }
+        }
         return menziList;
+
+        // old sort
+        // let menziList = [];
+        // let card2DList = this.getCard2DList(cards);
+
+        // //二二二二
+        // for (let i = 1; i <= 20; i++) {
+        //     if (4 == card2DList[i].length){
+        //         menziList.push(card2DList[i]);
+        //         card2DList[i] = [];
+        //     }
+        // }
+        // //二二二
+        // for (let i = 1; i <= 20; i++) {
+        //     if (3 == card2DList[i].length){
+        //         menziList.push(card2DList[i]);
+        //         card2DList[i] = [];
+        //     }
+        // }
+        // //二二贰
+        // for (let i = 1; i <= 10; i++) {
+        //     if (3 == (card2DList[i].length + card2DList[i+10].length)){
+        //         menziList.push(card2DList[i+10]);
+        //         for (var j = 0; j < card2DList[i].length; j++) {
+        //             menziList[menziList.length-1].push(card2DList[i][j]);
+        //         }
+        //         card2DList[i] = [];
+        //         card2DList[i+10] = [];
+        //     }
+        // }
+        // //二二+贰贰
+        // for (let i = 1; i <= 10; i++) {
+        //     if (2 == card2DList[i].length && 2 == card2DList[i+10].length){
+        //         menziList.push(card2DList[i]);
+        //         card2DList[i] = [];
+        //         menziList.push(card2DList[i+10]);
+        //         card2DList[i+10] = [];
+        //     }
+        // }
+        // //一二三
+        // for (let i = 1; i <= 10-2; i++) {
+        //     if (card2DList[i].length && card2DList[i+1].length && card2DList[i+2].length) {
+        //         let menzi = [];
+        //         menzi.push(card2DList[i].shift());
+        //         menzi.push(card2DList[i+1].shift());
+        //         menzi.push(card2DList[i+2].shift());
+        //         menziList.push(menzi);
+        //     }
+        // }
+        // //壹贰叁
+        // for (let i = 11; i <= 20-2; i++) {
+        //     if (card2DList[i].length && card2DList[i+1].length && card2DList[i+2].length) {
+        //         let menzi = [];
+        //         menzi.push(card2DList[i].shift());
+        //         menzi.push(card2DList[i+1].shift());
+        //         menzi.push(card2DList[i+2].shift());
+        //         menziList.push(menzi);
+        //     }
+        // }
+        // //二七十 贰柒拾
+        // let indesPair = [[2,7,10],[12,17,20]];
+        // for (var i = 0; i < indesPair.length; i++) {
+        //     if (card2DList[indesPair[i][0]].length && card2DList[indesPair[i][1]].length && card2DList[indesPair[i][2]].length) {
+        //         let menzi = [];
+        //         menzi.push(card2DList[indesPair[i][0]].shift());
+        //         menzi.push(card2DList[indesPair[i][1]].shift());
+        //         menzi.push(card2DList[indesPair[i][2]].shift());
+        //         menziList.push(menzi);
+        //     }
+        // }
+        // //二二 贰贰
+        // for (let i = 1; i <= 10; i++) {
+        //     if (2 == card2DList[i].length){
+        //         menziList.push(card2DList[i]);
+        //         card2DList[i] = [];
+        //     }
+        //     if (2 == card2DList[i+10].length) {
+        //         menziList.push(card2DList[i+10]);
+        //         card2DList[i+10] = [];
+        //     }
+        // }
+        // //一二
+        // for (let i = 1; i <= 10-1; i++) {
+        //     if (card2DList[i].length && card2DList[i+1].length) {
+        //         let menzi = [];
+        //         menzi.push(card2DList[i].shift());
+        //         menzi.push(card2DList[i+1].shift());
+        //         menziList.push(menzi);
+        //     }
+        // }
+        // //壹贰
+        // for (let i = 11; i <= 20-1; i++) {
+        //     if (card2DList[i].length && card2DList[i+1].length) {
+        //         let menzi = [];
+        //         menzi.push(card2DList[i].shift());
+        //         menzi.push(card2DList[i+1].shift());
+        //         menziList.push(menzi);
+        //     }
+        // }
+        // //二贰
+        // for (let i = 1; i <= 10; i++) {
+        //     if (1 == card2DList[i].length && 1 == card2DList[i+10].length){
+        //         menziList.push([card2DList[i+10][0], card2DList[i][0]]);
+        //         card2DList[i] = [];
+        //         card2DList[i+10] = [];
+        //     }
+        // }
+        // //一三
+        // for (let i = 1; i <= 10-2; i++) {
+        //     if (card2DList[i].length && card2DList[i+2].length) {
+        //         let menzi = [];
+        //         menzi.push(card2DList[i].shift());
+        //         menzi.push(card2DList[i+2].shift());
+        //         menziList.push(menzi);
+        //     }
+        // }
+        // //壹叁
+        // for (let i = 11; i <= 20-2; i++) {
+        //     if (card2DList[i].length && card2DList[i+2].length) {
+        //         let menzi = [];
+        //         menzi.push(card2DList[i].shift());
+        //         menzi.push(card2DList[i+2].shift());
+        //         menziList.push(menzi);
+        //     }
+        // }
+        // //2+7 7+10 2+10 
+        // indesPair = [[2,7],[2,10],[7,10],[12,17],[12,20],[17,20]];
+        // for (var i = 0; i < indesPair.length; i++) {
+        //     if (card2DList[indesPair[i][0]].length && card2DList[indesPair[i][1]].length) {
+        //         let menzi = [];
+        //         menzi.push(card2DList[indesPair[i][0]].shift());
+        //         menzi.push(card2DList[indesPair[i][1]].shift());
+        //         menziList.push(menzi);
+        //     }
+        // }
+        // //散牌
+        // for (let i = 1; i <= 20; i++) {
+        //     if (card2DList[i].length) {
+        //         if (10 > menziList.length) {
+        //             menziList.push(card2DList[i]);
+        //             card2DList[i] = [];
+        //         } else {
+        //             for (let j = menziList.length-1; j >= 0; j--) {
+        //                 let k = menziList[j].length;
+        //                 for (k = menziList[j].length; k < 3; k++) {
+        //                     menziList[j].push(card2DList[i][0]);
+        //                     card2DList[i] = [];
+        //                     break;
+        //                 }
+        //                 if (k < 3) {
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // return menziList;
     },
 
     getCard2DList(cards){
