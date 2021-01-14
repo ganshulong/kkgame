@@ -57,7 +57,8 @@ cc.Class({
             Global.btnClickEvent(btn, this.onClickLeftBtn, this);
             btn.getComponent(cc.Button).interactable = (j != 0);
         }
-        this.left_btn_bg.getChildByName("btn1").active = (1 == cc.vv.UserManager.getCurClubInfo().level);
+        let clubInfo = cc.vv.UserManager.getCurClubInfo();
+        this.left_btn_bg.getChildByName("btn1").active = (1 == clubInfo.level || 2 == clubInfo.level);
 
         //基础操作
         this.panel_baseContent = cc.find("bg_set/panel_baseContent",this._layer);
