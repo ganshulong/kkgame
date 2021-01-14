@@ -203,7 +203,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.registerMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, this);
-        cc.vv.NetManager.registerMsg(MsgId.CLUB_DISMISS_TABLE, this.onRcvDismissNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvDismissNotify, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
@@ -225,7 +225,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_POWER_NOTIFY, this.onRcvPowerNotify, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, false, this);
-        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_DISMISS_TABLE, this.onRcvDismissNotify, false, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvDismissNotify, false, this);
     },
 
     onRcvModifyRoomPlay(msg){
