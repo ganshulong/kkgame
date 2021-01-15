@@ -105,6 +105,9 @@ cc.Class({
         this._layer.addComponent("ClubAllocateMember");
         this.ClubAllocateMemberJS = this._layer.getComponent("ClubAllocateMember");
 
+        this._layer.addComponent("ClubSetManagerPermissions");
+        this.ClubSetManagerPermissionsJS = this._layer.getComponent("ClubSetManagerPermissions");
+
         this.panel_memberOperate = cc.find("bg_member/panel_member", this._layer);
         this.onClickCloseMemberOperate();
         let btnCloseMemberOperate = this.panel_memberOperate.getChildByName("btnCloseMemberOperate");
@@ -145,6 +148,9 @@ cc.Class({
         
         this.btn_allocateMember = this.panel_memberOperate.getChildByName("btn_allocateMember");
         Global.btnClickEvent(this.btn_allocateMember, this.onClickAllocateMember,this);
+        
+        this.btn_setManagerPermissions = this.panel_memberOperate.getChildByName("btn_setManagerPermissions");
+        Global.btnClickEvent(this.btn_setManagerPermissions, this.onClickSetManagerPermissions,this);
     },
 
     initShow(){
@@ -592,7 +598,7 @@ cc.Class({
         this.btn_checkGameRecord.uid = userInfo.uid;
         
         // 踢出玩家
-        btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level));
+        btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level));
         this.btn_tickout.getComponent(cc.Button).interactable = btnisActive;
         this.btn_tickout.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_tickout.uid = userInfo.uid;
@@ -605,10 +611,16 @@ cc.Class({
         this.btn_setPower.uid = userInfo.uid;
 
         // 调配成员
-        btnisActive = (0 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
+        btnisActive = (0 == userInfo.level && (1 == clubInfo.level || 2 == clubInfo.level));
         this.btn_allocateMember.getComponent(cc.Button).interactable = btnisActive;
         this.btn_allocateMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_allocateMember.userInfo = userInfo;
+
+        // 管理权限
+        btnisActive = (!isSelf && isSelfMember && 2 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
+        this.btn_setManagerPermissions.getComponent(cc.Button).interactable = btnisActive;
+        this.btn_setManagerPermissions.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setManagerPermissions.uid = userInfo.uid;
     },
 
     onClickCloseMemberOperate(){
@@ -787,6 +799,11 @@ cc.Class({
     onClickAllocateMember(event){
         this.onClickCloseMemberOperate();
         this.ClubAllocateMemberJS.showLayer(event.target.userInfo);
+    },
+
+    onClickSetManagerPermissions(event){
+        this.onClickCloseMemberOperate();
+        this.ClubSetManagerPermissionsJS.showLayer(event.target.uid);
     },
 
     onRcvMemberState(msg){
