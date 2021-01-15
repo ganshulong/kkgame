@@ -79,11 +79,11 @@ cc.Class({
         Global.btnClickEvent(power_bg,this.onClickPowerRecord,this);
 
         this.img_card_bg = cc.find("Layer/bg/img_card_bg",this.node);
-        this.img_card_bg.active = this.getIsManager();
+        this.img_card_bg.active = Global.getIsManager();
         this.img_card_bg.getChildByName("txt_card_num").getComponent(cc.Label).string = cc.vv.UserManager.roomcard;
 
         this.btn_invite = cc.find("Layer/bg/bg_top/btn_invite",this.node);
-        this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
+        this.btn_invite.active = (Global.getIsManager() || Global.getIsPartner());
         Global.btnClickEvent(this.btn_invite,this.onClickInviteJoin,this);
         this.node.addComponent("ClubInviteJoin");
         this.ClubInviteJoinJS = this.node.getComponent("ClubInviteJoin");
@@ -93,7 +93,7 @@ cc.Class({
 
         this.btn_msg = cc.find("Layer/bg/bg_top/btn_msg",this.node);
         Global.btnClickEvent(this.btn_msg,this.onClickMsg,this);
-        this.btn_msg.active = (this.getIsManager() || this.getIsPartner());
+        this.btn_msg.active = (Global.getIsManager() || Global.getIsPartner());
 
         this.spr_redPoint = this.btn_msg.getChildByName("spr_redPoint");
         this.spr_redPoint.active = false;
@@ -106,7 +106,7 @@ cc.Class({
 
         this.createRoomBtn = cc.find("Layer/img_bottomBg/btn_switch",this.node);
         Global.btnClickEvent(this.createRoomBtn,this.onCreateRoom,this);
-        this.createRoomBtn.active = this.getIsManager();
+        this.createRoomBtn.active = Global.getIsManager();
 
         this.CreateRoomJS = this.node.getComponent("CreateRoom");
         //this.CreateRoomJS.preLoadPrefab(true);
@@ -116,7 +116,7 @@ cc.Class({
 
         this.btn_member = cc.find("Layer/img_bottomBg/btn_member",this.node);
         Global.btnClickEvent(this.btn_member,this.onClickMember,this);
-        this.btn_member.active = (this.getIsManager() || this.getIsPartner());
+        this.btn_member.active = (Global.getIsManager() || Global.getIsPartner());
 
         this.node.addComponent("ClubWaterRecord");
 
@@ -264,34 +264,20 @@ cc.Class({
         }
     },
 
-    getIsManager(){
-        this._clubInfo = cc.vv.UserManager.getCurClubInfo();
-        return (1 == this._clubInfo.level || 2 == this._clubInfo.level);
-    },
-
-    getIsPartner(){
-        this._clubInfo = cc.vv.UserManager.getCurClubInfo();
-        return (1 == this._clubInfo.level || 3 <= this._clubInfo.level);
-    },
-
     onRcvSetPartner(data){
         data = data.detail;
         if (200 == data.code) {
             if (data.clubid === cc.vv.UserManager.currClubId && data.setuid === cc.vv.UserManager.uid) {
-                this.img_card_bg.active = this.getIsManager();
-                this.btn_msg.active = (this.getIsManager() || this.getIsPartner());
-                this.createRoomBtn.active = this.getIsManager();
-                this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
-                this.btn_member.active = (this.getIsManager() || this.getIsPartner());
-                // for(let i=0; i<this._content.childrenCount;++i){
-                //     let btn_tableOperate = cc.find("node/btn_tableOperate", this._content.children[i]);
-                //     btn_tableOperate.active = this.getIsManager();
-                // }
+                this.img_card_bg.active = Global.getIsManager();
+                this.btn_msg.active = (Global.getIsManager() || Global.getIsPartner());
+                this.createRoomBtn.active = Global.getIsManager();
+                this.btn_invite.active = (Global.getIsManager() || Global.getIsPartner());
+                this.btn_member.active = (Global.getIsManager() || Global.getIsPartner());
             }
             if (data.clubid === cc.vv.UserManager.currClubId && data.partneruid === cc.vv.UserManager.uid) {
                 this._clubInfo = cc.vv.UserManager.getCurClubInfo();
-                this.btn_invite.active = (this.getIsManager() || this.getIsPartner());
-                this.btn_member.active = (this.getIsManager() || this.getIsPartner());
+                this.btn_invite.active = (Global.getIsManager() || Global.getIsPartner());
+                this.btn_member.active = (Global.getIsManager() || Global.getIsPartner());
             }
         }
     },
@@ -832,7 +818,7 @@ cc.Class({
     onClickShowTableOperate(event){
         let tableInfo = event.target.tableInfo;
         this.panel_tableOperate.getChildByName("text_tip").getComponent(cc.Label).string = "当前桌子玩法:\n" +  Global.getGameRuleStr(tableInfo.config);
-        if (this.getIsManager()) { //hui
+        if (Global.getIsManager()) { //hui
             this.btn_dismissTable.active = (0 < tableInfo.users.length);
             this.btn_modifyTable.active = !(0 < tableInfo.users.length);
             this.btn_deleteTable.active = !(0 < tableInfo.users.length);

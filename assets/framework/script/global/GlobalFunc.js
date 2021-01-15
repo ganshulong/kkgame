@@ -1516,6 +1516,16 @@ Global.getGameRuleStr = function (config){
     return gameRuleStr;
 }
 
+GlobalFunc.getIsManager = function (){
+    let clubInfo = cc.vv.UserManager.getCurClubInfo();
+    return (1 == clubInfo.level || 2 == clubInfo.level);
+}
+
+GlobalFunc.getIsPartner = function (){
+    let clubInfo = cc.vv.UserManager.getCurClubInfo();
+    return (1 == clubInfo.level || 3 <= clubInfo.level);
+}
+
 GlobalFunc.initRecord = function (){
     if (GlobalFunc.isAndroid()) {
         cc.vv.FloatTip.show("initRecord isAndroid");
