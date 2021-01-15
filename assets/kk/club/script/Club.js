@@ -36,6 +36,7 @@ cc.Class({
         },
         _startPos:null,
         _clubInfo:null,
+        tableItem: cc.Prefab,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -157,10 +158,7 @@ cc.Class({
 
         this._content = cc.find("Layer/list/view/content",this.node);
         this._content.active = false;
-        let img_click = cc.find("node/img_click", this._content.children[0]);
-        Global.btnClickEvent(img_click,this.onEnterDesk,this);
-
-        this._startPos = cc.v2(this._content.children[0].x,this._content.children[0].y);
+        this._startPos = cc.v2(20,-300);
 
         let _tableSortIndex = parseInt(cc.sys.localStorage.getItem("_tableSortIndex")) == "1" ? 1 : 0;
         this.sortBtns = cc.find("Layer/sortBtns",this.node);
@@ -516,36 +514,23 @@ cc.Class({
     // 更新桌子信息
     initTable(item,data){
         let config = data.config;
-        let type = cc.find("node/type_bg",item);
-        type.getComponent(cc.Sprite).spriteFrame = this.wanfaAtlas.getSpriteFrame("hallClub-img-table-moreRule-index_" +
-            config.playtype);
 
-        let tableName = cc.find("node/img_roomId/table_name",item);
+        let tableName = cc.find("table_name",item);
         tableName.getComponent(cc.Label).string = config.tname;
-
-        let round = cc.find("node/img_round/txt_round",item);
+        let round = cc.find("txt_round",item);
         round.getComponent(cc.Label).string = data.round + "/" + config.gamenum + "局";
 
-        let tableChar24 = cc.find("node/tableChar24",item);
-        let tableChar3 = cc.find("node/tableChar3",item);
-
-        let tableChar = null;
-        if (2 == config.seat || 4 == config.seat) {
-            tableChar3.active = false;
-            tableChar = tableChar24;
-            tableChar.getChildByName("char_3").active = (2 <= config.seat);
-            tableChar.getChildByName("char_2").active = (3 <= config.seat);
-            tableChar.getChildByName("char_4").active = (4 <= config.seat);
-            for (let i = 1; i <= 4; i++) {
-                cc.find("char_"+i+"/headNode",tableChar).active = false;
-            }
-        } else if (3 == config.seat) {
-            tableChar24.active = false;
-            tableChar = tableChar3;
-            for (let i = 1; i <= 3; i++) {
-                cc.find("char_"+i+"/headNode",tableChar).active = false;
-            }
+        let tableChar = item.getChildByName("tableChar");
+        for (let i = 1; i <= 4; i++) {
+            tableChar.getChildByName("char_"+i).active = (i <= config.seat);
+            cc.find("char_"+i+"/headNode",tableChar).active = false;
         }
+        let char_1 = tableChar.getChildByName("char_1");
+        char_1.x = (3 == config.seat) ? -10 : -90;
+        char_1.y = (3 == config.seat) ? 65 : 40;
+        char_1.getChildByName("headNode").x = (3 == config.seat) ? 0 : -15;
+        char_1.getChildByName("bg_3").active = (3 == config.seat);
+        char_1.getChildByName("bg_24").active = (2 == config.seat || 4 == config.seat);
 
         let bg = tableChar.getChildByName("bg");
         if (1 == config.gameid) {
@@ -570,33 +555,30 @@ cc.Class({
             
         tableChar.active = true;
         
-        let bInRoomMask = cc.find("node/bInRoomMask",item);
+        let bInRoomMask = cc.find("bInRoomMask",item);
         bInRoomMask.active = false;
         if(data.users){
             let users = data.users;
             for(let j=0;j<users.length;++j){
                 let headNode = cc.find("char_"+(j+1)+"/headNode",tableChar);
-                if(config.seat === 2 && j===1) {
-                    headNode = cc.find("char_3/headNode",tableChar);
-                }
                 if(headNode){
                     headNode.active = true;
                     let spr_head = cc.find("UserHead/radio_mask/spr_head",headNode);
                     Global.setHead(spr_head,users[j].usericon);
-                    let name = cc.find("img_nameBg/txt_name",headNode);
+                    let name = cc.find("txt_name",headNode);
                     name.getComponent(cc.Label).string = users[j].playername;
                     headNode.getChildByName("img_ready").active = users[j].state === 1;
                 }
                 if (Global.curRoomID && Global.curRoomID == data.deskid) {
                     if (users[j].uid == cc.vv.UserManager.uid) {
-                        bInRoomMask.position = cc.v2(-70, 30);
+                        bInRoomMask.position = cc.v2(95, 168);
                         bInRoomMask.active = true;
                         bInRoomMask.stopAllActions();
                         bInRoomMask.runAction(
                             cc.repeatForever(
                                 cc.sequence(
-                                    cc.moveTo(0.3, cc.v2(-70, 30+10)),
-                                    cc.moveTo(0.3, cc.v2(-70, 30))
+                                    cc.moveTo(0.3, cc.v2(95, 168+10)),
+                                    cc.moveTo(0.3, cc.v2(95, 168))
                                 )
                             )
                         )
@@ -605,8 +587,9 @@ cc.Class({
             }
         }
 
-        let btn_tableOperate = cc.find("node/btn_tableOperate",item);
-        // btn_tableOperate.active = this.getIsManager();
+        let btn_tableOperate = cc.find("btn_tableOperate",item);
+        btn_tableOperate.getComponent(cc.Sprite).spriteFrame = this.wanfaAtlas.getSpriteFrame("hallClub-img-table-moreRule-index_" +
+            config.playtype);
         btn_tableOperate.tableInfo = data;
         Global.btnClickEvent(btn_tableOperate,this.onClickShowTableOperate,this);
     },
@@ -672,17 +655,17 @@ cc.Class({
             if(i < this._content.childrenCount) {
                 item = this._content.children[i];
             } else {
-                item = cc.instantiate(this._content.children[0]);
+                item = cc.instantiate(this.tableItem);
                 item.parent = this._content;
-                Global.btnClickEvent(cc.find("node/img_click",item),this.onEnterDesk,this);
+                Global.btnClickEvent(cc.find("img_click",item),this.onEnterDesk,this);
             }
             item.active = true;
-            let clickBtn = cc.find("node/img_click",item);
+            let clickBtn = cc.find("img_click",item);
             clickBtn._deskId = list[i].deskid;
             item._deskId = list[i].deskid;
 
             item.x  = this._startPos.x + (clickBtn.width+30)*parseInt(i/2);
-            item.y  = this._startPos.y - (clickBtn.height+30)*(i%2);
+            item.y  = this._startPos.y - (clickBtn.height)*(i%2);
             if(i%2===0) width +=  (clickBtn.width+30);
             this.initTable(item,list[i]);
 
