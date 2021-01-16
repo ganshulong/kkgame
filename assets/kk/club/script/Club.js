@@ -202,6 +202,8 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.registerMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvDismissNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_DELETE_TABLE, this.onRcvDeleteTableByManager, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_DISMISS_TABLE, this.onRcvDismissTableByManager, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
@@ -290,6 +292,18 @@ cc.Class({
     onRcvDismissNotify(msg){
         if (msg.code === 200 && Global.curRoomID) {
             Global.curRoomID = "";
+        }
+    },
+
+    onRcvDeleteTableByManager(msg){
+        if (msg.code === 200) {
+            cc.vv.FloatTip.show("删除玩法成功!");
+        }
+    },
+
+    onRcvDismissTableByManager(msg){
+        if (msg.code === 200) {
+            cc.vv.FloatTip.show("解散玩法成功!");
         }
     },
 
