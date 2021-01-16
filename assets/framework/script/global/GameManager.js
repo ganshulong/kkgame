@@ -136,7 +136,7 @@ cc.Class({
             cc.vv.NetManager.registerMsg(MsgId.RECHARGE_ROOM_CARD, this.onRcvRechargeRoomCard, this);
 
             cc.vv.NetManager.registerMsg(MsgId.PLAY_BACK_MSG_LIST, this.onRcvPlayBackMsgList, this);
-            cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER, this.onRcvSetPartnerOrManager, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER_RATIO, this.onRcvSetPartnerRatio, this);
 
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
@@ -148,11 +148,14 @@ cc.Class({
             }
         },
 
-        onRcvSetPartner(msg){
+        onRcvSetPartnerOrManager(msg){
             if (200 == msg.code) {
                 for (let i = 0; i < cc.vv.UserManager.clubs.length; i++) {
                     if (msg.clubid === cc.vv.UserManager.clubs[i].clubid) {
                         if (msg.partneruid === cc.vv.UserManager.uid) {
+                            cc.vv.UserManager.clubs[i].level = msg.level;
+                        }
+                        if (msg.setuid === cc.vv.UserManager.uid) {
                             cc.vv.UserManager.clubs[i].level = msg.level;
                         }
                         Global.dispatchEvent(EventId.CLUB_SET_PARTNER, msg);

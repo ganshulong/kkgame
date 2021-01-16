@@ -208,7 +208,7 @@ cc.Class({
         // Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
         Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
-        Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
+        Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartnerOrManager, this);
     },
 
     unregisterMsg(){
@@ -264,7 +264,7 @@ cc.Class({
         }
     },
 
-    onRcvSetPartner(data){
+    onRcvSetPartnerOrManager(data){
         data = data.detail;
         if (200 == data.code) {
             if (data.clubid === cc.vv.UserManager.currClubId && data.setuid === cc.vv.UserManager.uid) {

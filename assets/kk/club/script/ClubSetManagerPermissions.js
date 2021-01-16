@@ -8,6 +8,7 @@ cc.Class({
 
     start () {
         cc.vv.NetManager.registerMsg(MsgId.CLUB_GET_MANAGER_PERMISSIONS, this.onRcvClubGetManagerPermissions, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_MANAGER_PERMISSIONS, this.onRcvClubSetManagerPermissions, this);
     },
 
     showLayer(uid){
@@ -85,7 +86,6 @@ cc.Class({
         req.adminJurInfo.szpl = this.togglesList[this.togglesIndex.szpl].isChecked ? 1 : 0;
         req.adminJurInfo.pljl = this.togglesList[this.togglesIndex.pljl].isChecked ? 1 : 0;
         cc.vv.NetManager.send(req);
-        this.onClose();
     },
 
     onRcvClubGetManagerPermissions(msg){
@@ -101,8 +101,16 @@ cc.Class({
         }
     },
 
+    onRcvClubSetManagerPermissions(msg){
+        if (200 == msg.code) {
+            cc.vv.FloatTip.show("保存成功");
+            this.onClose();
+        }
+    },
+
     onDestroy(){
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_GET_MANAGER_PERMISSIONS, this.onRcvClubGetManagerPermissions, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_MANAGER_PERMISSIONS, this.onRcvClubSetManagerPermissions, this);
         if(this._Layer){
             cc.loader.releaseRes("common/prefab/club_setManagerPermissions",cc.Prefab);
         }
