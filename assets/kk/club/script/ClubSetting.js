@@ -112,11 +112,11 @@ cc.Class({
     initShow(){
         this._clubInfo = cc.vv.UserManager.getCurClubInfo();
         this.ItemArr[0].active = (this._clubInfo.createUid != cc.vv.UserManager.uid);
-        this.ItemArr[1].active = (this._clubInfo.createUid == cc.vv.UserManager.uid);
-        this.ItemArr[2].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && this._clubInfo.state);  //state:1正常，0冻结
-        this.ItemArr[3].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && !this._clubInfo.state);
-        this.ItemArr[4].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && (1 == this._clubInfo.mode));
-        this.ItemArr[5].active = (this._clubInfo.createUid == cc.vv.UserManager.uid && (1 != this._clubInfo.mode));
+        this.ItemArr[1].active = Global.getIsManager();
+        this.ItemArr[2].active = (Global.getIsManager() && this._clubInfo.state);  //state:1正常，0冻结
+        this.ItemArr[3].active = (Global.getIsManager() && !this._clubInfo.state);
+        this.ItemArr[4].active = (Global.getIsManager() && (1 == this._clubInfo.mode));
+        this.ItemArr[5].active = (Global.getIsManager() && (1 != this._clubInfo.mode));
 
         this.setPanelShow(0);
         this.panel_confirmTips.active = false;
