@@ -57,8 +57,6 @@ cc.Class({
             Global.btnClickEvent(btn, this.onClickLeftBtn, this);
             btn.getComponent(cc.Button).interactable = (j != 0);
         }
-        let clubInfo = cc.vv.UserManager.getCurClubInfo();
-        this.left_btn_bg.getChildByName("btn1").active = (1 == clubInfo.level || 2 == clubInfo.level);
 
         //基础操作
         this.panel_baseContent = cc.find("bg_set/panel_baseContent",this._layer);
@@ -117,6 +115,8 @@ cc.Class({
         this.ItemArr[3].active = (Global.getIsManager() && !this._clubInfo.state);
         this.ItemArr[4].active = (Global.getIsManager() && (1 == this._clubInfo.mode));
         this.ItemArr[5].active = (Global.getIsManager() && (1 != this._clubInfo.mode));
+        
+        this.left_btn_bg.getChildByName("btn1").active = (1 == this._clubInfo.level || 2 == this._clubInfo.level);
 
         this.setPanelShow(0);
         this.panel_confirmTips.active = false;

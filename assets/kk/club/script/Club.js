@@ -201,13 +201,15 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.registerMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvDismissNotify, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_DELETE_TABLE, this.onRcvDeleteTableByManager, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_DISMISS_TABLE, this.onRcvDismissTableByManager, this);
 
         Global.registerEvent(EventId.FREEZE_CLUB_NOTIFY, this.onRcvFreezeClubNotify,this);
         Global.registerEvent(EventId.DISMISS_CLUB_NOTIFY, this.onRcvDismissClubNotify,this);
         // Global.registerEvent(EventId.CLUB_EXIT_APPLY_NOTIFY, this.onRcvClubExitApplyNotify, this);
         Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
-        Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
+        Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartnerOrManager, this);
     },
 
     unregisterMsg(){
@@ -263,7 +265,7 @@ cc.Class({
         }
     },
 
-    onRcvSetPartner(data){
+    onRcvSetPartnerOrManager(data){
         data = data.detail;
         if (200 == data.code) {
             if (data.clubid === cc.vv.UserManager.currClubId && data.setuid === cc.vv.UserManager.uid) {
@@ -289,6 +291,18 @@ cc.Class({
     onRcvDismissNotify(msg){
         if (msg.code === 200 && Global.curRoomID) {
             Global.curRoomID = "";
+        }
+    },
+
+    onRcvDeleteTableByManager(msg){
+        if (msg.code === 200) {
+            cc.vv.FloatTip.show("删除玩法成功!");
+        }
+    },
+
+    onRcvDismissTableByManager(msg){
+        if (msg.code === 200) {
+            cc.vv.FloatTip.show("解散玩法成功!");
         }
     },
 
