@@ -50,11 +50,38 @@ cc.Class({
             scwf:1,
             jsyx:2,
             cjwf:3,
+
             jztz:4,
             dpcy:5,
             szpl:6,
-            pljl:7,
+            jsqyq:7,
+
+            djqyq:8,
+            bjqh:9,
+            jzyx:10,
+            hfyx:11,
+
+            sccy:12,
+            szhhren:13,
         };
+
+    // --xgwf --修改玩法 1 勾选  0 不勾选
+    // --scwf --删除玩法 1 勾选  0 不勾选
+    // --jsyx --解散游戏 1 勾选  0 不勾选
+    // --cjwf --创建玩法 1 勾选  0 不勾选
+
+    // --jztz --禁止同桌 1 勾选  0 不勾选
+    // --dpcy --调配成员 1 勾选  0 不勾选
+    // --szpl --设置疲劳 1 勾选  0 不勾选
+    // --jsqyq --解散亲友圈 1 勾选  0 不勾选
+
+    // --djqyq --冻结亲友圈
+    // --bjqh  --包间模式切换
+    // --jzyx  --禁止玩家游戏
+    // --hfyx  --恢复玩家游戏
+
+    // --sccy  --删除成语
+    // --szhhren --设置合伙人
     },
 
     onClose(){
@@ -81,10 +108,20 @@ cc.Class({
         req.adminJurInfo.scwf = this.togglesList[this.togglesIndex.scwf].isChecked ? 1 : 0;
         req.adminJurInfo.jsyx = this.togglesList[this.togglesIndex.jsyx].isChecked ? 1 : 0;
         req.adminJurInfo.cjwf = this.togglesList[this.togglesIndex.cjwf].isChecked ? 1 : 0;
+
         req.adminJurInfo.jztz = this.togglesList[this.togglesIndex.jztz].isChecked ? 1 : 0;
         req.adminJurInfo.dpcy = this.togglesList[this.togglesIndex.dpcy].isChecked ? 1 : 0;
         req.adminJurInfo.szpl = this.togglesList[this.togglesIndex.szpl].isChecked ? 1 : 0;
-        req.adminJurInfo.pljl = this.togglesList[this.togglesIndex.pljl].isChecked ? 1 : 0;
+        req.adminJurInfo.jsqyq = this.togglesList[this.togglesIndex.jsqyq].isChecked ? 1 : 0;
+
+        req.adminJurInfo.djqyq = this.togglesList[this.togglesIndex.djqyq].isChecked ? 1 : 0;
+        req.adminJurInfo.bjqh = this.togglesList[this.togglesIndex.bjqh].isChecked ? 1 : 0;
+        req.adminJurInfo.jzyx = this.togglesList[this.togglesIndex.jzyx].isChecked ? 1 : 0;
+        req.adminJurInfo.hfyx = this.togglesList[this.togglesIndex.hfyx].isChecked ? 1 : 0;
+
+        req.adminJurInfo.sccy = this.togglesList[this.togglesIndex.sccy].isChecked ? 1 : 0;
+        req.adminJurInfo.szhhren = this.togglesList[this.togglesIndex.szhhren].isChecked ? 1 : 0;
+
         cc.vv.NetManager.send(req);
     },
 
@@ -94,10 +131,19 @@ cc.Class({
             this.togglesList[this.togglesIndex.scwf].isChecked = (1 == msg.adminJurInfo.scwf);
             this.togglesList[this.togglesIndex.jsyx].isChecked = (1 == msg.adminJurInfo.jsyx);
             this.togglesList[this.togglesIndex.cjwf].isChecked = (1 == msg.adminJurInfo.cjwf);
+
             this.togglesList[this.togglesIndex.jztz].isChecked = (1 == msg.adminJurInfo.jztz);
             this.togglesList[this.togglesIndex.dpcy].isChecked = (1 == msg.adminJurInfo.dpcy);
             this.togglesList[this.togglesIndex.szpl].isChecked = (1 == msg.adminJurInfo.szpl);
-            this.togglesList[this.togglesIndex.pljl].isChecked = (1 == msg.adminJurInfo.pljl);
+            this.togglesList[this.togglesIndex.jsqyq].isChecked = (1 == msg.adminJurInfo.jsqyq);
+            
+            this.togglesList[this.togglesIndex.djqyq].isChecked = (1 == msg.adminJurInfo.djqyq);
+            this.togglesList[this.togglesIndex.bjqh].isChecked = (1 == msg.adminJurInfo.bjqh);
+            this.togglesList[this.togglesIndex.jzyx].isChecked = (1 == msg.adminJurInfo.jzyx);
+            this.togglesList[this.togglesIndex.hfyx].isChecked = (1 == msg.adminJurInfo.hfyx);
+            
+            this.togglesList[this.togglesIndex.sccy].isChecked = (1 == msg.adminJurInfo.sccy);
+            this.togglesList[this.togglesIndex.szhhren].isChecked = (1 == msg.adminJurInfo.szhhren);
         }
     },
 
