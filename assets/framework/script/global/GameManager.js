@@ -138,8 +138,22 @@ cc.Class({
             cc.vv.NetManager.registerMsg(MsgId.PLAY_BACK_MSG_LIST, this.onRcvPlayBackMsgList, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER, this.onRcvSetPartnerOrManager, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER_RATIO, this.onRcvSetPartnerRatio, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_NOTIFY_NOTIFY, this.onRcvSetNotifyNotify, this);
 
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvSetNotifyNotify(msg){
+            if (200 == msg.code && msg.response) {
+                for (let i = 0; i < cc.vv.UserManager.clubs.length; i++) {
+                    if (msg.response.clubid === cc.vv.UserManager.clubs[i].clubid) {
+                        cc.vv.UserManager.clubs[i].notify = msg.response.notify;
+                        cc.vv.UserManager.clubs[i].notifynum = msg.response.notifyNum;
+                        Global.dispatchEvent(EventId.CLUB_SET_NOTIFY_NOTIFY, msg);
+                        break;
+                    }
+                }
+            }
         },
 
         onRcvSetPartnerRatio(msg){
@@ -539,6 +553,7 @@ cc.Class({
                     }
                 }
             }
+
         },
 
         //收到系统强制解散房间
