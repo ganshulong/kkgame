@@ -300,12 +300,16 @@ cc.Class({
                 let bg_score = item.getChildByName("bg_score");
                 for (var j = 0; j < playerData.length; j++) {
                     bg_score.getChildByName("text_name" + j).getComponent(cc.Label).string = playerData[j].playername;
-                    bg_score.getChildByName("text_score_win" + j).active = (0 < playerData[j].roundScore);
-                    bg_score.getChildByName("text_score_lose" + j).active = (0 >= playerData[j].roundScore);
-                    if (0 < playerData[j].roundScore) {
-                        bg_score.getChildByName("text_score_win" + j).getComponent(cc.Label).string = playerData[j].roundScore;
+                    bg_score.getChildByName("text_score_win" + j).active = (0 <= playerData[j].roundScore);
+                    bg_score.getChildByName("text_score_lose" + j).active = (0 > playerData[j].roundScore);
+                    if (0 <= playerData[j].roundScore) {
+                        if (0 == playerData[j].roundScore) {
+                            bg_score.getChildByName("text_score_win" + j).getComponent(cc.Label).string = playerData[j].roundScore;
+                        } else {
+                            bg_score.getChildByName("text_score_win" + j).getComponent(cc.Label).string = playerData[j].roundScore.toFixed(1);  
+                        }
                     } else {
-                        bg_score.getChildByName("text_score_lose" + j).getComponent(cc.Label).string = '/' + Math.abs(playerData[j].roundScore);
+                        bg_score.getChildByName("text_score_lose" + j).getComponent(cc.Label).string = '/' + Math.abs(playerData[j].roundScore).toFixed(1);
                     }
                 }
                 for (var j = playerData.length; j < 4; j++) {
