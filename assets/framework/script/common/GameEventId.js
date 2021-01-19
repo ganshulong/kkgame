@@ -101,5 +101,6 @@ EventId.ERQIGUI_SELECT_COLOR_NOTIFY = "ERQIGUI_SELECT_COLOR_NOTIFY";	// 二七�
 EventId.ERQIGUI_MAI_CARD = "ERQIGUI_MAI_CARD";							// 二七鬼埋底牌
 EventId.ERQIGUI_MAI_CARD_NOTIFY = "ERQIGUI_MAI_CARD_NOTIFY";			// 二七鬼埋底牌通知
 
+EventId.CLUB_SET_NOTIFY_NOTIFY = "CLUB_SET_NOTIFY_NOTIFY";
 
 EventId.TEST_EVENT = "TEST_EVENT";  					  // 测试

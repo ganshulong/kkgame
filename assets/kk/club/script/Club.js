@@ -177,6 +177,8 @@ cc.Class({
         if (Global.backRecordData) {
             this.ClubRecordJS.showLayer({detail:Global.backRecordCheckUid});
         }
+
+        this.setShowClubNotify();
     },
 
     // 俱乐部信息
@@ -211,6 +213,7 @@ cc.Class({
         Global.registerEvent(EventId.UPDATE_CLUBS,this.updateClubList,this);
         Global.registerEvent(EventId.ROOMCRAD_CHANGE, this.onRcvNetRoomcardChanged,this);
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartnerOrManager, this);
+        Global.registerEvent(EventId.CLUB_SET_NOTIFY_NOTIFY, this.onRcvSetNotifyNotify, this);
     },
 
     unregisterMsg(){
@@ -226,6 +229,43 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MODIFY_ROOM_PLAY, this.onRcvModifyRoomPlay, false, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_CREATE_DISMISS_TABLE_NOTIFY, this.onRcvDismissNotify, false, this);
+    },
+
+    onRcvSetNotifyNotify(data){
+        data = data.detail;
+        if (200 == data.code) {
+            if (data.response.clubid === cc.vv.UserManager.currClubId){
+                this.setShowClubNotify();
+            }
+        }
+    },
+
+    setShowClubNotify(){
+        let clubInfo = cc.vv.UserManager.getCurClubInfo();
+
+        let bg_dialogue = cc.find("Layer/bg/bg_dialogue",this.node);
+        let text_dialogue = cc.find("mask/text_dialogue", bg_dialogue);
+        text_dialogue.stopAllActions();
+        
+        bg_dialogue.active = clubInfo.notifynum;
+        if (bg_dialogue.active) {
+            text_dialogue.getComponent(cc.Label).string = clubInfo.notify;
+            text_dialogue.x = bg_dialogue.width/2 + 100;
+            let moveTime = bg_dialogue.width/80;
+            if (moveTime < text_dialogue.width/80) {
+                moveTime = text_dialogue.width/80;
+            }
+            text_dialogue.runAction(
+                cc.repeatForever(
+                    cc.sequence(
+                        cc.moveTo(moveTime, cc.v2(-(bg_dialogue.width/2+text_dialogue.width), text_dialogue.y)),
+                        cc.callFunc(()=>{
+                            text_dialogue.x = bg_dialogue.width/2 + 100;
+                        })
+                    )
+                )
+            )
+        }
     },
 
     onRcvModifyRoomPlay(msg){

@@ -23,6 +23,7 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.CLUB_DELETE_FORBID_LIST, this.onRcvDeleteForbidList, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_ADD_FORBID_MEMBER, this.onRcvAddForbidMember, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_DELETE_FORBID_MEMBER, this.onRcvDeleteForbidMember, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_NOTIFY, this.onRcvClubSetNotify, this);
     },
 
     showClubSetting(){
@@ -105,6 +106,15 @@ cc.Class({
         this.input_addPlayer_editBox = this.panel_inputID.getChildByName("input_uid").getComponent(cc.EditBox);
         let btn_confirmAddID = this.panel_inputID.getChildByName("btn_confirmAddID");
         Global.btnClickEvent(btn_confirmAddID,this.onClickConfirmAddID,this);
+
+        //设置公告页        
+        this.panel_setNotify = cc.find("bg_set/panel_setNotify",this._layer);
+        this.input_notify_editBox = this.panel_setNotify.getChildByName("input_notify").getComponent(cc.EditBox);
+        let btn_pause = this.panel_setNotify.getChildByName("btn_pause");
+        Global.btnClickEvent(btn_pause,this.onClicNotifyPause,this);
+        let btn_play = this.panel_setNotify.getChildByName("btn_play");
+        Global.btnClickEvent(btn_play,this.onClicNotifyPlay,this);
+
     },
 
     initShow(){
@@ -116,7 +126,8 @@ cc.Class({
         this.ItemArr[4].active = (Global.getIsManager() && (1 == this._clubInfo.mode));
         this.ItemArr[5].active = (Global.getIsManager() && (1 != this._clubInfo.mode));
         
-        this.left_btn_bg.getChildByName("btn1").active = (1 == this._clubInfo.level || 2 == this._clubInfo.level);
+        this.left_btn_bg.getChildByName("btn1").active = Global.getIsManager();     //禁止同桌
+        this.left_btn_bg.getChildByName("btn2").active = Global.getIsManager();     //设置公告
 
         this.setPanelShow(0);
         this.panel_confirmTips.active = false;
@@ -135,6 +146,17 @@ cc.Class({
             var req = { c: MsgId.CLUB_FORBID_LIST};
             req.clubid = cc.vv.UserManager.currClubId;
             cc.vv.NetManager.send(req);
+        }
+        this.panel_setNotify.active = (2 == index);
+        if (this.panel_setNotify.active) {
+            this.input_notify_editBox.string = this._clubInfo.notify;
+        }
+    },
+
+    onRcvClubSetNotify(msg){
+        if (200 == msg.code) {
+            cc.vv.FloatTip.show("公告设置成功");
+            this.onClose();
         }
     },
 
@@ -371,6 +393,22 @@ cc.Class({
         }
     },
 
+    onClicNotifyPause(){
+        var req = { c: MsgId.CLUB_SET_NOTIFY};
+        req.clubid = cc.vv.UserManager.currClubId;
+        req.notify = this.input_notify_editBox.string;
+        req.notifynum = 0;
+        cc.vv.NetManager.send(req);
+    },
+
+    onClicNotifyPlay(){
+        var req = { c: MsgId.CLUB_SET_NOTIFY};
+        req.clubid = cc.vv.UserManager.currClubId;
+        req.notify = this.input_notify_editBox.string;
+        req.notifynum = 1;
+        cc.vv.NetManager.send(req);
+    },
+
     onRcvExitClubApply(msg){
         if(msg.code === 200){
             cc.vv.FloatTip.show("成功申请退出亲友圈");
@@ -385,6 +423,7 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_DELETE_FORBID_LIST, this.onRcvDeleteForbidList, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_ADD_FORBID_MEMBER, this.onRcvAddForbidMember, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_DELETE_FORBID_MEMBER, this.onRcvDeleteForbidMember, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_NOTIFY, this.onRcvClubSetNotify, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_setting",cc.Prefab);
         }
