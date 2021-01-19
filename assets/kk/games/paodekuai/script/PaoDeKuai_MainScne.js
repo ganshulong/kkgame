@@ -56,7 +56,7 @@ cc.Class({
             cc.find("scene/operate_btn_view/btn_voice",this.node).active = false;
 
             this.playBackMsgList = [];
-            this.playBackInterval = 2;
+            this.playBackInterval = 1.5;
             this.playBackCountdown = this.playBackInterval;
             this.playBackMsgNextReqStartid = 2;
             this.playBackMsgIsCanReques = true;
