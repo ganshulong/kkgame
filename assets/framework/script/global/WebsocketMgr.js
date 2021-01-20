@@ -176,7 +176,7 @@ cc.Class({
                     clearTimeout(this.m_nConnectNum);
                 }
                 this.m_nConnectNum = setTimeout(() => {
-                    cc.vv.GameManager.onEnterFront();
+                    cc.vv.GameManager.reqReLogin();
                 }, 0.1);
              }
         },
@@ -266,7 +266,17 @@ cc.Class({
             this.m_eNetWorkState = NetWorkState.NetWorkState_CLOSE;
             // let pEvent = new cc.Event.EventCustom(clientDefine.clientDefine_close, true);
             // cc.systemEvent.dispatchEvent(pEvent);
-            this.timeOutConnect();
+            
+            if (3 > this.m_nConnectCount) {
+                this.timeOutConnect();
+            } else {
+                this.m_nConnectCount = 0;
+                cc.vv.LoadingTip.hide(0.5);
+                let sureCall = function () {
+                    cc.vv.GameManager.goBackLoginScene()
+                }
+                cc.vv.AlertView.showTips(cc.vv.Language.go_back_login, sureCall)
+            }
         },
 
         onError(ev)
