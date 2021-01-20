@@ -408,7 +408,8 @@ cc.Class({
 
     showMemberList(showList){
         this.showList = showList;
-        this.showNum = (15 > showList.length) ? showList.length : 15;
+        this.maxInstantiateItem = 6;
+        this.showNum = (this.maxInstantiateItem > showList.length) ? showList.length : this.maxInstantiateItem;
         this.memberListContent.removeAllChildren();
         for (let i = 0; i < this.showNum; i++) {
             let item =  cc.instantiate(this.memberItem);
@@ -423,12 +424,12 @@ cc.Class({
     },
 
     update (dt) {
-        if (this.showList && 15 < this.showList.length) {
+        if (this.showList && this.maxInstantiateItem < this.showList.length) {
             if (this.lastFrameContentY < this.memberListContent.y) {        //上移中
                 for (var i = 0; i < this.memberListContent.children.length; i++) {
                     let item = this.memberListContent.children[i];
-                    if (500 < (item.y + this.memberListContent.y) && (item.listIndex + 15) < this.showList.length) {
-                        item.listIndex += 15;
+                    if (this.memberItem.height < (item.y + this.memberListContent.y) && (item.listIndex + this.maxInstantiateItem) < this.showList.length) {
+                        item.listIndex += this.maxInstantiateItem;
                         this.updateMemberItem(item);
                     }
                 }
@@ -436,8 +437,8 @@ cc.Class({
             } else if (this.lastFrameContentY > this.memberListContent.y && 0 < this.memberListContent.y) { //下移中
                 for (var i = this.memberListContent.children.length - 1; i >= 0 ; i--) {
                     let item = this.memberListContent.children[i];
-                    if (-500 > (item.y + this.memberListContent.y) && (item.listIndex - 15) >= 0) {
-                        item.listIndex -= 15;
+                    if (-this.memberListContent.parent.height > (item.y + this.memberListContent.y) && (item.listIndex - this.maxInstantiateItem) >= 0) {
+                        item.listIndex -= this.maxInstantiateItem;
                         this.updateMemberItem(item);
                     }
                 }
