@@ -300,6 +300,7 @@ cc.Class({
         list.push(conf.gamenum+"局 ");
         list.push(conf.seat+ "人 ");
         list.push(["一胡一分 ","1分底 ","2分底 ","3分底 ","4分底 ","5分底 "][conf.param1]);
+        list.push(["不封顶 ","50分封顶 ","100分封顶 ","150分封顶 "][parseInt(conf.param2/50)]);
         list.push(conf.score+ "倍 ");
         if (cc.vv.UserManager.currClubId) {
             list.push("最低入场" + conf.tiredsill + "分 ");

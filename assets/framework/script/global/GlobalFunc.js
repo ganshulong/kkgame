@@ -1480,6 +1480,7 @@ Global.getGameRuleStr = function (config){
             break;
         case 5:
             gameRuleStr += ("    " + ["一胡一分","1分底","2分底","3分底","4分底","5分底"][config.param1]);
+            gameRuleStr += ("    " + ["不封顶","50分封顶","100分封顶","150分封顶"][parseInt(config.param2/50)]);
             break;
         case 7:
             gameRuleStr += ("    " + ["一胡一分","三胡一分","一胡一分"][config.param1]);

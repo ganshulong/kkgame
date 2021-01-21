@@ -280,6 +280,7 @@ cc.Class({
             }
             optionList.push({option:"player_num",       valueList:[2,3]});
             optionList.push({option:"param1",           valueList:[0,1,2,3,4,5]});
+            optionList.push({option:"param2",           valueList:[0,50,100,150]});
 
         } else if (this.gameTypeIndex.LiuHuQiang == this.curGameIndex) {
             if (req) {
