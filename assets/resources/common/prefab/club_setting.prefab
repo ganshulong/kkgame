@@ -9721,8 +9721,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 514,
-      "height": 166
+      "width": 520,
+      "height": 180
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -9731,7 +9731,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 255,
-      "y": 0
+      "y": -7
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -9777,10 +9777,10 @@
     "isAlignOnce": true,
     "_target": null,
     "_alignFlags": 45,
-    "_left": -2,
-    "_right": -2,
+    "_left": -5,
+    "_right": -5,
     "_top": -3,
-    "_bottom": -3,
+    "_bottom": -17,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -9838,8 +9838,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 150,
-      "height": 30
+      "width": 162,
+      "height": 38
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -9866,10 +9866,10 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_actualFontSize": 30,
-    "_fontSize": 30,
-    "_lineHeight": 32,
-    "_enableWrapText": true,
+    "_actualFontSize": 36,
+    "_fontSize": 36,
+    "_lineHeight": 38,
+    "_enableWrapText": false,
     "_N$file": {
       "__uuid__": "f9b8c523-2069-4df6-87b5-862d44c3b15a"
     },
@@ -9879,7 +9879,7 @@
     "_N$horizontalAlign": 2,
     "_N$verticalAlign": 0,
     "_N$fontFamily": "Arial",
-    "_N$overflow": 1
+    "_N$overflow": 0
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -9921,7 +9921,7 @@
       "a": 255
     },
     "_N$placeholder": "请输入公告内容",
-    "_N$placeholderFontSize": 30,
+    "_N$placeholderFontSize": 36,
     "_N$placeholderFontColor": {
       "__type__": "cc.Color",
       "r": 127,
@@ -9929,7 +9929,7 @@
       "b": 127,
       "a": 255
     },
-    "_N$maxLength": -1,
+    "_N$maxLength": 50,
     "_N$stayOnTop": false
   },
   {
