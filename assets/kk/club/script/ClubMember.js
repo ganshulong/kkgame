@@ -636,7 +636,11 @@ cc.Class({
         		++shouBtnCount;
         	}
         }
-        this.node_btnStarPos.x = (4 > shouBtnCount) ? (-offsetX * 1) : (-offsetX * 1.5);
+        if (4 > shouBtnCount) {
+            this.node_btnStarPos.x = -offsetX * (shouBtnCount - 1) / 2;
+        } else {
+            this.node_btnStarPos.x = -offsetX * (4 - 1) / 2;
+        }
         this.panel_memberOperate.getChildByName("bg").height = 250 + Math.ceil(shouBtnCount / 4) * offsetY;
     },
 
