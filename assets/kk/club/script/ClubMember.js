@@ -113,43 +113,45 @@ cc.Class({
         let btnCloseMemberOperate = this.panel_memberOperate.getChildByName("btnCloseMemberOperate");
         Global.btnClickEvent(btnCloseMemberOperate, this.onClickCloseMemberOperate, this);
 
-        this.btn_forbidPlay = this.panel_memberOperate.getChildByName("btn_forbidPlay");
+        this.node_btnStarPos = this.panel_memberOperate.getChildByName("node_btnStarPos");
+
+        this.btn_forbidPlay = this.node_btnStarPos.getChildByName("btn_forbidPlay");
         Global.btnClickEvent(this.btn_forbidPlay, this.onClickForbidPlay,this);
-        this.btn_recoverPlay = this.panel_memberOperate.getChildByName("btn_recoverPlay");
+        this.btn_recoverPlay = this.node_btnStarPos.getChildByName("btn_recoverPlay");
         Global.btnClickEvent(this.btn_recoverPlay, this.onClickRecoverPlay,this); 
 
-        this.btn_cancelManager = this.panel_memberOperate.getChildByName("btn_cancelManager");
+        this.btn_cancelManager = this.node_btnStarPos.getChildByName("btn_cancelManager");
         Global.btnClickEvent(this.btn_cancelManager, this.onClickCancelManager,this); 
-        this.btn_setManager = this.panel_memberOperate.getChildByName("btn_setManager");
+        this.btn_setManager = this.node_btnStarPos.getChildByName("btn_setManager");
         Global.btnClickEvent(this.btn_setManager, this.onClickSetManager,this); 
 
-        this.btn_cancelPartner = this.panel_memberOperate.getChildByName("btn_cancelPartner");
+        this.btn_cancelPartner = this.node_btnStarPos.getChildByName("btn_cancelPartner");
         Global.btnClickEvent(this.btn_cancelPartner, this.onClickCancelPartner,this); 
-        this.btn_setPartner = this.panel_memberOperate.getChildByName("btn_setPartner");
+        this.btn_setPartner = this.node_btnStarPos.getChildByName("btn_setPartner");
         Global.btnClickEvent(this.btn_setPartner, this.onClickSetPartner,this); 
 
-        this.btn_setPartnerRatio = this.panel_memberOperate.getChildByName("btn_setPartnerRatio");
+        this.btn_setPartnerRatio = this.node_btnStarPos.getChildByName("btn_setPartnerRatio");
         Global.btnClickEvent(this.btn_setPartnerRatio, this.onClickSetPartnerRatio,this);
 
-        this.btn_checkWaterRecord = this.panel_memberOperate.getChildByName("btn_checkWaterRecord");
+        this.btn_checkWaterRecord = this.node_btnStarPos.getChildByName("btn_checkWaterRecord");
         Global.btnClickEvent(this.btn_checkWaterRecord, this.onClickCheckWaterRecord,this);
 
-        this.btn_checkPartnerMember = this.panel_memberOperate.getChildByName("btn_checkPartnerMember");
+        this.btn_checkPartnerMember = this.node_btnStarPos.getChildByName("btn_checkPartnerMember");
         Global.btnClickEvent(this.btn_checkPartnerMember, this.onClickCheckPartnerMember,this);
 
-        this.btn_checkGameRecord = this.panel_memberOperate.getChildByName("btn_checkGameRecord");
+        this.btn_checkGameRecord = this.node_btnStarPos.getChildByName("btn_checkGameRecord");
         Global.btnClickEvent(this.btn_checkGameRecord, this.onClickCheckGameRecord,this);
 
-        this.btn_tickout = this.panel_memberOperate.getChildByName("btn_tickout");
+        this.btn_tickout = this.node_btnStarPos.getChildByName("btn_tickout");
         Global.btnClickEvent(this.btn_tickout, this.onClickTickout,this);
         
-        this.btn_setPower = this.panel_memberOperate.getChildByName("btn_setPower");
+        this.btn_setPower = this.node_btnStarPos.getChildByName("btn_setPower");
         Global.btnClickEvent(this.btn_setPower, this.onClickSetPower,this);
         
-        this.btn_allocateMember = this.panel_memberOperate.getChildByName("btn_allocateMember");
+        this.btn_allocateMember = this.node_btnStarPos.getChildByName("btn_allocateMember");
         Global.btnClickEvent(this.btn_allocateMember, this.onClickAllocateMember,this);
         
-        this.btn_setManagerPermissions = this.panel_memberOperate.getChildByName("btn_setManagerPermissions");
+        this.btn_setManagerPermissions = this.node_btnStarPos.getChildByName("btn_setManagerPermissions");
         Global.btnClickEvent(this.btn_setManagerPermissions, this.onClickSetManagerPermissions,this);
     },
 
@@ -527,101 +529,115 @@ cc.Class({
         let btnisActive = true;
         let isSelf = (cc.vv.UserManager.uid == userInfo.uid);
         let isSelfMember = (0 === Global.checkPartnerList.length);
-        let normalColor = new cc.Color(255, 255, 255);
-        let forbidColor = new cc.Color(127, 127, 127);
+        // let normalColor = new cc.Color(255, 255, 255);
+        // let forbidColor = new cc.Color(127, 127, 127);
         let clubInfo = cc.vv.UserManager.getCurClubInfo();
 
         // 禁止娱乐
         btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level) && 1 == userInfo.state && 2 != userInfo.level);
-        this.btn_forbidPlay.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_forbidPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_forbidPlay.active = btnisActive;
+        // this.btn_forbidPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_forbidPlay.uid = userInfo.uid;
         this.btn_forbidPlay.playername = userInfo.playername;
 
         // 恢复娱乐
         btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level) && 0 == userInfo.state && 2 != userInfo.level);
-        this.btn_recoverPlay.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_recoverPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_recoverPlay.active = btnisActive;
+        // this.btn_recoverPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_recoverPlay.uid = userInfo.uid;
         this.btn_recoverPlay.playername = userInfo.playername;
 
         // 取消管理
         btnisActive = (!isSelf && isSelfMember && 2 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
-        this.btn_cancelManager.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_cancelManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_cancelManager.active = btnisActive;
+        // this.btn_cancelManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_cancelManager.uid = userInfo.uid;
         this.btn_cancelManager.playername = userInfo.playername;
 
         // 设置管理
         btnisActive = (!isSelf && isSelfMember && 0 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
-        this.btn_setManager.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_setManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setManager.active = btnisActive;
+        // this.btn_setManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setManager.uid = userInfo.uid;
         this.btn_setManager.playername = userInfo.playername;
 
         // 取消合伙人
         btnisActive = (!isSelf && isSelfMember && 3 <= userInfo.level);
-        this.btn_cancelPartner.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_cancelPartner.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_cancelPartner.active = btnisActive;
+        // this.btn_cancelPartner.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_cancelPartner.uid = userInfo.uid;
         this.btn_cancelPartner.playername = userInfo.playername;
 
         // 设置合伙人
         btnisActive = (!isSelf && isSelfMember && 0 == userInfo.level);
-        this.btn_setPartner.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_setPartner.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setPartner.active = btnisActive;
+        // this.btn_setPartner.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPartner.uid = userInfo.uid;
         this.btn_setPartner.playername = userInfo.playername;
 
         // 设置合伙人抽水
         btnisActive = (!isSelf && isSelfMember && 3 <= userInfo.level);
-        this.btn_setPartnerRatio.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_setPartnerRatio.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setPartnerRatio.active = btnisActive;
+        // this.btn_setPartnerRatio.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPartnerRatio.partneruid = userInfo.uid;
 
         // 查看抽水记录
         btnisActive = (1 == userInfo.level || 3 <= userInfo.level);
-        this.btn_checkWaterRecord.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_checkWaterRecord.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_checkWaterRecord.active = btnisActive;
+        // this.btn_checkWaterRecord.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_checkWaterRecord.uid = userInfo.uid;
 
         // 查看合伙人成员
         let isCheckPartnerListFirstPlayer = (0 < Global.checkPartnerList.length && userInfo.uid == Global.checkPartnerList[Global.checkPartnerList.length-1])
         btnisActive = (!isSelf && 3 <= userInfo.level && !isCheckPartnerListFirstPlayer);
-        this.btn_checkPartnerMember.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_checkPartnerMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_checkPartnerMember.active = btnisActive;
+        // this.btn_checkPartnerMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_checkPartnerMember.partneruid = userInfo.uid;
 
         // 查看游戏战绩
         btnisActive = true;
-        this.btn_checkGameRecord.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_checkGameRecord.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_checkGameRecord.active = btnisActive;
+        // this.btn_checkGameRecord.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_checkGameRecord.uid = userInfo.uid;
         
         // 踢出玩家
         btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level));
-        this.btn_tickout.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_tickout.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_tickout.active = btnisActive;
+        // this.btn_tickout.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_tickout.uid = userInfo.uid;
         this.btn_tickout.playername = userInfo.playername;
 
         // 设置疲劳
         btnisActive = ((1 == clubInfo.level || 2 == clubInfo.level) || (!isSelf && isSelfMember));      //创建管理者，或自己下级
-        this.btn_setPower.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_setPower.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setPower.active = btnisActive;
+        // this.btn_setPower.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPower.uid = userInfo.uid;
 
         // 调配成员
         btnisActive = (0 == userInfo.level && (1 == clubInfo.level || 2 == clubInfo.level));
-        this.btn_allocateMember.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_allocateMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_allocateMember.active = btnisActive;
+        // this.btn_allocateMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_allocateMember.userInfo = userInfo;
 
         // 管理权限
         btnisActive = (!isSelf && isSelfMember && 2 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
-        this.btn_setManagerPermissions.getComponent(cc.Button).interactable = btnisActive;
-        this.btn_setManagerPermissions.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
+        this.btn_setManagerPermissions.active = btnisActive;
+        // this.btn_setManagerPermissions.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setManagerPermissions.uid = userInfo.uid;
+
+        // 按钮定位
+        let shouBtnCount = 0;
+        let offsetX = 165;
+        let offsetY = 70;
+        for (let i = 0; i < this.node_btnStarPos.children.length; i++) {
+        	if (this.node_btnStarPos.children[i].active) {
+        		this.node_btnStarPos.children[i].x = (shouBtnCount % 4) * offsetX;
+        		this.node_btnStarPos.children[i].y = parseInt(shouBtnCount / 4) * -offsetY;
+        		++shouBtnCount;
+        	}
+        }
+        this.node_btnStarPos.x = (4 > shouBtnCount) ? (-offsetX * 1) : (-offsetX * 1.5);
+        this.panel_memberOperate.getChildByName("bg").height = 250 + Math.ceil(shouBtnCount / 4) * offsetY;
     },
 
     onClickCloseMemberOperate(){
