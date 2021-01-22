@@ -46,42 +46,25 @@ cc.Class({
         Global.btnClickEvent(btn_confirm,this.onClickConfirm,this);
 
         this.togglesIndex = {
-            xgwf:0,
-            scwf:1,
-            jsyx:2,
-            cjwf:3,
+            xgwf:0,         // 修改玩法
+            scwf:1,         // 删除玩法
+            jsyx:2,         // 解散游戏
+            cjwf:3,         // 创建玩法
 
-            jztz:4,
-            dpcy:5,
-            szpl:6,
-            jsqyq:7,
+            jztz:4,         // 禁止同桌
+            dpcy:5,         // 调配成员
+            szpl:6,         // 设置疲劳
+            jsqyq:7,        // 解散亲友圈
 
-            djqyq:8,
-            bjqh:9,
-            jzyx:10,
-            hfyx:11,
+            djqyq:8,        // 冻结亲友圈
+            bjqh:9,         // 包间模式切换
+            jzyx:10,        // 禁止玩家游戏
+            hfyx:11,        // 恢复玩家游戏
 
-            sccy:12,
-            szhhren:13,
+            sccy:12,        // 删除成员
+            szhhren:13,     // 设置合伙人
+            szgg:14,        // 设置公告
         };
-
-    // --xgwf --修改玩法 1 勾选  0 不勾选
-    // --scwf --删除玩法 1 勾选  0 不勾选
-    // --jsyx --解散游戏 1 勾选  0 不勾选
-    // --cjwf --创建玩法 1 勾选  0 不勾选
-
-    // --jztz --禁止同桌 1 勾选  0 不勾选
-    // --dpcy --调配成员 1 勾选  0 不勾选
-    // --szpl --设置疲劳 1 勾选  0 不勾选
-    // --jsqyq --解散亲友圈 1 勾选  0 不勾选
-
-    // --djqyq --冻结亲友圈
-    // --bjqh  --包间模式切换
-    // --jzyx  --禁止玩家游戏
-    // --hfyx  --恢复玩家游戏
-
-    // --sccy  --删除成语
-    // --szhhren --设置合伙人
     },
 
     onClose(){
@@ -121,6 +104,7 @@ cc.Class({
 
         req.adminJurInfo.sccy = this.togglesList[this.togglesIndex.sccy].isChecked ? 1 : 0;
         req.adminJurInfo.szhhren = this.togglesList[this.togglesIndex.szhhren].isChecked ? 1 : 0;
+        req.adminJurInfo.szgg = this.togglesList[this.togglesIndex.szgg].isChecked ? 1 : 0;
 
         cc.vv.NetManager.send(req);
     },
@@ -144,6 +128,7 @@ cc.Class({
             
             this.togglesList[this.togglesIndex.sccy].isChecked = (1 == msg.adminJurInfo.sccy);
             this.togglesList[this.togglesIndex.szhhren].isChecked = (1 == msg.adminJurInfo.szhhren);
+            this.togglesList[this.togglesIndex.szgg].isChecked = (1 == msg.adminJurInfo.szgg);
         }
     },
 
