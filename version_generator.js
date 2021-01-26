@@ -4,6 +4,11 @@ var crypto = require('crypto');
 
 var manifest = {
     //服务器上资源文件存放路径（src，res的路径）
+    // 开发测试
+    // packageUrl: 'http://47.241.145.84/remote-assets/',
+    // remoteManifestUrl: 'http://47.241.145.84/remote-assets/project.manifest',
+    // remoteVersionUrl: 'http://47.241.145.84/remote-assets/version.manifest',
+    // 正式
     packageUrl: 'http://www.kayuxin.com/remote-assets/',
     remoteManifestUrl: 'http://www.kayuxin.com/remote-assets/project.manifest',
     remoteVersionUrl: 'http://www.kayuxin.com/remote-assets/version.manifest',

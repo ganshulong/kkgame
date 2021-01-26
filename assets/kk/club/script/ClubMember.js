@@ -23,7 +23,8 @@ cc.Class({
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.registerMsg(MsgId.SEARCH_CLUB_MEMBER, this.onRcvSearchClubMember, this);
         cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_MANAGER, this.onRcvSetManager, this);
-        cc.vv.NetManager.registerMsg(MsgId.CLUB_MEMBER_UPDATE, this.onRcvMmeberUpdate, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_MEMBER_UPDATE, this.onRcvMemberUpdate, this);
+        cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_MEMBER_NOTE, this.onRcvSetMemberNote, this);
 
         Global.registerEvent(EventId.CLUB_SET_PARTNER, this.onRcvSetPartner, this);
         Global.registerEvent(EventId.SHOW_CLUB_MEMBER, this.showLayer,this);
@@ -86,12 +87,12 @@ cc.Class({
         this.memberItem = cc.find("bg_member/panel_list/scrollView/memberItem",this._layer);
         this.memberItem.active = false;
 
-        this.pagePlayerNum = 4;
-        this.btn_prePage = cc.find("bg_member/panel_list/node_bottom/btn_prePage",this._layer);
-        Global.btnClickEvent(this.btn_prePage, this.onClickPrePage,this);
-        this.btn_nextPage = cc.find("bg_member/panel_list/node_bottom/btn_nextPage",this._layer);
-        Global.btnClickEvent(this.btn_nextPage, this.onClickNextPage,this); 
-        this.text_page = cc.find("bg_member/panel_list/node_bottom/text_page",this._layer);
+        // this.pagePlayerNum = 4;
+        // this.btn_prePage = cc.find("bg_member/panel_list/node_bottom/btn_prePage",this._layer);
+        // Global.btnClickEvent(this.btn_prePage, this.onClickPrePage,this);
+        // this.btn_nextPage = cc.find("bg_member/panel_list/node_bottom/btn_nextPage",this._layer);
+        // Global.btnClickEvent(this.btn_nextPage, this.onClickNextPage,this); 
+        // this.text_page = cc.find("bg_member/panel_list/node_bottom/text_page",this._layer);
 
         this._layer.addComponent("ClubSetMemberNote");
         this.ClubSetMemberNoteJS = this._layer.getComponent("ClubSetMemberNote");
@@ -172,7 +173,7 @@ cc.Class({
         
         this.btn_back.active = (0 < Global.checkPartnerList.length);
         
-        this.text_page.getComponent(cc.Label).string = "1/1";
+        // this.text_page.getComponent(cc.Label).string = "1/1";
         this.curStartIndex = Global.curStartIndex ? Global.curStartIndex : 0;
 
         this.sendMemberListReq();
@@ -196,7 +197,10 @@ cc.Class({
         this._layer.active = false;
     },
 
-    sendMemberListReq(){
+    sendMemberListReq(isReqNextPage = false){
+        if (!isReqNextPage) {
+            this.memberList = [];
+        }
         let dataStr = Global.getDataStr(this.selectData.year,this.selectData.month,this.selectData.day);       
         this.text_data.getComponent(cc.Label).string = dataStr;
 
@@ -206,11 +210,9 @@ cc.Class({
         if (0 < Global.checkPartnerList.length) {
             req.tarUid = Global.checkPartnerList[Global.checkPartnerList.length-1];
         }
-        req.starty = this.curStartIndex;
-        req.endy = 10000;
+        req.starty = this.memberList.length ? this.memberList.length-1 : 0;
+        req.endy = 10;
         cc.vv.NetManager.send(req);
-
-        this.showList = [];
     },
 
     onClickSearch(event){
@@ -224,15 +226,15 @@ cc.Class({
         }
     },
 
-    onClickPrePage(){
-        this.curStartIndex -= this.pagePlayerNum;
-        this.sendMemberListReq();
-    },
+    // onClickPrePage(){
+    //     this.curStartIndex -= this.pagePlayerNum;
+    //     this.sendMemberListReq();
+    // },
 
-    onClickNextPage(){
-        this.curStartIndex += this.pagePlayerNum;
-        this.sendMemberListReq();
-    },
+    // onClickNextPage(){
+    //     this.curStartIndex += this.pagePlayerNum;
+    //     this.sendMemberListReq();
+    // },
 
     onClickSelectData(event){
         this.panel_dateSelect.active = true;
@@ -336,82 +338,96 @@ cc.Class({
 
     onRcvMemberList(msg){
         if (200 == msg.code && msg.memberList) {
-            let curPage = (this.curStartIndex/this.pagePlayerNum + 1);
-            this.btn_prePage.getComponent(cc.Button).interactable = 1 < curPage;
-            this.btn_nextPage.getComponent(cc.Button).interactable = curPage < msg.pagCnt;
-            this.text_page.getComponent(cc.Label).string = curPage + "/" + msg.pagCnt;
+            // let curPage = (this.curStartIndex/this.pagePlayerNum + 1);
+            // this.btn_prePage.getComponent(cc.Button).interactable = 1 < curPage;
+            // this.btn_nextPage.getComponent(cc.Button).interactable = curPage < msg.pagCnt;
+            // this.text_page.getComponent(cc.Label).string = curPage + "/" + msg.pagCnt;
 
             for (let i = 0; i < this.sortBtnArr.length; i++) {
                 this.sortBtnArr[i].isSmallToBig = true;
             }
             this.isShowSearchMember = false;
-            this.memberList = msg.memberList;
-            this.updateMemberList();
+            if (0 == msg.starty) {
+                this.memberList = msg.memberList;
+                this.userCnt = msg.userCnt;
+                this.updateMemberList();
+            } else {
+                for (let i = 0; i < msg.memberList.length; i++) {
+                    this.memberList.push(msg.memberList[i]);
+                }
+                this.memberListContent.height = this.memberItem.height * this.memberList.length;
+                this.isReqMemberListing = false;
+            }
         }
     },
 
     onRcvSearchClubMember(msg){
         if (200 == msg.code){
-            this.btn_prePage.getComponent(cc.Button).interactable = false
-            this.btn_nextPage.getComponent(cc.Button).interactable = false;
-            this.text_page.getComponent(cc.Label).string = "1/1";
+            // this.btn_prePage.getComponent(cc.Button).interactable = false
+            // this.btn_nextPage.getComponent(cc.Button).interactable = false;
+            // this.text_page.getComponent(cc.Label).string = "1/1";
 
             this.isShowSearchMember = true;
             this.btn_back.active = true;
             this.memberList = msg.memberList;
+            this.userCnt = msg.userCnt;
             this.updateMemberList()
         }
     },
 
-    updateMemberList(list){
-        let showList = list ? list : this.memberList;
-        let removeCount = 0;
-        for (let i = showList.length-1; i >= removeCount; i--) {
-            if (3 <= showList[i].level) {
-                let tempInfo = showList[i];
-                showList.splice(i, 1);
-                showList.unshift(tempInfo);
-                ++removeCount;
-                ++i;
-            }
-        }
-        removeCount = 0;
-        for (let i = showList.length-1; i >= removeCount; i--) {
-            if (2 == showList[i].level) {
-                let tempInfo = showList[i];
-                showList.splice(i, 1);
-                showList.unshift(tempInfo);
-                ++removeCount;
-                ++i;
-            }
-        }
-        for (let i = 0; i < showList.length; i++) {
-            if (showList[i].uid == cc.vv.UserManager.uid) {
-                let clubCeateInfo = showList[i];
-                showList.splice(i, 1);
-                showList.unshift(clubCeateInfo);
-                break;
-            }
-        }
-        if (0 < Global.checkPartnerList.length) {
-            for (let i = 0; i < showList.length; i++) {
-                if (showList[i].uid == Global.checkPartnerList[Global.checkPartnerList.length-1]) {
-                    let clubCeateInfo = showList[i];
-                    showList.splice(i, 1);
-                    showList.unshift(clubCeateInfo);
-                    break;
-                }
-            }
-        }
+    // updateMemberList(list){
+        // let showList = list ? list : this.memberList;
+        // let removeCount = 0;
+        // for (let i = showList.length-1; i >= removeCount; i--) {
+        //     if (3 <= showList[i].level) {
+        //         let tempInfo = showList[i];
+        //         showList.splice(i, 1);
+        //         showList.unshift(tempInfo);
+        //         ++removeCount;
+        //         ++i;
+        //     }
+        // }
+        // removeCount = 0;
+        // for (let i = showList.length-1; i >= removeCount; i--) {
+        //     if (2 == showList[i].level) {
+        //         let tempInfo = showList[i];
+        //         showList.splice(i, 1);
+        //         showList.unshift(tempInfo);
+        //         ++removeCount;
+        //         ++i;
+        //     }
+        // }
+        // for (let i = 0; i < showList.length; i++) {
+        //     if (showList[i].uid == cc.vv.UserManager.uid) {
+        //         let clubCeateInfo = showList[i];
+        //         showList.splice(i, 1);
+        //         showList.unshift(clubCeateInfo);
+        //         break;
+        //     }
+        // }
+        // if (0 < Global.checkPartnerList.length) {
+        //     for (let i = 0; i < showList.length; i++) {
+        //         if (showList[i].uid == Global.checkPartnerList[Global.checkPartnerList.length-1]) {
+        //             let clubCeateInfo = showList[i];
+        //             showList.splice(i, 1);
+        //             showList.unshift(clubCeateInfo);
+        //             break;
+        //         }
+        //     }
+        // }
 
-        this.showMemberList(showList);
-        cc.find("bg_member/bg_title/text_title",this._layer).getComponent(cc.Label).string = "成员列表(" + showList.length + ")";
-    },
+        // this.showMemberList(showList);
+        // cc.find("bg_member/bg_title/text_title",this._layer).getComponent(cc.Label).string = "成员列表(" + showList.length + ")";
+    // },
 
-    showMemberList(showList){
-        this.showList = showList;
+    updateMemberList(){
+        cc.find("bg_member/bg_input",this._layer).active = (0 === Global.checkPartnerList.length);
+        let titleStr = "成员列表(" + (this.userCnt ? this.userCnt : this.memberList.length) + ")";
+        cc.find("bg_member/bg_title/text_title",this._layer).getComponent(cc.Label).string = titleStr;
+
+        // this.showList = this.memberList;
         this.maxInstantiateItem = 6;
-        this.showNum = (this.maxInstantiateItem > showList.length) ? showList.length : this.maxInstantiateItem;
+        this.showNum = (this.maxInstantiateItem > this.memberList.length) ? this.memberList.length : this.maxInstantiateItem;
         this.memberListContent.removeAllChildren();
         for (let i = 0; i < this.showNum; i++) {
             let item =  cc.instantiate(this.memberItem);
@@ -420,19 +436,24 @@ cc.Class({
             this.updateMemberItem(item);
             item.active = true;
         }
-        this.memberListContent.height = this.memberItem.height * showList.length;
+        this.memberListContent.height = this.memberItem.height * this.memberList.length;
         this.memberListContent.y = 0;
         this.lastFrameContentY = this.memberListContent.y;
     },
 
     update (dt) {
-        if (this.showList && this.maxInstantiateItem < this.showList.length) {
+        if (this.memberList && this.maxInstantiateItem < this.memberList.length) {
             if (this.lastFrameContentY < this.memberListContent.y) {        //上移中
                 for (var i = 0; i < this.memberListContent.children.length; i++) {
                     let item = this.memberListContent.children[i];
-                    if (this.memberItem.height < (item.y + this.memberListContent.y) && (item.listIndex + this.maxInstantiateItem) < this.showList.length) {
-                        item.listIndex += this.maxInstantiateItem;
-                        this.updateMemberItem(item);
+                    if (this.memberItem.height < (item.y + this.memberListContent.y)) {
+                        if ((item.listIndex + this.maxInstantiateItem) < this.memberList.length) {
+                            item.listIndex += this.maxInstantiateItem;
+                            this.updateMemberItem(item);
+                        } else if (!this.isReqMemberListing && this.memberList.length < this.userCnt){
+                            this.isReqMemberListing = true;
+                            this.sendMemberListReq(true);
+                        }   
                     }
                 }
 
@@ -450,7 +471,7 @@ cc.Class({
     },
 
     updateMemberItem(item){
-        let userInfo = this.showList[item.listIndex];
+        let userInfo = this.memberList[item.listIndex];
         item.y = - item.height * item.listIndex;
         item.uid = userInfo.uid;
         
@@ -637,9 +658,9 @@ cc.Class({
         	}
         }
         if (4 > shouBtnCount) {
-            this.node_btnStarPos.x = -offsetX * (shouBtnCount - 1) / 2;
+			this.node_btnStarPos.x = -offsetX * (shouBtnCount - 1) / 2;
         } else {
-            this.node_btnStarPos.x = -offsetX * (4 - 1) / 2;
+        	this.node_btnStarPos.x = -offsetX * (4 - 1) / 2;
         }
         this.panel_memberOperate.getChildByName("bg").height = 250 + Math.ceil(shouBtnCount / 4) * offsetY;
     },
@@ -665,21 +686,30 @@ cc.Class({
     onRcvSetManager(msg){
         let data = msg;
         if (200 == data.code && this._layer && this._layer.active && data.clubid === cc.vv.UserManager.currClubId) {
-            for (let i = 0; i < this.memberList.length; i++) {
-                if (data.setuid === this.memberList[i].uid) {
-                    this.memberList[i].level = data.level;
-                    this.updateMemberList();
-                    break;
-                }
-            }
+            // for(let i = 0; i < this.memberListContent.children.length; ++i){
+            //     let childrenItem = this.memberListContent.children[i];
+            //     if (data.uid === childrenItem.uid && childrenItem.active) {
+            //         cc.find("bg_memberItem/btn_operate", childrenItem).userInfo.level = data.level;
+            //         cc.find("bg_memberItem/spr_manager", childrenItem).active = (2 == data.level);
+            //         break;
+            //     }
+            // }
+            // for (let i = 0; i < this.memberList.length; i++) {
+            //     if (data.setuid === this.memberList[i].uid) {
+            //         this.memberList[i].level = data.level;
+            //         break;
+            //     }
+            // }
             this.onClickCloseMemberOperate();
         }
     },
 
-    onRcvMmeberUpdate(msg){
+    onRcvMemberUpdate(msg){
         if (200 == msg.code && this._layer && this._layer.active && msg.clubid === cc.vv.UserManager.currClubId) {
             this.onClickCloseMemberOperate();
-            this.memberList = msg.memberList;;
+            this.isShowSearchMember = false;
+            this.memberList = msg.memberList;
+            this.userCnt = msg.userCnt;
             this.updateMemberList();
         }
     },
@@ -687,13 +717,20 @@ cc.Class({
     onRcvSetPartner(data){
         data = data.detail;
         if (200 == data.code && this._layer && this._layer.active && data.clubid === cc.vv.UserManager.currClubId) {
-            for (let i = 0; i < this.memberList.length; i++) {
-                if (data.partneruid === this.memberList[i].uid || data.setuid === this.memberList[i].uid) {
-                    this.memberList[i].level = data.level;
-                    this.updateMemberList();
-                    break;
-                }
-            }
+            // for(let i = 0; i < this.memberListContent.children.length; ++i){
+            //     let childrenItem = this.memberListContent.children[i];
+            //     if (data.uid === childrenItem.uid && childrenItem.active) {
+            //         cc.find("bg_memberItem/btn_operate", childrenItem).userInfo.level = data.level;
+            //         cc.find("bg_memberItem/spr_partner", childrenItem).active = (3 <= data.level);
+            //         break;
+            //     }
+            // }
+            // for (let i = 0; i < this.memberList.length; i++) {
+            //     if (data.partneruid === this.memberList[i].uid || data.setuid === this.memberList[i].uid) {
+            //         this.memberList[i].level = data.level;
+            //         break;
+            //     }
+            // }
             this.onClickCloseMemberOperate();
         }
     },
@@ -879,6 +916,22 @@ cc.Class({
         }
     },
 
+    onRcvSetMemberNote(msg){
+        if (200 == msg.code) {
+            for(let i = 0; i < this.memberListContent.children.length; ++i){
+                let childrenItem = this.memberListContent.children[i];
+                if (msg.adduid === childrenItem.uid && childrenItem.active) {
+                    cc.find("bg_memberItem/btn_note/text_note", childrenItem).getComponent(cc.Label).string = msg.remark;
+                }
+            }
+            for (let i = 0; i < this.memberList.length; i++) {
+                if (msg.adduid === this.memberList[i].uid) {
+                    this.memberList[i].remark = msg.remark;
+                }
+            }
+        }
+    },
+
     onDestroy(){
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_MEMBER_LIST, this.onRcvMemberList, this);
         cc.vv.NetManager.unregisterMsg(MsgId.MEMBER_FORBID_PLAY, this.onRcvMemberState, this);
@@ -887,7 +940,8 @@ cc.Class({
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_POWER, this.onRcvSetPower, this);
         cc.vv.NetManager.unregisterMsg(MsgId.SEARCH_CLUB_MEMBER, this.onRcvSearchClubMember, this);
         cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_MANAGER, this.onRcvSetManager, this);
-        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_MEMBER_UPDATE, this.onRcvMmeberUpdate, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_MEMBER_UPDATE, this.onRcvMemberUpdate, this);
+        cc.vv.NetManager.unregisterMsg(MsgId.CLUB_SET_MEMBER_NOTE, this.onRcvSetMemberNote, this);
         if(this._layer){
             cc.loader.releaseRes("common/prefab/club_member",cc.Prefab);
         }
