@@ -209,7 +209,7 @@ cc.Class({
                 zimoHuTypeStr += "点炮胡\n";
             }
             if (0 < data.mingTangType) {
-                zimoHuTypeStr += ["","红胡x2","一点红x2","黑胡x2","一点红x3","小红x2","大红x4","黑胡x5"][data.mingTangType];
+                zimoHuTypeStr += ["","","","","一点红x3","小红x2","大红x4","黑胡x5"][data.mingTangType];
             }
             if ("" == zimoHuTypeStr) {
                 zimoHuTypeStr += "平胡";
