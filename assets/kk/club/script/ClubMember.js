@@ -211,7 +211,7 @@ cc.Class({
             req.tarUid = Global.checkPartnerList[Global.checkPartnerList.length-1];
         }
         req.starty = this.memberList.length ? this.memberList.length-1 : 0;
-        req.endy = 10;
+        req.endy = 6;
         cc.vv.NetManager.send(req);
     },
 
@@ -358,6 +358,9 @@ cc.Class({
                 this.memberListContent.height = this.memberItem.height * this.memberList.length;
                 this.isReqMemberListing = false;
             }
+            if (this.memberList.length < this.userCnt) {
+                this.sendMemberListReq(true);
+            }
         }
     },
 
@@ -370,8 +373,8 @@ cc.Class({
             this.isShowSearchMember = true;
             this.btn_back.active = true;
             this.memberList = msg.memberList;
-            this.userCnt = msg.userCnt;
-            this.updateMemberList()
+            this.userCnt = msg.memberList.length;
+            this.updateMemberList();
         }
     },
 
@@ -442,7 +445,7 @@ cc.Class({
     },
 
     update (dt) {
-        if (this.memberList && this.maxInstantiateItem < this.memberList.length) {
+        if (this.memberListContent && this.memberListContent.children.length) {
             if (this.lastFrameContentY < this.memberListContent.y) {        //上移中
                 for (var i = 0; i < this.memberListContent.children.length; i++) {
                     let item = this.memberListContent.children[i];
@@ -450,10 +453,7 @@ cc.Class({
                         if ((item.listIndex + this.maxInstantiateItem) < this.memberList.length) {
                             item.listIndex += this.maxInstantiateItem;
                             this.updateMemberItem(item);
-                        } else if (!this.isReqMemberListing && this.memberList.length < this.userCnt){
-                            this.isReqMemberListing = true;
-                            this.sendMemberListReq(true);
-                        }   
+                        }  
                     }
                 }
 
@@ -711,6 +711,9 @@ cc.Class({
             this.memberList = msg.memberList;
             this.userCnt = msg.userCnt;
             this.updateMemberList();
+            if (this.memberList.length < this.userCnt) {
+                this.sendMemberListReq(true);
+            }
         }
     },
 
