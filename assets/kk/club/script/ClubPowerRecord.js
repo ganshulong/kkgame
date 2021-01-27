@@ -67,6 +67,7 @@ cc.Class({
 
     initShow(){
         this.text_page.getComponent(cc.Label).string = "1/1";
+        this.input_searchID.getComponent(cc.EditBox).string = "";
 
         this.curStartIndex = 0;
         this.sendListReq();
@@ -77,29 +78,33 @@ cc.Class({
     },
 
     sendListReq(searchID){
+        this.searchID = searchID;
         let req = { 'c': MsgId.CLUB_POWER_RECORD};
         req.clubid = cc.vv.UserManager.currClubId;
         req.starty = this.curStartIndex;
         req.endy = 5;
-        req.selUid = searchID ? searchID : 0;
+        req.selUid = this.searchID ? this.searchID : 0;
         cc.vv.NetManager.send(req);
     },
 
     onClickSearch(event){
         let searchID = this.input_searchID.getComponent(cc.EditBox).string;
         if (searchID && 6 == searchID.length) {
+            this.curStartIndex = 0;
             this.sendListReq(searchID);
+        } else {
+            cc.vv.FloatTip.show("输入ID无效");
         }
     },
 
     onClickPrePage(){
         this.curStartIndex -= 5;
-        this.sendListReq();
+        this.sendListReq(this.searchID);
     },
 
     onClickNextPage(){
         this.curStartIndex += 5;
-        this.sendListReq();
+        this.sendListReq(this.searchID);
     },
 
     onRcvList(msg){
