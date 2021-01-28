@@ -43,11 +43,11 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 555
+        "__id__": 558
       }
     ],
     "_prefab": {
-      "__id__": 556
+      "__id__": 559
     },
     "_id": "",
     "_opacity": 255,
@@ -17158,17 +17158,20 @@
       },
       {
         "__id__": 550
+      },
+      {
+        "__id__": 553
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 553
+        "__id__": 556
       }
     ],
     "_prefab": {
-      "__id__": 554
+      "__id__": 557
     },
     "_id": "",
     "_opacity": 255,
@@ -18023,6 +18026,97 @@
       "__uuid__": "a86ae201-31d1-4feb-a2d0-5080b3441fef"
     },
     "fileId": "7duU7wvDFN5JzPY0DeAMaN",
+    "sync": false
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "zhuanzhuan",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 525
+    },
+    "_children": [],
+    "_tag": -1,
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 554
+      }
+    ],
+    "_prefab": {
+      "__id__": 555
+    },
+    "_id": "",
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_cascadeOpacityEnabled": true,
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 262,
+      "height": 249
+    },
+    "_rotationX": 0,
+    "_rotationY": 0,
+    "_scaleX": 1,
+    "_scaleY": 1,
+    "_position": {
+      "__type__": "cc.Vec2",
+      "x": 1200,
+      "y": -200
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_localZOrder": 0,
+    "_globalZOrder": 0,
+    "_opacityModifyRGB": false,
+    "groupIndex": 0
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 553
+    },
+    "_enabled": true,
+    "_spriteFrame": {
+      "__uuid__": "205fb96b-7fcf-465c-a2d7-5a0232f7b80c"
+    },
+    "_type": 0,
+    "_sizeMode": 2,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_atlas": null
+  },
+  {
+    "__type__": "cc.PrefabInfo",
+    "root": {
+      "__id__": 1
+    },
+    "asset": {
+      "__uuid__": "a86ae201-31d1-4feb-a2d0-5080b3441fef"
+    },
+    "fileId": "93fr+G/zxO6q05BRBr4FSK",
     "sync": false
   },
   {

@@ -479,12 +479,26 @@ cc.Class({
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("shihuka");
                 }
+            } else if(msg.response.deskInfo.conf.gameid === 15 || msg.response.deskInfo.conf.gameid === 16){
+                if(cc.vv.gameData === null){
+                    let data = require("TongHua_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("tonghua");
+                }
             } else if(msg.response.deskInfo.conf.gameid === 17 || msg.response.deskInfo.conf.gameid === 18){
                 if(cc.vv.gameData === null){
                     let data = require("ErQiGui_GameData");
                     cc.vv.gameData = new data();
                     cc.vv.gameData.init(msg.response.deskInfo);
                     cc.vv.SceneMgr.enterScene("erqigui");
+                }
+            } else if(msg.response.deskInfo.conf.gameid === 19 || msg.response.deskInfo.conf.gameid === 20){
+                if(cc.vv.gameData === null){
+                    let data = require("ZhuanZhuan_GameData");
+                    cc.vv.gameData = new data();
+                    cc.vv.gameData.init(msg.response.deskInfo);
+                    cc.vv.SceneMgr.enterScene("zhuanzhaun");
                 }
             }
         }
@@ -591,6 +605,8 @@ cc.Class({
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[10];
         } else if (17 == config.gameid) {
             bg.getComponent(cc.Sprite).spriteFrame = this.tableBgs[10];
+        } else if (19 == config.gameid) {
+            bg.getComponent(cc.Sprite).spriteFrame = config.seat === 4 ? this.tableBgs[11] : this.tableBgs[12];
         }
             
         tableChar.active = true;

@@ -146,6 +146,8 @@ cc.Class({
                     str += "同花 ";
                 } else if(gameList[i].gameid === 17 && -1 === str.indexOf("二七鬼")) {
                     str += "二七鬼 ";
+                } else if(gameList[i].gameid === 19 && -1 === str.indexOf("转转麻将")) {
+                    str += "转转麻将 ";
                 }
             }
             // 游戏列表

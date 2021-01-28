@@ -1463,7 +1463,7 @@ Global.getDataStr = function (year,month,day){
 }
 
 Global.getGameName = function (gameid){
-    let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快","红中","红中","十胡卡","十胡卡","同花","同花","二七鬼","二七鬼"];
+    let gameNameStr = ["","碰胡","跑胡子","碰胡","跑胡子","红黑胡","红黑胡","六胡抢","六胡抢","跑得快","跑得快","红中","红中","十胡卡","十胡卡","同花","同花","二七鬼","二七鬼","转转麻将","转转麻将"];
     return gameNameStr[gameid];
 }
 
@@ -1497,9 +1497,20 @@ Global.getGameRuleStr = function (config){
             gameRuleStr += ("    " + ["一胡一分","三胡一分"][config.param1]);
             gameRuleStr += ("    " + ["不带醒","翻醒","随醒"][config.param2]);
             break;
+        case 15:
+            gameRuleStr += ("    " + config.param1 + "副牌");
+            gameRuleStr += ("    " + ["不显示剩余牌","显示剩余牌"][config.param2]);
+            gameRuleStr += ("    沉死分给对手");
+            if (15 <= config.param1) {
+                gameRuleStr += ("    不可废同");
+            }
+            break;
         case 17:
             gameRuleStr += ("    筷子" + config.param1 + "分 ");
             gameRuleStr += ("    " + ["不打五色四色 ","打五色四色 "][config.param2]);
+            break;
+        case 19:
+            gameRuleStr += ("    " + ["不抓鸟","抓2鸟","抓4鸟","抓6鸟"][config.param1/2]);
             break;
     }
     gameRuleStr += ("    " + config.score + "倍");

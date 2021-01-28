@@ -79,7 +79,9 @@ cc.Class({
             PaoDeKuai:4,
             HongZhong:5,
             ShiHuKa:6,
-            ErQiGui:7
+            ErQiGui:7,
+            TongHua:8,
+            ZhuanZhuan:9
         };
 
         let btn_back = this._createLayer.getChildByName("btn_back");
@@ -114,14 +116,14 @@ cc.Class({
         Global.btnClickEvent(item,this.onClickMoreGame,this);
 
         this.content_gameBtns.width = tempItem.width * (cc.vv.UserManager.gameList.length+1);
-	this.btn_create_room = this._createLayer.getChildByName("btn_create_room");
+	    this.btn_create_room = this._createLayer.getChildByName("btn_create_room");
         Global.btnClickEvent(this.btn_create_room,this.onCreateGame,this);
         this.btn_modify_config = this._createLayer.getChildByName("btn_modify_config");
         Global.btnClickEvent(this.btn_modify_config,this.onCreateGame,this);
 	
         //游戏玩法选项页面
         this.gamePanels = [];
-        this.gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_erqigui"];
+        this.gamePanelStr = ["panel_penghu","panel_paohuzi","panel_hongheihu","panel_liuhuqiang","panel_paodekuai","panel_hongzhong","panel_shihuka","panel_erqigui","panel_tonghua","panel_zhuanzhuan"];
         this.btn_rule = this._createLayer.getChildByName("btn_rule");
         Global.btnClickEvent(this.btn_rule,this.onClickSetRuleShow,this);
         this.panel_rule = this._createLayer.getChildByName("panel_rule");
@@ -312,6 +314,14 @@ cc.Class({
             optionList.push({option:"param1",           valueList:[0,1]});
             optionList.push({option:"param2",           valueList:[0,1,2]});
 
+        } else if (this.gameTypeIndex.TongHua == this.curGameIndex) {
+            if (req) {
+                req.gameid = this._isClubRoom ? 15 : 16;
+            }
+            optionList.push({option:"player_num",       valueList:[2]});
+            optionList.push({option:"param1",           valueList:[8,9,10,12,13,14,15,16]});
+            optionList.push({option:"param2",           valueList:[0,1]});
+
         } else if (this.gameTypeIndex.ErQiGui == this.curGameIndex) {
             if (req) {
                 req.gameid = this._isClubRoom ? 17 : 18;
@@ -320,6 +330,14 @@ cc.Class({
             optionList.push({option:"player_num",       valueList:[4]});
             optionList.push({option:"param1",           valueList:[20,30]});
             optionList.push({option:"param2",           valueList:[1]});
+
+        }  else if (this.gameTypeIndex.ZhuanZhuan == this.curGameIndex) {
+            if (req) {
+                req.gameid = this._isClubRoom ? 19 : 20;
+            }
+            optionList.push({option:"player_num",       valueList:[2,3,4]});
+            optionList.push({option:"param1",           valueList:[0,2,4,6]});
+
         }
         return optionList;
     },
