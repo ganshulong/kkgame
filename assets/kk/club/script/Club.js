@@ -498,7 +498,7 @@ cc.Class({
                     let data = require("ZhuanZhuan_GameData");
                     cc.vv.gameData = new data();
                     cc.vv.gameData.init(msg.response.deskInfo);
-                    cc.vv.SceneMgr.enterScene("zhuanzhaun");
+                    cc.vv.SceneMgr.enterScene("zhuanzhuan");
                 }
             }
         }
