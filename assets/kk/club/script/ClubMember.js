@@ -210,7 +210,7 @@ cc.Class({
         if (0 < Global.checkPartnerList.length) {
             req.tarUid = Global.checkPartnerList[Global.checkPartnerList.length-1];
         }
-        req.starty = this.memberList.length ? this.memberList.length-1 : 0;
+        req.starty = this.memberList.length ? this.memberList.length : 0;
         req.endy = 6;
         cc.vv.NetManager.send(req);
     },
