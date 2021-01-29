@@ -10,7 +10,7 @@ cc.Class({
     },
 
     // 创建牌
-    createCard(cardValue, bBIgCard=false, showBg=false, node=null){
+    createCard(cardValue, bBIgCard=false, node=null){
         let spr = null;
         if(node) {
             spr = node;
@@ -21,7 +21,7 @@ cc.Class({
         spr.cardValue = cardValue;
 
         let sprName = "";
-        if (0 == cardValue || showBg) {
+        if (0 == cardValue) {
             sprName = "play_img-cards-right_1-img_face_angang_1";
         } else {
             if (bBIgCard) {
@@ -34,20 +34,20 @@ cc.Class({
         }
         let prefabResNode = this.prefabResCard.getChildByName(sprName);
         spr.getComponent(cc.Sprite).spriteFrame = prefabResNode.getComponent(cc.Sprite).spriteFrame;
-        if (35 === cardValue) {
-            let magicCardMask = new cc.Node();
-            magicCardMask.addComponent(cc.Sprite);
-            let img_lai_lai = this.prefabResCard.getChildByName("img_lai_lai");
-            magicCardMask.getComponent(cc.Sprite).spriteFrame = img_lai_lai.getComponent(cc.Sprite).spriteFrame;
-            magicCardMask.parent = spr;
-            if (bBIgCard) {
-                magicCardMask.scale = 1;
-                magicCardMask.position = cc.v2(-14, 32);
-            } else {
-                magicCardMask.scale = 0.5;
-                magicCardMask.position = cc.v2(-6.5, 20);
-            }
-        }
+        // if (35 === cardValue) {
+        //     let magicCardMask = new cc.Node();
+        //     magicCardMask.addComponent(cc.Sprite);
+        //     let img_lai_lai = this.prefabResCard.getChildByName("img_lai_lai");
+        //     magicCardMask.getComponent(cc.Sprite).spriteFrame = img_lai_lai.getComponent(cc.Sprite).spriteFrame;
+        //     magicCardMask.parent = spr;
+        //     if (bBIgCard) {
+        //         magicCardMask.scale = 1;
+        //         magicCardMask.position = cc.v2(-14, 32);
+        //     } else {
+        //         magicCardMask.scale = 0.5;
+        //         magicCardMask.position = cc.v2(-6.5, 20);
+        //     }
+        // }
 
         spr.active = true;
         return spr;

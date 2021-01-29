@@ -179,31 +179,34 @@ cc.Class({
     },
 
     showCard(value){
-        let node = this.node.getComponent("ZhuanZhuan_Card").createCard(value,false);
         let row = parseInt(this._cardsNum/25);
         let col = this._cardsNum%25;
-        if(this._UISeat === 0){             // 下
-            node.x = 43 * col;
-            node.y = -70 * row;
-        } else if(this._UISeat === 1){      //上
-            node.x = -43 * col;
-            node.y = 70 * row;
+        if (1 === this._UISeat || 3 === this._UISeat) {
+            row = parseInt(this._cardsNum/10);
+            col = this._cardsNum%10;
         }
+        let dir = (1 === this._UISeat || 2 === this._UISeat) ? -1 : 1;
+
+        let node = this.node.getComponent("ZhuanZhuan_Card").createCard(value);
         node.parent = this._outCardNode;
+        node.width = 43;
+        node.height = 65;
+        node.x = node.width * col * dir;
+        node.y = node.height * row * dir;
         node.cardValue = value;
         ++this._cardsNum;
     },
 
     showCurOutCardAni(bShow){
-        this.curOutCardTipsAni.active = bShow;
         this.curOutCardTipsAni.stopAllActions();
+        this.curOutCardTipsAni.active = bShow;
         if (bShow) {
             let curOutCard = this._outCardNode.children[this._outCardNode.children.length-1];
             this.curOutCardTipsAni.position = cc.v2(curOutCard.x,curOutCard.y);
             this.curOutCardTipsAni.runAction(
                 cc.repeatForever(
                     cc.sequence(
-                        cc.moveTo(0.3, cc.p(curOutCard.x, curOutCard.y+10)),
+                        cc.moveTo(0.3, cc.p(curOutCard.x, curOutCard.y + 10)),
                         cc.moveTo(0.3, cc.p(curOutCard.x, curOutCard.y)),
                     )
                 )
@@ -279,22 +282,6 @@ cc.Class({
         if(chairId === this._chairId){
             this._seatIndex = data.seat;
         }
-    },
-
-    showCardAction(node,startPos,endPos){
-        // node.position = startPos;
-        // node.scale = 1;
-
-        // let time = cc.vv.gameData.getActionTime();
-        // node.opacity = 255;
-
-        // let self = this;
-        // node.runAction(cc.sequence(cc.spawn(cc.moveTo(time,endPos),cc.scaleTo(time,0.48),cc.fadeTo(time,50)),cc.callFunc(()=>{
-        //     self.node.getComponent("ZhuanZhuan_Card").createCard(node.cardValue,2,node.showBg,node);
-        //     node.scale = 1;
-        //     node.rotation = 0;
-        //     node.opacity = 255;
-        // })))
     },
 
     recvPlayerExit(data){

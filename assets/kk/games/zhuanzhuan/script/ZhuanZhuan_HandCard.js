@@ -272,21 +272,21 @@ cc.Class({
     },
 
     showAllCard(){
-        // let startPosX = -(cardWidth * (this._handCards.length-1))/2;
-        // if (0 === this._chairId && this.lastIsCurMoCard) {  //下,居中往右
-        //     startPosX -= (cardWidth * curMoCardOffsetScale / 2);
-        // }
-        let curPosX = 0;
-        let cardWidth = 43;
-        let dir = (0 === this._chairId) ? 1 : -1;
+        let uiSeat = cc.vv.gameData.getUISeatBylocalSeat(this._chairId);
         this._handcardNode.removeAllChildren();
+        let curPosX = 0;
 
+        let cardWidth = (1 === uiSeat || 3 === uiSeat) ? 31 : 43;
+        let cardHeight = (1 === uiSeat || 3 === uiSeat) ? 46 : 65;
+        let dir = (1 === uiSeat || 2 === uiSeat) ? -1 : 1;
         //杠牌
         for(let i = 0; i < this._gangCards.length; ++i){
             curPosX += 25 * dir;
             for (let j = 0; j < 4; j++) {
                 let node = this.node.getComponent("ZhuanZhuan_Card").createCard(this._gangCards[i]);
                 node.parent = this._handcardNode;
+                node.width = (cardWidth+2);
+                node.height = cardHeight;
                 if (3 > j) {
                     node.x = curPosX;
                     curPosX += cardWidth * dir;
@@ -296,33 +296,37 @@ cc.Class({
                 }
             }
         }
-
         //碰牌
         for(let i = 0; i < this._pengCards.length; ++i){
             curPosX += 25 * dir;;
             for (let j = 0; j < 3; j++) {
                 let node = this.node.getComponent("ZhuanZhuan_Card").createCard(this._pengCards[i]);
                 node.parent = this._handcardNode;
+                node.width = (cardWidth+2);
+                node.height = cardHeight;
                 node.x = curPosX;
                 curPosX += cardWidth * dir;
             }
         }
-
-        //手牌
         if (0 < this._gangCards.length || 0 < this._pengCards.length) {
             curPosX -= cardWidth/2 * dir;
         }
+
+        //手牌
         if (0 === this._chairId) {
-            cardWidth = 88;
-        } 
+            cardWidth = 66;
+            cardHeight = 100;
+        }
         if (0 < this._gangCards.length || 0 < this._pengCards.length) {
             curPosX += (25 + cardWidth/2) * dir;
         }
         for(let i = 0; i < this._handCards.length; ++i){
             let node = this.node.getComponent("ZhuanZhuan_Card").createCard(this._handCards[i], 0 === this._chairId);
             node.parent = this._handcardNode;
+            node.width = (cardWidth+2);
+            node.height = cardHeight;
             if (this.lastIsCurMoCard && this._handCards.length-1 === i) {       //当前摸牌
-                curPosX += cardWidth * dir * 0.4;
+                curPosX += cardWidth * dir * 0.3;
                 this.lastIsCurMoCard = false;
             }
             node.x = curPosX;

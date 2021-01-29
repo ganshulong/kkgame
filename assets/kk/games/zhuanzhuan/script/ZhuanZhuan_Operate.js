@@ -100,7 +100,7 @@ cc.Class({
             tingCard_item.parent = this.tingCard_content;
             tingCard_item.x = tingCard_item.width * i;
             let spr_card = tingCard_item.getChildByName("spr_card");
-            this.node.getComponent("ZhuanZhuan_Card").createCard(this.tingPaiInfo[i].card, true , false, spr_card);
+            this.node.getComponent("ZhuanZhuan_Card").createCard(this.tingPaiInfo[i].card, true, spr_card);
             tingCard_item.getChildByName("text_tingZhangNum").getComponent(cc.Label).string = this.tingPaiInfo[i].num;
 
             tingCard_item.active = true;

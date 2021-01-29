@@ -405,11 +405,6 @@ cc.Class({
                     let out_cards = this._playerNode.parent.getChildByName("out_cards");
                     out_cards.getChildByName("out_card"+uiSeat).removeAllChildren();
                     out_cards.getChildByName("curOutCardTipsPos"+uiSeat).active = false;
-                    
-                    if (uiSeat) {
-                        let playback_handle = this._playerNode.parent.getChildByName("hand_cards");
-                        playback_handle.getChildByName("hand_card"+uiSeat).removeAllChildren();
-                    }
                 }
             }
         }
@@ -446,6 +441,9 @@ cc.Class({
     },
 
     showOffline(bShow){
+        //test
+        bShow = false;
+
         if(this._playerNode) this._playerNode.getChildByName("img_off_line").active = bShow;
     },
 
