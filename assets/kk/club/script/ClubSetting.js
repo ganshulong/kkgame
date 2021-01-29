@@ -394,17 +394,21 @@ cc.Class({
     },
 
     onClicNotifyPause(){
+        let notifyStr = this.input_notify_editBox.string;
+        notifyStr = notifyStr.replace(/[\r\n]/g,"");   
         var req = { c: MsgId.CLUB_SET_NOTIFY};
         req.clubid = cc.vv.UserManager.currClubId;
-        req.notify = this.input_notify_editBox.string;
+        req.notify = notifyStr;
         req.notifynum = 0;
         cc.vv.NetManager.send(req);
     },
 
     onClicNotifyPlay(){
+        let notifyStr = this.input_notify_editBox.string;
+        notifyStr = notifyStr.replace(/[\r\n]/g,"");   
         var req = { c: MsgId.CLUB_SET_NOTIFY};
         req.clubid = cc.vv.UserManager.currClubId;
-        req.notify = this.input_notify_editBox.string;
+        req.notify = notifyStr;
         req.notifynum = 1;
         cc.vv.NetManager.send(req);
     },
