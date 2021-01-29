@@ -281,7 +281,6 @@ cc.Class({
         let dir = (1 === uiSeat || 2 === uiSeat) ? -1 : 1;
         //杠牌
         for(let i = 0; i < this._gangCards.length; ++i){
-            curPosX += 25 * dir;
             for (let j = 0; j < 4; j++) {
                 let node = this.node.getComponent("ZhuanZhuan_Card").createCard(this._gangCards[i]);
                 node.parent = this._handcardNode;
@@ -295,10 +294,10 @@ cc.Class({
                     node.y = node.height/4;
                 }
             }
+            curPosX += cardWidth/2 * dir;
         }
         //碰牌
         for(let i = 0; i < this._pengCards.length; ++i){
-            curPosX += 25 * dir;;
             for (let j = 0; j < 3; j++) {
                 let node = this.node.getComponent("ZhuanZhuan_Card").createCard(this._pengCards[i]);
                 node.parent = this._handcardNode;
@@ -307,18 +306,19 @@ cc.Class({
                 node.x = curPosX;
                 curPosX += cardWidth * dir;
             }
-        }
-        if (0 < this._gangCards.length || 0 < this._pengCards.length) {
-            curPosX -= cardWidth/2 * dir;
+            curPosX += cardWidth/2 * dir;
         }
 
         //手牌
         if (0 === this._chairId) {
+            if (0 < this._gangCards.length || 0 < this._pengCards.length) {
+                curPosX += cardWidth/2 * dir;
+            }
             cardWidth = 66;
             cardHeight = 100;
         }
         if (0 < this._gangCards.length || 0 < this._pengCards.length) {
-            curPosX += (25 + cardWidth/2) * dir;
+            // curPosX += cardWidth/2 * dir;
         }
         for(let i = 0; i < this._handCards.length; ++i){
             let node = this.node.getComponent("ZhuanZhuan_Card").createCard(this._handCards[i], 0 === this._chairId);
