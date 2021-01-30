@@ -145,6 +145,10 @@ cc.Class({
                     player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
                     player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
                 }
+                player.active = true;
+            }
+            for (let i = data.users.length; i < 4; i++) {
+                panle_playerInfo.getChildByName("player" + i).active = false;
             }
         }
 

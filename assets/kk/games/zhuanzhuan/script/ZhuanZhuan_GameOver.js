@@ -80,7 +80,6 @@ cc.Class({
         let bg_playerInfo = this._layer.getChildByName("bg_playerInfo");
         for(let i = 0; i < data.users.length; ++i){
             let player = bg_playerInfo.getChildByName("player" + i);
-
             player.getChildByName("img_bigwiner").active = (0 < bigWinerScore && bigWinerScore === data.users[i].score);
             let spr_head = cc.find("head/radio_mask/spr_head",player);
             Global.setHead(spr_head, data.users[i].usericon);
@@ -100,6 +99,11 @@ cc.Class({
                 bg_score.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
                 bg_score.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].score));
             }
+            player.active = true;
+            player.x = -280 * (data.users.length - 1) / 2 + 280 * i;
+        }
+        for (let i = data.users.length; i < 4; i++) {
+            bg_playerInfo.getChildByName("player" + i).active = false;
         }
     },
 
