@@ -62,7 +62,7 @@ cc.Class({
         //基础操作
         this.panel_baseContent = cc.find("bg_set/panel_baseContent",this._layer);
         this.ItemArr = [];
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < this.panel_baseContent.children.length; i++) {
             this.ItemArr.push(this.panel_baseContent.getChildByName("bg_Item"+i));
             let btn = this.ItemArr[i].getChildByName("btn_"+i);
             btn.index = i;
@@ -125,6 +125,8 @@ cc.Class({
         this.ItemArr[3].active = (Global.getIsManager() && !this._clubInfo.state);
         this.ItemArr[4].active = (Global.getIsManager() && (1 == this._clubInfo.mode));
         this.ItemArr[5].active = (Global.getIsManager() && (1 != this._clubInfo.mode));
+        this.ItemArr[6].active = (Global.getIsManager() && (1 == this._clubInfo.fufen));
+        this.ItemArr[7].active = (Global.getIsManager() && (1 != this._clubInfo.fufen));
         
         this.left_btn_bg.getChildByName("btn1").active = Global.getIsManager();     //禁止同桌
         this.left_btn_bg.getChildByName("btn2").active = Global.getIsManager();     //设置公告
@@ -364,6 +366,8 @@ cc.Class({
         tipsStrArr[3] = "确定解冻以下亲友圈？";
         tipsStrArr[4] = "确定切换平摊模式？";
         tipsStrArr[5] = "确定切换大赢家模式？";
+        tipsStrArr[6] = "确定设置为不可负分？";
+        tipsStrArr[7] = "确定设置为可负分？";
         confirmTips_bg.getChildByName("text_tip").getComponent(cc.Label).string = tipsStrArr[this.clickItemIndex];
         confirmTips_bg.getChildByName("text_clubName").getComponent(cc.Label).string = "亲友圈名称：" + this._clubInfo.name;
         confirmTips_bg.getChildByName("text_clubID").getComponent(cc.Label).string = "亲友圈ID：" + this._clubInfo.clubid;
@@ -374,7 +378,7 @@ cc.Class({
     },
 
     onClickConfirm(){
-        let msgIDArr = [MsgId.EXIT_CLUB_APPLY, MsgId.DISMISS_CLUB, MsgId.FREEZE_CLUB, MsgId.FREEZE_CLUB, MsgId.CLUB_SWITCH_MODE, MsgId.CLUB_SWITCH_MODE];
+        let msgIDArr = [MsgId.EXIT_CLUB_APPLY, MsgId.DISMISS_CLUB, MsgId.FREEZE_CLUB, MsgId.FREEZE_CLUB, MsgId.CLUB_SWITCH_MODE, MsgId.CLUB_SWITCH_MODE, MsgId.CLUB_SWITCH_MODE, MsgId.CLUB_SWITCH_MODE];
         if (-1 < this.clickItemIndex) {
             var req = { 'c': msgIDArr[this.clickItemIndex]};
             if (2 == this.clickItemIndex) {
@@ -382,8 +386,16 @@ cc.Class({
             } else if (3 == this.clickItemIndex) {
                 req.state = 1;
             } else if (4 == this.clickItemIndex) {
+                req.type = 1;
                 req.mode = 2;
             } else if (5 == this.clickItemIndex) {
+                req.type = 1;
+                req.mode = 1;
+            } else if (6 == this.clickItemIndex) {
+                req.type = 2;
+                req.mode = 2;
+            } else if (7 == this.clickItemIndex) {
+                req.type = 2;
                 req.mode = 1;
             }
             req.clubid = cc.vv.UserManager.currClubId;
