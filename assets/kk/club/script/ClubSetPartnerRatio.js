@@ -6,8 +6,9 @@ cc.Class({
         _Layer:null,
     },
 
-    showLayer(partneruid){
+    showLayer(partneruid, setType){
         this.partneruid = partneruid;
+        this.setType = setType;
         if(this._Layer === null){
             cc.loader.loadRes("common/prefab/club_setPartnerRatio",cc.Prefab,(err,prefab)=>{
                 if(err === null){
@@ -31,6 +32,8 @@ cc.Class({
         let btnClose = this._Layer.getChildByName("btnClose");
         Global.btnClickEvent(btnClose,this.onClose,this);
 
+        this.text_des = cc.find("input_uid/text_des", this._Layer).getComponent(cc.Label);
+
         this.input_uid_editBox = this._Layer.getChildByName("input_uid").getComponent(cc.EditBox);
 
         let btn_confirm = this._Layer.getChildByName("btn_confirm");
@@ -38,6 +41,8 @@ cc.Class({
     },
 
     initShow(){
+        this.text_des.string = (1 == this.setType) ? "设置该合伙人抽水百分比：" : "设置该合伙人预警百分比：";
+
         this.input_uid_editBox.string = "";
     },
 
@@ -52,6 +57,7 @@ cc.Class({
             req.clubid = cc.vv.UserManager.currClubId;
             req.partneruid = this.partneruid;
             req.water = uidInt;
+            req.type = this.setType;
             cc.vv.NetManager.send(req);
             this.onClose();
         } else {

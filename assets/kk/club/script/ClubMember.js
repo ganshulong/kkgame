@@ -77,7 +77,7 @@ cc.Class({
 
         this.sortBtnArr = [];
         let node_topInfo = cc.find("bg_member/panel_list/node_topInfo",this._layer);
-        let sortBtnStrArr = ["btn_IDSort","btn_stateSort","btn_roundNumSort","btn_bigWinerNumSort","btn_waterProSort","btn_scoreSort","btn_powerSort","btn_totalPowerSort"];
+        let sortBtnStrArr = ["btn_IDSort","btn_stateSort","btn_roundNumSort","btn_warnValue","btn_waterProSort","btn_scoreSort","btn_powerSort","btn_totalPowerSort"];
         for (let i = 0; i < sortBtnStrArr.length; i++) {
             this.sortBtnArr.push(node_topInfo.getChildByName(sortBtnStrArr[i]));
             Global.btnClickEvent(this.sortBtnArr[i],this.onClickSort,this);
@@ -98,7 +98,7 @@ cc.Class({
         this.ClubSetMemberNoteJS = this._layer.getComponent("ClubSetMemberNote");
 
         this._layer.addComponent("ClubSetPartnerRatio");
-        this.ClubSetPartnerRatioJS = this._layer.getComponent("ClubSetPartnerRatio");
+        this.ClubSetPartnerRatioOrWarnValueJS = this._layer.getComponent("ClubSetPartnerRatio");
 
         this._layer.addComponent("ClubSetPower");
         this.ClubSetPowerJS = this._layer.getComponent("ClubSetPower");
@@ -136,6 +136,9 @@ cc.Class({
 
         this.btn_checkWaterRecord = this.node_btnStarPos.getChildByName("btn_checkWaterRecord");
         Global.btnClickEvent(this.btn_checkWaterRecord, this.onClickCheckWaterRecord,this);
+
+        this.btn_setWarnValue = this.node_btnStarPos.getChildByName("btn_setWarnValue");
+        Global.btnClickEvent(this.btn_setWarnValue, this.onClickSetWarnValue,this);
 
         this.btn_checkPartnerMember = this.node_btnStarPos.getChildByName("btn_checkPartnerMember");
         Global.btnClickEvent(this.btn_checkPartnerMember, this.onClickCheckPartnerMember,this);
@@ -311,6 +314,10 @@ cc.Class({
     },
 
     onClickSort(event){
+        if (this.memberList.length != this.userCnt) {
+            cc.vv.FloatTip.show("成员数据加载中，请稍等");
+            return;
+        }
         let seq = event.target.isSmallToBig ? 1 : -1;
         event.target.isSmallToBig = !event.target.isSmallToBig;
         this.memberList.sort((obj1, obj2)=>{
@@ -320,8 +327,8 @@ cc.Class({
                 return seq * (obj1.isOnLine - obj2.isOnLine);
             } else if ("btn_roundNumSort" == event.target.name) {
                 return seq * (obj1.jushu - obj2.jushu);
-            } else if ("btn_bigWinerNumSort" == event.target.name) {
-                return seq * (obj1.bigWinCnt - obj2.bigWinCnt);
+            } else if ("btn_warnValue" == event.target.name) {
+                return seq * (obj1.warnvalue - obj2.warnvalue);
             } else if ("btn_waterProSort" == event.target.name) {
                 return seq * (obj1.cost - obj2.cost);
             } else if ("btn_scoreSort" == event.target.name) {
@@ -506,7 +513,7 @@ cc.Class({
             }
         }
         bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = userInfo.jushu;
-        bg_memberItem.getChildByName("text_bigWinerNum").getComponent(cc.Label).string = userInfo.bigWinCnt;
+        bg_memberItem.getChildByName("text_warnValue").getComponent(cc.Label).string = userInfo.warnvalue + "%";
         if (-1 < userInfo.waterPro) {
             bg_memberItem.getChildByName("text_waterPro").getComponent(cc.Label).string = userInfo.waterPro + "%";
         } else {
@@ -550,100 +557,89 @@ cc.Class({
         let btnisActive = true;
         let isSelf = (cc.vv.UserManager.uid == userInfo.uid);
         let isSelfMember = (0 === Global.checkPartnerList.length);
-        // let normalColor = new cc.Color(255, 255, 255);
-        // let forbidColor = new cc.Color(127, 127, 127);
         let clubInfo = cc.vv.UserManager.getCurClubInfo();
 
         // 禁止娱乐
         btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level) && 1 == userInfo.state && 2 != userInfo.level);
         this.btn_forbidPlay.active = btnisActive;
-        // this.btn_forbidPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_forbidPlay.uid = userInfo.uid;
         this.btn_forbidPlay.playername = userInfo.playername;
 
         // 恢复娱乐
         btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level) && 0 == userInfo.state && 2 != userInfo.level);
         this.btn_recoverPlay.active = btnisActive;
-        // this.btn_recoverPlay.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_recoverPlay.uid = userInfo.uid;
         this.btn_recoverPlay.playername = userInfo.playername;
 
         // 取消管理
         btnisActive = (!isSelf && isSelfMember && 2 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
         this.btn_cancelManager.active = btnisActive;
-        // this.btn_cancelManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_cancelManager.uid = userInfo.uid;
         this.btn_cancelManager.playername = userInfo.playername;
 
         // 设置管理
         btnisActive = (!isSelf && isSelfMember && 0 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
         this.btn_setManager.active = btnisActive;
-        // this.btn_setManager.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setManager.uid = userInfo.uid;
         this.btn_setManager.playername = userInfo.playername;
 
         // 取消合伙人
         btnisActive = (!isSelf && isSelfMember && 3 <= userInfo.level);
         this.btn_cancelPartner.active = btnisActive;
-        // this.btn_cancelPartner.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_cancelPartner.uid = userInfo.uid;
         this.btn_cancelPartner.playername = userInfo.playername;
 
         // 设置合伙人
         btnisActive = (!isSelf && isSelfMember && 0 == userInfo.level);
         this.btn_setPartner.active = btnisActive;
-        // this.btn_setPartner.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPartner.uid = userInfo.uid;
         this.btn_setPartner.playername = userInfo.playername;
 
         // 设置合伙人抽水
         btnisActive = (!isSelf && isSelfMember && 3 <= userInfo.level);
         this.btn_setPartnerRatio.active = btnisActive;
-        // this.btn_setPartnerRatio.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPartnerRatio.partneruid = userInfo.uid;
 
         // 查看抽水记录
         btnisActive = (1 == userInfo.level || 3 <= userInfo.level);
         this.btn_checkWaterRecord.active = btnisActive;
-        // this.btn_checkWaterRecord.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_checkWaterRecord.uid = userInfo.uid;
+
+        // 设置预警值
+        btnisActive = (!isSelf && isSelfMember && 3 <= userInfo.level);
+        this.btn_setWarnValue.active = btnisActive;
+        this.btn_setWarnValue.partneruid = userInfo.uid;
 
         // 查看合伙人成员
         let isCheckPartnerListFirstPlayer = (0 < Global.checkPartnerList.length && userInfo.uid == Global.checkPartnerList[Global.checkPartnerList.length-1])
         btnisActive = (!isSelf && 3 <= userInfo.level && !isCheckPartnerListFirstPlayer);
         this.btn_checkPartnerMember.active = btnisActive;
-        // this.btn_checkPartnerMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_checkPartnerMember.partneruid = userInfo.uid;
 
         // 查看游戏战绩
         btnisActive = true;
         this.btn_checkGameRecord.active = btnisActive;
-        // this.btn_checkGameRecord.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_checkGameRecord.uid = userInfo.uid;
         
         // 踢出玩家
         btnisActive = (!isSelf && (isSelfMember || 1 == clubInfo.level || 2 == clubInfo.level));
         this.btn_tickout.active = btnisActive;
-        // this.btn_tickout.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_tickout.uid = userInfo.uid;
         this.btn_tickout.playername = userInfo.playername;
 
         // 设置疲劳
         btnisActive = ((1 == clubInfo.level || 2 == clubInfo.level) || (!isSelf && isSelfMember));      //创建管理者，或自己下级
         this.btn_setPower.active = btnisActive;
-        // this.btn_setPower.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setPower.uid = userInfo.uid;
 
         // 调配成员
         btnisActive = (0 == userInfo.level && (1 == clubInfo.level || 2 == clubInfo.level));
         this.btn_allocateMember.active = btnisActive;
-        // this.btn_allocateMember.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_allocateMember.userInfo = userInfo;
 
         // 管理权限
         btnisActive = (!isSelf && isSelfMember && 2 == userInfo.level && clubInfo.createUid == cc.vv.UserManager.uid);
         this.btn_setManagerPermissions.active = btnisActive;
-        // this.btn_setManagerPermissions.getChildByName("text_des").color = btnisActive ? normalColor : forbidColor;
         this.btn_setManagerPermissions.uid = userInfo.uid;
 
         // 按钮定位
@@ -671,7 +667,12 @@ cc.Class({
 
     onClickSetPartnerRatio(event){
         this.onClickCloseMemberOperate();
-        this.ClubSetPartnerRatioJS.showLayer(event.target.partneruid);
+        this.ClubSetPartnerRatioOrWarnValueJS.showLayer(event.target.partneruid, 1);
+    },
+
+    onClickSetWarnValue(event){
+        this.onClickCloseMemberOperate();
+        this.ClubSetPartnerRatioOrWarnValueJS.showLayer(event.target.partneruid, 2);
     },
 
     onClickCheckPartnerMember(event){
