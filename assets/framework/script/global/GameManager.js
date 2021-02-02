@@ -139,8 +139,13 @@ cc.Class({
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER, this.onRcvSetPartnerOrManager, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER_RATIO, this.onRcvSetPartnerRatio, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_NOTIFY_NOTIFY, this.onRcvSetNotifyNotify, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_WARNTIP_NOTIFY, this.onRcvClubWarnTipNotify, this);
 
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvClubWarnTipNotify(msg){
+            cc.vv.FloatTip.show("预警值即将不足");
         },
 
         onRcvSetNotifyNotify(msg){
