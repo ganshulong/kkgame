@@ -248,8 +248,13 @@ cc.Class({
 
         onRcvClubSwitchMode(msg){
             if(msg.code === 200){
-                cc.vv.UserManager.setClubMode(msg.clubid, msg.mode);
-                cc.vv.FloatTip.show("切换亲友圈模式成功!");
+                if (1 == msg.type) {
+                    cc.vv.UserManager.setClubMode(msg.clubid, msg.mode);
+                    cc.vv.FloatTip.show("切换亲友圈模式成功!");
+                } else if (2 == msg.type) {
+                    cc.vv.UserManager.setClubFuFen(msg.clubid, msg.mode);
+                    cc.vv.FloatTip.show("亲友圈负分模式设置成功!");
+                }
             }
         },
 

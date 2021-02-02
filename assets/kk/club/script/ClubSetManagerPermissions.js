@@ -64,6 +64,10 @@ cc.Class({
             sccy:12,        // 删除成员
             szhhren:13,     // 设置合伙人
             szgg:14,        // 设置公告
+            szkff:15,        // 设置负分
+
+            szyjz:16,        // 设置预警值
+            szsxz:17,        // 设置水线值
         };
     },
 
@@ -105,6 +109,10 @@ cc.Class({
         req.adminJurInfo.sccy = this.togglesList[this.togglesIndex.sccy].isChecked ? 1 : 0;
         req.adminJurInfo.szhhren = this.togglesList[this.togglesIndex.szhhren].isChecked ? 1 : 0;
         req.adminJurInfo.szgg = this.togglesList[this.togglesIndex.szgg].isChecked ? 1 : 0;
+        req.adminJurInfo.szkff = this.togglesList[this.togglesIndex.szkff].isChecked ? 1 : 0;
+
+        req.adminJurInfo.szyjz = this.togglesList[this.togglesIndex.szyjz].isChecked ? 1 : 0;
+        req.adminJurInfo.szsxz = this.togglesList[this.togglesIndex.szsxz].isChecked ? 1 : 0;
 
         cc.vv.NetManager.send(req);
     },
@@ -129,6 +137,10 @@ cc.Class({
             this.togglesList[this.togglesIndex.sccy].isChecked = (1 == msg.adminJurInfo.sccy);
             this.togglesList[this.togglesIndex.szhhren].isChecked = (1 == msg.adminJurInfo.szhhren);
             this.togglesList[this.togglesIndex.szgg].isChecked = (1 == msg.adminJurInfo.szgg);
+            this.togglesList[this.togglesIndex.szkff].isChecked = (1 == msg.adminJurInfo.szkff);
+
+            this.togglesList[this.togglesIndex.szyjz].isChecked = (1 == msg.adminJurInfo.szyjz);
+            this.togglesList[this.togglesIndex.szsxz].isChecked = (1 == msg.adminJurInfo.szsxz);
         }
     },
 
