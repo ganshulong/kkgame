@@ -41,7 +41,7 @@ cc.Class({
     },
 
     initShow(){
-        this.text_des.string = (1 == this.setType) ? "设置该合伙人抽水百分比：" : "设置该合伙人预警百分比：";
+        this.text_des.string = (1 == this.setType) ? "设置该合伙人抽水百分比：" : "设置该合伙人游戏预警值：";
 
         this.input_uid_editBox.string = "";
     },
@@ -52,7 +52,11 @@ cc.Class({
 
     onClickConfirm(){
         let uidInt = parseInt(this.input_uid_editBox.string);
-        if (uidInt && 0 < uidInt && 100>= uidInt) {
+        if (uidInt && 0 < uidInt) {
+            if (1 == this.setType && 100 < uidInt) {
+               cc.vv.FloatTip.show("输入比例最大100%"); 
+               return;
+            }
             var req = { 'c': MsgId.CLUB_SET_PARTNER_RATIO};
             req.clubid = cc.vv.UserManager.currClubId;
             req.partneruid = this.partneruid;
