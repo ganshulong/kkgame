@@ -513,7 +513,11 @@ cc.Class({
             }
         }
         bg_memberItem.getChildByName("text_roundNum").getComponent(cc.Label).string = userInfo.jushu;
-        bg_memberItem.getChildByName("text_warnValue").getComponent(cc.Label).string = userInfo.warnvalue;
+        if (-1 < userInfo.warnvalue) {
+            bg_memberItem.getChildByName("text_warnValue").getComponent(cc.Label).string = userInfo.warnvalue;
+        } else {
+            bg_memberItem.getChildByName("text_warnValue").getComponent(cc.Label).string = "--";
+        }
         if (-1 < userInfo.waterPro) {
             bg_memberItem.getChildByName("text_waterPro").getComponent(cc.Label).string = userInfo.waterPro + "%";
         } else {
