@@ -140,8 +140,13 @@ cc.Class({
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_PARTNER_RATIO, this.onRcvSetPartnerRatio, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_SET_NOTIFY_NOTIFY, this.onRcvSetNotifyNotify, this);
             cc.vv.NetManager.registerMsg(MsgId.CLUB_WARNTIP_NOTIFY, this.onRcvClubWarnTipNotify, this);
+            cc.vv.NetManager.registerMsg(MsgId.CLUB_SCORE_0_AUTO_DISMISS_NOTIFY, this.onRcvClubScore0AutoDismissNotify, this);
 
             cc.game.on(cc.game.EVENT_HIDE, this.onBackGround, this);
+        },
+
+        onRcvClubScore0AutoDismissNotify(msg){
+            cc.vv.FloatTip.show("该桌有玩家积分已为零,游戏自动解散");
         },
 
         onRcvClubWarnTipNotify(msg){

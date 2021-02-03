@@ -341,4 +341,5 @@ GlobalMsgId.CLUB_SET_MANAGER_PERMISSIONS = 180;
 GlobalMsgId.CLUB_SET_NOTIFY = 8843;					//	设置俱乐部公告
 GlobalMsgId.CLUB_SET_NOTIFY_NOTIFY = 18821;			//	设置俱乐部公告 通知
 
-GlobalMsgId.CLUB_WARNTIP_NOTIFY = 20002;			//	提示预警值即将不足
+GlobalMsgId.CLUB_WARNTIP_NOTIFY = 20002;				//	提示预警值即将不足
+GlobalMsgId.CLUB_SCORE_0_AUTO_DISMISS_NOTIFY = 20003;	//	提示 该桌有玩家积分已为零,游戏自动解散
