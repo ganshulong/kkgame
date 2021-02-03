@@ -381,7 +381,7 @@ cc.Class({
     // 总分
     setTotalScore(score){
         if (typeof score != 'undefined' && this._playerNode) {
-            cc.find("txt_total_score",this._playerNode).getComponent(cc.Label).string = score;
+            cc.find("txt_total_score",this._playerNode).getComponent(cc.Label).string = score.toFixed(2);
         }
     },
 
