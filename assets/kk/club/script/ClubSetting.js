@@ -355,10 +355,6 @@ cc.Class({
 
     showConfirmTips(){
         this.panel_confirmTips.active = true;
-        let confirmTips_bg = this.panel_confirmTips.getChildByName("confirmTips_bg");
-        for (var i = 0; i < 6; i++) {
-            confirmTips_bg.getChildByName("spr_title"+i).active = (i == this.clickItemIndex);
-        }
         let tipsStrArr = [];
         tipsStrArr[0] = "确定退出以下亲友圈？";
         tipsStrArr[1] = "确定解散以下亲友圈？";
@@ -368,6 +364,10 @@ cc.Class({
         tipsStrArr[5] = "确定切换大赢家模式？";
         tipsStrArr[6] = "确定设置为不可负分？";
         tipsStrArr[7] = "确定设置为可负分？";
+        let confirmTips_bg = this.panel_confirmTips.getChildByName("confirmTips_bg");
+        for (var i = 0; i < tipsStrArr.length; i++) {
+            confirmTips_bg.getChildByName("spr_title"+i).active = (i == this.clickItemIndex);
+        }
         confirmTips_bg.getChildByName("text_tip").getComponent(cc.Label).string = tipsStrArr[this.clickItemIndex];
         confirmTips_bg.getChildByName("text_clubName").getComponent(cc.Label).string = "亲友圈名称：" + this._clubInfo.name;
         confirmTips_bg.getChildByName("text_clubID").getComponent(cc.Label).string = "亲友圈ID：" + this._clubInfo.clubid;
