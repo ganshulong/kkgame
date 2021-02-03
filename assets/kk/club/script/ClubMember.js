@@ -98,7 +98,10 @@ cc.Class({
         this.ClubSetMemberNoteJS = this._layer.getComponent("ClubSetMemberNote");
 
         this._layer.addComponent("ClubSetPartnerRatio");
-        this.ClubSetPartnerRatioOrWarnValueJS = this._layer.getComponent("ClubSetPartnerRatio");
+        this.ClubSetPartnerRatioJS = this._layer.getComponent("ClubSetPartnerRatio");
+
+        this._layer.addComponent("ClubSetPartnerWarn");
+        this.ClubSetPartnerWarnJS = this._layer.getComponent("ClubSetPartnerWarn");
 
         this._layer.addComponent("ClubSetPower");
         this.ClubSetPowerJS = this._layer.getComponent("ClubSetPower");
@@ -137,8 +140,8 @@ cc.Class({
         this.btn_checkWaterRecord = this.node_btnStarPos.getChildByName("btn_checkWaterRecord");
         Global.btnClickEvent(this.btn_checkWaterRecord, this.onClickCheckWaterRecord,this);
 
-        this.btn_setWarnValue = this.node_btnStarPos.getChildByName("btn_setWarnValue");
-        Global.btnClickEvent(this.btn_setWarnValue, this.onClickSetWarnValue,this);
+        this.btn_setPartnerWarn = this.node_btnStarPos.getChildByName("btn_setPartnerWarn");
+        Global.btnClickEvent(this.btn_setPartnerWarn, this.onClickSetPartnerWarn,this);
 
         this.btn_checkPartnerMember = this.node_btnStarPos.getChildByName("btn_checkPartnerMember");
         Global.btnClickEvent(this.btn_checkPartnerMember, this.onClickCheckPartnerMember,this);
@@ -609,10 +612,10 @@ cc.Class({
         this.btn_checkWaterRecord.active = btnisActive;
         this.btn_checkWaterRecord.uid = userInfo.uid;
 
-        // 设置预警值
+        // 设置预警
         btnisActive = (!isSelf && isSelfMember && 3 <= userInfo.level);
-        this.btn_setWarnValue.active = btnisActive;
-        this.btn_setWarnValue.partneruid = userInfo.uid;
+        this.btn_setPartnerWarn.active = btnisActive;
+        this.btn_setPartnerWarn.userInfo = userInfo;
 
         // 查看合伙人成员
         let isCheckPartnerListFirstPlayer = (0 < Global.checkPartnerList.length && userInfo.uid == Global.checkPartnerList[Global.checkPartnerList.length-1])
@@ -671,12 +674,12 @@ cc.Class({
 
     onClickSetPartnerRatio(event){
         this.onClickCloseMemberOperate();
-        this.ClubSetPartnerRatioOrWarnValueJS.showLayer(event.target.partneruid, 1);
+        this.ClubSetPartnerRatioJS.showLayer(event.target.partneruid);
     },
 
-    onClickSetWarnValue(event){
+    onClickSetPartnerWarn(event){
         this.onClickCloseMemberOperate();
-        this.ClubSetPartnerRatioOrWarnValueJS.showLayer(event.target.partneruid, 2);
+        this.ClubSetPartnerWarnJS.showLayer(event.target.userInfo);
     },
 
     onClickCheckPartnerMember(event){
