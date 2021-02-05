@@ -108,12 +108,16 @@ cc.Class({
             let bg_bar = player.getChildByName("bg_bar");
             if (0 <= user.scoreCount) {
                 bg_bar.getComponent(cc.Sprite).spriteFrame = this.bg_bar_win;
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs((user.scoreCount)));
+                if (0 == user.scoreCount) {
+                    player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = (Math.abs(user.scoreCount));
+                } else {
+                    player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(user.scoreCount).toFixed(2));
+                }
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
                 bg_bar.getComponent(cc.Sprite).spriteFrame = this.bg_bar_lose;
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs((user.scoreCount)));
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(user.scoreCount).toFixed(2));
             }
         }
     },

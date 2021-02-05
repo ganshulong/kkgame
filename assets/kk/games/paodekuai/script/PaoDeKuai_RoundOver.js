@@ -87,12 +87,15 @@ cc.Class({
                 node.parent = node_card;
             }
 
-            if (0 <= data.users[i].roundScore) {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+            if (0 > data.users[i].roundScore) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore).toFixed(1));
+            } else if (0 == data.users[i].roundScore) {
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = (Math.abs(data.users[i].roundScore));
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore).toFixed(1));
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             }
 
             if (data.users[i].uid == cc.vv.UserManager.uid) {
