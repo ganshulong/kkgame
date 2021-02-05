@@ -57,17 +57,15 @@ cc.Class({
     },
 
     recvDeskInfoMsg(){
-       let deskInfo = cc.vv.gameData.getDeskInfo();
-       // if(deskInfo.isReconnect ){
-           if(deskInfo.smallState === 1){
-               this.showDir((deskInfo.actionInfo.iswait===1 && deskInfo.actionInfo.curaction.seat>0)? deskInfo.actionInfo.curaction.seat:deskInfo.actionInfo.nextaction.seat);
-               this._cardBox.active = true;
-               this.updateRemainCards(deskInfo.pulicCardsCnt);
-           }
-           else{
-               this.clearDesk();
-           }
-       // }
+        let deskInfo = cc.vv.gameData.getDeskInfo();
+        if(deskInfo.smallState === 1){
+            this.showDir((deskInfo.actionInfo.iswait===1 && deskInfo.actionInfo.curaction.seat>0)? deskInfo.actionInfo.curaction.seat:deskInfo.actionInfo.nextaction.seat);
+            this._cardBox.active = true;
+            this.updateRemainCards(deskInfo.pulicCardsCnt);
+        }
+        else{
+            this.clearDesk();
+        }
     },
 
     recvMoPaiNotify(data){
