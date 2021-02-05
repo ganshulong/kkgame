@@ -141,10 +141,6 @@ cc.Class({
         this.readyBtn.active = false;
     },
 
-    onClickRefresh(){
-
-    },
-
     onClickCancelTrustee(event){
         let req = {c: MsgId.CANCEL_TRUSTEE};
         cc.vv.NetManager.send(req);
