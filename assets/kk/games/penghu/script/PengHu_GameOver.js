@@ -148,12 +148,12 @@ cc.Class({
 
             if (0 > user.score) {
                 img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(user.score).toFixed(1));
+                img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(user.score).toFixed(2));
             } else if (0 == user.score) {
                 img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = (Math.abs(user.score));
                 img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
-                img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(user.score).toFixed(1));
+                img_bg.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(user.score).toFixed(2));
                 img_bg.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             }
 
