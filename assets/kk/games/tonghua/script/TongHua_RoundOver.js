@@ -102,8 +102,12 @@ cc.Class({
             player.getChildByName("text_gameScore").color = data.users[i].roundZhuaFen > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
             player.getChildByName("text_xiScore").getComponent(cc.Label).string = data.users[i].roundXiFen;
             player.getChildByName("text_xiScore").color = data.users[i].roundXiFen > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
-            player.getChildByName("text_roundScore").getComponent(cc.Label).string = data.users[i].roundScore;
-            player.getChildByName("text_roundScore").color = data.users[i].roundScore > 0 ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
+            if (0 == data.users[i].roundScore) {
+                player.getChildByName("text_roundScore").getComponent(cc.Label).string = data.users[i].roundScore;
+            } else {
+                player.getChildByName("text_roundScore").getComponent(cc.Label).string = data.users[i].roundScore.toFixed(1);
+            }
+            player.getChildByName("text_roundScore").color = (0 <= data.users[i].roundScore) ? (new cc.Color(233,248,85)) : (new cc.Color(178,251,255));
 
             if (data.users[i].uid == cc.vv.UserManager.uid) {
                 this._layer.getChildByName("spr_title_lose").active = (0 >= data.users[i].roundScore);
