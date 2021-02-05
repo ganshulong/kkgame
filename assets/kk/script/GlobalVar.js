@@ -13,7 +13,7 @@ var GlobalVar = cc.Class({
   		// 登录游戏服地址
         // loginServerAddress:"47.241.145.84:7180",    //开发测试
         loginServerAddress:"123.57.94.118:7180",    //正式
-        resVersion:"1.2.39",
+        resVersion:"1.2.40",
         
         //非常用的配置
         localVersion:true,
