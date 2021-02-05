@@ -19,6 +19,14 @@ cc.Class({
         
         let setting = cc.find("scene/operate_btn_view/btn_setting",this.node);
         Global.btnClickEvent(setting,this.onClickSetting,this);
+        
+        let onClickRefreshTable = function () {
+            let req = {c: MsgId.UPDATE_TABLE_INFO};
+            cc.vv.NetManager.send(req);
+        }
+        let btn_refresh = cc.find("scene/operate_btn_view/btn_refresh",this.node);
+        Global.btnClickEvent(btn_refresh,onClickRefreshTable,this);
+        btn_refresh.active = !cc.vv.gameData._isPlayBack;
 
         this._panelSettingNode = cc.find("scene/panel_setting",this.node);
         this._panelSettingNode.getComponent(cc.Widget).updateAlignment();
