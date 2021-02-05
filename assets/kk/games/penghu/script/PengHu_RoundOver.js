@@ -153,10 +153,13 @@ cc.Class({
 
                 // 胡息
                 let score = player.getChildByName("lbl_num");
-                score.getComponent(cc.Label).string = users[i].roundScore;
+                if (0 == users[i].roundScore) {
+                    score.getComponent(cc.Label).string = users[i].roundScore;
+                } else {
+                    score.getComponent(cc.Label).string = Math.abs(users[i].roundScore).toFixed(1);
+                }
                 let img_signal = player.getChildByName("img_signal");
                 img_signal.active = users[i].roundScore<0;
-                img_signal.x = score.x-score.width-img_signal.width;
 
                 // 放炮
                 let fangpao = player.getChildByName("wz_fangpao");
