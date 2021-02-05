@@ -84,14 +84,14 @@ cc.Class({
             player.getChildByName("text_totalScxore").getComponent(cc.Label).string = user.score + "x" + user.beishu;
 
             if (0 < user.scoreCount) {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + user.scoreCount);
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + user.scoreCount.toFixed(2));
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else if (0 == user.scoreCount) {
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '0';
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs((user.scoreCount)));
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(user.scoreCount).toFixed(2));
             }
         }
     },

@@ -77,14 +77,14 @@ cc.Class({
             player.getChildByName("text_name").getComponent(cc.Label).string = data.users[i].playername;
             player.getChildByName("text_cardRound").getComponent(cc.Label).string = data.users[i].roundScore;
             if (0 < data.users[i].roundScore) {
-                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('.' + data.users[i].roundScore);
+                player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + data.users[i].roundScore.toFixed(1));
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else if (0 == data.users[i].roundScore) {
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '0';
                 player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
                 player.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore));
+                player.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].roundScore).toFixed(1));
             }
         }
     },
