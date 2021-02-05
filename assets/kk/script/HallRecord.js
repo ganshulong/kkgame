@@ -274,7 +274,11 @@ cc.Class({
                 bg_clubInfo.getChildByName("text_roomType").getComponent(cc.Label).string = (0 == this.curShowRecordType) ? "个人房间" : "亲友圈房间";
                 bg_clubInfo.getChildByName("text_houseOwner").getComponent(cc.Label).string = msg.data[i].houseOwner;
                 
-                cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score;
+                if (0 == msg.data[i].score) {
+                    cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score;
+                } else {
+                    cc.find("bg_score/text_score",roomInfo).getComponent(cc.Label).string = msg.data[i].score.toFixed(2);
+                }
 
                 let btn_detail = roomInfo.getChildByName("btn_detail");
                 btn_detail._index = i;
@@ -311,12 +315,16 @@ cc.Class({
                     playerInfoItem.getChildByName("text_player_id").getComponent(cc.Label).string = playerData[j].uid;
                     playerInfoItem.getChildByName("img_big_winner").active = (playerData[j].score >= maxScore && maxScore > 0);
 
-                    playerInfoItem.getChildByName("text_score_win").active = (0 < playerData[j].score);
-                    playerInfoItem.getChildByName("text_score_lose").active = (0 >= playerData[j].score);
-                    if (0 < playerData[j].score) {
-                        playerInfoItem.getChildByName("text_score_win").getComponent(cc.Label).string = playerData[j].score;
+                    if (0 <= playerData[j].score) {
+                        if (0 == playerData[j].score) {
+                            playerInfoItem.getChildByName("text_score_win").getComponent(cc.Label).string = playerData[j].score;
+                        } else {
+                            playerInfoItem.getChildByName("text_score_win").getComponent(cc.Label).string = playerData[j].score.toFixed(2);
+                        }
+                        playerInfoItem.getChildByName("text_score_lose").getComponent(cc.Label).string = "";
                     } else {
-                        playerInfoItem.getChildByName("text_score_lose").getComponent(cc.Label).string = '/' + Math.abs(playerData[j].score);
+                        playerInfoItem.getChildByName("text_score_win").getComponent(cc.Label).string = "";
+                        playerInfoItem.getChildByName("text_score_lose").getComponent(cc.Label).string = '/' + Math.abs(playerData[j].score).toFixed(2);
                     }
                     playerInfoItem.active = true;
                 }
@@ -377,12 +385,16 @@ cc.Class({
                 let bg_score = this._roundRecordItemList[i].getChildByName("bg_score");
                 for (var j = 0; j < playerData.length; j++) {
                     bg_score.getChildByName("text_name" + j).getComponent(cc.Label).string = playerData[j].playername;
-                    bg_score.getChildByName("text_score_win" + j).active = (0 < playerData[j].roundScore);
-                    bg_score.getChildByName("text_score_lose" + j).active = (0 >= playerData[j].roundScore);
-                    if (0 < playerData[j].roundScore) {
-                        bg_score.getChildByName("text_score_win" + j).getComponent(cc.Label).string = playerData[j].roundScore;
+                    bg_score.getChildByName("text_score_win" + j).active = (0 <= playerData[j].roundScore);
+                    bg_score.getChildByName("text_score_lose" + j).active = (0 > playerData[j].roundScore);
+                    if (0 <= playerData[j].roundScore) {
+                        if (0 == playerData[j].roundScore) {
+                            bg_score.getChildByName("text_score_win" + j).getComponent(cc.Label).string = playerData[j].roundScore;
+                        } else {
+                            bg_score.getChildByName("text_score_win" + j).getComponent(cc.Label).string = playerData[j].roundScore.toFixed(1);
+                        }
                     } else {
-                        bg_score.getChildByName("text_score_lose" + j).getComponent(cc.Label).string = '/' + Math.abs(playerData[j].roundScore);
+                        bg_score.getChildByName("text_score_lose" + j).getComponent(cc.Label).string = '/' + Math.abs(playerData[j].roundScore).toFixed(1);
                     }
                 }
                 for (var j = playerData.length; j < 4; j++) {
