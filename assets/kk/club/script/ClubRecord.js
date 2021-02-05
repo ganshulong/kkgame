@@ -216,11 +216,11 @@ cc.Class({
                         if (0 == userData[j].score) {
                             bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score;
                         } else {
-                            bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = "+" + userData[j].score.toFixed(1);
+                            bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = "+" + userData[j].score.toFixed(2);
                         }
                         bg_score.getChildByName("text_score"+j).color = new cc.Color(189,57,53);
                     } else {
-                        bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score.toFixed(1);
+                        bg_score.getChildByName("text_score"+j).getComponent(cc.Label).string = userData[j].score.toFixed(2);
                         bg_score.getChildByName("text_score"+j).color = new cc.Color(79,102,143);
                     }
                     if (maxScore < userData[j].score) {
@@ -228,7 +228,6 @@ cc.Class({
                         bigWinerName = userData[j].playername;
                         bigWinerID = userData[j].uid;
                     }
-                    
                     if (this.checkUid) {
                         if(this.checkUid == userData[j].uid){
                             item.getChildByName("mask_win").active = (0 <= userData[j].score);
@@ -261,12 +260,12 @@ cc.Class({
                 if (0 == msg.totalScore) {
                     cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = msg.totalScore;
                 } else {
-                    cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = msg.totalScore.toFixed(1);
+                    cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = msg.totalScore.toFixed(2);
                 }
                 cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = "";
             } else {
                 cc.find("bg_right/panel_gameRecord/bg_top/text_score_win",this._layer).getComponent(cc.Label).string = "";
-                cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = '/' + Math.abs(msg.totalScore.toFixed(1));
+                cc.find("bg_right/panel_gameRecord/bg_top/text_score_loss",this._layer).getComponent(cc.Label).string = '/' + Math.abs(msg.totalScore.toFixed(2));
             }
         }
     },
