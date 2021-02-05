@@ -93,12 +93,15 @@ cc.Class({
             player.getChildByName("text_jiegang_count").getComponent(cc.Label).string = data.users[i].jiegangCount;
 
             let bg_score = player.getChildByName("bg_score");
-            if (0 <= data.users[i].score) {
-                bg_score.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].score));
+            if (0 > data.users[i].score) {
+                bg_score.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
+                bg_score.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].score).toFixed(2));
+            } else if (0 == data.users[i].score) {
+                bg_score.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = (Math.abs(data.users[i].score));
                 bg_score.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             } else {
-                bg_score.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = '';
-                bg_score.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].score));
+                bg_score.getChildByName("LabelAtlas_score_win").getComponent(cc.Label).string = ('/' + Math.abs(data.users[i].score).toFixed(2));
+                bg_score.getChildByName("LabelAtlas_score_lose").getComponent(cc.Label).string = '';
             }
         }
     },
