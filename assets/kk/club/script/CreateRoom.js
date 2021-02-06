@@ -585,11 +585,11 @@ cc.Class({
             req.shrink = [];
             for (let i = 0; i < 3; i++) {
                 let chouShuiValue = content.getChildByName("input_chouShuiValue"+i).getComponent(cc.EditBox).string;
-                chouShuiValue = parseFloat((chouShuiValue || 0)).toFixed(2);
+                chouShuiValue = parseFloat(parseFloat((chouShuiValue || 0)).toFixed(2));
                 let chouShuiRangeMin = content.getChildByName("input_chouShuiRangeMin"+i).getComponent(cc.EditBox).string;
-                chouShuiRangeMin = parseFloat((chouShuiRangeMin || 0)).toFixed(2);
+                chouShuiRangeMin = parseFloat(parseFloat((chouShuiRangeMin || 0)).toFixed(2));
                 let chouShuiRangeMax = content.getChildByName("input_chouShuiRangeMax"+i).getComponent(cc.EditBox).string;
-                chouShuiRangeMax = parseFloat((chouShuiRangeMax || 0)).toFixed(2);
+                chouShuiRangeMax = parseFloat(parseFloat((chouShuiRangeMax || 0)).toFixed(2));
                 if (0 <= chouShuiValue && chouShuiValue <= chouShuiRangeMin && chouShuiRangeMin <= chouShuiRangeMax) {
                     req.shrink[i] = [chouShuiValue,chouShuiRangeMin,chouShuiRangeMax];
                 } else {
