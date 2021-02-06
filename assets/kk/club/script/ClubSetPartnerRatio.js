@@ -47,7 +47,7 @@ cc.Class({
 
     onClickConfirm(){
         let uidInt = parseInt(this.input_uid_editBox.string);
-        if (uidInt && 0 < uidInt && 100 < uidInt) {
+        if (uidInt && 0 < uidInt && 100 >= uidInt) {
             var req = { 'c': MsgId.CLUB_SET_PARTNER_RATIO};
             req.clubid = cc.vv.UserManager.currClubId;
             req.partneruid = this.partneruid;

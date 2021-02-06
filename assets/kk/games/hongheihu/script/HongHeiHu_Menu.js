@@ -51,6 +51,7 @@ cc.Class({
         let onClickRefreshTable = function () {
             let req = {c: MsgId.UPDATE_TABLE_INFO};
             cc.vv.NetManager.send(req);
+            cc.vv.FloatTip.show("刷新游戏中");
         }
         let btn_refresh = cc.find("scene/operate_btn_view/btn_refresh",this.node);
         Global.btnClickEvent(btn_refresh,onClickRefreshTable,this);
